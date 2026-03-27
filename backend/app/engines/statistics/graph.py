@@ -46,9 +46,7 @@ class GraphEngine(BaseStatisticsEngine):
         betweenness = nx.betweenness_centrality(graph, weight="weight")
 
         try:
-            eigenvector = nx.eigenvector_centrality(
-                graph, weight="weight", max_iter=1000
-            )
+            eigenvector = nx.eigenvector_centrality(graph, weight="weight", max_iter=1000)
         except nx.PowerIterationFailedConvergence:
             eigenvector = {node: 0.0 for node in graph.nodes()}
 
@@ -78,9 +76,7 @@ class GraphEngine(BaseStatisticsEngine):
             "communities": community_list,
             "centrality": centrality,
             "density": round(nx.density(graph), 4),
-            "clustering_coefficient": round(
-                nx.average_clustering(graph, weight="weight"), 4
-            ),
+            "clustering_coefficient": round(nx.average_clustering(graph, weight="weight"), 4),
         }
 
     def get_name(self) -> str:

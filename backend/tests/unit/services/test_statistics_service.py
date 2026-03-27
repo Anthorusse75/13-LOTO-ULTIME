@@ -1,11 +1,11 @@
 """Tests for StatisticsService."""
 
-import pytest
-import numpy as np
-from datetime import date
 from unittest.mock import AsyncMock, MagicMock
 
-from app.core.exceptions import InsufficientDataError, EngineComputationError
+import numpy as np
+import pytest
+
+from app.core.exceptions import EngineComputationError, InsufficientDataError
 from app.core.game_definitions import GameConfig
 from app.services.statistics import StatisticsService
 
@@ -24,18 +24,20 @@ def game_config() -> GameConfig:
 
 @pytest.fixture
 def draws_matrix() -> np.ndarray:
-    return np.array([
-        [1, 3, 7],
-        [2, 5, 9],
-        [1, 4, 8],
-        [3, 6, 10],
-        [1, 5, 7],
-        [2, 3, 9],
-        [4, 7, 10],
-        [1, 6, 8],
-        [3, 5, 9],
-        [2, 7, 10],
-    ])
+    return np.array(
+        [
+            [1, 3, 7],
+            [2, 5, 9],
+            [1, 4, 8],
+            [3, 6, 10],
+            [1, 5, 7],
+            [2, 3, 9],
+            [4, 7, 10],
+            [1, 6, 8],
+            [3, 5, 9],
+            [2, 7, 10],
+        ]
+    )
 
 
 @pytest.fixture
@@ -86,9 +88,7 @@ class TestStatisticsServiceComputeAll:
     @pytest.mark.asyncio
     async def test_insufficient_data(self, stats_repo, game_config):
         draw_repo = AsyncMock()
-        draw_repo.get_numbers_matrix = AsyncMock(
-            return_value=np.array([[1, 2, 3]])
-        )
+        draw_repo.get_numbers_matrix = AsyncMock(return_value=np.array([[1, 2, 3]]))
         svc = StatisticsService(draw_repo, stats_repo)
         with pytest.raises(InsufficientDataError):
             await svc.compute_all(game_id=1, game=game_config)

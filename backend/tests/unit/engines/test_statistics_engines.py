@@ -3,7 +3,6 @@
 import networkx as nx
 import numpy as np
 import pytest
-from scipy.stats import beta as beta_dist
 
 from app.core.game_definitions import GameConfig
 from app.engines.statistics.bayesian import BayesianEngine
@@ -13,7 +12,6 @@ from app.engines.statistics.frequency import FrequencyEngine
 from app.engines.statistics.gap import GapEngine
 from app.engines.statistics.graph import GraphEngine
 from app.engines.statistics.temporal import TemporalEngine
-
 
 # ── Fixtures ──
 
@@ -48,35 +46,39 @@ def small_config() -> GameConfig:
 @pytest.fixture
 def small_draws() -> np.ndarray:
     """10 draws of 3 numbers from 1-10 for manual verification."""
-    return np.array([
-        [1, 3, 7],
-        [2, 5, 9],
-        [1, 4, 8],
-        [3, 6, 10],
-        [1, 5, 7],
-        [2, 3, 9],
-        [4, 7, 10],
-        [1, 6, 8],
-        [3, 5, 9],
-        [2, 7, 10],
-    ])
+    return np.array(
+        [
+            [1, 3, 7],
+            [2, 5, 9],
+            [1, 4, 8],
+            [3, 6, 10],
+            [1, 5, 7],
+            [2, 3, 9],
+            [4, 7, 10],
+            [1, 6, 8],
+            [3, 5, 9],
+            [2, 7, 10],
+        ]
+    )
 
 
 @pytest.fixture
 def loto_draws() -> np.ndarray:
     """10 Loto FDJ draws from sample data."""
-    return np.array([
-        [3, 12, 25, 37, 44],
-        [1, 8, 19, 33, 48],
-        [5, 14, 22, 36, 41],
-        [2, 17, 28, 39, 45],
-        [7, 11, 24, 31, 49],
-        [3, 9, 18, 35, 42],
-        [6, 15, 27, 38, 46],
-        [4, 13, 23, 34, 47],
-        [10, 16, 29, 40, 43],
-        [1, 20, 26, 32, 44],
-    ])
+    return np.array(
+        [
+            [3, 12, 25, 37, 44],
+            [1, 8, 19, 33, 48],
+            [5, 14, 22, 36, 41],
+            [2, 17, 28, 39, 45],
+            [7, 11, 24, 31, 49],
+            [3, 9, 18, 35, 42],
+            [6, 15, 27, 38, 46],
+            [4, 13, 23, 34, 47],
+            [10, 16, 29, 40, 43],
+            [1, 20, 26, 32, 44],
+        ]
+    )
 
 
 # ══════════════════════════════════════════════════════════════
@@ -273,27 +275,21 @@ class TestTemporalEngine:
 
     def test_too_few_draws(self, small_config):
         """With 10 draws, no window of 20+ fits → empty windows."""
-        draws = np.random.default_rng(42).choice(
-            range(1, 11), size=(10, 3), replace=True
-        )
+        draws = np.random.default_rng(42).choice(range(1, 11), size=(10, 3), replace=True)
         result = self.engine.compute(draws, small_config)
         assert result["windows"] == []
 
     def test_sufficient_draws(self, small_config):
         """With 25 draws, window of 20 fits."""
         rng = np.random.default_rng(42)
-        draws = np.column_stack([
-            rng.choice(range(1, 11), size=25) for _ in range(3)
-        ])
+        draws = np.column_stack([rng.choice(range(1, 11), size=25) for _ in range(3)])
         result = self.engine.compute(draws, small_config)
         assert len(result["windows"]) == 1
         assert result["windows"][0]["window_size"] == 20
 
     def test_hot_cold_structure(self, small_config):
         rng = np.random.default_rng(42)
-        draws = np.column_stack([
-            rng.choice(range(1, 11), size=25) for _ in range(3)
-        ])
+        draws = np.column_stack([rng.choice(range(1, 11), size=25) for _ in range(3)])
         result = self.engine.compute(draws, small_config)
         if result["windows"]:
             w = result["windows"][0]
@@ -305,9 +301,7 @@ class TestTemporalEngine:
     def test_momentum_with_multiple_windows(self, small_config):
         """With 250 draws, windows 20,50,100,200 all fit → momentum computed."""
         rng = np.random.default_rng(42)
-        draws = np.column_stack([
-            rng.choice(range(1, 11), size=250) for _ in range(3)
-        ])
+        draws = np.column_stack([rng.choice(range(1, 11), size=250) for _ in range(3)])
         result = self.engine.compute(draws, small_config)
         assert len(result["windows"]) == 4
         assert "momentum" in result
@@ -370,12 +364,20 @@ class TestDistributionEngine:
     def test_uniform_draws(self, small_config):
         """Perfectly uniform draws should have high uniformity score."""
         # Each number appears exactly 3 times in 10 draws of 3
-        draws = np.array([
-            [1, 2, 3], [4, 5, 6], [7, 8, 9],
-            [10, 1, 2], [3, 4, 5], [6, 7, 8],
-            [9, 10, 1], [2, 3, 4], [5, 6, 7],
-            [8, 9, 10],
-        ])
+        draws = np.array(
+            [
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+                [10, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [9, 10, 1],
+                [2, 3, 4],
+                [5, 6, 7],
+                [8, 9, 10],
+            ]
+        )
         result = self.engine.compute(draws, small_config)
         assert result["uniformity_score"] > 0.95
 

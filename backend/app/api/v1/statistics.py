@@ -51,15 +51,12 @@ async def get_statistics(
 
     # Build frequency list
     frequencies = [
-        FrequencyItem(number=int(num), **data)
-        for num, data in snapshot.frequencies.items()
+        FrequencyItem(number=int(num), **data) for num, data in snapshot.frequencies.items()
     ]
     frequencies.sort(key=lambda f: -f.count)
 
     # Build gap list
-    gaps = [
-        GapItem(number=int(num), **data) for num, data in snapshot.gaps.items()
-    ]
+    gaps = [GapItem(number=int(num), **data) for num, data in snapshot.gaps.items()]
 
     # Hot / cold from frequencies
     hot_numbers = [f.number for f in frequencies[:5]]
@@ -88,10 +85,7 @@ async def get_frequencies(
 ):
     """Get detailed frequency data for all numbers."""
     snapshot = await _get_snapshot(game_id, stats_service)
-    items = [
-        FrequencyItem(number=int(num), **data)
-        for num, data in snapshot.frequencies.items()
-    ]
+    items = [FrequencyItem(number=int(num), **data) for num, data in snapshot.frequencies.items()]
     items.sort(key=lambda f: -f.count)
     return items
 
@@ -106,9 +100,7 @@ async def get_gaps(
 ):
     """Get detailed gap data for all numbers."""
     snapshot = await _get_snapshot(game_id, stats_service)
-    items = [
-        GapItem(number=int(num), **data) for num, data in snapshot.gaps.items()
-    ]
+    items = [GapItem(number=int(num), **data) for num, data in snapshot.gaps.items()]
     items.sort(key=lambda g: -g.current_gap)
     return items
 
@@ -127,9 +119,7 @@ async def get_cooccurrences(
     cooc = snapshot.cooccurrence_matrix
 
     pairs_raw = cooc.get("pairs", {})
-    pairs = [
-        CooccurrencePairItem(pair=key, **val) for key, val in pairs_raw.items()
-    ]
+    pairs = [CooccurrencePairItem(pair=key, **val) for key, val in pairs_raw.items()]
     pairs.sort(key=lambda p: -p.affinity)
 
     return CooccurrenceResponse(
@@ -187,8 +177,7 @@ async def get_bayesian(
     """Get Bayesian posterior estimates."""
     snapshot = await _get_snapshot(game_id, stats_service)
     items = [
-        BayesianItem(number=int(num), **data)
-        for num, data in snapshot.bayesian_priors.items()
+        BayesianItem(number=int(num), **data) for num, data in snapshot.bayesian_priors.items()
     ]
     items.sort(key=lambda b: -b.posterior_mean)
     return items
@@ -207,8 +196,7 @@ async def get_graph(
     g = snapshot.graph_metrics
 
     centrality = [
-        CentralityItem(number=int(num), **data)
-        for num, data in g.get("centrality", {}).items()
+        CentralityItem(number=int(num), **data) for num, data in g.get("centrality", {}).items()
     ]
     centrality.sort(key=lambda c: -c.degree)
 
@@ -244,17 +232,14 @@ async def recompute_statistics(
 
     # Build response
     frequencies = [
-        FrequencyItem(number=int(num), **data)
-        for num, data in snapshot.frequencies.items()
+        FrequencyItem(number=int(num), **data) for num, data in snapshot.frequencies.items()
     ]
     frequencies.sort(key=lambda f: -f.count)
 
     hot_numbers = [f.number for f in frequencies[:5]]
     cold_numbers = [f.number for f in sorted(frequencies, key=lambda f: f.count)[:5]]
 
-    gaps = [
-        GapItem(number=int(num), **data) for num, data in snapshot.gaps.items()
-    ]
+    gaps = [GapItem(number=int(num), **data) for num, data in snapshot.gaps.items()]
 
     return StatisticsResponse(
         game_id=snapshot.game_id,

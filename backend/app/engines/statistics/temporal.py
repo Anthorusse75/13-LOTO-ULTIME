@@ -47,11 +47,13 @@ class TemporalEngine(BaseStatisticsEngine):
             hot.sort(key=lambda x: -x["delta"])
             cold.sort(key=lambda x: x["delta"])
 
-            windows_data.append({
-                "window_size": w,
-                "hot_numbers": hot[:10],
-                "cold_numbers": cold[:10],
-            })
+            windows_data.append(
+                {
+                    "window_size": w,
+                    "hot_numbers": hot[:10],
+                    "cold_numbers": cold[:10],
+                }
+            )
 
         # Momentum: regression over window frequencies for each number
         momentum = self._compute_momentum(draws, game)

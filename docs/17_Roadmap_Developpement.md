@@ -86,16 +86,16 @@ Phase 6      Phase 7      Phase 8      Phase 9      Phase 10
 
 | #    | Tâche                   | Description                            | Statut |
 | ---- | ----------------------- | -------------------------------------- | ------ |
-| 3.1  | FrequencyEngine         | Fréquences absolues, relatives, ratios | ✅ |
-| 3.2  | GapEngine               | Écarts courant, max, moyen, médian     | ✅ |
-| 3.3  | CooccurrenceEngine      | Matrice paires, affinité, triplets     | ✅ |
-| 3.4  | TemporalEngine          | Fenêtres glissantes, tendances         | ✅ |
-| 3.5  | DistributionEngine      | Entropie, Chi-2, stats structurelles   | ✅ |
-| 3.6  | BayesianEngine          | Beta-Binomial, intervalles crédibilité | ✅ |
-| 3.7  | GraphEngine             | NetworkX, centralités, communautés     | ✅ |
-| 3.8  | StatisticsService       | Orchestration pipeline complet         | ✅ |
-| 3.9  | API /statistics         | Endpoints REST documentés              | ✅ |
-| 3.10 | Tests unitaires engines | Couverture ≥95%                        | ✅ |
+| 3.1  | FrequencyEngine         | Fréquences absolues, relatives, ratios | ✅      |
+| 3.2  | GapEngine               | Écarts courant, max, moyen, médian     | ✅      |
+| 3.3  | CooccurrenceEngine      | Matrice paires, affinité, triplets     | ✅      |
+| 3.4  | TemporalEngine          | Fenêtres glissantes, tendances         | ✅      |
+| 3.5  | DistributionEngine      | Entropie, Chi-2, stats structurelles   | ✅      |
+| 3.6  | BayesianEngine          | Beta-Binomial, intervalles crédibilité | ✅      |
+| 3.7  | GraphEngine             | NetworkX, centralités, communautés     | ✅      |
+| 3.8  | StatisticsService       | Orchestration pipeline complet         | ✅      |
+| 3.9  | API /statistics         | Endpoints REST documentés              | ✅      |
+| 3.10 | Tests unitaires engines | Couverture ≥95%                        | ✅      |
 
 ### Critères de complétion
 - [x] 7 engines fonctionnels avec données réelles

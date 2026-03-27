@@ -1,6 +1,6 @@
 """Statistics service — orchestrates all statistical engines."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import numpy as np
 import structlog
@@ -45,9 +45,7 @@ class StatisticsService:
             "graph": GraphEngine(),
         }
 
-    async def compute_all(
-        self, game_id: int, game: GameConfig
-    ) -> StatisticsSnapshot:
+    async def compute_all(self, game_id: int, game: GameConfig) -> StatisticsSnapshot:
         """Run the full statistics pipeline and persist a snapshot."""
         log = logger.bind(game_id=game_id, game_slug=game.slug)
         log.info("statistics_pipeline_started")
@@ -57,9 +55,7 @@ class StatisticsService:
         n_draws = draws.shape[0]
 
         if n_draws < MIN_DRAWS_REQUIRED:
-            raise InsufficientDataError(
-                f"Need at least {MIN_DRAWS_REQUIRED} draws, got {n_draws}"
-            )
+            raise InsufficientDataError(f"Need at least {MIN_DRAWS_REQUIRED} draws, got {n_draws}")
 
         log.info("draws_extracted", n_draws=n_draws)
 
@@ -71,14 +67,12 @@ class StatisticsService:
                 log.debug("engine_completed", engine=name)
             except Exception as exc:
                 log.error("engine_failed", engine=name, error=str(exc))
-                raise EngineComputationError(
-                    f"Engine '{name}' failed: {exc}"
-                ) from exc
+                raise EngineComputationError(f"Engine '{name}' failed: {exc}") from exc
 
         # 3. Persist snapshot
         snapshot = StatisticsSnapshot(
             game_id=game_id,
-            computed_at=datetime.now(timezone.utc),
+            computed_at=datetime.now(UTC),
             draw_count=n_draws,
             frequencies=results["frequency"],
             gaps=results["gaps"],
@@ -97,9 +91,7 @@ class StatisticsService:
         """Return the most recent statistics snapshot."""
         return await self._stats_repo.get_latest(game_id)
 
-    def compute_single(
-        self, engine_name: str, draws: np.ndarray, game: GameConfig
-    ) -> dict:
+    def compute_single(self, engine_name: str, draws: np.ndarray, game: GameConfig) -> dict:
         """Run a single engine on a draw matrix (no persistence)."""
         engine = self._engines.get(engine_name)
         if engine is None:

@@ -1,7 +1,6 @@
 """Integration tests for statistics API endpoints."""
 
-import asyncio
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -66,7 +65,7 @@ async def game_with_snapshot(db_session: AsyncSession, game_with_draws):
     """Create a game with a pre-computed statistics snapshot."""
     snapshot = StatisticsSnapshot(
         game_id=game_with_draws.id,
-        computed_at=datetime.now(timezone.utc),
+        computed_at=datetime.now(UTC),
         draw_count=10,
         frequencies={
             "1": {"count": 2, "relative": 0.2, "ratio": 1.96, "last_seen": 0},
@@ -74,8 +73,22 @@ async def game_with_snapshot(db_session: AsyncSession, game_with_draws):
             "7": {"count": 1, "relative": 0.1, "ratio": 0.98, "last_seen": 5},
         },
         gaps={
-            "1": {"current_gap": 0, "max_gap": 7, "avg_gap": 3.0, "min_gap": 0, "median_gap": 3.0, "expected_gap": 9.8},
-            "3": {"current_gap": 4, "max_gap": 5, "avg_gap": 2.5, "min_gap": 0, "median_gap": 2.5, "expected_gap": 9.8},
+            "1": {
+                "current_gap": 0,
+                "max_gap": 7,
+                "avg_gap": 3.0,
+                "min_gap": 0,
+                "median_gap": 3.0,
+                "expected_gap": 9.8,
+            },
+            "3": {
+                "current_gap": 4,
+                "max_gap": 5,
+                "avg_gap": 2.5,
+                "min_gap": 0,
+                "median_gap": 2.5,
+                "expected_gap": 9.8,
+            },
         },
         cooccurrence_matrix={
             "pairs": {
@@ -98,8 +111,22 @@ async def game_with_snapshot(db_session: AsyncSession, game_with_draws):
             "decades": {"1-10": 10, "11-20": 10, "21-30": 10, "31-40": 10, "41-49": 10},
         },
         bayesian_priors={
-            "1": {"alpha": 2.5, "beta": 8.5, "posterior_mean": 0.227273, "ci_95_low": 0.05, "ci_95_high": 0.45, "ci_width": 0.4},
-            "3": {"alpha": 2.5, "beta": 8.5, "posterior_mean": 0.227273, "ci_95_low": 0.05, "ci_95_high": 0.45, "ci_width": 0.4},
+            "1": {
+                "alpha": 2.5,
+                "beta": 8.5,
+                "posterior_mean": 0.227273,
+                "ci_95_low": 0.05,
+                "ci_95_high": 0.45,
+                "ci_width": 0.4,
+            },
+            "3": {
+                "alpha": 2.5,
+                "beta": 8.5,
+                "posterior_mean": 0.227273,
+                "ci_95_low": 0.05,
+                "ci_95_high": 0.45,
+                "ci_width": 0.4,
+            },
         },
         graph_metrics={
             "communities": [[1, 3, 7]],
@@ -126,14 +153,15 @@ async def stats_client(engine, db_session, game_with_snapshot):
     os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 
     from app.main import create_app
-    from app.models.base import init_db
 
     test_app = create_app()
 
     # Manually init DB with the test engine
     from app.models import base as base_module
+
     base_module._engine = engine
     from sqlalchemy.ext.asyncio import async_sessionmaker
+
     base_module._session_factory = async_sessionmaker(engine, expire_on_commit=False)
 
     transport = ASGITransport(app=test_app)
@@ -225,21 +253,30 @@ class TestStatisticsEndpoints:
     async def test_no_statistics_returns_error(self, engine, db_session):
         """Game without snapshot returns appropriate error."""
         import os
+
         os.environ["SECRET_KEY"] = "test-secret-key-for-testing-min-32-chars!!"
         os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 
         game = GameDefinition(
-            name="Empty Game", slug="empty-game", numbers_pool=10,
-            numbers_drawn=3, min_number=1, max_number=10, is_active=True,
-            draw_frequency="test", historical_source="test", description="test",
+            name="Empty Game",
+            slug="empty-game",
+            numbers_pool=10,
+            numbers_drawn=3,
+            min_number=1,
+            max_number=10,
+            is_active=True,
+            draw_frequency="test",
+            historical_source="test",
+            description="test",
         )
         db_session.add(game)
         await db_session.flush()
         await db_session.refresh(game)
 
+        from sqlalchemy.ext.asyncio import async_sessionmaker
+
         from app.main import create_app
         from app.models import base as base_module
-        from sqlalchemy.ext.asyncio import async_sessionmaker
 
         test_app = create_app()
         base_module._engine = engine
