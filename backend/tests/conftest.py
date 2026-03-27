@@ -45,10 +45,9 @@ async def engine():
 async def db_session(engine) -> AsyncGenerator[AsyncSession, None]:
     """Provide a transactional session for each test (rolled back after)."""
     session_factory = async_sessionmaker(engine, expire_on_commit=False)
-    async with session_factory() as session:
-        async with session.begin():
-            yield session
-            await session.rollback()
+    async with session_factory() as session, session.begin():
+        yield session
+        await session.rollback()
 
 
 @pytest.fixture
@@ -100,9 +99,7 @@ async def sample_euromillions(db_session: AsyncSession) -> GameDefinition:
 
 
 @pytest.fixture
-async def sample_draws(
-    db_session: AsyncSession, sample_game: GameDefinition
-) -> list[Draw]:
+async def sample_draws(db_session: AsyncSession, sample_game: GameDefinition) -> list[Draw]:
     """Create 10 sample draws for Loto FDJ."""
     fixtures_path = Path(__file__).parent / "fixtures" / "sample_draws.json"
     data = json.loads(fixtures_path.read_text(encoding="utf-8"))
@@ -130,6 +127,7 @@ async def sample_draws(
 async def app_client() -> AsyncGenerator[AsyncClient, None]:
     """HTTP client for integration tests against the FastAPI app."""
     import os
+
     os.environ["SECRET_KEY"] = "test-secret-key-for-testing-min-32-chars!!"
     os.environ["DATABASE_URL"] = TEST_DATABASE_URL
 

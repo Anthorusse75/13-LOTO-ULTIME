@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import DateTime, Enum, Float, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy import JSON, DateTime, Enum, Float, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
@@ -20,9 +20,7 @@ class JobExecution(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     job_name: Mapped[str] = mapped_column(String(100), index=True)
-    game_id: Mapped[int | None] = mapped_column(
-        ForeignKey("game_definitions.id"), nullable=True
-    )
+    game_id: Mapped[int | None] = mapped_column(ForeignKey("game_definitions.id"), nullable=True)
     status: Mapped[JobStatus] = mapped_column(Enum(JobStatus))
     started_at: Mapped[datetime] = mapped_column(DateTime, index=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

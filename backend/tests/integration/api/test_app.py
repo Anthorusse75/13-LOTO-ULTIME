@@ -1,10 +1,11 @@
 """Integration tests for the FastAPI application."""
+
 import os
 
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from app.models.base import Base, init_db, close_db, _engine
+from app.models.base import Base, close_db, init_db
 
 
 @pytest.fixture
@@ -20,6 +21,7 @@ async def client():
     # Manually initialize the DB since ASGITransport doesn't trigger lifespan
     init_db("sqlite+aiosqlite:///:memory:")
     from app.models.base import _engine as eng
+
     async with eng.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 

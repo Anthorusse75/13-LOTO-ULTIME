@@ -1,4 +1,5 @@
 """Tests for core configuration."""
+
 from pathlib import Path
 
 import pytest
@@ -34,10 +35,13 @@ class TestSettings:
         """Settings should fail without SECRET_KEY."""
         monkeypatch.delenv("SECRET_KEY", raising=False)
         # Remove .env loading
-        monkeypatch.setattr("pydantic_settings.BaseSettings.model_config", {
-            "env_file": "/nonexistent/.env",
-            "case_sensitive": True,
-        })
+        monkeypatch.setattr(
+            "pydantic_settings.BaseSettings.model_config",
+            {
+                "env_file": "/nonexistent/.env",
+                "case_sensitive": True,
+            },
+        )
 
         from app.core.config import Settings
 

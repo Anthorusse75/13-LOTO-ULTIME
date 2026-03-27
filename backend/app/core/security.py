@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import bcrypt
-from jose import JWTError, jwt
+from jose import jwt
 
 
 def hash_password(password: str) -> str:
@@ -11,9 +11,7 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Vérifie un mot de passe contre son hash."""
-    return bcrypt.checkpw(
-        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
-    )
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
 
 
 def create_access_token(
@@ -21,7 +19,7 @@ def create_access_token(
 ) -> str:
     """Crée un token JWT signé."""
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=expires_minutes)
+    expire = datetime.now(UTC) + timedelta(minutes=expires_minutes)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, secret_key, algorithm=algorithm)
 

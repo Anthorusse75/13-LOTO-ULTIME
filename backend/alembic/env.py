@@ -1,20 +1,20 @@
 import asyncio
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 
+from alembic import context
 from app.models.base import Base
+from app.models.draw import Draw  # noqa: F401
 
 # Import all models so Alembic can detect them
 from app.models.game import GameDefinition  # noqa: F401
-from app.models.draw import Draw  # noqa: F401
-from app.models.statistics import StatisticsSnapshot  # noqa: F401
 from app.models.grid import ScoredGrid  # noqa: F401
-from app.models.portfolio import Portfolio  # noqa: F401
-from app.models.user import User  # noqa: F401
 from app.models.job import JobExecution  # noqa: F401
+from app.models.portfolio import Portfolio  # noqa: F401
+from app.models.statistics import StatisticsSnapshot  # noqa: F401
+from app.models.user import User  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:

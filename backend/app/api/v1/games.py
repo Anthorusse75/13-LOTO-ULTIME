@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies import get_db, get_game_repository
+from app.dependencies import get_game_repository
 from app.repositories.game_repository import GameRepository
 from app.schemas.game import GameDefinitionResponse
 

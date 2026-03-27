@@ -300,19 +300,19 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 
 ## Récapitulatif
 
-| Phase | Tâches | Statut |
-|---|---|---|
-| 1. Architecture & Documentation | 20 | ✅ Complète |
-| 2. Fondations Backend | 33 | ⬜ |
-| 3. Moteur Statistique | 18 | ⬜ |
-| 4. Moteur de Scoring | 13 | ⬜ |
-| 5. Moteur d'Optimisation | 14 | ⬜ |
-| 6. Moteur de Simulation | 11 | ⬜ |
-| 7. Interface Frontend | 32 | ⬜ |
-| 8. Scheduler & Jobs | 16 | ⬜ |
-| 9. Sécurité & Auth | 15 | ⬜ |
-| 10. Polish & Déploiement | 16 | ⬜ |
-| **TOTAL** | **188** | |
+| Phase                           | Tâches  | Statut     |
+| ------------------------------- | ------- | ---------- |
+| 1. Architecture & Documentation | 20      | ✅ Complète |
+| 2. Fondations Backend           | 33      | ⬜          |
+| 3. Moteur Statistique           | 18      | ⬜          |
+| 4. Moteur de Scoring            | 13      | ⬜          |
+| 5. Moteur d'Optimisation        | 14      | ⬜          |
+| 6. Moteur de Simulation         | 11      | ⬜          |
+| 7. Interface Frontend           | 32      | ⬜          |
+| 8. Scheduler & Jobs             | 16      | ⬜          |
+| 9. Sécurité & Auth              | 15      | ⬜          |
+| 10. Polish & Déploiement        | 16      | ⬜          |
+| **TOTAL**                       | **188** |            |
 
 ---
 

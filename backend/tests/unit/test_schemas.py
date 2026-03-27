@@ -1,10 +1,11 @@
 """Tests for Pydantic schemas validation."""
-from datetime import date, datetime
+
+from datetime import date
 
 import pytest
 from pydantic import ValidationError
 
-from app.schemas.draw import DrawCreate, DrawResponse
+from app.schemas.draw import DrawCreate
 from app.schemas.game import GameDefinitionCreate, GameDefinitionResponse
 from app.schemas.grid import GridGenerateRequest
 

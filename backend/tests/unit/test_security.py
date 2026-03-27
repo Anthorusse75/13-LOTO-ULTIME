@@ -1,4 +1,5 @@
 """Tests for security utilities."""
+
 import pytest
 
 from app.core.security import (
@@ -28,9 +29,7 @@ class TestJWT:
     SECRET = "test-secret-key-for-jwt-testing-32chars!!"
 
     def test_create_and_decode_token(self):
-        token = create_access_token(
-            data={"sub": "testuser"}, secret_key=self.SECRET
-        )
+        token = create_access_token(data={"sub": "testuser"}, secret_key=self.SECRET)
         payload = decode_access_token(token, secret_key=self.SECRET)
         assert payload["sub"] == "testuser"
         assert "exp" in payload
@@ -44,8 +43,6 @@ class TestJWT:
     def test_decode_wrong_secret(self):
         from jose import JWTError
 
-        token = create_access_token(
-            data={"sub": "user"}, secret_key=self.SECRET
-        )
+        token = create_access_token(data={"sub": "user"}, secret_key=self.SECRET)
         with pytest.raises(JWTError):
             decode_access_token(token, secret_key="wrong-secret-key-that-is-different!!")

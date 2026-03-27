@@ -1,8 +1,8 @@
 """Tests for repository layer."""
+
 from datetime import date
 
 import numpy as np
-import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.draw import Draw
@@ -24,9 +24,7 @@ class TestGameRepository:
         result = await repo.get_by_slug("nonexistent")
         assert result is None
 
-    async def test_get_active_games(
-        self, db_session: AsyncSession, sample_game: GameDefinition
-    ):
+    async def test_get_active_games(self, db_session: AsyncSession, sample_game: GameDefinition):
         repo = GameRepository(db_session)
         games = await repo.get_active_games()
         assert len(games) >= 1
@@ -86,7 +84,9 @@ class TestDrawRepository:
         assert isinstance(matrix, np.ndarray)
         assert matrix.shape == (10, 5)  # 10 draws, 5 numbers each
 
-    async def test_get_numbers_matrix_empty(self, db_session: AsyncSession, sample_game: GameDefinition):
+    async def test_get_numbers_matrix_empty(
+        self, db_session: AsyncSession, sample_game: GameDefinition
+    ):
         repo = DrawRepository(db_session)
         matrix = await repo.get_numbers_matrix(sample_game.id)
         assert matrix.shape == (0, 0)

@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import Date, ForeignKey, Integer, JSON, UniqueConstraint
+from sqlalchemy import JSON, Date, ForeignKey, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base, TimestampMixin
@@ -8,9 +8,7 @@ from .base import Base, TimestampMixin
 
 class Draw(Base, TimestampMixin):
     __tablename__ = "draws"
-    __table_args__ = (
-        UniqueConstraint("game_id", "draw_date", name="uq_draw_game_date"),
-    )
+    __table_args__ = (UniqueConstraint("game_id", "draw_date", name="uq_draw_game_date"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     game_id: Mapped[int] = mapped_column(ForeignKey("game_definitions.id"), index=True)

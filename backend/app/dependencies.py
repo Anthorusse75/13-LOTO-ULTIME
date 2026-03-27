@@ -12,7 +12,6 @@ from app.repositories.portfolio_repository import PortfolioRepository
 from app.repositories.statistics_repository import StatisticsRepository
 from app.repositories.user_repository import UserRepository
 
-
 # ── Database session ──
 
 

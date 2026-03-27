@@ -1,7 +1,7 @@
 """Tests for SQLAlchemy models."""
+
 from datetime import date, datetime
 
-import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.draw import Draw
@@ -37,9 +37,7 @@ class TestGameDefinitionModel:
 
 
 class TestDrawModel:
-    async def test_create_draw(
-        self, db_session: AsyncSession, sample_game: GameDefinition
-    ):
+    async def test_create_draw(self, db_session: AsyncSession, sample_game: GameDefinition):
         draw = Draw(
             game_id=sample_game.id,
             draw_date=date(2026, 3, 1),
@@ -52,9 +50,7 @@ class TestDrawModel:
         assert draw.id is not None
         assert draw.numbers == [1, 7, 23, 34, 45]
 
-    async def test_draw_repr(
-        self, db_session: AsyncSession, sample_game: GameDefinition
-    ):
+    async def test_draw_repr(self, db_session: AsyncSession, sample_game: GameDefinition):
         draw = Draw(
             game_id=sample_game.id,
             draw_date=date(2026, 3, 2),
@@ -105,9 +101,7 @@ class TestJobExecutionModel:
 
 
 class TestStatisticsSnapshotModel:
-    async def test_create_snapshot(
-        self, db_session: AsyncSession, sample_game: GameDefinition
-    ):
+    async def test_create_snapshot(self, db_session: AsyncSession, sample_game: GameDefinition):
         snapshot = StatisticsSnapshot(
             game_id=sample_game.id,
             computed_at=datetime(2026, 3, 1, 12, 0),
@@ -126,9 +120,7 @@ class TestStatisticsSnapshotModel:
 
 
 class TestScoredGridModel:
-    async def test_create_grid(
-        self, db_session: AsyncSession, sample_game: GameDefinition
-    ):
+    async def test_create_grid(self, db_session: AsyncSession, sample_game: GameDefinition):
         grid = ScoredGrid(
             game_id=sample_game.id,
             numbers=[3, 12, 25, 37, 44],
@@ -145,9 +137,7 @@ class TestScoredGridModel:
 
 
 class TestPortfolioModel:
-    async def test_create_portfolio(
-        self, db_session: AsyncSession, sample_game: GameDefinition
-    ):
+    async def test_create_portfolio(self, db_session: AsyncSession, sample_game: GameDefinition):
         portfolio = Portfolio(
             game_id=sample_game.id,
             name="Test Portfolio",
