@@ -27,7 +27,7 @@ Phase 6      Phase 7      Phase 8      Phase 9      Phase 10
 
 ## 2. Phase 1 — Architecture & Documentation
 
-> **Statut** : ✅ EN COURS  
+> **Statut** : ✅ TERMINÉE  
 > **Prérequis** : Aucun
 
 ### Livrables
@@ -36,33 +36,33 @@ Phase 6      Phase 7      Phase 8      Phase 9      Phase 10
 |---|---|---|
 | 1.1 | Rédaction des 18 documents d'architecture | ✅ |
 | 1.2 | Structure dossier projet | ✅ |
-| 1.3 | Validation croisée des documents | ⬜ |
-| 1.4 | Création du README.md racine | ⬜ |
+| 1.3 | Validation croisée des documents | ✅ |
+| 1.4 | Création du README.md racine | ✅ |
 
 ### Critères de complétion
 - [x] 18 documents rédigés et cohérents
-- [ ] README avec instructions de setup
-- [ ] Tous les cross-references valides
+- [x] README avec instructions de setup
+- [x] Tous les cross-references valides
 
 ---
 
 ## 3. Phase 2 — Fondations Backend
 
-> **Statut** : ⬜ À FAIRE  
+> **Statut** : ✅ TERMINÉE  
 > **Prérequis** : Phase 1
 
 ### Livrables
 
-| # | Tâche | Description |
-|---|---|---|
-| 2.1 | Initialisation projet Python | pyproject.toml, structure dossiers, venv |
-| 2.2 | Configuration (Settings) | Pydantic Settings, .env, YAML jeux |
-| 2.3 | Modèles SQLAlchemy | Tous les modèles du doc 05 |
-| 2.4 | Alembic setup | Init + première migration |
-| 2.5 | Repository pattern | BaseRepository + implémentations |
-| 2.6 | FastAPI app de base | main.py, lifespan, CORS, health check |
-| 2.7 | Logger structuré | Configuration structlog |
-| 2.8 | Tests fondations | Fixtures, factories, tests repo/config |
+| # | Tâche | Description | Statut |
+|---|---|---|---|
+| 2.1 | Initialisation projet Python | pyproject.toml, structure dossiers, venv | ✅ |
+| 2.2 | Configuration (Settings) | Pydantic Settings, .env, YAML jeux | ✅ |
+| 2.3 | Modèles SQLAlchemy | Tous les modèles du doc 05 | ✅ |
+| 2.4 | Alembic setup | Init + première migration | ✅ |
+| 2.5 | Repository pattern | BaseRepository + implémentations | ✅ |
+| 2.6 | FastAPI app de base | main.py, lifespan, CORS, health check | ✅ |
+| 2.7 | Logger structuré | Configuration structlog | ✅ |
+| 2.8 | Tests fondations | Fixtures, factories, tests repo/config | ✅ |
 
 ### Technologies initialisées
 - Python 3.11+, FastAPI, SQLAlchemy 2.0, Alembic, Pydantic v2
@@ -70,10 +70,10 @@ Phase 6      Phase 7      Phase 8      Phase 9      Phase 10
 - structlog, uvicorn
 
 ### Critères de complétion
-- [ ] `uvicorn app.main:app` démarre sans erreur
-- [ ] Migrations créent toutes les tables
-- [ ] `/health` retourne `{"status": "healthy"}`
-- [ ] Tests passent avec couverture > 80% sur ce code
+- [x] `uvicorn app.main:app` démarre sans erreur
+- [x] Migrations créent toutes les tables
+- [x] `/health` retourne `{"status": "healthy"}`
+- [x] Tests passent avec couverture > 80% sur ce code (81.68%)
 
 ---
 

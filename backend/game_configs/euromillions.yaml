@@ -1,0 +1,12 @@
+name: "EuroMillions"
+slug: "euromillions"
+numbers_pool: 50
+numbers_drawn: 5
+min_number: 1
+max_number: 50
+stars_pool: 12
+stars_drawn: 2
+star_name: "étoile"
+draw_frequency: "mar/ven"
+historical_source: "euromillions"
+description: "EuroMillions - Loterie européenne"

@@ -42,53 +42,53 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 ## Phase 2 — Fondations Backend
 
 ### 2.1 Initialisation projet
-- [ ] Répertoire `backend/` créé
-- [ ] `pyproject.toml` configuré (dependencies + dev-dependencies)
-- [ ] Environnement virtuel créé
-- [ ] Dépendances installées
-- [ ] Structure de dossiers conforme au doc 02
+- [x] Répertoire `backend/` créé
+- [x] `pyproject.toml` configuré (dependencies + dev-dependencies)
+- [x] Environnement virtuel créé
+- [x] Dépendances installées
+- [x] Structure de dossiers conforme au doc 02
 
 ### 2.2 Configuration
-- [ ] `app/core/config.py` — Pydantic Settings
-- [ ] `.env.example` avec toutes les variables
-- [ ] `configs/games/loto_fdj.yaml` créé
-- [ ] `configs/games/euromillions.yaml` créé
-- [ ] Configuration testée (unit test)
+- [x] `app/core/config.py` — Pydantic Settings
+- [x] `.env.example` avec toutes les variables
+- [x] `configs/games/loto_fdj.yaml` créé
+- [x] `configs/games/euromillions.yaml` créé
+- [x] Configuration testée (unit test)
 
 ### 2.3 Base de données
-- [ ] `app/models/base.py` — DeclarativeBase
-- [ ] `app/models/game_definition.py` — GameDefinition
-- [ ] `app/models/draw.py` — Draw
-- [ ] `app/models/statistics_snapshot.py` — StatisticsSnapshot
-- [ ] `app/models/scored_grid.py` — ScoredGrid
-- [ ] `app/models/portfolio.py` — Portfolio
-- [ ] `app/models/user.py` — User + UserRole enum
-- [ ] `app/models/job_execution.py` — JobExecution + JobStatus enum
-- [ ] Alembic initialisé
-- [ ] Migration initiale créée et testée (SQLite)
+- [x] `app/models/base.py` — DeclarativeBase
+- [x] `app/models/game.py` — GameDefinition
+- [x] `app/models/draw.py` — Draw
+- [x] `app/models/statistics.py` — StatisticsSnapshot
+- [x] `app/models/grid.py` — ScoredGrid
+- [x] `app/models/portfolio.py` — Portfolio
+- [x] `app/models/user.py` — User + UserRole enum
+- [x] `app/models/job.py` — JobExecution + JobStatus enum
+- [x] Alembic initialisé
+- [x] Migration initiale créée et testée (SQLite)
 - [ ] Migration testée (PostgreSQL)
 
 ### 2.4 Repositories
-- [ ] `app/repositories/base.py` — BaseRepository[T] générique
-- [ ] `app/repositories/game.py` — GameRepository
-- [ ] `app/repositories/draw.py` — DrawRepository
-- [ ] `app/repositories/statistics.py` — StatisticsRepository
-- [ ] `app/repositories/grid.py` — GridRepository
-- [ ] `app/repositories/portfolio.py` — PortfolioRepository
-- [ ] `app/repositories/user.py` — UserRepository
-- [ ] `app/repositories/job.py` — JobRepository
-- [ ] Tests d'intégration repositories
+- [x] `app/repositories/base.py` — BaseRepository[T] générique
+- [x] `app/repositories/game_repository.py` — GameRepository
+- [x] `app/repositories/draw_repository.py` — DrawRepository
+- [x] `app/repositories/statistics_repository.py` — StatisticsRepository
+- [x] `app/repositories/grid_repository.py` — GridRepository
+- [x] `app/repositories/portfolio_repository.py` — PortfolioRepository
+- [x] `app/repositories/user_repository.py` — UserRepository
+- [x] `app/repositories/job_repository.py` — JobRepository
+- [x] Tests d'intégration repositories
 
 ### 2.5 Application FastAPI
-- [ ] `app/main.py` — create_app() avec lifespan
-- [ ] CORS middleware configuré
-- [ ] Timing middleware
-- [ ] Security headers middleware
-- [ ] Logging context middleware
-- [ ] `/health` endpoint fonctionnel
-- [ ] `/docs` (Swagger) accessible
-- [ ] structlog configuré (JSON + console)
-- [ ] Tests de démarrage application
+- [x] `app/main.py` — create_app() avec lifespan
+- [x] CORS middleware configuré
+- [x] Timing middleware
+- [x] Security headers middleware
+- [x] Logging context middleware
+- [x] `/health` endpoint fonctionnel
+- [x] `/docs` (Swagger) accessible
+- [x] structlog configuré (JSON + console)
+- [x] Tests de démarrage application
 
 ---
 

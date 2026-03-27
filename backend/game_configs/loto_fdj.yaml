@@ -1,0 +1,12 @@
+name: "Loto FDJ"
+slug: "loto-fdj"
+numbers_pool: 49
+numbers_drawn: 5
+min_number: 1
+max_number: 49
+stars_pool: 10
+stars_drawn: 1
+star_name: "numéro chance"
+draw_frequency: "lun/mer/sam"
+historical_source: "fdj"
+description: "Loto Français - Française des Jeux"
