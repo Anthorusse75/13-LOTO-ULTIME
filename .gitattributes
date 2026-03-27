@@ -1,0 +1,49 @@
+# Git attributes — normalisation des fins de ligne
+# et détection des fichiers binaires
+
+# ── Normalisation auto ──
+* text=auto eol=lf
+
+# ── Fichiers texte explicites ──
+*.py        text diff=python
+*.js        text
+*.jsx       text
+*.ts        text
+*.tsx       text
+*.json      text
+*.yaml      text
+*.yml       text
+*.toml      text
+*.md        text diff=markdown
+*.html      text diff=html
+*.css       text diff=css
+*.sql       text
+*.sh        text eol=lf
+*.bash      text eol=lf
+*.cfg       text
+*.ini       text
+*.env       text
+
+# ── Windows batch (garder CRLF) ──
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# ── Fichiers binaires ──
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.svg       text
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.eot       binary
+*.db        binary
+*.sqlite    binary
+*.sqlite3   binary
+
+# ── Lock files (ne pas diff) ──
+package-lock.json   -diff
+pnpm-lock.yaml      -diff
