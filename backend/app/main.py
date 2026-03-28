@@ -6,6 +6,9 @@ import structlog
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from slowapi import Limiter
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from app.core.config import get_settings
 from app.core.exceptions import (
@@ -20,6 +23,8 @@ from app.core.logging import setup_logging
 from app.models.base import close_db, init_db
 
 settings = get_settings()
+
+limiter = Limiter(key_func=get_remote_address)
 
 
 async def _seed_games() -> None:
@@ -62,6 +67,19 @@ async def _seed_games() -> None:
         break
 
 
+async def _seed_admin() -> None:
+    """Seed the initial admin user if no users exist."""
+    from app.models.base import get_session
+    from app.repositories.user_repository import UserRepository
+    from app.services.auth import create_initial_admin
+
+    async for session in get_session():
+        repo = UserRepository(session)
+        await create_initial_admin(repo, settings)
+        await session.commit()
+        break
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup / shutdown logic."""
@@ -72,6 +90,9 @@ async def lifespan(app: FastAPI):
 
     # Seed games from YAML if table is empty
     await _seed_games()
+
+    # Seed initial admin user if no users exist
+    await _seed_admin()
 
     # Start scheduler if enabled
     scheduler = None
@@ -93,6 +114,13 @@ async def lifespan(app: FastAPI):
     logger.info("application_stopped")
 
 
+async def _rate_limit_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+    return JSONResponse(
+        status_code=429,
+        content={"detail": "Trop de requêtes — réessayez plus tard"},
+    )
+
+
 def create_app() -> FastAPI:
     """Factory de l'application FastAPI."""
     app = FastAPI(
@@ -100,6 +128,10 @@ def create_app() -> FastAPI:
         version=settings.APP_VERSION,
         lifespan=lifespan,
     )
+
+    # ── Rate Limiting ──
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_handler)  # type: ignore[arg-type]
 
     # ── CORS ──
     app.add_middleware(

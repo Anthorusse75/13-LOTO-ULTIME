@@ -7,6 +7,7 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.game import GameDefinition
+from tests.integration.api.conftest import override_auth
 from app.models.grid import ScoredGrid
 from app.models.statistics import StatisticsSnapshot
 
@@ -137,6 +138,7 @@ class TestGridsAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
@@ -176,6 +178,7 @@ class TestGridsAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
@@ -221,6 +224,7 @@ class TestGridsAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
@@ -248,6 +252,7 @@ class TestGridsAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.get(f"/api/v1/games/{game.id}/grids/top?limit=10")
@@ -277,6 +282,7 @@ class TestGridsAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.get(f"/api/v1/games/{game.id}/grids/{grids[0].id}")
@@ -303,6 +309,7 @@ class TestGridsAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.get(f"/api/v1/games/{game.id}/grids/99999")
@@ -327,6 +334,7 @@ class TestGridsAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
@@ -378,6 +386,7 @@ class TestGridsAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(

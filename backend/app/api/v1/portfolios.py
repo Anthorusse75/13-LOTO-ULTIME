@@ -4,14 +4,15 @@ from fastapi import APIRouter, Depends, HTTPException, Path
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
-from app.dependencies import get_grid_service
+from app.dependencies import get_grid_service, require_role
+from app.models.user import UserRole
 from app.schemas.portfolio import (
     PortfolioGenerateRequest,
     PortfolioGenerateResponse,
 )
 from app.services.grid import GridService
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
 
 _game_configs = load_all_game_configs()
 

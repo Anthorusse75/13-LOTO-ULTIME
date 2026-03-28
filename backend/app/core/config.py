@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = Field(..., min_length=32)
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_MINUTES: int = 60
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # Admin initial
     ADMIN_EMAIL: str = "admin@loto-ultime.local"

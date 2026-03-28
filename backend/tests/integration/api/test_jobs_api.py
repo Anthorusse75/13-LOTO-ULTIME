@@ -6,6 +6,7 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 
 from app.models.base import Base, close_db, init_db
+from tests.integration.api.conftest import override_auth
 
 
 @pytest.fixture
@@ -17,6 +18,7 @@ async def client():
     from app.main import create_app
 
     test_app = create_app()
+    override_auth(test_app)
 
     init_db("sqlite+aiosqlite:///:memory:")
     from app.models.base import _engine as eng

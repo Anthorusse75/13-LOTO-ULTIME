@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from .auth import router as auth_router
 from .draws import router as draws_router
 from .games import router as games_router
 from .grids import router as grids_router
@@ -10,6 +11,7 @@ from .simulations import router as simulations_router
 from .statistics import router as statistics_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
+api_v1_router.include_router(auth_router, prefix="/auth", tags=["Auth"])
 api_v1_router.include_router(games_router, prefix="/games", tags=["Games"])
 api_v1_router.include_router(health_router, prefix="/system", tags=["System"])
 api_v1_router.include_router(jobs_router, prefix="/jobs", tags=["Jobs"])

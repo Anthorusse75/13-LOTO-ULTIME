@@ -1,12 +1,17 @@
 import { useJobs, useSchedulerStatus, useTriggerJob } from "@/hooks/useJobs";
 import type { JobExecution, JobStatus } from "@/types/job";
+import type { User, UserRole } from "@/types/user";
+import { authService } from "@/services/authService";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   CheckCircle2,
   Clock,
   Database,
   Loader2,
   Play,
+  Plus,
   Settings,
+  UserPlus,
   Users,
   XCircle,
 } from "lucide-react";
@@ -202,8 +207,228 @@ function JobsPanel() {
   );
 }
 
+const ROLE_LABELS: Record<UserRole, string> = {
+  ADMIN: "Administrateur",
+  UTILISATEUR: "Utilisateur",
+  CONSULTATION: "Consultation",
+};
+
+const ROLE_COLORS: Record<UserRole, string> = {
+  ADMIN: "bg-accent-red/20 text-accent-red",
+  UTILISATEUR: "bg-accent-blue/20 text-accent-blue",
+  CONSULTATION: "bg-accent-yellow/20 text-accent-yellow",
+};
+
+function UsersPanel() {
+  const queryClient = useQueryClient();
+  const { data: users, isLoading } = useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: authService.getUsers,
+  });
+
+  const [showForm, setShowForm] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<UserRole>("CONSULTATION");
+  const [formError, setFormError] = useState("");
+
+  const createMutation = useMutation({
+    mutationFn: authService.register,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      setShowForm(false);
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setRole("CONSULTATION");
+      setFormError("");
+    },
+    onError: (err: unknown) => {
+      const msg =
+        err instanceof Error ? err.message : "Erreur lors de la création";
+      setFormError(msg);
+    },
+  });
+
+  const handleCreate = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError("");
+    createMutation.mutate({ username, email, password, role });
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Header with create button */}
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-text-secondary">
+          {users?.length ?? 0} utilisateur(s)
+        </span>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-accent-blue text-white text-sm hover:bg-accent-blue/90 transition-colors"
+        >
+          {showForm ? (
+            <XCircle size={14} />
+          ) : (
+            <UserPlus size={14} />
+          )}
+          {showForm ? "Annuler" : "Nouvel utilisateur"}
+        </button>
+      </div>
+
+      {/* Create user form */}
+      {showForm && (
+        <form
+          onSubmit={handleCreate}
+          className="bg-surface rounded-lg border border-accent-blue/30 p-4 space-y-3"
+        >
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Plus size={14} /> Créer un utilisateur
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-text-secondary block mb-1">
+                Nom d'utilisateur
+              </label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                minLength={3}
+                maxLength={50}
+                className="w-full bg-surface-hover border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent-blue"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-text-secondary block mb-1">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full bg-surface-hover border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent-blue"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-text-secondary block mb-1">
+                Mot de passe
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={8}
+                autoComplete="new-password"
+                className="w-full bg-surface-hover border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent-blue"
+              />
+              <p className="text-xs text-text-secondary mt-0.5">
+                Min. 8 car., 1 majuscule, 1 minuscule, 1 chiffre
+              </p>
+            </div>
+            <div>
+              <label className="text-xs text-text-secondary block mb-1">
+                Rôle
+              </label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value as UserRole)}
+                className="w-full bg-surface-hover border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent-blue"
+              >
+                <option value="CONSULTATION">Consultation</option>
+                <option value="UTILISATEUR">Utilisateur</option>
+                <option value="ADMIN">Administrateur</option>
+              </select>
+            </div>
+          </div>
+          {formError && (
+            <p className="text-xs text-accent-red">{formError}</p>
+          )}
+          <button
+            type="submit"
+            disabled={createMutation.isPending}
+            className="flex items-center gap-2 px-4 py-1.5 rounded-md bg-accent-green text-white text-sm hover:bg-accent-green/90 disabled:opacity-50"
+          >
+            {createMutation.isPending && (
+              <Loader2 size={14} className="animate-spin" />
+            )}
+            Créer
+          </button>
+        </form>
+      )}
+
+      {/* User list */}
+      <div className="bg-surface rounded-lg border border-border overflow-hidden">
+        {isLoading ? (
+          <div className="p-6 text-center text-text-secondary">
+            <Loader2 className="animate-spin mx-auto mb-2" size={20} />
+            Chargement…
+          </div>
+        ) : !users?.length ? (
+          <div className="p-6 text-center text-text-secondary text-sm">
+            Aucun utilisateur.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-text-secondary border-b border-border">
+                  <th className="px-4 py-2 font-medium">ID</th>
+                  <th className="px-4 py-2 font-medium">Utilisateur</th>
+                  <th className="px-4 py-2 font-medium">Email</th>
+                  <th className="px-4 py-2 font-medium">Rôle</th>
+                  <th className="px-4 py-2 font-medium">Actif</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u) => (
+                  <tr
+                    key={u.id}
+                    className="border-b border-border/50 hover:bg-surface-hover/50 transition-colors"
+                  >
+                    <td className="px-4 py-2 font-mono text-xs text-text-secondary">
+                      {u.id}
+                    </td>
+                    <td className="px-4 py-2 font-medium">{u.username}</td>
+                    <td className="px-4 py-2 text-text-secondary">
+                      {u.email}
+                    </td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${ROLE_COLORS[u.role]}`}
+                      >
+                        {ROLE_LABELS[u.role]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2">
+                      {u.is_active ? (
+                        <CheckCircle2
+                          size={16}
+                          className="text-accent-green"
+                        />
+                      ) : (
+                        <XCircle size={16} className="text-accent-red" />
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<"overview" | "jobs">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "jobs" | "users">(
+    "overview"
+  );
 
   return (
     <div className="space-y-6">
@@ -230,6 +455,16 @@ export default function AdminPage() {
           }`}
         >
           Jobs & Scheduler
+        </button>
+        <button
+          onClick={() => setActiveTab("users")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === "users"
+              ? "border-accent-blue text-accent-blue"
+              : "border-transparent text-text-secondary hover:text-text"
+          }`}
+        >
+          Utilisateurs
         </button>
       </div>
 
@@ -268,7 +503,10 @@ export default function AdminPage() {
             </div>
           </button>
 
-          <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
+          <button
+            onClick={() => setActiveTab("users")}
+            className="bg-surface rounded-lg border border-accent-purple/30 p-6 flex items-start gap-4 text-left hover:border-accent-purple/60 transition-colors"
+          >
             <div className="p-2 rounded-lg bg-accent-purple/20">
               <Users size={20} className="text-accent-purple" />
             </div>
@@ -277,11 +515,11 @@ export default function AdminPage() {
               <p className="text-sm text-text-secondary">
                 Gestion des comptes et des rôles.
               </p>
-              <p className="text-xs text-text-secondary mt-2 italic">
-                À venir — Phase 9
+              <p className="text-xs text-accent-purple mt-2 font-medium">
+                Actif — voir le détail →
               </p>
             </div>
-          </div>
+          </button>
 
           <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
             <div className="p-2 rounded-lg bg-accent-yellow/20">
@@ -301,6 +539,7 @@ export default function AdminPage() {
       )}
 
       {activeTab === "jobs" && <JobsPanel />}
+      {activeTab === "users" && <UsersPanel />}
     </div>
   );
 }

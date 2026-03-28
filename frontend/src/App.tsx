@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import RequireAuth from "@/components/auth/RequireAuth";
+import RequireRole from "@/components/auth/RequireRole";
 import MainLayout from "@/components/layout/MainLayout";
 import DashboardPage from "@/pages/DashboardPage";
 import DrawsPage from "@/pages/DrawsPage";
@@ -14,14 +16,27 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route element={<MainLayout />}>
+      <Route
+        element={
+          <RequireAuth>
+            <MainLayout />
+          </RequireAuth>
+        }
+      >
         <Route index element={<DashboardPage />} />
         <Route path="draws" element={<DrawsPage />} />
         <Route path="statistics" element={<StatisticsPage />} />
         <Route path="grids" element={<GridsPage />} />
         <Route path="portfolio" element={<PortfolioPage />} />
         <Route path="simulation" element={<SimulationPage />} />
-        <Route path="admin" element={<AdminPage />} />
+        <Route
+          path="admin"
+          element={
+            <RequireRole minRole="ADMIN">
+              <AdminPage />
+            </RequireRole>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

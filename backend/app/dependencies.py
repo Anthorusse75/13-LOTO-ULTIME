@@ -1,9 +1,15 @@
 from collections.abc import AsyncGenerator
 
 from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import Settings, get_settings
+from app.core.exceptions import AuthenticationError, AuthorizationError
+from app.core.security import decode_access_token
 from app.models.base import get_session
+from app.models.user import User, UserRole
 from app.repositories.draw_repository import DrawRepository
 from app.repositories.game_repository import GameRepository
 from app.repositories.grid_repository import GridRepository
@@ -11,11 +17,14 @@ from app.repositories.job_repository import JobRepository
 from app.repositories.portfolio_repository import PortfolioRepository
 from app.repositories.statistics_repository import StatisticsRepository
 from app.repositories.user_repository import UserRepository
+from app.services.auth import AuthService
 from app.services.grid import GridService
 from app.services.simulation import SimulationService
 from app.services.statistics import StatisticsService
 
 # ── Database session ──
+
+_bearer = HTTPBearer(auto_error=False)
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -80,3 +89,57 @@ def get_simulation_service(
     stats_repo: StatisticsRepository = Depends(get_statistics_repository),
 ) -> SimulationService:
     return SimulationService(draw_repo, stats_repo)
+
+
+# ── Auth ──
+
+
+def get_auth_service(
+    user_repo: UserRepository = Depends(get_user_repository),
+    settings: Settings = Depends(get_settings),
+) -> AuthService:
+    return AuthService(user_repo, settings)
+
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
+    user_repo: UserRepository = Depends(get_user_repository),
+    settings: Settings = Depends(get_settings),
+) -> User:
+    """Decode JWT and return the authenticated user."""
+    if credentials is None:
+        raise AuthenticationError("Token manquant")
+
+    try:
+        payload = decode_access_token(
+            credentials.credentials, settings.SECRET_KEY, settings.JWT_ALGORITHM
+        )
+        if payload.get("type") != "access":
+            raise AuthenticationError("Type de token invalide")
+        user_id = int(payload["sub"])
+    except (JWTError, KeyError, ValueError) as exc:
+        raise AuthenticationError("Token invalide ou expiré") from exc
+
+    user = await user_repo.get(user_id)
+    if user is None or not user.is_active:
+        raise AuthenticationError("Utilisateur inactif ou inexistant")
+
+    return user
+
+
+def require_role(minimum_role: UserRole):
+    """FastAPI dependency that checks the user has the minimum required role."""
+    ROLE_HIERARCHY = {
+        UserRole.CONSULTATION: 1,
+        UserRole.UTILISATEUR: 2,
+        UserRole.ADMIN: 3,
+    }
+
+    async def role_checker(current_user: User = Depends(get_current_user)) -> User:
+        if ROLE_HIERARCHY.get(current_user.role, 0) < ROLE_HIERARCHY[minimum_role]:
+            raise AuthorizationError(
+                f"Accès réservé au rôle {minimum_role.value} minimum"
+            )
+        return current_user
+
+    return role_checker

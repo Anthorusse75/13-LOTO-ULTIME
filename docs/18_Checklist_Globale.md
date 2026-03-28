@@ -195,7 +195,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] Axios instance avec intercepteur JWT
 - [x] TanStack Query configuré (staleTime 5min, retry 1)
 - [x] Zustand stores (auth + game + settings) avec persist
-- [x] React Router v6 avec routes — guards auth → Phase 9
+- [x] React Router v6 avec routes — guards auth (RequireAuth + RequireRole)
 
 ### 7.2 Layout
 - [x] Sidebar navigation (collapse/expand, 7 nav items, icônes Lucide)
@@ -203,7 +203,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] Layout responsive (MainLayout flex + Outlet)
 
 ### 7.3 Pages
-- [x] Login — Register → Phase 9
+- [x] Login — Register (admin crée via page Admin > Utilisateurs)
 - [x] Dashboard (KPIs, graphiques fréquence, top 5 grilles, 5 derniers tirages)
 - [x] Tirages (liste paginée avec DrawBalls)
 - [x] Statistiques — onglet Fréquences (heatmap + top/bottom 10)
@@ -221,7 +221,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] Simulation — paramètres + résultats (3 onglets : Monte Carlo, Stabilité, Comparaison)
 - [x] Admin — monitoring système (placeholder Phase 8-9)
 - [x] Admin — gestion jobs (tableau historique, boutons trigger, statut scheduler)
-- [ ] Admin — gestion utilisateurs → Phase 9
+- [x] Admin — gestion utilisateurs (onglet Utilisateurs : liste + création)
 
 ### 7.4 Composants
 - [x] DrawBalls (affichage numéros + étoiles, 3 tailles, highlights)
@@ -262,21 +262,25 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 
 ## Phase 9 — Sécurité & Auth
 
-- [ ] `app/core/security.py` — hash_password, verify_password, JWT
-- [ ] POST /auth/login fonctionnel
-- [ ] POST /auth/register fonctionnel
-- [ ] POST /auth/refresh fonctionnel
-- [ ] Dépendance `get_current_user`
-- [ ] Dépendance `require_role`
-- [ ] RBAC appliqué sur tous les endpoints
-- [ ] Matrice permissions vérifiée
-- [ ] Rate limiting configuré (slowapi)
-- [ ] Security headers middleware
-- [ ] Validation mot de passe (complexité)
-- [ ] Création admin initial au démarrage
-- [ ] Audit logging des actions sensibles
-- [ ] Tests auth (login, token, rôles, injection)
-- [ ] Pas d'accès possible sans token
+- [x] `app/core/security.py` — hash_password, verify_password, JWT (access + refresh tokens)
+- [x] POST /auth/login fonctionnel (rate limited 5/min)
+- [x] POST /auth/register fonctionnel (admin only, rate limited 3/min)
+- [x] POST /auth/refresh fonctionnel
+- [x] Dépendance `get_current_user` (JWT decode + user lookup)
+- [x] Dépendance `require_role` (hiérarchie ADMIN > UTILISATEUR > CONSULTATION)
+- [x] RBAC appliqué sur tous les endpoints (jobs=ADMIN, grids/portfolios/simulations=UTILISATEUR, bayesian/graph=UTILISATEUR, recompute=ADMIN, games/draws/stats basiques=public)
+- [x] Matrice permissions vérifiée
+- [x] Rate limiting configuré (slowapi 0.1.9 — login 5/min, register 3/min)
+- [x] Security headers middleware (x-content-type-options, x-frame-options)
+- [x] Validation mot de passe (min 8 car., 1 majuscule, 1 minuscule, 1 chiffre)
+- [x] Création admin initial au démarrage (halila.olivier@free.fr)
+- [x] Audit logging des actions sensibles (structlog audit logger)
+- [x] Tests auth (23 tests : login, token, rôles, refresh, validation, admin seed)
+- [x] Pas d'accès possible sans token (401 + redirect /login)
+- [x] Frontend: RequireAuth guard + RequireRole pour admin
+- [x] Frontend: page Admin > Utilisateurs (liste + création)
+- [x] Frontend: sidebar conditionnel (admin link masqué pour non-admin)
+- [x] Frontend: logout + user info dans sidebar
 
 ---
 

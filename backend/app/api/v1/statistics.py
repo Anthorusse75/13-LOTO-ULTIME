@@ -5,9 +5,12 @@ from fastapi import APIRouter, Depends, Query
 from app.core.exceptions import GameNotFoundError, InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
 from app.dependencies import (
+    get_current_user,
     get_game_repository,
     get_statistics_service,
+    require_role,
 )
+from app.models.user import User, UserRole
 from app.repositories.game_repository import GameRepository
 from app.schemas.statistics import (
     BayesianItem,
@@ -173,6 +176,7 @@ async def get_distribution(
 async def get_bayesian(
     game_id: int,
     stats_service: StatisticsService = Depends(get_statistics_service),
+    _user: User = Depends(require_role(UserRole.UTILISATEUR)),
 ):
     """Get Bayesian posterior estimates."""
     snapshot = await _get_snapshot(game_id, stats_service)
@@ -190,6 +194,7 @@ async def get_bayesian(
 async def get_graph(
     game_id: int,
     stats_service: StatisticsService = Depends(get_statistics_service),
+    _user: User = Depends(require_role(UserRole.UTILISATEUR)),
 ):
     """Get graph analysis metrics."""
     snapshot = await _get_snapshot(game_id, stats_service)
@@ -216,6 +221,7 @@ async def recompute_statistics(
     game_id: int,
     game_repo: GameRepository = Depends(get_game_repository),
     stats_service: StatisticsService = Depends(get_statistics_service),
+    _user: User = Depends(require_role(UserRole.ADMIN)),
 ):
     """Force full recomputation of all statistics."""
     game_def = await game_repo.get(game_id)

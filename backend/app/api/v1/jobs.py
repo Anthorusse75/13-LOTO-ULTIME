@@ -4,12 +4,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies import get_db, get_job_repository
+from app.dependencies import get_db, get_job_repository, require_role
 from app.models.job import JobExecution, JobStatus
+from app.models.user import UserRole
 from app.repositories.job_repository import JobRepository
 from app.schemas.job import JobExecutionResponse
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_role(UserRole.ADMIN))])
 
 # Allowed jobs for manual triggering
 TRIGGERABLE_JOBS = {

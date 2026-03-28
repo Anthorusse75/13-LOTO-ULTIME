@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.game import GameDefinition
 from app.models.statistics import StatisticsSnapshot
+from tests.integration.api.conftest import override_auth
 
 
 @pytest.fixture
@@ -100,6 +101,7 @@ class TestPortfoliosAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
@@ -140,6 +142,7 @@ class TestPortfoliosAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
@@ -185,6 +188,7 @@ class TestPortfoliosAPI:
             from app.main import create_app
 
             test_app = create_app()
+            override_auth(test_app)
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(

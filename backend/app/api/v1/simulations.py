@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Path
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
-from app.dependencies import get_simulation_service
+from app.dependencies import get_simulation_service, require_role
+from app.models.user import UserRole
 from app.schemas.simulation import (
     ComparisonRequest,
     ComparisonResponse,
@@ -17,7 +18,7 @@ from app.schemas.simulation import (
 )
 from app.services.simulation import SimulationService
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
 
 _game_configs = load_all_game_configs()
 

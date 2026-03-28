@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.draw import Draw
 from app.models.game import GameDefinition
 from app.models.statistics import StatisticsSnapshot
+from tests.integration.api.conftest import override_auth
 
 
 @pytest.fixture
@@ -155,6 +156,7 @@ async def stats_client(engine, db_session, game_with_snapshot):
     from app.main import create_app
 
     test_app = create_app()
+    override_auth(test_app)
 
     # Manually init DB with the test engine
     from app.models import base as base_module

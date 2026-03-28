@@ -20,7 +20,17 @@ def create_access_token(
     """Crée un token JWT signé."""
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(minutes=expires_minutes)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "access"})
+    return jwt.encode(to_encode, secret_key, algorithm=algorithm)
+
+
+def create_refresh_token(
+    data: dict, secret_key: str, algorithm: str = "HS256", expires_days: int = 7
+) -> str:
+    """Crée un refresh token JWT signé."""
+    to_encode = data.copy()
+    expire = datetime.now(UTC) + timedelta(days=expires_days)
+    to_encode.update({"exp": expire, "type": "refresh"})
     return jwt.encode(to_encode, secret_key, algorithm=algorithm)
 
 

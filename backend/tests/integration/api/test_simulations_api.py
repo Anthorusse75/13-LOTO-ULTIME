@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.draw import Draw
 from app.models.game import GameDefinition
+from tests.integration.api.conftest import override_auth
 from app.models.statistics import StatisticsSnapshot
 
 
@@ -128,7 +129,9 @@ class TestSimulationAPI:
         try:
             from app.main import create_app
 
-            transport = ASGITransport(app=create_app())
+            _app = create_app()
+            override_auth(_app)
+            transport = ASGITransport(app=_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
                     f"/api/v1/games/{game.id}/simulation/monte-carlo",
@@ -153,7 +156,9 @@ class TestSimulationAPI:
         try:
             from app.main import create_app
 
-            transport = ASGITransport(app=create_app())
+            _app = create_app()
+            override_auth(_app)
+            transport = ASGITransport(app=_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
                     f"/api/v1/games/{game.id}/simulation/monte-carlo/portfolio",
@@ -182,7 +187,9 @@ class TestSimulationAPI:
         try:
             from app.main import create_app
 
-            transport = ASGITransport(app=create_app())
+            _app = create_app()
+            override_auth(_app)
+            transport = ASGITransport(app=_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
                     f"/api/v1/games/{game.id}/simulation/stability",
@@ -205,7 +212,9 @@ class TestSimulationAPI:
         try:
             from app.main import create_app
 
-            transport = ASGITransport(app=create_app())
+            _app = create_app()
+            override_auth(_app)
+            transport = ASGITransport(app=_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
                     f"/api/v1/games/{game.id}/simulation/compare-random",
@@ -243,7 +252,9 @@ class TestSimulationAPI:
         try:
             from app.main import create_app
 
-            transport = ASGITransport(app=create_app())
+            _app = create_app()
+            override_auth(_app)
+            transport = ASGITransport(app=_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 resp = await client.post(
                     f"/api/v1/games/{game.id}/simulation/compare-random",
