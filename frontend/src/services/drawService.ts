@@ -1,5 +1,5 @@
-import api from "./api";
 import type { Draw } from "@/types/draw";
+import api from "./api";
 
 export const drawService = {
   getDraws: async (gameId: number, skip = 0, limit = 50): Promise<Draw[]> => {

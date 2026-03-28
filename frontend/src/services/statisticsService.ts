@@ -1,14 +1,14 @@
-import api from "./api";
 import type {
-  StatisticsResponse,
+  BayesianItem,
+  CooccurrenceResponse,
+  DistributionResponse,
   FrequencyItem,
   GapItem,
-  CooccurrenceResponse,
-  TemporalResponse,
-  DistributionResponse,
-  BayesianItem,
   GraphResponse,
+  StatisticsResponse,
+  TemporalResponse,
 } from "@/types/statistics";
+import api from "./api";
 
 export const statisticsService = {
   getAll: async (gameId: number): Promise<StatisticsResponse> => {

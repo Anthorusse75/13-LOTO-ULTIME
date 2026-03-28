@@ -14,6 +14,6 @@ export const useGameStore = create<GameState>()(
       currentGameSlug: null,
       setGame: (id, slug) => set({ currentGameId: id, currentGameSlug: slug }),
     }),
-    { name: "game-storage" }
-  )
+    { name: "game-storage" },
+  ),
 );

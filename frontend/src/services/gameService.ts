@@ -1,5 +1,5 @@
-import api from "./api";
 import type { GameDefinition } from "@/types/game";
+import api from "./api";
 
 export const gameService = {
   getAll: async (): Promise<GameDefinition[]> => {

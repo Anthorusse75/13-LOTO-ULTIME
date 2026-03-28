@@ -303,19 +303,19 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 
 ## Récapitulatif
 
-| Phase                           | Tâches  | Statut     |
-| ------------------------------- | ------- | ---------- |
-| 1. Architecture & Documentation | 20      | ✅ Complète |
-| 2. Fondations Backend           | 33      | ✅ Complète |
-| 3. Moteur Statistique           | 18      | ✅ Complète |
-| 4. Moteur de Scoring            | 13      | ✅ Complète |
-| 5. Moteur d'Optimisation        | 14      | ✅ Complète |
-| 6. Moteur de Simulation         | 11      | ✅ Complète |
+| Phase                           | Tâches  | Statut        |
+| ------------------------------- | ------- | ------------- |
+| 1. Architecture & Documentation | 20      | ✅ Complète    |
+| 2. Fondations Backend           | 33      | ✅ Complète    |
+| 3. Moteur Statistique           | 18      | ✅ Complète    |
+| 4. Moteur de Scoring            | 13      | ✅ Complète    |
+| 5. Moteur d'Optimisation        | 14      | ✅ Complète    |
+| 6. Moteur de Simulation         | 11      | ✅ Complète    |
 | 7. Interface Frontend           | 39      | 🟡 33/39 (85%) |
-| 8. Scheduler & Jobs             | 16      | ⬜          |
-| 9. Sécurité & Auth              | 15      | ⬜          |
-| 10. Polish & Déploiement        | 16      | ⬜          |
-| **TOTAL**                       | **188** |            |
+| 8. Scheduler & Jobs             | 16      | ⬜             |
+| 9. Sécurité & Auth              | 15      | ⬜             |
+| 10. Polish & Déploiement        | 16      | ⬜             |
+| **TOTAL**                       | **188** |               |
 
 ---
 

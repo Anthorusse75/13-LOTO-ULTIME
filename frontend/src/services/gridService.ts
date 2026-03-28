@@ -1,19 +1,25 @@
-import api from "./api";
 import type {
-  GridScoreRequest,
-  GridScoreResponse,
   GridGenerateRequest,
   GridGenerateResponse,
   GridResponse,
+  GridScoreRequest,
+  GridScoreResponse,
 } from "@/types/grid";
+import api from "./api";
 
 export const gridService = {
-  score: async (gameId: number, req: GridScoreRequest): Promise<GridScoreResponse> => {
+  score: async (
+    gameId: number,
+    req: GridScoreRequest,
+  ): Promise<GridScoreResponse> => {
     const { data } = await api.post(`/games/${gameId}/grids/score`, req);
     return data;
   },
 
-  generate: async (gameId: number, req: GridGenerateRequest): Promise<GridGenerateResponse> => {
+  generate: async (
+    gameId: number,
+    req: GridGenerateRequest,
+  ): Promise<GridGenerateResponse> => {
     const { data } = await api.post(`/games/${gameId}/grids/generate`, req);
     return data;
   },
