@@ -12,6 +12,21 @@ class ScoreBreakdown(BaseModel):
     pattern_penalty: float
 
 
+class GridScoreRequest(BaseModel):
+    numbers: list[int] = Field(..., min_length=1)
+    stars: list[int] | None = None
+    profile: str = Field("equilibre", pattern=r"^(equilibre|tendance|contrarian|structurel)$")
+    weights: dict[str, float] | None = None
+
+
+class GridScoreResponse(BaseModel):
+    numbers: list[int]
+    stars: list[int] | None = None
+    total_score: float
+    score_breakdown: ScoreBreakdown
+    star_score: float | None = None
+
+
 class GridResponse(BaseModel):
     id: int
     numbers: list[int]

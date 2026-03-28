@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from .games import router as games_router
+from .grids import router as grids_router
 from .health import router as health_router
 from .statistics import router as statistics_router
 
@@ -11,4 +12,9 @@ api_v1_router.include_router(
     statistics_router,
     prefix="/games/{game_id}/statistics",
     tags=["Statistics"],
+)
+api_v1_router.include_router(
+    grids_router,
+    prefix="/games/{game_id}/grids",
+    tags=["Grids"],
 )

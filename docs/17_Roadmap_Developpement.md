@@ -14,7 +14,7 @@ Phase 1      Phase 2      Phase 3      Phase 4      Phase 5
  Archi        Fondations   Stats        Scoring      Optimisation
  & Docs       Backend      Engine       Engine       Engine
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-▓▓▓▓▓▓▓▓▓▓  ░░░░░░░░░░  ░░░░░░░░░░  ░░░░░░░░░░  ░░░░░░░░░░
+▓▓▓▓▓▓▓▓▓▓  ▓▓▓▓▓▓▓▓▓▓  ▓▓▓▓▓▓▓▓▓▓  ▓▓▓▓▓▓▓▓▓▓  ░░░░░░░░░░
 
 Phase 6      Phase 7      Phase 8      Phase 9      Phase 10
  Simulation   Frontend     Scheduler    Sécurité     Polish
@@ -107,30 +107,31 @@ Phase 6      Phase 7      Phase 8      Phase 9      Phase 10
 
 ## 5. Phase 4 — Moteur de Scoring
 
-> **Statut** : ⬜ À FAIRE  
+> **Statut** : ✅ TERMINÉE  
 > **Prérequis** : Phase 3
 
 ### Livrables
 
-| #    | Tâche                           | Description                   |
-| ---- | ------------------------------- | ----------------------------- |
-| 4.1  | FrequencyScoreCriterion         | Score basé ratio fréquence    |
-| 4.2  | GapScoreCriterion               | Sigmoïde des écarts           |
-| 4.3  | CooccurrenceScoreCriterion      | Affinité moyenne paires       |
-| 4.4  | StructureScoreCriterion         | Pair/impair, décades, etc.    |
-| 4.5  | BalanceScoreCriterion           | Écart positions idéales       |
-| 4.6  | PatternPenaltyCriterion         | Détection patterns anormaux   |
-| 4.7  | GridScorer                      | Orchestrateur multi-critères  |
-| 4.8  | Profils de poids                | 4 profils prédéfinis + custom |
-| 4.9  | Scoring étoiles/complémentaires | Score séparé 85%/15%          |
-| 4.10 | API /grids/score                | Endpoint scoring              |
-| 4.11 | Tests scoring                   | Cohérence, bornes, pénalités  |
+| #    | Tâche                           | Description                   | Statut |
+| ---- | ------------------------------- | ----------------------------- | ------ |
+| 4.1  | FrequencyCriterion              | Score basé ratio fréquence    | ✅      |
+| 4.2  | GapCriterion                    | Sigmoïde des écarts           | ✅      |
+| 4.3  | CooccurrenceCriterion           | Affinité moyenne paires       | ✅      |
+| 4.4  | StructureCriterion              | Pair/impair, décades, etc.    | ✅      |
+| 4.5  | BalanceCriterion                | Écart positions idéales       | ✅      |
+| 4.6  | PatternPenalty                  | Détection patterns anormaux   | ✅      |
+| 4.7  | GridScorer                      | Orchestrateur multi-critères  | ✅      |
+| 4.8  | Profils de poids                | 4 profils prédéfinis + custom | ✅      |
+| 4.9  | Scoring étoiles/complémentaires | Score séparé 85%/15%          | ✅      |
+| 4.10 | API /grids (3 endpoints)        | POST /score, GET /top, GET /  | ✅      |
+| 4.11 | Tests scoring                   | 62 tests (unit + intégration) | ✅      |
 
 ### Critères de complétion
-- [ ] Score toujours dans [0, 10]
-- [ ] Les 4 profils produisent des classements différents
-- [ ] Patterns détectés et pénalisés correctement
-- [ ] Tests : couverture ≥ 95%
+- [x] Score toujours dans [0, 1] (normalisé)
+- [x] Les 4 profils produisent des classements différents
+- [x] Patterns détectés et pénalisés correctement (6 types)
+- [x] Tests : couverture 100% sur tous les engines scoring
+- [x] Suite complète : 187 tests, 0 échec, 90.38% couverture globale
 
 ---
 

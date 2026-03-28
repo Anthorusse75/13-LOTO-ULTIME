@@ -123,22 +123,22 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 ## Phase 4 — Moteur de Scoring
 
 ### 4.1 Critères
-- [ ] `app/engines/scoring/frequency_criterion.py`
-- [ ] `app/engines/scoring/gap_criterion.py`
-- [ ] `app/engines/scoring/cooccurrence_criterion.py`
-- [ ] `app/engines/scoring/structure_criterion.py`
-- [ ] `app/engines/scoring/balance_criterion.py`
-- [ ] `app/engines/scoring/pattern_penalty.py`
-- [ ] Tests unitaires chaque critère
+- [x] `app/engines/scoring/frequency_criterion.py` — 100%
+- [x] `app/engines/scoring/gap_criterion.py` — 100%
+- [x] `app/engines/scoring/cooccurrence_criterion.py` — 100%
+- [x] `app/engines/scoring/structure_criterion.py` — 100%
+- [x] `app/engines/scoring/balance_criterion.py` — 100%
+- [x] `app/engines/scoring/pattern_penalty.py` — 100%
+- [x] Tests unitaires chaque critère (35 tests)
 
 ### 4.2 Scorer & API
-- [ ] `app/engines/scoring/scorer.py` — GridScorer
-- [ ] Profils de poids (4 prédéfinis + custom)
-- [ ] Scoring étoiles/complémentaires
-- [ ] Tests scorer (bornes, cohérence, profils)
-- [ ] `app/services/grid.py` — GridService
-- [ ] `app/api/routers/grids.py` — POST /grids/score
-- [ ] Tests intégration API
+- [x] `app/engines/scoring/scorer.py` — GridScorer — 100%
+- [x] Profils de poids (4 prédéfinis + custom)
+- [x] Scoring étoiles/complémentaires
+- [x] Tests scorer (bornes, cohérence, profils — 14 tests)
+- [x] `app/services/grid.py` — GridService — 100%
+- [x] `app/api/v1/grids.py` — POST /score, GET /top, GET /{grid_id}
+- [x] Tests intégration API (6 tests)
 
 ---
 
@@ -305,7 +305,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 | 1. Architecture & Documentation | 20      | ✅ Complète |
 | 2. Fondations Backend           | 33      | ✅ Complète |
 | 3. Moteur Statistique           | 18      | ✅ Complète |
-| 4. Moteur de Scoring            | 13      | ⬜          |
+| 4. Moteur de Scoring            | 13      | ✅ Complète |
 | 5. Moteur d'Optimisation        | 14      | ⬜          |
 | 6. Moteur de Simulation         | 11      | ⬜          |
 | 7. Interface Frontend           | 32      | ⬜          |
