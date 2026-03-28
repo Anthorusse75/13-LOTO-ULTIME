@@ -1,13 +1,13 @@
-import { useMutation } from "@tanstack/react-query";
 import { simulationService } from "@/services/simulationService";
 import { useGameStore } from "@/stores/gameStore";
-import { toast } from "sonner";
 import type {
+  ComparisonRequest,
   MonteCarloGridRequest,
   MonteCarloPortfolioRequest,
   StabilityRequest,
-  ComparisonRequest,
 } from "@/types/simulation";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function useMonteCarloGrid() {
   const gameId = useGameStore((s) => s.currentGameId);

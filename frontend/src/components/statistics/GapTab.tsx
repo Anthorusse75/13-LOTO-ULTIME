@@ -1,24 +1,27 @@
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { useGaps } from "@/hooks/useStatistics";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
-import { useGaps } from "@/hooks/useStatistics";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function GapTab() {
   const { data: gaps, isLoading } = useGaps();
 
   if (isLoading) return <LoadingSpinner />;
   if (!gaps || gaps.length === 0)
-    return <p className="text-text-secondary">Aucune donnée d'écart disponible.</p>;
+    return (
+      <p className="text-text-secondary">Aucune donnée d'écart disponible.</p>
+    );
 
   const sorted = [...gaps].sort((a, b) => b.current_gap - a.current_gap);
-  const avgExpected = gaps.reduce((s, g) => s + g.expected_gap, 0) / gaps.length;
+  const avgExpected =
+    gaps.reduce((s, g) => s + g.expected_gap, 0) / gaps.length;
 
   // Critical gaps: current_gap > 2 * expected_gap
   const critical = sorted.filter((g) => g.current_gap > 2 * g.expected_gap);
@@ -46,11 +49,18 @@ export default function GapTab() {
 
       {/* Chart */}
       <div className="bg-surface rounded-lg border border-border p-4">
-        <h3 className="text-sm font-semibold mb-3">Écarts courants par numéro</h3>
+        <h3 className="text-sm font-semibold mb-3">
+          Écarts courants par numéro
+        </h3>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={sorted.slice(0, 20)}>
-            <XAxis dataKey="number" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
-            <YAxis tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
+            <XAxis
+              dataKey="number"
+              tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
+            />
+            <YAxis
+              tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
+            />
             <Tooltip
               contentStyle={{
                 background: "var(--color-surface)",
@@ -62,12 +72,23 @@ export default function GapTab() {
               y={avgExpected}
               stroke="var(--color-accent-amber)"
               strokeDasharray="3 3"
-              label={{ value: "Moy. attendue", fill: "var(--color-accent-amber)", fontSize: 11 }}
+              label={{
+                value: "Moy. attendue",
+                fill: "var(--color-accent-amber)",
+                fontSize: 11,
+              }}
             />
-            <Bar dataKey="current_gap" fill="var(--color-accent-red)" radius={[4, 4, 0, 0]} />
+            <Bar
+              dataKey="current_gap"
+              fill="var(--color-accent-red)"
+              radius={[4, 4, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
-        <p className="text-xs text-text-secondary mt-2">Écart courant des 20 numéros les plus en retard. La ligne pointillée représente la moyenne attendue.</p>
+        <p className="text-xs text-text-secondary mt-2">
+          Écart courant des 20 numéros les plus en retard. La ligne pointillée
+          représente la moyenne attendue.
+        </p>
       </div>
 
       {/* Table */}
@@ -75,23 +96,34 @@ export default function GapTab() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-surface-hover">
-              <th className="px-4 py-2 text-left text-text-secondary">Numéro</th>
-              <th className="px-4 py-2 text-right text-text-secondary">Écart actuel</th>
+              <th className="px-4 py-2 text-left text-text-secondary">
+                Numéro
+              </th>
+              <th className="px-4 py-2 text-right text-text-secondary">
+                Écart actuel
+              </th>
               <th className="px-4 py-2 text-right text-text-secondary">Max</th>
-              <th className="px-4 py-2 text-right text-text-secondary">Moyen</th>
-              <th className="px-4 py-2 text-right text-text-secondary">Médian</th>
-              <th className="px-4 py-2 text-right text-text-secondary">Attendu</th>
+              <th className="px-4 py-2 text-right text-text-secondary">
+                Moyen
+              </th>
+              <th className="px-4 py-2 text-right text-text-secondary">
+                Médian
+              </th>
+              <th className="px-4 py-2 text-right text-text-secondary">
+                Attendu
+              </th>
             </tr>
           </thead>
           <tbody>
             {sorted.map((g) => (
-              <tr key={g.number} className="border-b border-border hover:bg-surface-hover">
+              <tr
+                key={g.number}
+                className="border-b border-border hover:bg-surface-hover"
+              >
                 <td className="px-4 py-2 font-mono">{g.number}</td>
                 <td
                   className={`px-4 py-2 text-right font-mono ${
-                    g.current_gap > 2 * g.expected_gap
-                      ? "text-accent-red"
-                      : ""
+                    g.current_gap > 2 * g.expected_gap ? "text-accent-red" : ""
                   }`}
                 >
                   {g.current_gap}

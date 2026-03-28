@@ -70,8 +70,7 @@ function mapDetailToFrench(detail: string): string | null {
       "Pas assez de tirages pour le calcul. Lancez l'import des tirages depuis l'administration.",
     "Internal server error":
       "Une erreur inattendue s'est produite. Réessayez dans quelques instants.",
-    "Not authenticated":
-      "Votre session a expiré. Veuillez vous reconnecter.",
+    "Not authenticated": "Votre session a expiré. Veuillez vous reconnecter.",
     "Rate limit exceeded":
       "Trop de requêtes. Veuillez patienter quelques instants.",
   };

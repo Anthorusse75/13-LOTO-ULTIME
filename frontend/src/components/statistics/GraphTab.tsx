@@ -1,7 +1,7 @@
-import { useEffect, useRef, useMemo } from "react";
-import * as d3 from "d3";
-import { useGraph } from "@/hooks/useStatistics";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { useGraph } from "@/hooks/useStatistics";
+import * as d3 from "d3";
+import { useEffect, useMemo, useRef } from "react";
 
 export default function GraphTab() {
   const { data: graph, isLoading } = useGraph();
@@ -9,7 +9,7 @@ export default function GraphTab() {
 
   const communityColors = useMemo(
     () => d3.scaleOrdinal(d3.schemeTableau10),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function GraphTab() {
         d3
           .forceLink(links)
           .id((d: d3.SimulationNodeDatum) => (d as { id: number }).id)
-          .distance(60)
+          .distance(60),
       )
       .force("charge", d3.forceManyBody().strength(-100))
       .force("center", d3.forceCenter(width / 2, height / 2));
@@ -57,9 +57,12 @@ export default function GraphTab() {
 
     // Zoom
     svg.call(
-      d3.zoom<SVGSVGElement, unknown>().scaleExtent([0.3, 5]).on("zoom", (event) => {
-        g.attr("transform", event.transform);
-      })
+      d3
+        .zoom<SVGSVGElement, unknown>()
+        .scaleExtent([0.3, 5])
+        .on("zoom", (event) => {
+          g.attr("transform", event.transform);
+        }),
     );
 
     // Links
@@ -90,20 +93,54 @@ export default function GraphTab() {
       .call(
         d3
           .drag<SVGCircleElement, (typeof nodes)[0]>()
-          .on("start", (event: d3.D3DragEvent<SVGCircleElement, (typeof nodes)[0], unknown>, d) => {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            (d as d3.SimulationNodeDatum).fx = (d as d3.SimulationNodeDatum).x;
-            (d as d3.SimulationNodeDatum).fy = (d as d3.SimulationNodeDatum).y;
-          })
-          .on("drag", (event: d3.D3DragEvent<SVGCircleElement, (typeof nodes)[0], unknown>, d) => {
-            (d as d3.SimulationNodeDatum).fx = event.x;
-            (d as d3.SimulationNodeDatum).fy = event.y;
-          })
-          .on("end", (event: d3.D3DragEvent<SVGCircleElement, (typeof nodes)[0], unknown>, d) => {
-            if (!event.active) simulation.alphaTarget(0);
-            (d as d3.SimulationNodeDatum).fx = null;
-            (d as d3.SimulationNodeDatum).fy = null;
-          }) as any
+          .on(
+            "start",
+            (
+              event: d3.D3DragEvent<
+                SVGCircleElement,
+                (typeof nodes)[0],
+                unknown
+              >,
+              d,
+            ) => {
+              if (!event.active) simulation.alphaTarget(0.3).restart();
+              (d as d3.SimulationNodeDatum).fx = (
+                d as d3.SimulationNodeDatum
+              ).x;
+              (d as d3.SimulationNodeDatum).fy = (
+                d as d3.SimulationNodeDatum
+              ).y;
+            },
+          )
+          .on(
+            "drag",
+            (
+              event: d3.D3DragEvent<
+                SVGCircleElement,
+                (typeof nodes)[0],
+                unknown
+              >,
+              d,
+            ) => {
+              (d as d3.SimulationNodeDatum).fx = event.x;
+              (d as d3.SimulationNodeDatum).fy = event.y;
+            },
+          )
+          .on(
+            "end",
+            (
+              event: d3.D3DragEvent<
+                SVGCircleElement,
+                (typeof nodes)[0],
+                unknown
+              >,
+              d,
+            ) => {
+              if (!event.active) simulation.alphaTarget(0);
+              (d as d3.SimulationNodeDatum).fx = null;
+              (d as d3.SimulationNodeDatum).fy = null;
+            },
+          ) as any,
       );
 
     // Labels
@@ -122,10 +159,22 @@ export default function GraphTab() {
 
     simulation.on("tick", () => {
       link
-        .attr("x1", (d: Record<string, unknown>) => (d.source as { x: number }).x)
-        .attr("y1", (d: Record<string, unknown>) => (d.source as { y: number }).y)
-        .attr("x2", (d: Record<string, unknown>) => (d.target as { x: number }).x)
-        .attr("y2", (d: Record<string, unknown>) => (d.target as { y: number }).y);
+        .attr(
+          "x1",
+          (d: Record<string, unknown>) => (d.source as { x: number }).x,
+        )
+        .attr(
+          "y1",
+          (d: Record<string, unknown>) => (d.source as { y: number }).y,
+        )
+        .attr(
+          "x2",
+          (d: Record<string, unknown>) => (d.target as { x: number }).x,
+        )
+        .attr(
+          "y2",
+          (d: Record<string, unknown>) => (d.target as { y: number }).y,
+        );
 
       node
         .attr("cx", (d) => (d as d3.SimulationNodeDatum).x!)
@@ -143,7 +192,9 @@ export default function GraphTab() {
 
   if (isLoading) return <LoadingSpinner />;
   if (!graph)
-    return <p className="text-text-secondary">Aucune donnée de graphe disponible.</p>;
+    return (
+      <p className="text-text-secondary">Aucune donnée de graphe disponible.</p>
+    );
 
   return (
     <div className="space-y-6">
@@ -153,7 +204,10 @@ export default function GraphTab() {
           Graphe de réseau — Communautés
         </h3>
         <svg ref={svgRef} className="w-full" style={{ height: 500 }} />
-        <p className="text-xs text-text-secondary mt-2">Réseau de co-occurrence : chaque couleur représente une communauté détectée, la taille des nœuds reflète la centralité.</p>
+        <p className="text-xs text-text-secondary mt-2">
+          Réseau de co-occurrence : chaque couleur représente une communauté
+          détectée, la taille des nœuds reflète la centralité.
+        </p>
       </div>
 
       {/* Stats */}

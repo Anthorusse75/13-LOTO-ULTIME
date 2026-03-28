@@ -1,17 +1,17 @@
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { useFrequencies } from "@/hooks/useStatistics";
+import { gameService } from "@/services/gameService";
+import { useGameStore } from "@/stores/gameStore";
+import { useQuery } from "@tanstack/react-query";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
 } from "recharts";
-import { useFrequencies } from "@/hooks/useStatistics";
-import { useGameStore } from "@/stores/gameStore";
 import NumberHeatmap from "./NumberHeatmap";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { useQuery } from "@tanstack/react-query";
-import { gameService } from "@/services/gameService";
 
 export default function FrequencyTab() {
   const { data: freqs, isLoading } = useFrequencies();
@@ -24,7 +24,11 @@ export default function FrequencyTab() {
 
   if (isLoading) return <LoadingSpinner />;
   if (!freqs || freqs.length === 0)
-    return <p className="text-text-secondary">Aucune donnée de fréquence disponible.</p>;
+    return (
+      <p className="text-text-secondary">
+        Aucune donnée de fréquence disponible.
+      </p>
+    );
 
   const sorted = [...freqs].sort((a, b) => b.relative - a.relative);
   const top10 = sorted.slice(0, 10);
@@ -56,7 +60,10 @@ export default function FrequencyTab() {
           <h3 className="text-sm font-semibold mb-3">Top 10 fréquences</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={top10} layout="vertical">
-              <XAxis type="number" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
+              <XAxis
+                type="number"
+                tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
+              />
               <YAxis
                 type="category"
                 dataKey="number"
@@ -70,10 +77,16 @@ export default function FrequencyTab() {
                   borderRadius: 6,
                 }}
               />
-              <Bar dataKey="relative" fill="var(--color-accent-green)" radius={[0, 4, 4, 0]} />
+              <Bar
+                dataKey="relative"
+                fill="var(--color-accent-green)"
+                radius={[0, 4, 4, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
-          <p className="text-xs text-text-secondary mt-2">Fréquence relative des 10 numéros les plus tirés.</p>
+          <p className="text-xs text-text-secondary mt-2">
+            Fréquence relative des 10 numéros les plus tirés.
+          </p>
         </div>
 
         {/* Bottom frequencies */}
@@ -81,7 +94,10 @@ export default function FrequencyTab() {
           <h3 className="text-sm font-semibold mb-3">Bottom 10 fréquences</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={bottom10} layout="vertical">
-              <XAxis type="number" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
+              <XAxis
+                type="number"
+                tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
+              />
               <YAxis
                 type="category"
                 dataKey="number"
@@ -95,10 +111,16 @@ export default function FrequencyTab() {
                   borderRadius: 6,
                 }}
               />
-              <Bar dataKey="relative" fill="var(--color-accent-red)" radius={[0, 4, 4, 0]} />
+              <Bar
+                dataKey="relative"
+                fill="var(--color-accent-red)"
+                radius={[0, 4, 4, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
-          <p className="text-xs text-text-secondary mt-2">Fréquence relative des 10 numéros les moins tirés.</p>
+          <p className="text-xs text-text-secondary mt-2">
+            Fréquence relative des 10 numéros les moins tirés.
+          </p>
         </div>
       </div>
 
@@ -107,16 +129,29 @@ export default function FrequencyTab() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-surface-hover">
-              <th className="px-4 py-2 text-left text-text-secondary">Numéro</th>
-              <th className="px-4 py-2 text-right text-text-secondary">Tirages</th>
-              <th className="px-4 py-2 text-right text-text-secondary">Fréquence</th>
-              <th className="px-4 py-2 text-right text-text-secondary">Ratio</th>
-              <th className="px-4 py-2 text-right text-text-secondary">Dernier vu</th>
+              <th className="px-4 py-2 text-left text-text-secondary">
+                Numéro
+              </th>
+              <th className="px-4 py-2 text-right text-text-secondary">
+                Tirages
+              </th>
+              <th className="px-4 py-2 text-right text-text-secondary">
+                Fréquence
+              </th>
+              <th className="px-4 py-2 text-right text-text-secondary">
+                Ratio
+              </th>
+              <th className="px-4 py-2 text-right text-text-secondary">
+                Dernier vu
+              </th>
             </tr>
           </thead>
           <tbody>
             {sorted.map((f) => (
-              <tr key={f.number} className="border-b border-border hover:bg-surface-hover">
+              <tr
+                key={f.number}
+                className="border-b border-border hover:bg-surface-hover"
+              >
                 <td className="px-4 py-2 font-mono">{f.number}</td>
                 <td className="px-4 py-2 text-right font-mono">{f.count}</td>
                 <td className="px-4 py-2 text-right font-mono">

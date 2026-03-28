@@ -1,8 +1,8 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { gridService } from "@/services/gridService";
 import { useGameStore } from "@/stores/gameStore";
-import { toast } from "sonner";
 import type { GridGenerateRequest, GridScoreRequest } from "@/types/grid";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function useTopGrids(limit = 10) {
   const gameId = useGameStore((s) => s.currentGameId);

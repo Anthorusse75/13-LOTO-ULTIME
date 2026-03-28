@@ -1,25 +1,31 @@
-import { useState } from "react";
-import {
-  useMonteCarloGrid,
-  useStability,
-  useCompareRandom,
-} from "@/hooks/useSimulation";
-import { useGameStore } from "@/stores/gameStore";
-import { useQuery } from "@tanstack/react-query";
-import { gameService } from "@/services/gameService";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 import InfoTooltip from "@/components/common/InfoTooltip";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
-import { Loader2, TrendingUp, BarChart3, ShieldCheck, Dices } from "lucide-react";
 import {
-  BarChart,
+  useCompareRandom,
+  useMonteCarloGrid,
+  useStability,
+} from "@/hooks/useSimulation";
+import { gameService } from "@/services/gameService";
+import { useGameStore } from "@/stores/gameStore";
+import { useQuery } from "@tanstack/react-query";
+import {
+  BarChart3,
+  Dices,
+  Loader2,
+  ShieldCheck,
+  TrendingUp,
+} from "lucide-react";
+import { useState } from "react";
+import {
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 
 type SimTab = "monte-carlo" | "stability" | "comparison";
@@ -46,8 +52,7 @@ export default function SimulationPage() {
       .map(Number)
       .filter((n) => !isNaN(n) && n > 0);
 
-  const isValid =
-    game && parseNumbers().length === game.numbers_drawn;
+  const isValid = game && parseNumbers().length === game.numbers_drawn;
 
   const tabs: { key: SimTab; label: string; icon: React.ReactNode }[] = [
     { key: "monte-carlo", label: "Monte Carlo", icon: <Dices size={14} /> },
@@ -94,7 +99,8 @@ export default function SimulationPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="text-xs text-text-secondary block mb-1">
-              Numéros ({game?.numbers_drawn ?? "?"} attendus, séparés par virgule)
+              Numéros ({game?.numbers_drawn ?? "?"} attendus, séparés par
+              virgule)
             </label>
             <input
               type="text"
@@ -159,13 +165,18 @@ export default function SimulationPage() {
             disabled={!isValid || isPending}
             className="px-6 py-2 bg-accent-blue text-white rounded-md text-sm font-medium hover:bg-accent-blue/90 disabled:opacity-50 flex items-center gap-2"
           >
-            {mcMutation.isPending && <Loader2 size={16} className="animate-spin" />}
+            {mcMutation.isPending && (
+              <Loader2 size={16} className="animate-spin" />
+            )}
             Lancer Monte Carlo
           </button>
 
           {!mc && !mcMutation.isPending && (
             <div className="bg-surface rounded-lg border border-border p-6 text-center">
-              <p className="text-text-secondary text-sm">Saisissez une grille et lancez la simulation Monte Carlo pour estimer vos chances de correspondance.</p>
+              <p className="text-text-secondary text-sm">
+                Saisissez une grille et lancez la simulation Monte Carlo pour
+                estimer vos chances de correspondance.
+              </p>
             </div>
           )}
 
@@ -177,30 +188,62 @@ export default function SimulationPage() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary flex items-center">Simulations<InfoTooltip text="Nombre total de tirages simulés aléatoirement." /></p>
-                  <p className="font-mono text-lg">{mc.n_simulations.toLocaleString()}</p>
+                  <p className="text-xs text-text-secondary flex items-center">
+                    Simulations
+                    <InfoTooltip text="Nombre total de tirages simulés aléatoirement." />
+                  </p>
+                  <p className="font-mono text-lg">
+                    {mc.n_simulations.toLocaleString()}
+                  </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary flex items-center">Moyenne correspondances<InfoTooltip text="Nombre moyen de numéros de votre grille retrouvés dans les tirages simulés." /></p>
-                  <p className="font-mono text-lg text-accent-green">{mc.avg_matches.toFixed(2)}</p>
+                  <p className="text-xs text-text-secondary flex items-center">
+                    Moyenne correspondances
+                    <InfoTooltip text="Nombre moyen de numéros de votre grille retrouvés dans les tirages simulés." />
+                  </p>
+                  <p className="font-mono text-lg text-accent-green">
+                    {mc.avg_matches.toFixed(2)}
+                  </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary flex items-center">Espérance théorique<InfoTooltip text="Nombre de correspondances attendu par les mathématiques pures (distribution hypergéométrique)." /></p>
-                  <p className="font-mono text-lg">{mc.expected_matches.toFixed(2)}</p>
+                  <p className="text-xs text-text-secondary flex items-center">
+                    Espérance théorique
+                    <InfoTooltip text="Nombre de correspondances attendu par les mathématiques pures (distribution hypergéométrique)." />
+                  </p>
+                  <p className="font-mono text-lg">
+                    {mc.expected_matches.toFixed(2)}
+                  </p>
                 </div>
               </div>
 
               <div className="bg-surface rounded-lg border border-border p-4">
-                <h3 className="text-sm font-semibold mb-3">Distribution des correspondances</h3>
+                <h3 className="text-sm font-semibold mb-3">
+                  Distribution des correspondances
+                </h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={mcChartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--color-border)"
+                    />
                     <XAxis
                       dataKey="matches"
-                      tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
-                      label={{ value: "Correspondances", position: "bottom", fill: "var(--color-text-secondary)" }}
+                      tick={{
+                        fill: "var(--color-text-secondary)",
+                        fontSize: 12,
+                      }}
+                      label={{
+                        value: "Correspondances",
+                        position: "bottom",
+                        fill: "var(--color-text-secondary)",
+                      }}
                     />
-                    <YAxis tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
+                    <YAxis
+                      tick={{
+                        fill: "var(--color-text-secondary)",
+                        fontSize: 12,
+                      }}
+                    />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: "var(--color-surface)",
@@ -208,10 +251,17 @@ export default function SimulationPage() {
                         borderRadius: "6px",
                       }}
                     />
-                    <Bar dataKey="count" fill="var(--color-accent-blue)" radius={[4, 4, 0, 0]} />
+                    <Bar
+                      dataKey="count"
+                      fill="var(--color-accent-blue)"
+                      radius={[4, 4, 0, 0]}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
-                <p className="text-xs text-text-secondary mt-2">Distribution des correspondances observées lors de la simulation Monte Carlo.</p>
+                <p className="text-xs text-text-secondary mt-2">
+                  Distribution des correspondances observées lors de la
+                  simulation Monte Carlo.
+                </p>
               </div>
 
               <p className="text-xs text-text-secondary">
@@ -229,13 +279,18 @@ export default function SimulationPage() {
             disabled={!isValid || isPending}
             className="px-6 py-2 bg-accent-purple text-white rounded-md text-sm font-medium hover:bg-accent-purple/90 disabled:opacity-50 flex items-center gap-2"
           >
-            {stabMutation.isPending && <Loader2 size={16} className="animate-spin" />}
+            {stabMutation.isPending && (
+              <Loader2 size={16} className="animate-spin" />
+            )}
             Analyser la stabilité
           </button>
 
           {!stab && !stabMutation.isPending && (
             <div className="bg-surface rounded-lg border border-border p-6 text-center">
-              <p className="text-text-secondary text-sm">Testez la robustesse de votre grille par bootstrap : entrez vos numéros et lancez l'analyse de stabilité.</p>
+              <p className="text-text-secondary text-sm">
+                Testez la robustesse de votre grille par bootstrap : entrez vos
+                numéros et lancez l'analyse de stabilité.
+              </p>
             </div>
           )}
 
@@ -247,18 +302,31 @@ export default function SimulationPage() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary flex items-center">Score moyen<InfoTooltip text="Score moyen obtenu par bootstrap (ré-échantillonnage répété de l'historique)." /></p>
+                  <p className="text-xs text-text-secondary flex items-center">
+                    Score moyen
+                    <InfoTooltip text="Score moyen obtenu par bootstrap (ré-échantillonnage répété de l'historique)." />
+                  </p>
                   <p className="font-mono text-lg text-accent-green">
                     {stab.mean_score.toFixed(2)}
                   </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary flex items-center">Écart-type<InfoTooltip text="Mesure de dispersion du score : un écart-type faible indique une grille stable." /></p>
-                  <p className="font-mono text-lg">{stab.std_score.toFixed(3)}</p>
+                  <p className="text-xs text-text-secondary flex items-center">
+                    Écart-type
+                    <InfoTooltip text="Mesure de dispersion du score : un écart-type faible indique une grille stable." />
+                  </p>
+                  <p className="font-mono text-lg">
+                    {stab.std_score.toFixed(3)}
+                  </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary flex items-center">CV<InfoTooltip text="Coefficient de variation = écart-type / moyenne. Plus il est bas, plus la grille est stable." /></p>
-                  <p className="font-mono text-lg">{(stab.cv * 100).toFixed(1)}%</p>
+                  <p className="text-xs text-text-secondary flex items-center">
+                    CV
+                    <InfoTooltip text="Coefficient de variation = écart-type / moyenne. Plus il est bas, plus la grille est stable." />
+                  </p>
+                  <p className="font-mono text-lg">
+                    {(stab.cv * 100).toFixed(1)}%
+                  </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
                   <p className="text-xs text-text-secondary">Stabilité</p>
@@ -267,9 +335,13 @@ export default function SimulationPage() {
               </div>
 
               <div className="bg-surface rounded-lg border border-border p-4">
-                <h3 className="text-sm font-semibold mb-3">Intervalle de confiance (95%)</h3>
+                <h3 className="text-sm font-semibold mb-3">
+                  Intervalle de confiance (95%)
+                </h3>
                 <div className="flex items-center gap-4">
-                  <p className="font-mono text-accent-red">{stab.ci_95_low.toFixed(3)}</p>
+                  <p className="font-mono text-accent-red">
+                    {stab.ci_95_low.toFixed(3)}
+                  </p>
                   <div className="flex-1 h-3 bg-surface-hover rounded-full relative overflow-hidden">
                     <div
                       className="absolute h-full bg-gradient-to-r from-accent-red via-accent-green to-accent-red rounded-full"
@@ -279,7 +351,9 @@ export default function SimulationPage() {
                       }}
                     />
                   </div>
-                  <p className="font-mono text-accent-green">{stab.ci_95_high.toFixed(3)}</p>
+                  <p className="font-mono text-accent-green">
+                    {stab.ci_95_high.toFixed(3)}
+                  </p>
                 </div>
                 <div className="flex justify-between mt-2 text-xs text-text-secondary">
                   <span>Min: {stab.min_score.toFixed(3)}</span>
@@ -302,13 +376,18 @@ export default function SimulationPage() {
             disabled={!isValid || isPending}
             className="px-6 py-2 bg-accent-green text-white rounded-md text-sm font-medium hover:bg-accent-green/90 disabled:opacity-50 flex items-center gap-2"
           >
-            {compMutation.isPending && <Loader2 size={16} className="animate-spin" />}
+            {compMutation.isPending && (
+              <Loader2 size={16} className="animate-spin" />
+            )}
             Comparer au hasard
           </button>
 
           {!comp && !compMutation.isPending && (
             <div className="bg-surface rounded-lg border border-border p-6 text-center">
-              <p className="text-text-secondary text-sm">Comparez le score de votre grille à celui de grilles générées aléatoirement pour évaluer sa qualité relative.</p>
+              <p className="text-text-secondary text-sm">
+                Comparez le score de votre grille à celui de grilles générées
+                aléatoirement pour évaluer sa qualité relative.
+              </p>
             </div>
           )}
 
@@ -320,29 +399,43 @@ export default function SimulationPage() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">Score de la grille</p>
+                  <p className="text-xs text-text-secondary">
+                    Score de la grille
+                  </p>
                   <p className="font-mono text-lg text-accent-green">
                     {comp.grid_score.toFixed(3)}
                   </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">Moyenne aléatoire</p>
-                  <p className="font-mono text-lg">{comp.random_mean.toFixed(3)}</p>
+                  <p className="text-xs text-text-secondary">
+                    Moyenne aléatoire
+                  </p>
+                  <p className="font-mono text-lg">
+                    {comp.random_mean.toFixed(3)}
+                  </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">Écart-type aléatoire</p>
-                  <p className="font-mono text-lg">{comp.random_std.toFixed(3)}</p>
+                  <p className="text-xs text-text-secondary">
+                    Écart-type aléatoire
+                  </p>
+                  <p className="font-mono text-lg">
+                    {comp.random_std.toFixed(3)}
+                  </p>
                 </div>
               </div>
 
               <div className="bg-surface rounded-lg border border-border p-4">
-                <h3 className="text-sm font-semibold mb-3">Position relative</h3>
+                <h3 className="text-sm font-semibold mb-3">
+                  Position relative
+                </h3>
                 <div className="flex items-center gap-4 mb-4">
                   <TrendingUp size={20} className="text-accent-blue" />
                   <div className="flex-1">
                     <div className="flex justify-between text-xs text-text-secondary mb-1">
                       <span>Percentile</span>
-                      <span className="font-mono">{comp.percentile.toFixed(1)}%</span>
+                      <span className="font-mono">
+                        {comp.percentile.toFixed(1)}%
+                      </span>
                     </div>
                     <div className="h-4 bg-surface-hover rounded-full overflow-hidden">
                       <div
@@ -353,8 +446,8 @@ export default function SimulationPage() {
                             comp.percentile >= 80
                               ? "var(--color-accent-green)"
                               : comp.percentile >= 50
-                              ? "var(--color-accent-yellow)"
-                              : "var(--color-accent-red)",
+                                ? "var(--color-accent-yellow)"
+                                : "var(--color-accent-red)",
                         }}
                       />
                     </div>
@@ -371,8 +464,8 @@ export default function SimulationPage() {
                           comp.z_score > 1
                             ? "text-accent-green"
                             : comp.z_score < -1
-                            ? "text-accent-red"
-                            : "text-text-primary"
+                              ? "text-accent-red"
+                              : "text-text-primary"
                         }`}
                       >
                         {comp.z_score > 0 ? "+" : ""}
@@ -383,10 +476,10 @@ export default function SimulationPage() {
                       {comp.z_score > 2
                         ? "Bien au-dessus de la moyenne"
                         : comp.z_score > 1
-                        ? "Au-dessus de la moyenne"
-                        : comp.z_score > -1
-                        ? "Dans la moyenne"
-                        : "En-dessous de la moyenne"}
+                          ? "Au-dessus de la moyenne"
+                          : comp.z_score > -1
+                            ? "Dans la moyenne"
+                            : "En-dessous de la moyenne"}
                     </p>
                   </div>
                 </div>

@@ -201,8 +201,13 @@ export default function GridsPage() {
           </div>
         ) : (
           <div className="text-center py-6">
-            <p className="text-text-secondary text-sm mb-3">Aucune grille scorée en base.</p>
-            <p className="text-text-secondary text-xs">Utilisez le formulaire ci-dessus pour générer vos premières grilles, ou lancez le job de scoring depuis l'administration.</p>
+            <p className="text-text-secondary text-sm mb-3">
+              Aucune grille scorée en base.
+            </p>
+            <p className="text-text-secondary text-xs">
+              Utilisez le formulaire ci-dessus pour générer vos premières
+              grilles, ou lancez le job de scoring depuis l'administration.
+            </p>
           </div>
         )}
       </div>

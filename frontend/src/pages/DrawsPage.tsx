@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useDraws } from "@/hooks/useDraws";
-import DrawBalls from "@/components/draws/DrawBalls";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 import InfoTooltip from "@/components/common/InfoTooltip";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import DrawBalls from "@/components/draws/DrawBalls";
+import { useDraws } from "@/hooks/useDraws";
 import { formatDate } from "@/utils/formatters";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
 const PAGE_SIZE = 50;
 
@@ -23,13 +23,21 @@ export default function DrawsPage() {
           <thead>
             <tr className="border-b border-border bg-surface-hover">
               <th className="text-left px-4 py-3 text-text-secondary font-medium">
-                <span className="flex items-center">#<InfoTooltip text="Numéro officiel du tirage." /></span>
+                <span className="flex items-center">
+                  #<InfoTooltip text="Numéro officiel du tirage." />
+                </span>
               </th>
               <th className="text-left px-4 py-3 text-text-secondary font-medium">
-                <span className="flex items-center">Date<InfoTooltip text="Date à laquelle le tirage a eu lieu." /></span>
+                <span className="flex items-center">
+                  Date
+                  <InfoTooltip text="Date à laquelle le tirage a eu lieu." />
+                </span>
               </th>
               <th className="text-left px-4 py-3 text-text-secondary font-medium">
-                <span className="flex items-center">Numéros<InfoTooltip text="Numéros tirés (+étoiles pour EuroMillions)." /></span>
+                <span className="flex items-center">
+                  Numéros
+                  <InfoTooltip text="Numéros tirés (+étoiles pour EuroMillions)." />
+                </span>
               </th>
             </tr>
           </thead>
@@ -53,7 +61,10 @@ export default function DrawsPage() {
               ))
             ) : (
               <tr>
-                <td colSpan={3} className="px-4 py-8 text-center text-text-secondary">
+                <td
+                  colSpan={3}
+                  className="px-4 py-8 text-center text-text-secondary"
+                >
                   Aucun tirage disponible
                 </td>
               </tr>

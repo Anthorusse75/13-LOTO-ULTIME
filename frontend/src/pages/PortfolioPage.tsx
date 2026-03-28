@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useGeneratePortfolio } from "@/hooks/usePortfolios";
-import { useGameStore } from "@/stores/gameStore";
-import { useQuery } from "@tanstack/react-query";
-import { gameService } from "@/services/gameService";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DrawBalls from "@/components/draws/DrawBalls";
 import NumberHeatmap from "@/components/statistics/NumberHeatmap";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { formatScore } from "@/utils/formatters";
+import { useGeneratePortfolio } from "@/hooks/usePortfolios";
+import { gameService } from "@/services/gameService";
+import { useGameStore } from "@/stores/gameStore";
 import { PORTFOLIO_STRATEGIES } from "@/utils/constants";
+import { formatScore } from "@/utils/formatters";
+import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export default function PortfolioPage() {
   const [gridCount, setGridCount] = useState(7);
@@ -85,18 +85,27 @@ export default function PortfolioPage() {
           disabled={generateMutation.isPending}
           className="px-6 py-2 bg-accent-blue text-white rounded-md text-sm font-medium hover:bg-accent-blue/90 disabled:opacity-50 flex items-center gap-2"
         >
-          {generateMutation.isPending && <Loader2 size={16} className="animate-spin" />}
+          {generateMutation.isPending && (
+            <Loader2 size={16} className="animate-spin" />
+          )}
           Générer portefeuille
         </button>
       </div>
 
-      {generateMutation.isPending && <LoadingSpinner message="Optimisation en cours..." />}
+      {generateMutation.isPending && (
+        <LoadingSpinner message="Optimisation en cours..." />
+      )}
 
       {/* Empty state */}
       {!portfolio && !generateMutation.isPending && (
         <div className="bg-surface rounded-lg border border-border p-8 text-center">
-          <p className="text-text-secondary text-sm mb-2">Aucun portefeuille généré.</p>
-          <p className="text-text-secondary text-xs">Choisissez le nombre de grilles et la stratégie, puis cliquez sur « Générer portefeuille » pour optimiser votre jeu.</p>
+          <p className="text-text-secondary text-sm mb-2">
+            Aucun portefeuille généré.
+          </p>
+          <p className="text-text-secondary text-xs">
+            Choisissez le nombre de grilles et la stratégie, puis cliquez sur «
+            Générer portefeuille » pour optimiser votre jeu.
+          </p>
         </div>
       )}
 
@@ -124,7 +133,9 @@ export default function PortfolioPage() {
               </p>
             </div>
             <div className="bg-surface rounded-lg border border-border p-4">
-              <p className="text-xs text-text-secondary">Distance Hamming min</p>
+              <p className="text-xs text-text-secondary">
+                Distance Hamming min
+              </p>
               <p className="font-mono text-lg">
                 {portfolio.min_hamming_distance?.toFixed(1) ?? "—"}
               </p>
@@ -133,14 +144,18 @@ export default function PortfolioPage() {
 
           {/* Grids list */}
           <div className="bg-surface rounded-lg border border-border p-4">
-            <h2 className="text-sm font-semibold mb-4">Grilles du portefeuille</h2>
+            <h2 className="text-sm font-semibold mb-4">
+              Grilles du portefeuille
+            </h2>
             <div className="space-y-2">
               {portfolio.grids.map((g, i) => (
                 <div
                   key={i}
                   className="flex items-center gap-4 p-2 rounded-md hover:bg-surface-hover"
                 >
-                  <span className="text-xs text-text-secondary w-6">#{i + 1}</span>
+                  <span className="text-xs text-text-secondary w-6">
+                    #{i + 1}
+                  </span>
                   <DrawBalls numbers={g.numbers} stars={g.stars} size="sm" />
                   <span className="ml-auto font-mono text-accent-green">
                     {formatScore(g.score)}
@@ -153,7 +168,9 @@ export default function PortfolioPage() {
           {/* Coverage heatmap */}
           {game && (
             <div className="bg-surface rounded-lg border border-border p-4">
-              <h2 className="text-sm font-semibold mb-3">Couverture numérique</h2>
+              <h2 className="text-sm font-semibold mb-3">
+                Couverture numérique
+              </h2>
               <NumberHeatmap
                 data={coverageMap}
                 minNumber={game.min_number}
