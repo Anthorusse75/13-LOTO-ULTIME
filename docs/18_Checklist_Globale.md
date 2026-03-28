@@ -189,53 +189,53 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 ## Phase 7 — Interface Frontend
 
 ### 7.1 Setup
-- [ ] Projet Vite + React 18 + TypeScript initialisé
-- [ ] Tailwind CSS configuré (dark mode)
-- [ ] Shadcn/ui installé et configuré
-- [ ] Axios instance avec intercepteur JWT
-- [ ] TanStack Query configuré
-- [ ] Zustand stores (auth + game)
-- [ ] React Router v6 avec routes protégées
+- [x] Projet Vite + React 18 + TypeScript initialisé
+- [x] Tailwind CSS configuré (dark mode) — Tailwind v4 avec @custom-variant dark
+- [ ] Shadcn/ui installé et configuré → remplacé par composants custom Tailwind
+- [x] Axios instance avec intercepteur JWT
+- [x] TanStack Query configuré (staleTime 5min, retry 1)
+- [x] Zustand stores (auth + game + settings) avec persist
+- [x] React Router v6 avec routes — guards auth → Phase 9
 
 ### 7.2 Layout
-- [ ] Sidebar navigation (collapse/expand)
-- [ ] TopBar (game selector, user menu)
-- [ ] Layout responsive
+- [x] Sidebar navigation (collapse/expand, 7 nav items, icônes Lucide)
+- [x] TopBar (game selector dropdown, theme toggle)
+- [x] Layout responsive (MainLayout flex + Outlet)
 
 ### 7.3 Pages
-- [ ] Login / Register
-- [ ] Dashboard (KPIs, graphiques, derniers tirages)
-- [ ] Tirages (liste paginée, filtres)
-- [ ] Statistiques — onglet Fréquences (heatmap)
-- [ ] Statistiques — onglet Écarts
-- [ ] Statistiques — onglet Cooccurrences (matrice D3.js)
-- [ ] Statistiques — onglet Tendances
-- [ ] Statistiques — onglet Distribution
-- [ ] Statistiques — onglet Bayésien
-- [ ] Statistiques — onglet Graphe (D3.js force)
-- [ ] Grilles — formulaire génération
-- [ ] Grilles — liste résultats
-- [ ] Grilles — détail avec décomposition score
-- [ ] Portefeuille — génération
-- [ ] Portefeuille — visualisation couverture
-- [ ] Simulation — paramètres + résultats
-- [ ] Admin — monitoring système
-- [ ] Admin — gestion jobs
-- [ ] Admin — gestion utilisateurs
+- [x] Login — Register → Phase 9
+- [x] Dashboard (KPIs, graphiques fréquence, top 5 grilles, 5 derniers tirages)
+- [x] Tirages (liste paginée avec DrawBalls)
+- [x] Statistiques — onglet Fréquences (heatmap + top/bottom 10)
+- [x] Statistiques — onglet Écarts (bar chart + alertes critiques)
+- [x] Statistiques — onglet Cooccurrences (top/bottom 20 paires affinité)
+- [x] Statistiques — onglet Tendances (fenêtres temporelles + momentum)
+- [x] Statistiques — onglet Distribution (Chi-2, entropie, sommes, pairs/impairs)
+- [x] Statistiques — onglet Bayésien (chart moyennes postérieures + table)
+- [x] Statistiques — onglet Graphe (D3.js force-directed + communautés)
+- [x] Grilles — formulaire génération (count, méthode, profil)
+- [x] Grilles — liste résultats
+- [x] Grilles — détail avec décomposition score (ScoreBar × 6 critères)
+- [x] Portefeuille — génération (stratégie, nombre de grilles)
+- [x] Portefeuille — visualisation couverture (NumberHeatmap)
+- [x] Simulation — paramètres + résultats (3 onglets : Monte Carlo, Stabilité, Comparaison)
+- [x] Admin — monitoring système (placeholder Phase 8-9)
+- [ ] Admin — gestion jobs → Phase 8
+- [ ] Admin — gestion utilisateurs → Phase 9
 
 ### 7.4 Composants
-- [ ] DrawBalls (affichage numéros)
-- [ ] ScoreBar (barre de score)
-- [ ] NumberHeatmap (grille colorée)
-- [ ] CooccurrenceMatrix (D3.js)
-- [ ] NetworkGraph (D3.js force-directed)
-- [ ] Toast notifications
+- [x] DrawBalls (affichage numéros + étoiles, 3 tailles, highlights)
+- [x] ScoreBar (barre de score avec gradient)
+- [x] NumberHeatmap (grille colorée par valeur)
+- [ ] CooccurrenceMatrix (D3.js) → CooccurrenceTab affiche paires, matrice complète → Phase 10
+- [x] NetworkGraph (D3.js force-directed, zoom/pan/drag, communautés Louvain)
+- [x] Toast notifications (Sonner, bottom-right, rich colors)
 
 ### 7.5 Qualité
-- [ ] Dark mode par défaut + toggle
-- [ ] LCP < 2.5s
-- [ ] Bundle < 300 KB gzipped
-- [ ] Navigation clavier (accessibilité)
+- [x] Dark mode par défaut + toggle (class-based, persist localStorage)
+- [ ] LCP < 2.5s → à mesurer en intégration
+- [x] Bundle < 300 KB gzipped — 238 KB gzip JS + 5 KB gzip CSS
+- [ ] Navigation clavier (accessibilité) → Phase 10
 
 ---
 
@@ -311,7 +311,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 | 4. Moteur de Scoring            | 13      | ✅ Complète |
 | 5. Moteur d'Optimisation        | 14      | ✅ Complète |
 | 6. Moteur de Simulation         | 11      | ✅ Complète |
-| 7. Interface Frontend           | 32      | ⬜          |
+| 7. Interface Frontend           | 39      | 🟡 33/39 (85%) |
 | 8. Scheduler & Jobs             | 16      | ⬜          |
 | 9. Sécurité & Auth              | 15      | ⬜          |
 | 10. Polish & Déploiement        | 16      | ⬜          |
