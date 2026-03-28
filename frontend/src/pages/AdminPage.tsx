@@ -161,7 +161,7 @@ function JobsPanel() {
           </div>
         ) : !jobs?.length ? (
           <div className="p-6 text-center text-text-secondary text-sm">
-            Aucune exécution enregistrée.
+            Aucune exécution enregistrée. Le pipeline nocturne s'exécute chaque jour à 22h (Europe/Paris).
           </div>
         ) : (
           <div className="overflow-x-auto">

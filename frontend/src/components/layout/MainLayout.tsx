@@ -9,7 +9,7 @@ export default function MainLayout() {
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-4 pt-14 md:p-6 md:pt-6">
           <ErrorBoundary>
             <Outlet />
           </ErrorBoundary>

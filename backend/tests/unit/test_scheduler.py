@@ -18,13 +18,14 @@ class TestSchedulerCreation:
         scheduler = create_scheduler(settings)
         jobs = scheduler.get_jobs()
 
-        # Should have 3 jobs registered (nightly_pipeline, cleanup, health_check)
-        assert len(jobs) == 3
+        # Should have 4 jobs registered (nightly_pipeline, cleanup, health_check, backup_db)
+        assert len(jobs) == 4
 
         job_ids = {j.id for j in jobs}
         assert "nightly_pipeline" in job_ids
         assert "cleanup" in job_ids
         assert "health_check" in job_ids
+        assert "backup_db" in job_ids
 
     def test_scheduler_job_defaults(self):
         from app.core.config import Settings

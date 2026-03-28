@@ -32,9 +32,9 @@ L'architecture est **game-agnostic** : toute loterie peut être ajoutée via con
 - structlog, uvicorn, httpx
 
 ### Frontend
-- React 18+, TypeScript, Vite
-- Shadcn/ui, Tailwind CSS (dark mode par défaut)
-- Recharts, D3.js, Zustand, TanStack Query
+- React 19, TypeScript 5.9, Vite 8
+- Tailwind CSS v4 (dark mode par défaut)
+- Recharts, D3.js, Zustand 5, TanStack Query v5
 
 ### Base de données
 - SQLite (développement) / PostgreSQL 15+ (production)
@@ -133,15 +133,31 @@ CORS_ORIGINS=["http://localhost:5173"]
 ```bash
 # Tests backend
 cd backend
-pytest --cov=app --cov-report=html
+pytest --cov=app --cov-report=html   # 395+ tests
+
+# Tests frontend
+cd frontend
+npm test                              # 28+ tests (Vitest)
 
 # Linter
-ruff check app/
+cd backend && ruff check app/
 
 # Frontend build
 cd frontend
 npm run build
 ```
+
+### Docker
+
+```bash
+# Lancer l'application complète
+docker compose up --build
+
+# Backend uniquement
+docker compose up backend
+```
+
+Le frontend est servi via Nginx (port 80), le backend via Uvicorn (port 8000).
 
 ---
 
@@ -150,15 +166,15 @@ npm run build
 | Phase | Description | Statut |
 |---|---|---|
 | 1 | Architecture & Documentation | ✅ Complète |
-| 2 | Fondations Backend | ⬜ |
-| 3 | Moteur Statistique | ⬜ |
-| 4 | Moteur de Scoring | ⬜ |
-| 5 | Moteur d'Optimisation | ⬜ |
-| 6 | Moteur de Simulation | ⬜ |
-| 7 | Interface Frontend | ⬜ |
-| 8 | Scheduler & Jobs | ⬜ |
-| 9 | Sécurité & Auth | ⬜ |
-| 10 | Polish & Déploiement | ⬜ |
+| 2 | Fondations Backend | ✅ Complète |
+| 3 | Moteur Statistique | ✅ Complète |
+| 4 | Moteur de Scoring | ✅ Complète |
+| 5 | Moteur d'Optimisation | ✅ Complète |
+| 6 | Moteur de Simulation | ✅ Complète |
+| 7 | Interface Frontend | ✅ Complète |
+| 8 | Scheduler & Jobs | ✅ Complète |
+| 9 | Sécurité & Auth | ✅ Complète |
+| 10 | Polish & Déploiement | 🔄 En cours |
 
 Voir [17_Roadmap](docs/17_Roadmap_Developpement.md) et [18_Checklist](docs/18_Checklist_Globale.md) pour le détail.
 

@@ -63,3 +63,15 @@ async def generate_portfolio(
         computation_time_ms=round(elapsed_ms, 1),
         method_used=method_used,
     )
+
+
+@router.delete("/{portfolio_id}", status_code=204)
+async def delete_portfolio(
+    portfolio_id: int = Path(..., gt=0),
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+):
+    """Delete a portfolio by ID."""
+    deleted = await service.delete_portfolio(portfolio_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Portfolio not found")

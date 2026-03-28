@@ -1,0 +1,12 @@
+name: "Keno Gagnant à Vie"
+slug: "keno"
+numbers_pool: 70
+numbers_drawn: 20
+min_number: 1
+max_number: 70
+stars_pool: 0
+stars_drawn: 0
+star_name: ""
+draw_frequency: "quotidien"
+historical_source: "keno"
+description: "Keno - Tirage quotidien FDJ, le joueur choisit 2 à 10 numéros parmi 70"

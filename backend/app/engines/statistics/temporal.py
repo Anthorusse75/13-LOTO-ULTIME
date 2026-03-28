@@ -6,11 +6,15 @@ from app.core.game_definitions import GameConfig
 
 from .base import BaseStatisticsEngine
 
+DEFAULT_WINDOWS = [20, 50, 100, 200]
+MIN_R2_THRESHOLD = 0.5
+
 
 class TemporalEngine(BaseStatisticsEngine):
     """Analyze frequency trends over sliding windows."""
 
-    WINDOWS = [20, 50, 100, 200]
+    def __init__(self, windows: list[int] | None = None):
+        self.WINDOWS = windows or DEFAULT_WINDOWS
 
     def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
         n_draws = draws.shape[0]
@@ -61,7 +65,10 @@ class TemporalEngine(BaseStatisticsEngine):
         return {"windows": windows_data, "momentum": momentum}
 
     def _compute_momentum(self, draws: np.ndarray, game: GameConfig) -> dict:
-        """Compute momentum via linear regression on sliding window frequencies."""
+        """Compute momentum via linear regression on sliding window frequencies.
+
+        Only returns trends with R² > MIN_R2_THRESHOLD.
+        """
         n_draws = draws.shape[0]
         available_windows = [w for w in self.WINDOWS if n_draws >= w]
         if len(available_windows) < 2:
@@ -69,6 +76,8 @@ class TemporalEngine(BaseStatisticsEngine):
 
         momentum = {}
         x = np.arange(len(available_windows), dtype=float)
+        x_mean = x.mean()
+        ss_xx = float(((x - x_mean) ** 2).sum())
 
         for num in range(game.min_number, game.max_number + 1):
             freqs = []
@@ -78,10 +87,24 @@ class TemporalEngine(BaseStatisticsEngine):
                 freqs.append(float(mask.sum() / w))
 
             y = np.array(freqs)
-            # Linear regression: slope
-            if len(x) >= 2:
-                slope = float(np.polyfit(x, y, 1)[0])
-                momentum[num] = round(slope, 6)
+            y_mean = y.mean()
+
+            if len(x) < 2 or ss_xx == 0:
+                continue
+
+            # Linear regression coefficients
+            ss_xy = float(((x - x_mean) * (y - y_mean)).sum())
+            slope = ss_xy / ss_xx
+
+            # R² computation
+            ss_yy = float(((y - y_mean) ** 2).sum())
+            r_squared = (ss_xy ** 2) / (ss_xx * ss_yy) if ss_yy > 0 else 0.0
+
+            if r_squared >= MIN_R2_THRESHOLD:
+                momentum[num] = {
+                    "slope": round(slope, 6),
+                    "r_squared": round(r_squared, 4),
+                }
 
         return momentum
 

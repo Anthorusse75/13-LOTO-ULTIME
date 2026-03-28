@@ -8,14 +8,16 @@ from app.core.game_definitions import GameConfig, load_all_game_configs
 class TestLoadAllGameConfigs:
     """Verify YAML configs load and sort correctly."""
 
-    def test_loads_two_games(self):
+    def test_loads_three_games(self):
         configs = load_all_game_configs()
-        assert len(configs) == 2
+        assert len(configs) == 3
 
     def test_sorted_order_euromillions_first(self):
         configs = load_all_game_configs()
         slugs = list(configs.keys())
-        assert slugs == ["euromillions", "loto-fdj"]
+        assert slugs[0] == "euromillions"
+        assert "loto-fdj" in slugs
+        assert "keno" in slugs
 
     def test_euromillions_fields(self):
         configs = load_all_game_configs()
@@ -47,11 +49,11 @@ class TestGameConfigById:
         assert by_id[1].numbers_pool == 50
         assert by_id[1].stars_drawn == 2
 
-    def test_game_id_2_is_loto(self):
+    def test_game_id_2_is_keno(self):
         by_id = self._build_config_by_id()
-        assert by_id[2].slug == "loto-fdj"
-        assert by_id[2].numbers_pool == 49
-        assert by_id[2].stars_drawn == 1
+        assert by_id[2].slug == "keno"
+        assert by_id[2].numbers_pool == 70
+        assert by_id[2].stars_drawn == 0
 
     def test_unknown_game_id_returns_none(self):
         by_id = self._build_config_by_id()

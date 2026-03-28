@@ -6,10 +6,11 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { TrendingUp, TrendingDown, Hash, Award } from "lucide-react";
+import { TrendingUp, TrendingDown, Hash, Award, Activity, Calendar } from "lucide-react";
 import { useStatistics } from "@/hooks/useStatistics";
 import { useDraws, useLatestDraw } from "@/hooks/useDraws";
 import { useTopGrids } from "@/hooks/useGrids";
+import { useSchedulerStatus } from "@/hooks/useJobs";
 import DrawBalls from "@/components/draws/DrawBalls";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Disclaimer from "@/components/common/Disclaimer";
@@ -20,6 +21,7 @@ export default function DashboardPage() {
   const { data: latest } = useLatestDraw();
   const { data: draws } = useDraws(0, 5);
   const { data: topGrids } = useTopGrids(5);
+  const { data: schedulerStatus } = useSchedulerStatus();
 
   if (statsLoading) return <LoadingSpinner message="Chargement du dashboard..." />;
 
@@ -63,6 +65,22 @@ export default function DashboardPage() {
           icon={<TrendingDown size={18} className="text-accent-red" />}
           value={stats?.cold_numbers?.slice(0, 5).join(", ") ?? "—"}
           sub="fréquences basses"
+        />
+      </div>
+
+      {/* Pipeline health */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <KpiCard
+          title="Pipeline nocturne"
+          icon={<Activity size={18} className={schedulerStatus ? "text-accent-green" : "text-accent-red"} />}
+          value={schedulerStatus ? "Actif" : "Inactif"}
+          sub={`${schedulerStatus?.running_count ?? 0} jobs en cours`}
+        />
+        <KpiCard
+          title="Meilleure grille"
+          icon={<Calendar size={18} />}
+          value={topGrids?.[0] ? formatScore(topGrids[0].total_score) : "—"}
+          sub={topGrids?.[0] ? `méthode ${topGrids[0].method}` : "aucune grille générée"}
         />
       </div>
 

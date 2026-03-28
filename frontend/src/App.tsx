@@ -4,7 +4,9 @@ import MainLayout from "@/components/layout/MainLayout";
 import AdminPage from "@/pages/AdminPage";
 import DashboardPage from "@/pages/DashboardPage";
 import DrawsPage from "@/pages/DrawsPage";
+import GlossaryPage from "@/pages/GlossaryPage";
 import GridsPage from "@/pages/GridsPage";
+import HowItWorksPage from "@/pages/HowItWorksPage";
 import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import PortfolioPage from "@/pages/PortfolioPage";
@@ -29,6 +31,8 @@ export default function App() {
         <Route path="grids" element={<GridsPage />} />
         <Route path="portfolio" element={<PortfolioPage />} />
         <Route path="simulation" element={<SimulationPage />} />
+        <Route path="how-it-works" element={<HowItWorksPage />} />
+        <Route path="glossary" element={<GlossaryPage />} />
         <Route
           path="admin"
           element={

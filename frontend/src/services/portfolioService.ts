@@ -15,4 +15,11 @@ export const portfolioService = {
     );
     return data;
   },
+
+  deletePortfolio: async (
+    gameId: number,
+    portfolioId: number,
+  ): Promise<void> => {
+    await api.delete(`/games/${gameId}/portfolios/${portfolioId}`);
+  },
 };

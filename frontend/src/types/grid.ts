@@ -31,6 +31,7 @@ export interface GridResponse {
   rank: number | null;
   method: string;
   computed_at: string;
+  is_favorite: boolean;
 }
 
 export interface GridGenerateRequest {

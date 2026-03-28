@@ -123,3 +123,28 @@ async def get_grid(
     if grid is None:
         raise HTTPException(status_code=404, detail="Grid not found")
     return grid
+
+
+@router.delete("/{grid_id}", status_code=204)
+async def delete_grid(
+    grid_id: int = Path(..., gt=0),
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+):
+    """Delete a grid by ID."""
+    deleted = await service.delete_grid(grid_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Grid not found")
+
+
+@router.patch("/{grid_id}/favorite", response_model=GridResponse)
+async def toggle_favorite(
+    grid_id: int = Path(..., gt=0),
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+):
+    """Toggle the favorite status of a grid."""
+    grid = await service.toggle_favorite(grid_id)
+    if grid is None:
+        raise HTTPException(status_code=404, detail="Grid not found")
+    return grid

@@ -36,3 +36,30 @@ export function useScoreGrid() {
     },
   });
 }
+
+export function useDeleteGrid() {
+  const gameId = useGameStore((s) => s.currentGameId);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (gridId: number) => gridService.deleteGrid(gameId!, gridId),
+    onSuccess: () => {
+      toast.success("Grille supprimée");
+      queryClient.invalidateQueries({ queryKey: ["grids", gameId] });
+    },
+  });
+}
+
+export function useToggleFavorite() {
+  const gameId = useGameStore((s) => s.currentGameId);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (gridId: number) =>
+      gridService.toggleFavorite(gameId!, gridId),
+    onSuccess: (data) => {
+      toast.success(
+        data.is_favorite ? "Ajoutée aux favoris" : "Retirée des favoris",
+      );
+      queryClient.invalidateQueries({ queryKey: ["grids", gameId] });
+    },
+  });
+}

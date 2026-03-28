@@ -2,6 +2,7 @@
 
 import structlog
 
+from app.core.circuit_breaker import get_circuit_breaker
 from app.core.game_definitions import load_all_game_configs
 from app.models.base import get_session
 from app.models.draw import Draw
@@ -36,6 +37,12 @@ async def fetch_draws_job(game_slug: str, triggered_by: str = "scheduler") -> No
 
 async def _do_fetch(game_slug: str) -> dict:
     """Core fetch logic — returns result summary."""
+    # Circuit breaker check
+    cb = get_circuit_breaker(f"scraper_{game_slug}")
+    if not cb.allow_request():
+        logger.warning("fetch_draws.circuit_open", slug=game_slug)
+        return {"skipped": True, "reason": "circuit_breaker_open"}
+
     # Load game config from YAML
     configs = load_all_game_configs()
     config = configs.get(game_slug)
@@ -56,7 +63,12 @@ async def _do_fetch(game_slug: str) -> dict:
 
         # Fetch from external source
         scraper = get_scraper(game_slug)
-        raw_draws = await scraper.fetch_latest_draws(since_date=since_date)
+        try:
+            raw_draws = await scraper.fetch_latest_draws(since_date=since_date)
+            cb.record_success()
+        except Exception as exc:
+            cb.record_failure()
+            raise exc
 
         # Validate and save
         validator = DrawValidator(

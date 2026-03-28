@@ -107,7 +107,7 @@ async def lifespan(app: FastAPI):
 
     # Shutdown scheduler
     if scheduler is not None:
-        scheduler.shutdown(wait=False)
+        scheduler.shutdown(wait=True)
         logger.info("scheduler_stopped")
 
     await close_db()
@@ -196,7 +196,32 @@ def create_app() -> FastAPI:
     # ── Health check ──
     @app.get("/health", tags=["System"])
     async def health_check():
-        return {"status": "healthy", "version": settings.APP_VERSION}
+        from sqlalchemy import func, select
+
+        from app.models.base import get_session
+        from app.models.draw import Draw
+        from app.models.grid import ScoredGrid
+
+        db_status = "ok"
+        draw_count = 0
+        grid_count = 0
+        try:
+            async for session in get_session():
+                result = await session.execute(select(func.count(Draw.id)))
+                draw_count = result.scalar() or 0
+                result = await session.execute(select(func.count(ScoredGrid.id)))
+                grid_count = result.scalar() or 0
+                break
+        except Exception:
+            db_status = "error"
+
+        return {
+            "status": "healthy",
+            "version": settings.APP_VERSION,
+            "database": db_status,
+            "draws_count": draw_count,
+            "grids_count": grid_count,
+        }
 
     # ── API v1 router ──
     from app.api.v1 import api_v1_router

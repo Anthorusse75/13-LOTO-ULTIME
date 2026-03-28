@@ -1,7 +1,7 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
-import { useGenerateGrids, useTopGrids } from "@/hooks/useGrids";
+import { useGenerateGrids, useToggleFavorite, useTopGrids } from "@/hooks/useGrids";
 import type { GridScoreResponse } from "@/types/grid";
 import {
   OPTIMIZATION_METHODS,
@@ -9,19 +9,21 @@ import {
   SCORING_PROFILES,
 } from "@/utils/constants";
 import { formatScore } from "@/utils/formatters";
-import { Loader2 } from "lucide-react";
+import { Heart, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 export default function GridsPage() {
   const [count, setCount] = useState(10);
   const [method, setMethod] = useState("auto");
   const [profile, setProfile] = useState("equilibre");
+  const [topMethodFilter, setTopMethodFilter] = useState("all");
   const [selectedGrid, setSelectedGrid] = useState<GridScoreResponse | null>(
     null,
   );
 
   const { data: topGrids, isLoading: topLoading } = useTopGrids(10);
   const generateMutation = useGenerateGrids();
+  const toggleFavoriteMutation = useToggleFavorite();
 
   const handleGenerate = () => {
     generateMutation.mutate({ count, method, profile });
@@ -176,14 +178,28 @@ export default function GridsPage() {
 
       {/* Top grids from DB */}
       <div className="bg-surface rounded-lg border border-border p-4">
-        <h2 className="text-sm font-semibold mb-4">
-          Top 10 — Meilleures grilles
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold">
+            Top 10 — Meilleures grilles
+          </h2>
+          <select
+            value={topMethodFilter}
+            onChange={(e) => setTopMethodFilter(e.target.value)}
+            className="bg-surface-hover border border-border rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-accent-blue"
+          >
+            <option value="all">Toutes méthodes</option>
+            {OPTIMIZATION_METHODS.filter((m) => m.value !== "auto").map((m) => (
+              <option key={m.value} value={m.value}>{m.label}</option>
+            ))}
+          </select>
+        </div>
         {topLoading ? (
           <LoadingSpinner />
         ) : topGrids && topGrids.length > 0 ? (
           <div className="space-y-2">
-            {topGrids.map((g, i) => (
+            {topGrids
+              .filter((g) => topMethodFilter === "all" || g.method === topMethodFilter)
+              .map((g, i) => (
               <div
                 key={g.id}
                 className="flex items-center gap-4 p-2 rounded-md hover:bg-surface-hover"
@@ -193,6 +209,16 @@ export default function GridsPage() {
                 </span>
                 <DrawBalls numbers={g.numbers} stars={g.stars} size="sm" />
                 <span className="text-xs text-text-secondary">{g.method}</span>
+                <button
+                  onClick={() => toggleFavoriteMutation.mutate(g.id)}
+                  className="p-1 rounded hover:bg-surface-hover transition-colors"
+                  aria-label={g.is_favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+                >
+                  <Heart
+                    size={16}
+                    className={g.is_favorite ? "fill-accent-red text-accent-red" : "text-text-secondary"}
+                  />
+                </button>
                 <span className="ml-auto font-mono text-accent-green">
                   {formatScore(g.total_score)}
                 </span>

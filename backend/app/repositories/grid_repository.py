@@ -28,3 +28,12 @@ class GridRepository(BaseRepository[ScoredGrid]):
         )
         result = await self._session.execute(stmt)
         return list(result.scalars().all())
+
+    async def get_favorites(self, game_id: int) -> list[ScoredGrid]:
+        stmt = (
+            select(ScoredGrid)
+            .where(ScoredGrid.game_id == game_id, ScoredGrid.is_favorite.is_(True))
+            .order_by(ScoredGrid.total_score.desc())
+        )
+        result = await self._session.execute(stmt)
+        return list(result.scalars().all())

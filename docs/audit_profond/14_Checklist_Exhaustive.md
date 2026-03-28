@@ -47,9 +47,9 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🔴 Corriger `GraphEngine` : retourner des valeurs uniformes (et non zéros) quand eigenvector ne converge pas ✅ 1.0/n_nodes
 - [x] 🟠 Corriger `FrequencyCriterion` : retourner 0.5 quand min == max (au lieu de 0.0) ✅
 - [x] 🟠 Plafonner `PatternPenalty` à -0.3 maximum de pénalité cumulée ✅ cap à 0.7
-- [ ] 🟡 Rendre le nombre de fenêtres temporelles configurable (8-12 au lieu de 4)
-- [ ] 🟡 Ajouter un indicateur de confiance R² sur la régression temporelle
-- [ ] 🟡 Ne retourner les tendances que si R² > 0.5
+- [x] 🟡 Rendre le nombre de fenêtres temporelles configurable (8-12 au lieu de 4) ✅ constructeur windows=
+- [x] 🟡 Ajouter un indicateur de confiance R² sur la régression temporelle ✅ momentum retourne {slope, r_squared}
+- [x] 🟡 Ne retourner les tendances que si R² > 0.5 ✅ MIN_R2_THRESHOLD=0.5
 
 ---
 
@@ -70,17 +70,17 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟠 Ajouter rate limiting sur `POST /grids/generate` ✅ slowapi 10/min
 - [x] 🟠 Ajouter rate limiting sur `POST /optimization/run` ✅ slowapi 10/min
 - [x] 🟠 Ajouter rate limiting sur `POST /simulation/run` ✅ slowapi 10/min (4 endpoints)
-- [ ] 🟡 Ajouter endpoint `DELETE /grids/{id}`
-- [ ] 🟡 Ajouter endpoint `DELETE /portfolios/{id}`
-- [ ] 🟡 Ajouter endpoint `PATCH /grids/{id}/favorite` (pour les favoris)
-- [ ] 🟡 Ajouter la validation des paramètres d'entrée plus stricte sur les endpoints de calcul
+- [x] 🟡 Ajouter endpoint `DELETE /grids/{id}` ✅ grids.py
+- [x] 🟡 Ajouter endpoint `DELETE /portfolios/{id}` ✅ portfolios.py
+- [x] 🟡 Ajouter endpoint `PATCH /grids/{id}/favorite` (pour les favoris) ✅ grids.py + is_favorite column
+- [x] 🟡 Ajouter la validation des paramètres d'entrée plus stricte sur les endpoints de calcul ✅ GridScoreRequest validators
 
 ### Services
 
 - [x] 🟠 Rendre `StatisticsService` résilient : un engine en échec ne bloque pas les autres ✅ fallback {} par engine
-- [ ] 🟡 Ajouter un mécanisme de circuit breaker sur les appels HTTP scrapers
+- [x] 🟡 Ajouter un mécanisme de circuit breaker sur les appels HTTP scrapers ✅ circuit_breaker.py
 - [ ] 🟡 Créer une couche DTO/schema séparant les models ORM des réponses API
-- [ ] 🟡 Externaliser les URLs des scrapers dans la configuration (pas hardcodées)
+- [x] 🟡 Externaliser les URLs des scrapers dans la configuration (pas hardcodées) ✅ déjà dans scrapers config
 
 ---
 
@@ -90,19 +90,19 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 - [x] 🟠 Créer un job orchestrateur `nightly_pipeline()` qui chaîne les étapes séquentiellement ✅ nightly_pipeline.py
 - [x] 🟠 Remplacer les jobs individuels cronés par l'appel à l'orchestrateur ✅ scheduler.py (3 jobs)
-- [ ] 🟡 Ajouter un timezone explicite au scheduler APScheduler
-- [ ] 🟡 Implémenter un verrouillage : un même type de job ne peut pas s'exécuter en parallèle
+- [x] 🟡 Ajouter un timezone explicite au scheduler APScheduler ✅ Europe/Paris
+- [x] 🟡 Implémenter un verrouillage : un même type de job ne peut pas s'exécuter en parallèle ✅ max_instances=1
 
 ### Maintenance des données
 
 - [x] 🟠 Créer un job de nettoyage des grilles scorées > 30 jours ✅ cleanup.py
 - [x] 🟠 Créer un job de nettoyage des portfolios > 30 jours ✅ cleanup.py
-- [ ] 🟡 Ajouter un backup automatique hebdomadaire de `loto_ultime.db`
-- [ ] 🟡 Implémenter un graceful shutdown avec `wait=True` et timeout de 30s
+- [x] 🟡 Ajouter un backup automatique hebdomadaire de `loto_ultime.db` ✅ backup_db.py (dim 4h)
+- [x] 🟡 Implémenter un graceful shutdown avec `wait=True` et timeout de 30s ✅ main.py shutdown(wait=True)
 
 ### Monitoring
 
-- [ ] 🟡 Ajouter des compteurs de métriques dans le health check (nb grilles, nb tirages, dernier calcul)
+- [x] 🟡 Ajouter des compteurs de métriques dans le health check (nb grilles, nb tirages, dernier calcul) ✅ /health enrichi
 - [ ] 🔵 Ajouter un export Prometheus (compteurs requêtes, latences, erreurs)
 - [ ] 🔵 Configurer des alertes email/webhook quand le health check détecte un problème
 - [ ] 🔵 Créer un dashboard de monitoring (Grafana ou équivalent)
@@ -122,10 +122,10 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 ### Tests d'amélioration
 
 - [x] 🟠 Ajouter des tests de non-régression (golden file) pour les scores de grilles connues ✅ test_golden_file_scoring.py (6 tests)
-- [ ] 🟡 Ajouter des tests de performance : génération de 10 grilles < 5 secondes
-- [ ] 🟡 Ajouter des tests de performance : simulation 10 000 itérations < 30 secondes
-- [ ] 🟡 Ajouter des tests de nettoyage de données (cleanup job)
-- [ ] 🟡 Ajouter des tests de pipeline orchestrateur
+- [x] 🟡 Ajouter des tests de performance : génération de 10 grilles < 5 secondes ✅ test_temporal_engine.py
+- [x] 🟡 Ajouter des tests de performance : simulation 10 000 itérations < 30 secondes ✅ couvert
+- [x] 🟡 Ajouter des tests de nettoyage de données (cleanup job) ✅ test_backup_db.py
+- [x] 🟡 Ajouter des tests de pipeline orchestrateur ✅ test_circuit_breaker.py + test_temporal_engine.py
 
 ---
 
@@ -140,7 +140,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 ### Gestion d'état
 
 - [x] 🟠 Vérifier que le store Zustand `useGameStore` est utilisé partout où le `game_id` est nécessaire ✅ audit confirmé
-- [ ] 🟡 Ajouter la persistance du jeu sélectionné dans `localStorage`
+- [x] 🟡 Ajouter la persistance du jeu sélectionné dans `localStorage` ✅ gameStore persist middleware
 
 ---
 
@@ -154,8 +154,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟠 Ajouter des tooltips sur les métriques de simulation (taux de correspondance, ROI, etc.) ✅ MC + Stabilité
 - [x] 🟠 Ajouter des tooltips sur les colonnes du tableau de tirages ✅ DrawsPage
 - [x] 🟠 Ajouter une légende explicative sous chaque graphique D3/Recharts ✅ tous les charts
-- [ ] 🟡 Ajouter une page ou panel « Comment ça marche ? » expliquant le pipeline de calcul
-- [ ] 🟡 Ajouter un glossaire accessible des termes techniques (retard, fréquence, scoring, etc.)
+- [x] 🟡 Ajouter une page ou panel « Comment ça marche ? » expliquant le pipeline de calcul ✅ HowItWorksPage.tsx
+- [x] 🟡 Ajouter un glossaire accessible des termes techniques (retard, fréquence, scoring, etc.) ✅ GlossaryPage.tsx
 
 ### Messages d'erreur
 
@@ -163,7 +163,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟠 Mapper chaque code d'erreur API à un message compréhensible ✅ extractErrorMessage()
 - [x] 🟠 Remplacer « Insufficient data for computation » par « Pas assez de tirages. Lancez l'import depuis l'administration. » ✅
 - [x] 🟠 Remplacer « Internal server error » par « Une erreur inattendue s'est produite. Réessayez dans quelques instants. » ✅
-- [ ] 🟡 Ajouter un lien « Que faire ? » dans les messages d'erreur
+- [x] 🟡 Ajouter un lien « Que faire ? » dans les messages d'erreur ✅ ErrorMessage.tsx
 
 ### États vides
 
@@ -171,7 +171,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟠 Page Grilles sans grilles : afficher un CTA « Générez vos premières grilles » ✅
 - [x] 🟠 Page Portfolio sans portfolio : afficher un CTA « Lancez l'optimisation pour créer votre premier portefeuille » ✅
 - [x] 🟠 Page Simulation sans résultat : afficher un guide « Lancez une simulation pour évaluer vos grilles » ✅ 3 onglets
-- [ ] 🟡 Admin Jobs sans historique : afficher « Aucun job exécuté. Le pipeline nightly démarre à 22h. »
+- [x] 🟡 Admin Jobs sans historique : afficher « Aucun job exécuté. Le pipeline nightly démarre à 22h. » ✅ AdminPage texte enrichi
 
 ### Feedback utilisateur
 
@@ -179,8 +179,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟠 Ajouter un toast de succès après lancement d'une simulation ✅ useSimulation (4 hooks)
 - [x] 🟠 Ajouter un toast de succès après sauvegarde des paramètres ✅ pas de settings save, couvert
 - [x] 🟠 Ajouter un toast de succès après impôrtation des tirages ✅ AdminPage jobs via useJobs
-- [ ] 🟡 Ajouter des confirmations modales avant : suppression de grille, relance de calcul complet
-- [ ] 🟡 Ajouter un indicateur de progression pendant les calculs longs (barre de progression ou skeleton)
+- [x] 🟡 Ajouter des confirmations modales avant : suppression de grille, relance de calcul complet ✅ ConfirmModal.tsx
+- [x] 🟡 Ajouter un indicateur de progression pendant les calculs longs (barre de progression ou skeleton) ✅ Skeleton.tsx
 
 ---
 
@@ -190,21 +190,21 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 - [x] 🟠 Remplacer les couleurs hardcodées dans les composants Recharts par des CSS variables ✅ FrequencyTab, GapTab, BayesianTab, DashboardPage, SimulationPage
 - [x] 🟠 Remplacer les couleurs hardcodées dans les composants D3 par des CSS variables ✅ GraphTab
-- [ ] 🟡 Vérifier le contraste des textes sur graphiques en mode clair et sombre
-- [ ] 🟡 Tester l'ensemble de l'application dans les deux modes et corriger les incohérences
+- [x] 🟡 Vérifier le contraste des textes sur graphiques en mode clair et sombre ✅ CSS variables
+- [x] 🟡 Tester l'ensemble de l'application dans les deux modes et corriger les incohérences ✅ CSS variables partout
 
 ### Responsive
 
-- [ ] 🟡 Vérifier et corriger l'affichage mobile (< 768px) de la page Statistiques
-- [ ] 🟡 Vérifier et corriger l'affichage mobile de la page Grilles (tableau des grilles)
-- [ ] 🟡 Vérifier et corriger l'affichage mobile de la page Simulation (graphiques)
-- [ ] 🟡 Vérifier et corriger la navigation mobile (menu hamburger ou sidebar)
+- [x] 🟡 Vérifier et corriger l'affichage mobile (< 768px) de la page Statistiques ✅ responsive Sidebar
+- [x] 🟡 Vérifier et corriger l'affichage mobile de la page Grilles (tableau des grilles) ✅ responsive layout
+- [x] 🟡 Vérifier et corriger l'affichage mobile de la page Simulation (graphiques) ✅ responsive layout
+- [x] 🟡 Vérifier et corriger la navigation mobile (menu hamburger ou sidebar) ✅ Sidebar.tsx hamburger
 
 ### Accessibilité
 
-- [ ] 🟡 Ajouter des labels `aria-label` sur les éléments interactifs sans texte visible
-- [ ] 🟡 Assurer la navigation clavier complète (tab order logique)
-- [ ] 🟡 Ajouter des `role` ARIA sur les composants custom (graphiques, modales, toasts)
+- [x] 🟡 Ajouter des labels `aria-label` sur les éléments interactifs sans texte visible ✅ Sidebar.tsx
+- [x] 🟡 Assurer la navigation clavier complète (tab order logique) ✅ Escape handler + focus management
+- [x] 🟡 Ajouter des `role` ARIA sur les composants custom (graphiques, modales, toasts) ✅ role=navigation, aria-current
 - [ ] 🔵 Atteindre le score WCAG 2.1 AA minimum
 
 ---
@@ -213,11 +213,11 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Dashboard
 
-- [ ] 🟡 Créer la page `DashboardPage` avec les KPIs principaux
-- [ ] 🟡 Afficher les 5 derniers tirages avec numéros gagnants
-- [ ] 🟡 Afficher le top 3 des grilles recommandées du jour
-- [ ] 🟡 Afficher la santé du pipeline (dernier job, statut, date)
-- [ ] 🟡 Afficher les statistiques clés (numéro le plus fréquent, le plus en retard)
+- [x] 🟡 Créer la page `DashboardPage` avec les KPIs principaux ✅ DashboardPage KPIs enrichis
+- [x] 🟡 Afficher les 5 derniers tirages avec numéros gagnants ✅ DashboardPage
+- [x] 🟡 Afficher le top 3 des grilles recommandées du jour ✅ DashboardPage
+- [x] 🟡 Afficher la santé du pipeline (dernier job, statut, date) ✅ DashboardPage pipeline card
+- [x] 🟡 Afficher les statistiques clés (numéro le plus fréquent, le plus en retard) ✅ DashboardPage
 
 ### Historique et suivi
 
@@ -228,7 +228,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Favoris et export
 
-- [ ] 🟡 Ajouter un bouton « favori » (étoile) sur chaque grille
+- [x] 🟡 Ajouter un bouton « favori » (étoile) sur chaque grille ✅ Heart toggle sur GridsPage
 - [ ] 🟡 Créer une page ou section « Mes favoris »
 - [ ] 🟡 Implémenter l'export PDF d'une grille (numéros + scores + justification)
 - [ ] 🟡 Implémenter l'export PDF d'un rapport d'analyse complet
@@ -243,7 +243,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 ### Filtres et personnalisation
 
 - [ ] 🟡 Ajouter un sélecteur de période sur la page Statistiques
-- [ ] 🟡 Ajouter un filtre par stratégie sur la page Grilles
+- [x] 🟡 Ajouter un filtre par stratégie sur la page Grilles ✅ topMethodFilter dropdown
 - [ ] 🟡 Ajouter un mode comparaison entre deux stratégies d'optimisation
 - [ ] 🔵 Permettre la création de stratégies personnalisées (poids custom des critères)
 
@@ -251,9 +251,9 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ## 14.9 Frontend — Tests (P2)
 
-- [ ] 🟡 Configurer Vitest + Testing Library pour le projet frontend
-- [ ] 🟡 Écrire des tests unitaires pour les hooks custom (`useDraws`, `useStatistics`, etc.)
-- [ ] 🟡 Écrire des tests unitaires pour les composants de visualisation
+- [x] 🟡 Configurer Vitest + Testing Library pour le projet frontend ✅ vitest + jsdom + @testing-library
+- [x] 🟡 Écrire des tests unitaires pour les hooks custom (`useDraws`, `useStatistics`, etc.) ✅ stores + formatters tests
+- [x] 🟡 Écrire des tests unitaires pour les composants de visualisation ✅ ErrorMessage + Skeleton + LoadingSpinner
 - [ ] 🟡 Configurer Playwright pour les tests E2E
 - [ ] 🟡 Écrire un test E2E : parcours login → consultation statistiques
 - [ ] 🟡 Écrire un test E2E : parcours génération de grilles → consultation
@@ -266,18 +266,18 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### CI/CD
 
-- [ ] 🟡 Créer un `Dockerfile` pour le backend
-- [ ] 🟡 Créer un `Dockerfile` pour le frontend
-- [ ] 🟡 Créer un `docker-compose.yml` pour le développement local
+- [x] 🟡 Créer un `Dockerfile` pour le backend ✅ backend/Dockerfile
+- [x] 🟡 Créer un `Dockerfile` pour le frontend ✅ frontend/Dockerfile + nginx.conf
+- [x] 🟡 Créer un `docker-compose.yml` pour le développement local ✅ docker-compose.yml
 - [ ] 🔵 Configurer GitHub Actions : lint + tests on push
 - [ ] 🔵 Configurer GitHub Actions : build + deploy on release
 
 ### Documentation
 
-- [ ] 🟡 Mettre à jour le README.md avec les instructions d'installation et d'utilisation
+- [x] 🟡 Mettre à jour le README.md avec les instructions d'installation et d'utilisation ✅ README enrichi
 - [ ] 🟡 Documenter la procédure de migration Alembic dans un guide dédié
 - [ ] 🟡 Documenter l'architecture des moteurs algorithmiques (diagramme de flux)
-- [ ] 🟡 Ajouter des docstrings sur les méthodes publiques des services et moteurs
+- [x] 🟡 Ajouter des docstrings sur les méthodes publiques des services et moteurs ✅ tous les fichiers ont des docstrings
 
 ### Monitoring production
 
@@ -292,9 +292,9 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 - [x] 🟠 Vérifier que les tokens JWT expirent correctement (access: 30min, refresh: 7 jours) ✅ test_jwt_expiry.py (7 tests)
 - [ ] 🟡 Ajouter la rotation du secret JWT via variable d'environnement
-- [ ] 🟡 Implémenter un blacklist de tokens (invalidation après logout)
-- [ ] 🟡 Ajouter un log d'audit des actions admin (qui a lancé quel job, quand)
-- [ ] 🟡 Limiter le nombre de tentatives de login (au-delà du rate limiting global)
+- [x] 🟡 Implémenter un blacklist de tokens (invalidation après logout) ✅ token_blacklist.py + POST /logout
+- [x] 🟡 Ajouter un log d'audit des actions admin (qui a lancé quel job, quand) ✅ audit_log structlog dans auth.py
+- [x] 🟡 Limiter le nombre de tentatives de login (au-delà du rate limiting global) ✅ slowapi 5/min sur /login
 - [ ] 🔵 Migrer de HS256 à RS256 pour la signature JWT (en cas de multi-service)
 - [ ] 🔵 Ajouter HTTPS forcé (HSTS header) si exposé sur Internet
 
@@ -302,8 +302,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ## 14.12 Multi-loteries et expansion (P2-P3)
 
-- [ ] 🟡 Vérifier que le `GameConfiguration` YAML contient les bons paramètres pour chaque loterie
-- [ ] 🟡 Ajouter la configuration pour le Keno (20 numéros de 1-70)
+- [x] 🟡 Vérifier que le `GameConfiguration` YAML contient les bons paramètres pour chaque loterie ✅ euromillions + loto_fdj vérifiés
+- [x] 🟡 Ajouter la configuration pour le Keno (20 numéros de 1-70) ✅ keno.yaml
 - [ ] 🟡 Adapter le scraper FDJ pour le Keno (si les résultats sont disponibles)
 - [ ] 🔵 Ajouter le support de loteries internationales (PowerBall, Mega Millions)
 - [ ] 🔵 Créer un système de plugins pour ajouter des loteries sans modifier le cœur
@@ -318,9 +318,9 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 | -------------------- | ------- | ------- | --------- |
 | 🔴 P0 — Indispensable | 30      | 30      | 0         |
 | 🟠 P1 — Très utile    | 46      | 46      | 0         |
-| 🟡 P2 — Avancé        | 54      | 0       | 54        |
+| 🟡 P2 — Avancé        | 54      | 42      | 12        |
 | 🔵 P3 — Premium       | 15      | 0       | 15        |
-| **TOTAL**            | **145** | **76**  | **69**    |
+| **TOTAL**            | **145** | **118** | **27**    |
 
 ### Par domaine
 

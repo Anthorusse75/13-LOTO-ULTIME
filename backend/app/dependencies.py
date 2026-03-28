@@ -80,8 +80,9 @@ def get_statistics_service(
 def get_grid_service(
     stats_repo: StatisticsRepository = Depends(get_statistics_repository),
     grid_repo: GridRepository = Depends(get_grid_repository),
+    portfolio_repo: PortfolioRepository = Depends(get_portfolio_repository),
 ) -> GridService:
-    return GridService(stats_repo, grid_repo)
+    return GridService(stats_repo, grid_repo, portfolio_repo)
 
 
 def get_simulation_service(

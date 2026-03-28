@@ -7,10 +7,11 @@ from slowapi.util import get_remote_address
 from app.core.config import Settings, get_settings
 from app.core.exceptions import AuthenticationError
 from app.core.security import decode_access_token
+from app.core.token_blacklist import get_token_blacklist
 from app.dependencies import get_auth_service, get_current_user, get_user_repository
 from app.models.user import User, UserRole
 from app.repositories.user_repository import UserRepository
-from app.schemas.auth import LoginRequest, RefreshRequest, TokenResponse
+from app.schemas.auth import LoginRequest, LogoutRequest, RefreshRequest, TokenResponse
 from app.schemas.user import UserCreate, UserResponse
 from app.services.auth import AuthService
 
@@ -64,8 +65,10 @@ async def refresh_token(
     auth_service: AuthService = Depends(get_auth_service),
     settings: Settings = Depends(get_settings),
 ):
-    """Refresh the access token using a refresh token."""
+    """Refresh tokens with rotation — old refresh token is revoked."""
     from jose import JWTError
+
+    blacklist = get_token_blacklist()
 
     try:
         payload = decode_access_token(
@@ -73,12 +76,43 @@ async def refresh_token(
         )
         if payload.get("type") != "refresh":
             raise AuthenticationError("Token de type invalide")
+
+        jti = payload.get("jti")
+        if jti and blacklist.is_revoked(jti):
+            raise AuthenticationError("Refresh token révoqué")
+
         user_id = int(payload["sub"])
     except (JWTError, KeyError, ValueError) as exc:
         raise AuthenticationError("Refresh token invalide ou expiré") from exc
 
+    # Revoke old refresh token
+    if jti and "exp" in payload:
+        blacklist.revoke(jti, float(payload["exp"]))
+
     access_token, refresh_token = await auth_service.refresh(user_id)
     return TokenResponse(access_token=access_token, refresh_token=refresh_token)
+
+
+@router.post("/logout", status_code=204)
+async def logout(
+    body: LogoutRequest,
+    settings: Settings = Depends(get_settings),
+):
+    """Revoke the refresh token on logout."""
+    from jose import JWTError
+
+    blacklist = get_token_blacklist()
+
+    try:
+        payload = decode_access_token(
+            body.refresh_token, settings.SECRET_KEY, settings.JWT_ALGORITHM
+        )
+        jti = payload.get("jti")
+        exp = payload.get("exp")
+        if jti and exp:
+            blacklist.revoke(jti, float(exp))
+    except JWTError:
+        pass  # Token already invalid, no action needed
 
 
 @router.get("/me", response_model=UserResponse)

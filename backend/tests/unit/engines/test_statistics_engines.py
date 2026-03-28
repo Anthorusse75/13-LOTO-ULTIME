@@ -299,13 +299,18 @@ class TestTemporalEngine:
                 assert entry["delta"] > 0.02
 
     def test_momentum_with_multiple_windows(self, small_config):
-        """With 250 draws, windows 20,50,100,200 all fit → momentum computed."""
+        """With 250 draws, windows 20,50,100,200 all fit → momentum computed (filtered by R²)."""
         rng = np.random.default_rng(42)
         draws = np.column_stack([rng.choice(range(1, 11), size=250) for _ in range(3)])
         result = self.engine.compute(draws, small_config)
         assert len(result["windows"]) == 4
         assert "momentum" in result
-        assert len(result["momentum"]) == 10  # 10 numbers
+        # Only numbers with R² >= 0.5 are included
+        assert len(result["momentum"]) > 0
+        for num, data in result["momentum"].items():
+            assert "slope" in data
+            assert "r_squared" in data
+            assert data["r_squared"] >= 0.5
 
 
 # ══════════════════════════════════════════════════════════════

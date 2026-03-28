@@ -18,6 +18,7 @@ from app.engines.optimization import (
 from app.engines.scoring.scorer import GridScorer, ScoredResult
 from app.models.grid import ScoredGrid
 from app.repositories.grid_repository import GridRepository
+from app.repositories.portfolio_repository import PortfolioRepository
 from app.repositories.statistics_repository import StatisticsRepository
 
 logger = structlog.get_logger(__name__)
@@ -37,9 +38,11 @@ class GridService:
         self,
         stats_repo: StatisticsRepository,
         grid_repo: GridRepository,
+        portfolio_repo: PortfolioRepository | None = None,
     ):
         self._stats_repo = stats_repo
         self._grid_repo = grid_repo
+        self._portfolio_repo = portfolio_repo
 
     async def score_grid(
         self,
@@ -186,3 +189,30 @@ class GridService:
         )
 
         return result, method_used, total_ms
+
+    async def delete_grid(self, grid_id: int) -> bool:
+        """Delete a grid by ID. Returns True if deleted."""
+        grid = await self._grid_repo.get(grid_id)
+        if grid is None:
+            return False
+        await self._grid_repo.delete(grid)
+        return True
+
+    async def toggle_favorite(self, grid_id: int) -> ScoredGrid | None:
+        """Toggle is_favorite on a grid. Returns updated grid or None."""
+        grid = await self._grid_repo.get(grid_id)
+        if grid is None:
+            return None
+        grid.is_favorite = not grid.is_favorite
+        await self._grid_repo.update(grid)
+        return grid
+
+    async def delete_portfolio(self, portfolio_id: int) -> bool:
+        """Delete a portfolio by ID. Returns True if deleted."""
+        if self._portfolio_repo is None:
+            return False
+        portfolio = await self._portfolio_repo.get(portfolio_id)
+        if portfolio is None:
+            return False
+        await self._portfolio_repo.delete(portfolio)
+        return True

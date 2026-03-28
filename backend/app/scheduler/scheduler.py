@@ -16,7 +16,10 @@ def create_scheduler(settings: Settings) -> AsyncIOScheduler:
         "misfire_grace_time": 3600,
     }
 
-    scheduler = AsyncIOScheduler(job_defaults=job_defaults)
+    scheduler = AsyncIOScheduler(
+        job_defaults=job_defaults,
+        timezone="Europe/Paris",
+    )
 
     _register_jobs(scheduler)
 
@@ -26,6 +29,7 @@ def create_scheduler(settings: Settings) -> AsyncIOScheduler:
 
 def _register_jobs(scheduler: AsyncIOScheduler) -> None:
     """Register all scheduled jobs."""
+    from app.scheduler.jobs.backup_db import backup_db_job
     from app.scheduler.jobs.cleanup import cleanup_job
     from app.scheduler.jobs.health_check import health_check_job
     from app.scheduler.jobs.nightly_pipeline import nightly_pipeline_job
@@ -56,5 +60,16 @@ def _register_jobs(scheduler: AsyncIOScheduler) -> None:
         "interval",
         id="health_check",
         minutes=30,
+        replace_existing=True,
+    )
+
+    # Backup DB : hebdomadaire dimanche 4h
+    scheduler.add_job(
+        backup_db_job,
+        "cron",
+        id="backup_db",
+        day_of_week="sun",
+        hour=4,
+        minute=0,
         replace_existing=True,
     )

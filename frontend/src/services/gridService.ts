@@ -35,4 +35,18 @@ export const gridService = {
     const { data } = await api.get(`/games/${gameId}/grids/${gridId}`);
     return data;
   },
+
+  deleteGrid: async (gameId: number, gridId: number): Promise<void> => {
+    await api.delete(`/games/${gameId}/grids/${gridId}`);
+  },
+
+  toggleFavorite: async (
+    gameId: number,
+    gridId: number,
+  ): Promise<GridResponse> => {
+    const { data } = await api.patch(
+      `/games/${gameId}/grids/${gridId}/favorite`,
+    );
+    return data;
+  },
 };

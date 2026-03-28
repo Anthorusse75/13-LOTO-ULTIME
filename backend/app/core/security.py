@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+import uuid
 
 import bcrypt
 from jose import jwt
@@ -17,20 +18,20 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(
     data: dict, secret_key: str, algorithm: str = "HS256", expires_minutes: int = 60
 ) -> str:
-    """Crée un token JWT signé."""
+    """Crée un token JWT signé avec un JTI unique."""
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(minutes=expires_minutes)
-    to_encode.update({"exp": expire, "type": "access"})
+    to_encode.update({"exp": expire, "type": "access", "jti": uuid.uuid4().hex})
     return jwt.encode(to_encode, secret_key, algorithm=algorithm)
 
 
 def create_refresh_token(
     data: dict, secret_key: str, algorithm: str = "HS256", expires_days: int = 7
 ) -> str:
-    """Crée un refresh token JWT signé."""
+    """Crée un refresh token JWT signé avec un JTI unique."""
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(days=expires_days)
-    to_encode.update({"exp": expire, "type": "refresh"})
+    to_encode.update({"exp": expire, "type": "refresh", "jti": uuid.uuid4().hex})
     return jwt.encode(to_encode, secret_key, algorithm=algorithm)
 
 
