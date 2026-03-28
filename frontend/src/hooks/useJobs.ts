@@ -1,6 +1,6 @@
+import { jobService } from "@/services/jobService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { jobService } from "@/services/jobService";
 
 export function useJobs(limit = 50) {
   return useQuery({

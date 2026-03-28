@@ -1,16 +1,16 @@
-import { useState } from "react";
-import {
-  Settings,
-  Database,
-  Clock,
-  Users,
-  Play,
-  CheckCircle2,
-  XCircle,
-  Loader2,
-} from "lucide-react";
 import { useJobs, useSchedulerStatus, useTriggerJob } from "@/hooks/useJobs";
 import type { JobExecution, JobStatus } from "@/types/job";
+import {
+  CheckCircle2,
+  Clock,
+  Database,
+  Loader2,
+  Play,
+  Settings,
+  Users,
+  XCircle,
+} from "lucide-react";
+import { useState } from "react";
 
 const JOB_LABELS: Record<string, string> = {
   fetch_loto: "Scraping Loto FDJ",
@@ -27,10 +27,22 @@ const STATUS_CONFIG: Record<
   JobStatus,
   { color: string; bg: string; icon: typeof CheckCircle2 }
 > = {
-  SUCCESS: { color: "text-accent-green", bg: "bg-accent-green/20", icon: CheckCircle2 },
+  SUCCESS: {
+    color: "text-accent-green",
+    bg: "bg-accent-green/20",
+    icon: CheckCircle2,
+  },
   FAILED: { color: "text-accent-red", bg: "bg-accent-red/20", icon: XCircle },
-  RUNNING: { color: "text-accent-blue", bg: "bg-accent-blue/20", icon: Loader2 },
-  PENDING: { color: "text-accent-yellow", bg: "bg-accent-yellow/20", icon: Clock },
+  RUNNING: {
+    color: "text-accent-blue",
+    bg: "bg-accent-blue/20",
+    icon: Loader2,
+  },
+  PENDING: {
+    color: "text-accent-yellow",
+    bg: "bg-accent-yellow/20",
+    icon: Clock,
+  },
   CANCELLED: { color: "text-text-secondary", bg: "bg-surface", icon: XCircle },
 };
 
@@ -89,7 +101,9 @@ function JobsPanel() {
         <span className="flex items-center gap-1">
           <span
             className={`h-2 w-2 rounded-full ${
-              status?.running_count ? "bg-accent-green animate-pulse" : "bg-text-secondary"
+              status?.running_count
+                ? "bg-accent-green animate-pulse"
+                : "bg-text-secondary"
             }`}
           />
           {status?.running_count ?? 0} job(s) en cours
@@ -100,7 +114,14 @@ function JobsPanel() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {Object.entries(JOB_LABELS).map(([key, label]) => {
           const isRunning =
-            triggering === key || status?.running_jobs?.some((r) => r.includes(key.replace("fetch_loto", "fetch_draws").replace("fetch_euromillions", "fetch_draws")));
+            triggering === key ||
+            status?.running_jobs?.some((r) =>
+              r.includes(
+                key
+                  .replace("fetch_loto", "fetch_draws")
+                  .replace("fetch_euromillions", "fetch_draws"),
+              ),
+            );
           return (
             <button
               key={key}

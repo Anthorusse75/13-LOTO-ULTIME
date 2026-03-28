@@ -75,9 +75,7 @@ async def execute_with_tracking(
     started = job_execution.started_at
     if started.tzinfo is None:
         started = started.replace(tzinfo=UTC)
-    job_execution.duration_seconds = (
-        job_execution.finished_at - started
-    ).total_seconds()
+    job_execution.duration_seconds = (job_execution.finished_at - started).total_seconds()
 
     # Persist final state
     async for session in get_session():

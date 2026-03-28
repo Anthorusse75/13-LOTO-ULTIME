@@ -43,9 +43,7 @@ async def _do_health_check() -> dict:
         stale_games = []
         for game in games:
             latest = await draw_repo.get_latest(game.id, limit=1)
-            if not latest or (today - latest[0].draw_date) > timedelta(
-                days=STALE_THRESHOLD_DAYS
-            ):
+            if not latest or (today - latest[0].draw_date) > timedelta(days=STALE_THRESHOLD_DAYS):
                 stale_games.append(game.slug)
 
         results["checks"]["stale_games"] = stale_games
@@ -60,7 +58,11 @@ async def _do_health_check() -> dict:
         stuck = []
         for j in running:
             if j.started_at:
-                started = j.started_at.replace(tzinfo=UTC) if j.started_at.tzinfo is None else j.started_at
+                started = (
+                    j.started_at.replace(tzinfo=UTC)
+                    if j.started_at.tzinfo is None
+                    else j.started_at
+                )
                 if (now - started) > timedelta(hours=1):
                     stuck.append(j.job_name)
         if stuck:

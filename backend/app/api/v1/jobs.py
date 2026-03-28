@@ -60,6 +60,7 @@ async def trigger_job(
             await job_func(*args, triggered_by="manual")
         except Exception:
             import structlog
+
             structlog.get_logger("jobs").exception("trigger_job.background_error", job=job_name)
 
     task = asyncio.create_task(_run_job())

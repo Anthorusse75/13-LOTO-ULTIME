@@ -33,13 +33,20 @@ function extractErrorMessage(error: AxiosError<{ detail?: string }>): string {
   if (detail) return detail;
 
   switch (status) {
-    case 400: return "Requête invalide.";
-    case 403: return "Accès interdit.";
-    case 404: return "Ressource introuvable.";
-    case 409: return "Conflit — opération déjà en cours.";
-    case 422: return "Données invalides.";
-    case 500: return "Erreur interne du serveur.";
-    default:  return `Erreur ${status}`;
+    case 400:
+      return "Requête invalide.";
+    case 403:
+      return "Accès interdit.";
+    case 404:
+      return "Ressource introuvable.";
+    case 409:
+      return "Conflit — opération déjà en cours.";
+    case 422:
+      return "Données invalides.";
+    case 500:
+      return "Erreur interne du serveur.";
+    default:
+      return `Erreur ${status}`;
   }
 }
 

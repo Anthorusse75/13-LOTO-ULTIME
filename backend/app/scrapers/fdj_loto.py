@@ -3,7 +3,7 @@
 import csv
 import io
 import zipfile
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 import httpx
 import structlog
@@ -86,13 +86,15 @@ class FDJLotoScraper(BaseScraper):
         draw_date = datetime.strptime(row["date_de_tirage"].strip(), "%d/%m/%Y").date()
         draw_number = int(row["annee_numero_de_tirage"].strip())
 
-        numbers = sorted([
-            int(row["boule_1"]),
-            int(row["boule_2"]),
-            int(row["boule_3"]),
-            int(row["boule_4"]),
-            int(row["boule_5"]),
-        ])
+        numbers = sorted(
+            [
+                int(row["boule_1"]),
+                int(row["boule_2"]),
+                int(row["boule_3"]),
+                int(row["boule_4"]),
+                int(row["boule_5"]),
+            ]
+        )
 
         chance = int(row["numero_chance"])
 

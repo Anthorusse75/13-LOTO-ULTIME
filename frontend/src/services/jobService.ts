@@ -12,10 +12,7 @@ export const jobService = {
     return data;
   },
 
-  getHistory: async (
-    jobName: string,
-    limit = 20,
-  ): Promise<JobExecution[]> => {
+  getHistory: async (jobName: string, limit = 20): Promise<JobExecution[]> => {
     const { data } = await api.get(`/jobs/${jobName}/history`, {
       params: { limit },
     });

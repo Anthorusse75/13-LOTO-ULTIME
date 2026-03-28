@@ -1,6 +1,5 @@
 """Unit tests for scrapers (base, FDJ, EuroMillions)."""
 
-import csv
 import io
 import zipfile
 from datetime import date
@@ -179,12 +178,32 @@ class TestFDJLotoScraper:
 
     @pytest.fixture
     def mock_zip_data(self):
-        return _make_loto_zip([
-            {"num": "2024001", "jour": "LUNDI", "date": "15/01/2024",
-             "b1": "5", "b2": "12", "b3": "23", "b4": "34", "b5": "45", "chance": "7"},
-            {"num": "2024000", "jour": "SAMEDI", "date": "13/01/2024",
-             "b1": "1", "b2": "8", "b3": "19", "b4": "28", "b5": "40", "chance": "3"},
-        ])
+        return _make_loto_zip(
+            [
+                {
+                    "num": "2024001",
+                    "jour": "LUNDI",
+                    "date": "15/01/2024",
+                    "b1": "5",
+                    "b2": "12",
+                    "b3": "23",
+                    "b4": "34",
+                    "b5": "45",
+                    "chance": "7",
+                },
+                {
+                    "num": "2024000",
+                    "jour": "SAMEDI",
+                    "date": "13/01/2024",
+                    "b1": "1",
+                    "b2": "8",
+                    "b3": "19",
+                    "b4": "28",
+                    "b5": "40",
+                    "chance": "3",
+                },
+            ]
+        )
 
     @pytest.mark.asyncio
     async def test_fetch_latest_draws(self, mock_zip_data):
@@ -239,11 +258,22 @@ class TestEuroMillionsScraper:
     async def test_fetch_latest_draws(self):
         from app.scrapers.euromillions import EuroMillionsScraper
 
-        zip_data = _make_euromillions_zip([
-            {"num": "2024002", "jour": "MARDI", "date": "16/01/2024",
-             "b1": "3", "b2": "15", "b3": "27", "b4": "38", "b5": "49",
-             "e1": "2", "e2": "11"},
-        ])
+        zip_data = _make_euromillions_zip(
+            [
+                {
+                    "num": "2024002",
+                    "jour": "MARDI",
+                    "date": "16/01/2024",
+                    "b1": "3",
+                    "b2": "15",
+                    "b3": "27",
+                    "b4": "38",
+                    "b5": "49",
+                    "e1": "2",
+                    "e2": "11",
+                },
+            ]
+        )
 
         mock_response = MagicMock()
         mock_response.status_code = 200
