@@ -44,3 +44,9 @@ class GridGenerateRequest(BaseModel):
     count: int = Field(10, ge=1, le=100)
     method: str = Field("auto", pattern=r"^(auto|genetic|annealing|tabu|hill_climbing)$")
     weights: dict[str, float] | None = None
+
+
+class GridGenerateResponse(BaseModel):
+    grids: list["GridScoreResponse"]
+    computation_time_ms: float
+    method_used: str

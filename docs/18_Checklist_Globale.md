@@ -145,25 +145,25 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 ## Phase 5 — Moteur d'Optimisation
 
 ### 5.1 Méta-heuristiques
-- [ ] `app/engines/optimization/simulated_annealing.py`
-- [ ] Tests SimulatedAnnealing
-- [ ] `app/engines/optimization/genetic.py`
-- [ ] Tests GeneticAlgorithm
-- [ ] `app/engines/optimization/tabu.py`
-- [ ] Tests TabuSearch
-- [ ] `app/engines/optimization/hill_climbing.py`
-- [ ] Tests HillClimbing
-- [ ] `app/engines/optimization/multi_objective.py`
-- [ ] Tests MultiObjectiveOptimizer
+- [x] `app/engines/optimization/simulated_annealing.py` — 100%
+- [x] Tests SimulatedAnnealing (5 tests)
+- [x] `app/engines/optimization/genetic.py` — 100%
+- [x] Tests GeneticAlgorithm (6 tests)
+- [x] `app/engines/optimization/tabu.py` — 100%
+- [x] Tests TabuSearch (4 tests)
+- [x] `app/engines/optimization/hill_climbing.py` — 100%
+- [x] Tests HillClimbing (4 tests)
+- [x] `app/engines/optimization/multi_objective.py` — 100%
+- [x] Tests MultiObjectiveOptimizer (6 tests)
 
 ### 5.2 Portfolio & API
-- [ ] `app/engines/optimization/portfolio.py` — PortfolioOptimizer
-- [ ] Tests PortfolioOptimizer (diversité, couverture)
-- [ ] Auto-sélection de méthode
-- [ ] `app/api/routers/grids.py` — POST /grids/generate
-- [ ] `app/api/routers/portfolios.py` — POST /portfolios/generate
-- [ ] Tests intégration API
-- [ ] Génération 10 grilles < 5s
+- [x] `app/engines/optimization/portfolio.py` — PortfolioOptimizer — 100%
+- [x] Tests PortfolioOptimizer (diversité, couverture — 10 tests)
+- [x] Auto-sélection de méthode (`method_selector.py` — 4 tests)
+- [x] `app/api/v1/grids.py` — POST /grids/generate
+- [x] `app/api/v1/portfolios.py` — POST /portfolios/generate
+- [x] Tests intégration API (5 tests : generate grids + portfolio)
+- [x] Génération 10 grilles < 5s (0.44s en test)
 
 ---
 
@@ -306,7 +306,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 | 2. Fondations Backend           | 33      | ✅ Complète |
 | 3. Moteur Statistique           | 18      | ✅ Complète |
 | 4. Moteur de Scoring            | 13      | ✅ Complète |
-| 5. Moteur d'Optimisation        | 14      | ⬜          |
+| 5. Moteur d'Optimisation        | 14      | ✅ Complète |
 | 6. Moteur de Simulation         | 11      | ⬜          |
 | 7. Interface Frontend           | 32      | ⬜          |
 | 8. Scheduler & Jobs             | 16      | ⬜          |

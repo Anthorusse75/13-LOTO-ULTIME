@@ -6,6 +6,7 @@ import pytest
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import GameConfig
+from app.engines.scoring.scorer import ScoredResult
 from app.models.statistics import StatisticsSnapshot
 from app.services.grid import GridService
 
@@ -146,3 +147,60 @@ class TestGridService:
         result = await service.get_grid(grid_id=42)
         grid_repo.get.assert_called_once_with(42)
         assert result is None
+
+    @pytest.mark.asyncio
+    async def test_generate_grids_auto(self, loto_config, mock_repos):
+        stats_repo, grid_repo = mock_repos
+        service = GridService(stats_repo, grid_repo)
+        results, method_used, elapsed = await service.generate_grids(
+            game_id=1, game=loto_config, count=3, method="auto", seed=42,
+        )
+        assert len(results) == 3
+        assert isinstance(method_used, str)
+        assert elapsed > 0
+        for r in results:
+            assert isinstance(r, ScoredResult)
+            assert len(r.numbers) == loto_config.numbers_drawn
+
+    @pytest.mark.asyncio
+    async def test_generate_grids_specific_method(self, loto_config, mock_repos):
+        stats_repo, grid_repo = mock_repos
+        service = GridService(stats_repo, grid_repo)
+        results, method_used, _ = await service.generate_grids(
+            game_id=1, game=loto_config, count=2, method="annealing", seed=42,
+        )
+        assert method_used == "annealing"
+        assert len(results) == 2
+
+    @pytest.mark.asyncio
+    async def test_generate_grids_no_snapshot_raises(self, loto_config):
+        stats_repo = AsyncMock()
+        stats_repo.get_latest = AsyncMock(return_value=None)
+        grid_repo = AsyncMock()
+        service = GridService(stats_repo, grid_repo)
+        with pytest.raises(InsufficientDataError):
+            await service.generate_grids(
+                game_id=1, game=loto_config, count=3, method="auto",
+            )
+
+    @pytest.mark.asyncio
+    async def test_generate_grids_unknown_method_raises(self, loto_config, mock_repos):
+        stats_repo, grid_repo = mock_repos
+        service = GridService(stats_repo, grid_repo)
+        with pytest.raises(ValueError, match="Unknown method"):
+            await service.generate_grids(
+                game_id=1, game=loto_config, count=3, method="nonexistent",
+            )
+
+    @pytest.mark.asyncio
+    async def test_generate_portfolio(self, loto_config, mock_repos):
+        stats_repo, grid_repo = mock_repos
+        service = GridService(stats_repo, grid_repo)
+        result, method_used, elapsed = await service.generate_portfolio(
+            game_id=1, game=loto_config, grid_count=3, strategy="balanced", seed=42,
+        )
+        assert len(result.grids) == 3
+        assert result.strategy == "balanced"
+        assert result.diversity_score >= 0
+        assert result.coverage_score >= 0
+        assert elapsed > 0

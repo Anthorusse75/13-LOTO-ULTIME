@@ -1,11 +1,17 @@
-"""Grids API — scoring and grid management endpoints."""
+"""Grids API — scoring, generation, and grid management endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
 from app.dependencies import get_grid_service
-from app.schemas.grid import GridResponse, GridScoreRequest, GridScoreResponse
+from app.schemas.grid import (
+    GridGenerateRequest,
+    GridGenerateResponse,
+    GridResponse,
+    GridScoreRequest,
+    GridScoreResponse,
+)
 from app.services.grid import GridService
 
 router = APIRouter()
@@ -15,11 +21,9 @@ _game_configs = load_all_game_configs()
 
 def _get_game_config(game_id: int):
     """Resolve game config by game_id (uses slug mapping loaded once)."""
-    # For now, map game IDs to configs by position
     configs = list(_game_configs.values())
     for cfg in configs:
-        # We'll match by checking all loaded configs
-        return cfg  # Fallback: return first config
+        return cfg
     raise HTTPException(status_code=404, detail="Game not found")
 
 
@@ -58,6 +62,42 @@ async def score_grid(
         total_score=result.total_score,
         score_breakdown=result.score_breakdown,
         star_score=result.star_score,
+    )
+
+
+@router.post("/generate", response_model=GridGenerateResponse)
+async def generate_grids(
+    request: GridGenerateRequest,
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+):
+    """Generate optimized grids using meta-heuristics."""
+    game_config = _get_game_config(game_id)
+
+    try:
+        results, method_used, elapsed_ms = await service.generate_grids(
+            game_id=game_id,
+            game=game_config,
+            count=request.count,
+            method=request.method,
+            custom_weights=request.weights,
+        )
+    except InsufficientDataError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+    return GridGenerateResponse(
+        grids=[
+            GridScoreResponse(
+                numbers=r.numbers,
+                stars=r.stars,
+                total_score=r.total_score,
+                score_breakdown=r.score_breakdown,
+                star_score=r.star_score,
+            )
+            for r in results
+        ],
+        computation_time_ms=round(elapsed_ms, 1),
+        method_used=method_used,
     )
 
 

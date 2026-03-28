@@ -310,3 +310,81 @@ class TestGridsAPI:
         finally:
             base_module._engine = original_engine
             base_module._session_factory = original_factory
+
+    @pytest.mark.asyncio
+    async def test_generate_grids(self, db_session, game_with_snapshot_for_scoring):
+        """POST /grids/generate returns generated grids."""
+        import app.models.base as base_module
+
+        game, snapshot = game_with_snapshot_for_scoring
+        engine = db_session.bind
+        original_engine = base_module._engine
+        original_factory = base_module._session_factory
+        base_module._engine = engine
+        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
+
+        try:
+            from app.main import create_app
+
+            test_app = create_app()
+            transport = ASGITransport(app=test_app)
+            async with AsyncClient(transport=transport, base_url="http://test") as client:
+                resp = await client.post(
+                    f"/api/v1/games/{game.id}/grids/generate",
+                    json={"count": 3, "method": "annealing"},
+                )
+            assert resp.status_code == 200
+            data = resp.json()
+            assert "grids" in data
+            assert len(data["grids"]) == 3
+            assert "method_used" in data
+            assert data["method_used"] == "annealing"
+            assert data["computation_time_ms"] > 0
+            for g in data["grids"]:
+                assert 0 <= g["total_score"] <= 1
+                assert len(g["numbers"]) == 5
+        finally:
+            base_module._engine = original_engine
+            base_module._session_factory = original_factory
+
+    @pytest.mark.asyncio
+    async def test_generate_grids_no_snapshot(self, db_session):
+        """POST /grids/generate returns 422 when no statistics available."""
+        import app.models.base as base_module
+
+        game = GameDefinition(
+            name="Empty Game 2",
+            slug="empty2",
+            numbers_pool=49,
+            numbers_drawn=5,
+            min_number=1,
+            max_number=49,
+            draw_frequency="test",
+            historical_source="test",
+            description="test",
+            is_active=True,
+        )
+        db_session.add(game)
+        await db_session.flush()
+        await db_session.refresh(game)
+
+        engine = db_session.bind
+        original_engine = base_module._engine
+        original_factory = base_module._session_factory
+        base_module._engine = engine
+        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
+
+        try:
+            from app.main import create_app
+
+            test_app = create_app()
+            transport = ASGITransport(app=test_app)
+            async with AsyncClient(transport=transport, base_url="http://test") as client:
+                resp = await client.post(
+                    f"/api/v1/games/{game.id}/grids/generate",
+                    json={"count": 3},
+                )
+            assert resp.status_code == 422
+        finally:
+            base_module._engine = original_engine
+            base_module._session_factory = original_factory

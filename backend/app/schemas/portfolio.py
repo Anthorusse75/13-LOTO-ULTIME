@@ -31,3 +31,15 @@ class PortfolioGenerateRequest(BaseModel):
         "balanced",
         pattern=r"^(max_diversity|max_coverage|balanced|min_correlation)$",
     )
+
+
+class PortfolioGenerateResponse(BaseModel):
+    strategy: str
+    grid_count: int
+    grids: list[PortfolioGridItem]
+    diversity_score: float
+    coverage_score: float
+    avg_grid_score: float
+    min_hamming_distance: float | None
+    computation_time_ms: float
+    method_used: str
