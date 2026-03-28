@@ -4,10 +4,10 @@
 
 LOTO ULTIME ambitionne de supporter plusieurs loteries. Aujourd'hui, deux jeux sont configurés :
 
-| Jeu | Pool principal | Tirés | Pool secondaire | Tirés | Fréquence |
-|-----|---------------|-------|-----------------|-------|-----------|
-| **Loto FDJ** | 1-49 | 5 | 1-10 (N° Chance) | 1 | Lun/Mer/Sam |
-| **EuroMillions** | 1-50 | 5 | 1-12 (Étoiles) | 2 | Mar/Ven |
+| Jeu              | Pool principal | Tirés | Pool secondaire  | Tirés | Fréquence   |
+| ---------------- | -------------- | ----- | ---------------- | ----- | ----------- |
+| **Loto FDJ**     | 1-49           | 5     | 1-10 (N° Chance) | 1     | Lun/Mer/Sam |
+| **EuroMillions** | 1-50           | 5     | 1-12 (Étoiles)   | 2     | Mar/Ven     |
 
 La différence structurelle entre les deux jeux est significative :
 - Pool principal quasi-identique (49 vs 50) mais pool secondaire très différent (1×10 vs 2×12)
@@ -104,18 +104,18 @@ def _get_game_config(game_id: int) -> GameConfig:
 
 Les moteurs statistiques et de scoring travaillent principalement sur la matrice `numbers` (les 5 numéros principaux). Le traitement des étoiles est inégal :
 
-| Moteur | Traitement des étoiles |
-|--------|----------------------|
-| FrequencyEngine | ❌ Numéros principaux uniquement |
-| GapEngine | ❌ Numéros principaux uniquement |
-| CooccurrenceEngine | ❌ Numéros principaux uniquement |
-| DistributionEngine | ❌ Numéros principaux uniquement |
-| BayesianEngine | ❌ Numéros principaux uniquement |
-| GraphEngine | ❌ Numéros principaux uniquement |
-| TemporalEngine | ❌ Numéros principaux uniquement |
-| Scoring (tous) | ❌ Numéros principaux uniquement |
+| Moteur              | Traitement des étoiles                                 |
+| ------------------- | ------------------------------------------------------ |
+| FrequencyEngine     | ❌ Numéros principaux uniquement                        |
+| GapEngine           | ❌ Numéros principaux uniquement                        |
+| CooccurrenceEngine  | ❌ Numéros principaux uniquement                        |
+| DistributionEngine  | ❌ Numéros principaux uniquement                        |
+| BayesianEngine      | ❌ Numéros principaux uniquement                        |
+| GraphEngine         | ❌ Numéros principaux uniquement                        |
+| TemporalEngine      | ❌ Numéros principaux uniquement                        |
+| Scoring (tous)      | ❌ Numéros principaux uniquement                        |
 | MonteCarloSimulator | ⚠️ Paramètre stars_pool accepté mais traitement minimal |
-| PortfolioOptimizer | ⚠️ Stars stockées mais pas optimisées |
+| PortfolioOptimizer  | ⚠️ Stars stockées mais pas optimisées                   |
 
 **Conséquence** : Pour l'EuroMillions, les 2 étoiles (qui représentent un espace combinatoire de C(12,2) = 66 combinaisons) sont essentiellement ignorées par l'analyse statistique et le scoring. Un joueur qui utilise LOTO ULTIME pour l'EuroMillions reçoit une optimisation sur les 5 numéros principaux seulement — les étoiles sont choisies aléatoirement ou par défaut.
 

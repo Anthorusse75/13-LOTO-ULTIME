@@ -2,18 +2,18 @@
 
 ## 7.1 Stack technique
 
-| Technologie | Version | Rôle | Verdict |
-|------------|---------|------|---------|
-| Vite | 8 | Build tool | ✅ Excellent choix (rapide, HMR, tree-shaking) |
-| React | 18 | Framework UI | ✅ Standard |
-| TypeScript | Strict | Typage | ✅ Typage complet |
-| Tailwind CSS | v4 | Styling | ✅ Productif mais nécessite discipline |
-| TanStack Query | v5 | Data fetching | ✅ Excellent (cache, refetch, mutations) |
-| Zustand | — | État global | ✅ Léger, adapté au besoin |
-| Axios | — | HTTP client | ✅ Intercepteurs bien configurés |
-| Recharts | — | Graphiques | ⚠️ Fonctionnel mais couleurs hardcodées |
-| D3.js | — | Graphe réseau | ⚠️ Puissant mais pas optimisé mobile |
-| Sonner | — | Toasts | ⚠️ Intégré mais sous-utilisé |
+| Technologie    | Version | Rôle          | Verdict                                       |
+| -------------- | ------- | ------------- | --------------------------------------------- |
+| Vite           | 8       | Build tool    | ✅ Excellent choix (rapide, HMR, tree-shaking) |
+| React          | 18      | Framework UI  | ✅ Standard                                    |
+| TypeScript     | Strict  | Typage        | ✅ Typage complet                              |
+| Tailwind CSS   | v4      | Styling       | ✅ Productif mais nécessite discipline         |
+| TanStack Query | v5      | Data fetching | ✅ Excellent (cache, refetch, mutations)       |
+| Zustand        | —       | État global   | ✅ Léger, adapté au besoin                     |
+| Axios          | —       | HTTP client   | ✅ Intercepteurs bien configurés               |
+| Recharts       | —       | Graphiques    | ⚠️ Fonctionnel mais couleurs hardcodées        |
+| D3.js          | —       | Graphe réseau | ⚠️ Puissant mais pas optimisé mobile           |
+| Sonner         | —       | Toasts        | ⚠️ Intégré mais sous-utilisé                   |
 
 **Build** : 817 KB JS + 27 KB CSS, 0 erreur TypeScript. La taille du bundle est raisonnable pour une SPA avec visualisations de données.
 
@@ -259,12 +259,12 @@ Le fichier `api.ts` configure un client Axios avec :
 
 ## 7.7 Code mort et inconsistances
 
-| Fichier | Problème | Impact |
-|---------|----------|--------|
-| GridsPage.tsx | `const [profile] = useState("equilibre")` — déclaré, jamais utilisé | Fonctionnalité non branchée |
-| NumberHeatmap.tsx | `onNumberClick` prop défini, jamais connecté | Feature morta |
-| AdminPage.tsx | Cards « À venir — Phase 9 » | Affiche du contenu non fonctionnel |
-| TemporalTab.tsx | `sortedPairs` basé sur `cooccurrences` au lieu de `temporal` (import croisé ?) | Possible bug de copier-coller |
+| Fichier           | Problème                                                                       | Impact                             |
+| ----------------- | ------------------------------------------------------------------------------ | ---------------------------------- |
+| GridsPage.tsx     | `const [profile] = useState("equilibre")` — déclaré, jamais utilisé            | Fonctionnalité non branchée        |
+| NumberHeatmap.tsx | `onNumberClick` prop défini, jamais connecté                                   | Feature morta                      |
+| AdminPage.tsx     | Cards « À venir — Phase 9 »                                                    | Affiche du contenu non fonctionnel |
+| TemporalTab.tsx   | `sortedPairs` basé sur `cooccurrences` au lieu de `temporal` (import croisé ?) | Possible bug de copier-coller      |
 
 **Classement** : 🔧 Corrections mineures
 
@@ -291,16 +291,16 @@ Le fichier `api.ts` configure un client Axios avec :
 
 ## 7.9 Synthèse frontend
 
-| Aspect | Qualité | Priorité d'amélioration |
-|--------|---------|------------------------|
-| Stack technique | ★★★★☆ | Aucune |
-| Architecture composants | ★★★☆☆ | Extraire les composants composites |
-| Hooks / data fetching | ★★★★☆ | Ajustements mineurs |
-| Gestion d'état | ★★★★☆ | Aucune |
-| Pages fonctionnelles | ★★★☆☆ | Dashboard, Simulation, Portfolio |
-| Composants UI | ★★★☆☆ | Accessibilité ARIA |
-| Code quality | ★★★★☆ | Nettoyer le code mort |
-| Performance | ★★★★☆ | Lazy loading |
-| Mode clair | ★★☆☆☆ | Corriger couleurs Recharts/D3 |
+| Aspect                  | Qualité | Priorité d'amélioration            |
+| ----------------------- | ------- | ---------------------------------- |
+| Stack technique         | ★★★★☆   | Aucune                             |
+| Architecture composants | ★★★☆☆   | Extraire les composants composites |
+| Hooks / data fetching   | ★★★★☆   | Ajustements mineurs                |
+| Gestion d'état          | ★★★★☆   | Aucune                             |
+| Pages fonctionnelles    | ★★★☆☆   | Dashboard, Simulation, Portfolio   |
+| Composants UI           | ★★★☆☆   | Accessibilité ARIA                 |
+| Code quality            | ★★★★☆   | Nettoyer le code mort              |
+| Performance             | ★★★★☆   | Lazy loading                       |
+| Mode clair              | ★★☆☆☆   | Corriger couleurs Recharts/D3      |
 
 Le frontend est **fonctionnel mais pas encore un produit**. La prochaine étape n'est pas d'ajouter des pages, mais d'**approfondir** celles qui existent avec du contexte, de la pédagogie et du feedback utilisateur.

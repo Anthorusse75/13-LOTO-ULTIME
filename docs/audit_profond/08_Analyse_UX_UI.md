@@ -62,19 +62,19 @@ La hiérarchie visuelle est le mécanisme par lequel l'œil est guidé vers les 
 
 C'est la faiblesse la plus critique de l'interface. L'application utilise une terminologie technique sans jamais l'expliquer :
 
-| Terme affiché | Compréhensible sans expertise ? | Explication absente |
-|--------------|-------------------------------|-------------------|
-| Affinité | Non | Mesure statistique de la force d'association entre deux numéros |
-| Momentum | Peut-être | Tendance hausse/baisse de la fréquence d'un numéro |
-| Entropie de Shannon | Non | Mesure de la diversité/équilibre d'une distribution |
-| Uniformité | Vaguement | Score indiquant si les numéros sont répartis équitablement |
-| Centralité (degree) | Non | Nombre de connexions d'un numéro dans le graphe |
-| Betweenness | Non | Mesure d'intermédiation dans le réseau |
-| Distance de Hamming | Non | Nombre moyen de numéros différents entre deux grilles |
-| Intervalles crédibles (α, β) | Non | Paramètres du modèle bayésien Beta-Binomial |
-| Z-score | Non | Écart standardisé par rapport à la moyenne |
-| Monte Carlo | Vaguement | Méthode de simulation par tirages aléatoires |
-| Bootstrap | Non | Technique de rééchantillonnage pour estimer l'incertitude |
+| Terme affiché                | Compréhensible sans expertise ? | Explication absente                                             |
+| ---------------------------- | ------------------------------- | --------------------------------------------------------------- |
+| Affinité                     | Non                             | Mesure statistique de la force d'association entre deux numéros |
+| Momentum                     | Peut-être                       | Tendance hausse/baisse de la fréquence d'un numéro              |
+| Entropie de Shannon          | Non                             | Mesure de la diversité/équilibre d'une distribution             |
+| Uniformité                   | Vaguement                       | Score indiquant si les numéros sont répartis équitablement      |
+| Centralité (degree)          | Non                             | Nombre de connexions d'un numéro dans le graphe                 |
+| Betweenness                  | Non                             | Mesure d'intermédiation dans le réseau                          |
+| Distance de Hamming          | Non                             | Nombre moyen de numéros différents entre deux grilles           |
+| Intervalles crédibles (α, β) | Non                             | Paramètres du modèle bayésien Beta-Binomial                     |
+| Z-score                      | Non                             | Écart standardisé par rapport à la moyenne                      |
+| Monte Carlo                  | Vaguement                       | Méthode de simulation par tirages aléatoires                    |
+| Bootstrap                    | Non                             | Technique de rééchantillonnage pour estimer l'incertitude       |
 
 **Conséquence** : Un utilisateur non statisticien — c'est-à-dire la grande majorité des joueurs de loto — est **exclu** de 80% de la valeur du produit. Il peut voir des chiffres mais pas les interpréter.
 
@@ -121,19 +121,19 @@ Le feedback est le mécanisme par lequel le système confirme à l'utilisateur q
 
 ### État actuel
 
-| Action | Feedback existant | Feedback attendu |
-|--------|------------------|-----------------|
-| Login réussi | Redirection vers dashboard | ✅ + toast « Bienvenue » |
-| Login échoué | Message d'erreur rouge | ✅ Correct |
-| Génération de grilles | Spinner pendant le chargement | ⚠️ + toast « X grilles générées » + temps d'exécution |
-| Génération de portefeuille | Spinner | ⚠️ + toast de confirmation |
-| Lancement simulation | Spinner | ⚠️ + toast + barre de progression |
-| Création utilisateur | Formulaire se ferme | ❌ Aucun feedback de succès |
-| Déclenchement job | Toast « Job lancé avec succès » | ✅ Correct |
-| Changement de jeu | Dropdown change | ❌ Aucune confirmation |
-| Changement de thème | Thème change visuellement | ✅ Suffisant |
-| Erreur API | Toast d'erreur automatique | ✅ Correct |
-| Logout | Redirection vers login | ⚠️ Pas de confirmation |
+| Action                     | Feedback existant               | Feedback attendu                                     |
+| -------------------------- | ------------------------------- | ---------------------------------------------------- |
+| Login réussi               | Redirection vers dashboard      | ✅ + toast « Bienvenue »                              |
+| Login échoué               | Message d'erreur rouge          | ✅ Correct                                            |
+| Génération de grilles      | Spinner pendant le chargement   | ⚠️ + toast « X grilles générées » + temps d'exécution |
+| Génération de portefeuille | Spinner                         | ⚠️ + toast de confirmation                            |
+| Lancement simulation       | Spinner                         | ⚠️ + toast + barre de progression                     |
+| Création utilisateur       | Formulaire se ferme             | ❌ Aucun feedback de succès                           |
+| Déclenchement job          | Toast « Job lancé avec succès » | ✅ Correct                                            |
+| Changement de jeu          | Dropdown change                 | ❌ Aucune confirmation                                |
+| Changement de thème        | Thème change visuellement       | ✅ Suffisant                                          |
+| Erreur API                 | Toast d'erreur automatique      | ✅ Correct                                            |
+| Logout                     | Redirection vers login          | ⚠️ Pas de confirmation                                |
 
 **7 actions sur 11** n'ont pas de feedback de succès. C'est un déficit majeur.
 
@@ -288,16 +288,16 @@ Chaque écran devrait comporter :
 
 ## 8.8 Synthèse UX/UI
 
-| Critère | Score actuel | Cible produit | Effort |
-|---------|-------------|---------------|--------|
-| Lisibilité | 3/5 | 4.5/5 | Moyen |
-| Hiérarchie visuelle | 2.5/5 | 4/5 | Élevé |
-| Compréhension immédiate | 1.5/5 | 4/5 | **Élevé** |
-| Qualité perçue | 2.5/5 | 4.5/5 | Élevé |
-| Cohérence des composants | 3/5 | 4.5/5 | Moyen |
-| Feedback utilisateur | 1.5/5 | 4/5 | **Faible** (toasts rapides à ajouter) |
-| Accessibilité | 1.5/5 | 3.5/5 | Moyen |
-| Dark/Light mode | 2/5 | 4.5/5 | Faible (corriger hardcoded colors) |
-| Responsive | 2.5/5 | 3.5/5 | Moyen |
+| Critère                  | Score actuel | Cible produit | Effort                                |
+| ------------------------ | ------------ | ------------- | ------------------------------------- |
+| Lisibilité               | 3/5          | 4.5/5         | Moyen                                 |
+| Hiérarchie visuelle      | 2.5/5        | 4/5           | Élevé                                 |
+| Compréhension immédiate  | 1.5/5        | 4/5           | **Élevé**                             |
+| Qualité perçue           | 2.5/5        | 4.5/5         | Élevé                                 |
+| Cohérence des composants | 3/5          | 4.5/5         | Moyen                                 |
+| Feedback utilisateur     | 1.5/5        | 4/5           | **Faible** (toasts rapides à ajouter) |
+| Accessibilité            | 1.5/5        | 3.5/5         | Moyen                                 |
+| Dark/Light mode          | 2/5          | 4.5/5         | Faible (corriger hardcoded colors)    |
+| Responsive               | 2.5/5        | 3.5/5         | Moyen                                 |
 
 **Le levier le plus impactant pour le moindre effort** : ajouter des tooltips et des toasts de feedback. Ce sont des changements unitaires qui transforment radicalement la perception de « ça marche ? » en « ça marche et je comprends pourquoi ».

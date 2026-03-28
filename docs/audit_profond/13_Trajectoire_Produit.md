@@ -41,32 +41,32 @@ L'objectif de la trajectoire : passer de **« prototype avancé fonctionnel »**
 
 ### Sprint 10.1 — Fondations (3-4 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Corriger `_get_game_config()` | Filtrage par `game_id` | Tests multi-loteries passants |
-| Intégrer Alembic | Migration initiale + config | `alembic upgrade head` fonctionne |
-| Activer PRAGMA FK | Config SQLAlchemy event | Tests d'intégrité FK passants |
-| Corriger `count()` | `SELECT COUNT(*)` partout | Benchmark : count() < 10ms |
-| Corriger GraphEngine fallback | Valeurs uniformes au lieu de zéros | Test avec fréquences identiques |
+| Action                        | Livrable                           | Critère de succès                 |
+| ----------------------------- | ---------------------------------- | --------------------------------- |
+| Corriger `_get_game_config()` | Filtrage par `game_id`             | Tests multi-loteries passants     |
+| Intégrer Alembic              | Migration initiale + config        | `alembic upgrade head` fonctionne |
+| Activer PRAGMA FK             | Config SQLAlchemy event            | Tests d'intégrité FK passants     |
+| Corriger `count()`            | `SELECT COUNT(*)` partout          | Benchmark : count() < 10ms        |
+| Corriger GraphEngine fallback | Valeurs uniformes au lieu de zéros | Test avec fréquences identiques   |
 
 ### Sprint 10.2 — EuroMillions complet (5-7 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Intégrer les étoiles dans les 7 moteurs stats | Statistiques séparées numéros + étoiles | Tests statistiques étoiles |
-| Intégrer les étoiles dans le scoring | Critères étoiles | Score composite numéros + étoiles |
-| Intégrer les étoiles dans l'optimiseur | Grilles avec étoiles | Grilles 5+2 générées |
-| Intégrer les étoiles dans la simulation | Simulation complète | Monte Carlo avec étoiles |
-| Écrire 20+ tests multi-loteries | Suite de tests dédiée | Différences Loto/Euro détectées |
+| Action                                        | Livrable                                | Critère de succès                 |
+| --------------------------------------------- | --------------------------------------- | --------------------------------- |
+| Intégrer les étoiles dans les 7 moteurs stats | Statistiques séparées numéros + étoiles | Tests statistiques étoiles        |
+| Intégrer les étoiles dans le scoring          | Critères étoiles                        | Score composite numéros + étoiles |
+| Intégrer les étoiles dans l'optimiseur        | Grilles avec étoiles                    | Grilles 5+2 générées              |
+| Intégrer les étoiles dans la simulation       | Simulation complète                     | Monte Carlo avec étoiles          |
+| Écrire 20+ tests multi-loteries               | Suite de tests dédiée                   | Différences Loto/Euro détectées   |
 
 ### Sprint 10.3 — UX minimale viable (2-3 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Câbler le sélecteur de profil | Profil → stratégie d'optimisation | Changement de profil change les grilles |
-| Corriger `select_method()` | SA accessible | Option visible dans l'UI |
-| Rate limiting endpoints calcul | slowapi sur /recompute, /generate, /run | Tests de rate limit passants |
-| Supprimer code mort frontend | Composants inutilisés retirés | 0 import inutilisé |
+| Action                         | Livrable                                | Critère de succès                       |
+| ------------------------------ | --------------------------------------- | --------------------------------------- |
+| Câbler le sélecteur de profil  | Profil → stratégie d'optimisation       | Changement de profil change les grilles |
+| Corriger `select_method()`     | SA accessible                           | Option visible dans l'UI                |
+| Rate limiting endpoints calcul | slowapi sur /recompute, /generate, /run | Tests de rate limit passants            |
+| Supprimer code mort frontend   | Composants inutilisés retirés           | 0 import inutilisé                      |
 
 **Critère de fin de phase** : EuroMillions produit des résultats différents du Loto, tous les tests passent, aucun composant UI trompeur.
 
@@ -79,38 +79,38 @@ L'objectif de la trajectoire : passer de **« prototype avancé fonctionnel »**
 
 ### Sprint 11.1 — Compréhension (3-4 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Tooltips sur toutes les métriques statistiques | InfoTooltip component réutilisable | Chaque valeur a une explication |
-| Tooltips sur les scores de grille | Explication de chaque critère de scoring | L'utilisateur comprend pourquoi une grille est recommandée |
-| Légendes des graphiques enrichies | Labels explicites + descriptions | Aucun graphique n'est muet |
-| Messages d'erreur user-friendly | Catalogue de messages en français | 0 message technique exposé à l'utilisateur |
+| Action                                         | Livrable                                 | Critère de succès                                          |
+| ---------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------- |
+| Tooltips sur toutes les métriques statistiques | InfoTooltip component réutilisable       | Chaque valeur a une explication                            |
+| Tooltips sur les scores de grille              | Explication de chaque critère de scoring | L'utilisateur comprend pourquoi une grille est recommandée |
+| Légendes des graphiques enrichies              | Labels explicites + descriptions         | Aucun graphique n'est muet                                 |
+| Messages d'erreur user-friendly                | Catalogue de messages en français        | 0 message technique exposé à l'utilisateur                 |
 
 ### Sprint 11.2 — Polish visuel (2-3 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Couleurs CSS variables pour les graphiques | Theme-aware charts | Mode clair et sombre cohérents |
-| États vides enrichis (CTA + guide) | Composant EmptyState réutilisable | Chaque page sans données guide l'utilisation |
-| Confirmations avant actions destructives | Modal de confirmation | Aucune action irréversible sans confirmation |
-| Feedback toast sur toutes les actions | Toast sur chaque mutation API | L'utilisateur sait toujours ce qui s'est passé |
+| Action                                     | Livrable                          | Critère de succès                              |
+| ------------------------------------------ | --------------------------------- | ---------------------------------------------- |
+| Couleurs CSS variables pour les graphiques | Theme-aware charts                | Mode clair et sombre cohérents                 |
+| États vides enrichis (CTA + guide)         | Composant EmptyState réutilisable | Chaque page sans données guide l'utilisation   |
+| Confirmations avant actions destructives   | Modal de confirmation             | Aucune action irréversible sans confirmation   |
+| Feedback toast sur toutes les actions      | Toast sur chaque mutation API     | L'utilisateur sait toujours ce qui s'est passé |
 
 ### Sprint 11.3 — Robustesse opérationnelle (2-3 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Pipeline séquentiel (orchestrateur) | Job orchestrateur | Les étapes s'enchaînent au lieu de dépendre du timing |
-| Nettoyage automatique des vieilles données | Job de cleanup | Grilles > 30 jours supprimées automatiquement |
-| Backup automatique SQLite | Job hebdomadaire | Fichier .bak daté dans un dossier backup |
-| Graceful shutdown | wait=True + timeout 30s | Jobs en cours finalisés proprement |
+| Action                                     | Livrable                | Critère de succès                                     |
+| ------------------------------------------ | ----------------------- | ----------------------------------------------------- |
+| Pipeline séquentiel (orchestrateur)        | Job orchestrateur       | Les étapes s'enchaînent au lieu de dépendre du timing |
+| Nettoyage automatique des vieilles données | Job de cleanup          | Grilles > 30 jours supprimées automatiquement         |
+| Backup automatique SQLite                  | Job hebdomadaire        | Fichier .bak daté dans un dossier backup              |
+| Graceful shutdown                          | wait=True + timeout 30s | Jobs en cours finalisés proprement                    |
 
 ### Sprint 11.4 — Qualité algorithmique (2 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
+| Action                                             | Livrable                          | Critère de succès                  |
+| -------------------------------------------------- | --------------------------------- | ---------------------------------- |
 | Temporal regression configurable (8+ fenêtres, R²) | Config `n_windows`, indicateur R² | Tendances significatives seulement |
-| PatternPenalty plafonné | Max -0.3 | Pas de score négatif |
-| Normalisation z-score en option | Choix min-max/z-score | Stabilité sur distributions plates |
+| PatternPenalty plafonné                            | Max -0.3                          | Pas de score négatif               |
+| Normalisation z-score en option                    | Choix min-max/z-score             | Stabilité sur distributions plates |
 
 **Critère de fin de phase** : L'utilisateur comprend chaque donnée affichée, l'interface est cohérente visuellement, le pipeline est robuste.
 
@@ -123,35 +123,35 @@ L'objectif de la trajectoire : passer de **« prototype avancé fonctionnel »**
 
 ### Sprint 12.1 — Dashboard et synthèse (3-4 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Dashboard principal | Page d'accueil avec KPIs | Derniers tirages, top grilles, santé pipeline en un coup d'œil |
-| Filtres temporels sur les statistiques | Sélecteur de période | Analyse sur 3 mois, 6 mois, 1 an, tout |
-| Mode comparaison entre stratégies | Side-by-side grids | Deux stratégies visibles simultanément |
+| Action                                 | Livrable                 | Critère de succès                                              |
+| -------------------------------------- | ------------------------ | -------------------------------------------------------------- |
+| Dashboard principal                    | Page d'accueil avec KPIs | Derniers tirages, top grilles, santé pipeline en un coup d'œil |
+| Filtres temporels sur les statistiques | Sélecteur de période     | Analyse sur 3 mois, 6 mois, 1 an, tout                         |
+| Mode comparaison entre stratégies      | Side-by-side grids       | Deux stratégies visibles simultanément                         |
 
 ### Sprint 12.2 — Engagement utilisateur (3-4 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Historique de performance | Page suivi des résultats | Grilles jouées vs tirages réels |
-| Système de favoris pour les grilles | Bookmark de grilles | Grilles favorites persistent |
-| Export PDF des grilles et analyses | Bouton export PDF | PDF imprimable généré |
+| Action                              | Livrable                 | Critère de succès               |
+| ----------------------------------- | ------------------------ | ------------------------------- |
+| Historique de performance           | Page suivi des résultats | Grilles jouées vs tirages réels |
+| Système de favoris pour les grilles | Bookmark de grilles      | Grilles favorites persistent    |
+| Export PDF des grilles et analyses  | Bouton export PDF        | PDF imprimable généré           |
 
 ### Sprint 12.3 — Coach IA contextuel (5 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Assistant contextuel basique | Panel d'aide par page | Explications adaptées au contexte |
-| Recommandations personnalisées | « Votre profil suggère... » | Suggestions basées sur l'historique |
-| Guide interactif premier lancement | Onboarding tour | Nouvel utilisateur guidé pas à pas |
+| Action                             | Livrable                    | Critère de succès                   |
+| ---------------------------------- | --------------------------- | ----------------------------------- |
+| Assistant contextuel basique       | Panel d'aide par page       | Explications adaptées au contexte   |
+| Recommandations personnalisées     | « Votre profil suggère... » | Suggestions basées sur l'historique |
+| Guide interactif premier lancement | Onboarding tour             | Nouvel utilisateur guidé pas à pas  |
 
 ### Sprint 12.4 — Tests et qualité (3-4 jours)
 
-| Action | Livrable | Critère de succès |
-|--------|----------|-------------------|
-| Tests E2E Playwright (parcours critiques) | 5-10 scénarios E2E | Login → stats → grilles → simulation |
-| Tests unitaires frontend (composants clés) | Vitest + Testing Library | Couverture composants critiques |
-| Tests de performance (benchmarks) | Fichier benchmarks | Temps de calcul sous seuil |
+| Action                                     | Livrable                 | Critère de succès                    |
+| ------------------------------------------ | ------------------------ | ------------------------------------ |
+| Tests E2E Playwright (parcours critiques)  | 5-10 scénarios E2E       | Login → stats → grilles → simulation |
+| Tests unitaires frontend (composants clés) | Vitest + Testing Library | Couverture composants critiques      |
+| Tests de performance (benchmarks)          | Fichier benchmarks       | Temps de calcul sous seuil           |
 
 **Critère de fin de phase** : Le produit offre une expérience analytique complète avec dashboard, historique et aide contextuelle.
 
@@ -162,16 +162,16 @@ L'objectif de la trajectoire : passer de **« prototype avancé fonctionnel »**
 **Durée estimée** : 4-6 semaines
 **Objectif** : Élargir le périmètre et explorer des pistes avancées.
 
-| Sprint | Contenu | Durée |
-|--------|---------|-------|
-| 13.1 | Support de loteries supplémentaires (Keno, etc.) | 5j |
-| 13.2 | Backtesting historique avec rapport détaillé | 5j |
-| 13.3 | Notifications temps réel (WebSocket) | 3j |
-| 13.4 | Internationalisation (i18n français/anglais) | 3j |
-| 13.5 | Conteneurisation Docker + CI/CD | 2j |
-| 13.6 | API publique améliorée + documentation Swagger | 3j |
-| 13.7 | Modèle ML de tendances (recherche) | 10j |
-| 13.8 | Simulation multi-agent (recherche) | 5j |
+| Sprint | Contenu                                          | Durée |
+| ------ | ------------------------------------------------ | ----- |
+| 13.1   | Support de loteries supplémentaires (Keno, etc.) | 5j    |
+| 13.2   | Backtesting historique avec rapport détaillé     | 5j    |
+| 13.3   | Notifications temps réel (WebSocket)             | 3j    |
+| 13.4   | Internationalisation (i18n français/anglais)     | 3j    |
+| 13.5   | Conteneurisation Docker + CI/CD                  | 2j    |
+| 13.6   | API publique améliorée + documentation Swagger   | 3j    |
+| 13.7   | Modèle ML de tendances (recherche)               | 10j   |
+| 13.8   | Simulation multi-agent (recherche)               | 5j    |
 
 ---
 
@@ -198,16 +198,16 @@ L'objectif de la trajectoire : passer de **« prototype avancé fonctionnel »**
 
 ## 13.7 Jalons et métriques de suivi
 
-| Jalon | Phase | Métrique de succès | Date cible |
-|-------|-------|--------------------|------------|
-| EuroMillions fonctionnel | 10 | Tests multi-loteries : 100% pass | Fin semaine 2 |
-| Zéro bug critique | 10 | 0 item 🔴 dans la checklist | Fin semaine 2 |
-| UX compréhensible | 11 | Tooltips sur 100% des métriques | Fin semaine 5 |
-| Pipeline robuste | 11 | 0 incohérence temporelle sur 30 jours | Fin semaine 5 |
-| Dashboard opérationnel | 12 | Page d'accueil avec KPIs | Fin semaine 7 |
-| Coach IA v1 | 12 | Aide contextuelle sur 100% des pages | Fin semaine 9 |
-| Multi-loteries étendu | 13 | 3+ loteries supportées | Mois 4 |
-| Tests couverture | 12 | 80% backend + E2E critiques | Fin semaine 9 |
+| Jalon                    | Phase | Métrique de succès                    | Date cible    |
+| ------------------------ | ----- | ------------------------------------- | ------------- |
+| EuroMillions fonctionnel | 10    | Tests multi-loteries : 100% pass      | Fin semaine 2 |
+| Zéro bug critique        | 10    | 0 item 🔴 dans la checklist            | Fin semaine 2 |
+| UX compréhensible        | 11    | Tooltips sur 100% des métriques       | Fin semaine 5 |
+| Pipeline robuste         | 11    | 0 incohérence temporelle sur 30 jours | Fin semaine 5 |
+| Dashboard opérationnel   | 12    | Page d'accueil avec KPIs              | Fin semaine 7 |
+| Coach IA v1              | 12    | Aide contextuelle sur 100% des pages  | Fin semaine 9 |
+| Multi-loteries étendu    | 13    | 3+ loteries supportées                | Mois 4        |
+| Tests couverture         | 12    | 80% backend + E2E critiques           | Fin semaine 9 |
 
 ---
 

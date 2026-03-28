@@ -134,13 +134,13 @@ Ce qui serait utile :
 
 ## 9.2 Fonctionnalités « vitrines » (affichées mais non fonctionnelles)
 
-| Fonctionnalité | Présence visuelle | État réel | Impact utilisateur |
-|---------------|------------------|-----------|-------------------|
-| Sélecteur de profil (GridsPage) | 4 boutons radio cliquables | Jamais envoyé à l'API | L'utilisateur croit choisir, mais il ne choisit pas |
-| Sélection auto de méthode | Option « auto » dans le dropdown | Toujours génétique | L'utilisateur croit obtenir la meilleure méthode |
-| Cards admin « À venir » | Visuellement présentes | Contenu vide « Phase 9 » | Donne une impression de chantier |
-| Clic sur NumberHeatmap | Boutons cliquables | Handler non connecté | Frustration si l'utilisateur clique |
-| Sélecteur de jeu EuroMillions | Dropdown fonctionnel | Config non résolue côté API | Résultats EuroMillions erronés |
+| Fonctionnalité                  | Présence visuelle                | État réel                   | Impact utilisateur                                  |
+| ------------------------------- | -------------------------------- | --------------------------- | --------------------------------------------------- |
+| Sélecteur de profil (GridsPage) | 4 boutons radio cliquables       | Jamais envoyé à l'API       | L'utilisateur croit choisir, mais il ne choisit pas |
+| Sélection auto de méthode       | Option « auto » dans le dropdown | Toujours génétique          | L'utilisateur croit obtenir la meilleure méthode    |
+| Cards admin « À venir »         | Visuellement présentes           | Contenu vide « Phase 9 »    | Donne une impression de chantier                    |
+| Clic sur NumberHeatmap          | Boutons cliquables               | Handler non connecté        | Frustration si l'utilisateur clique                 |
+| Sélecteur de jeu EuroMillions   | Dropdown fonctionnel             | Config non résolue côté API | Résultats EuroMillions erronés                      |
 
 **Recommandation** : Chaque fonctionnalité doit être soit **pleinement opérationnelle**, soit **retirée de l'interface**. Afficher un contrôle non fonctionnel est pire que de ne pas l'afficher.
 
@@ -150,43 +150,43 @@ Ce qui serait utile :
 
 Pour être juste, voici ce qui fonctionne correctement de bout en bout :
 
-| Fonctionnalité | Verdict | Qualité |
-|---------------|---------|---------|
-| Login / Authentification | ✅ Complet | Bon |
-| Consultation des tirages (paginé) | ✅ Complet | Bon |
-| Statistiques de fréquences | ✅ Fonctionnel | Basique |
-| Statistiques de gaps | ✅ Fonctionnel | Correct |
-| Statistiques co-occurrences | ✅ Fonctionnel | Correct |
-| Statistiques distribution | ✅ Fonctionnel | Bon |
-| Statistiques bayésiennes | ✅ Fonctionnel | Avancé |
-| Statistiques graphe | ✅ Fonctionnel | Avancé |
-| Statistiques temporelles | ✅ Fonctionnel | Fragile (4 points) |
-| Génération de grilles | ✅ Fonctionnel | Score correct mais profil non branché |
-| Top grilles | ✅ Fonctionnel | Automatique via scheduler |
-| Génération de portefeuille | ✅ Fonctionnel | 4 stratégies |
-| Simulation Monte Carlo | ✅ Fonctionnel | Résultats bruts |
-| Simulation stabilité | ✅ Fonctionnel | Bootstrap |
-| Comparaison random | ✅ Fonctionnel | Z-score correct |
-| Administration jobs | ✅ Fonctionnel | Trigger + historique |
-| Administration utilisateurs | ✅ Fonctionnel | Création + liste |
-| Importation automatique tirages | ✅ Fonctionnel | Scheduler + scrapers |
-| Pipeline nightly | ✅ Fonctionnel | Stats → Scoring → Top → Portfolio |
+| Fonctionnalité                    | Verdict       | Qualité                               |
+| --------------------------------- | ------------- | ------------------------------------- |
+| Login / Authentification          | ✅ Complet     | Bon                                   |
+| Consultation des tirages (paginé) | ✅ Complet     | Bon                                   |
+| Statistiques de fréquences        | ✅ Fonctionnel | Basique                               |
+| Statistiques de gaps              | ✅ Fonctionnel | Correct                               |
+| Statistiques co-occurrences       | ✅ Fonctionnel | Correct                               |
+| Statistiques distribution         | ✅ Fonctionnel | Bon                                   |
+| Statistiques bayésiennes          | ✅ Fonctionnel | Avancé                                |
+| Statistiques graphe               | ✅ Fonctionnel | Avancé                                |
+| Statistiques temporelles          | ✅ Fonctionnel | Fragile (4 points)                    |
+| Génération de grilles             | ✅ Fonctionnel | Score correct mais profil non branché |
+| Top grilles                       | ✅ Fonctionnel | Automatique via scheduler             |
+| Génération de portefeuille        | ✅ Fonctionnel | 4 stratégies                          |
+| Simulation Monte Carlo            | ✅ Fonctionnel | Résultats bruts                       |
+| Simulation stabilité              | ✅ Fonctionnel | Bootstrap                             |
+| Comparaison random                | ✅ Fonctionnel | Z-score correct                       |
+| Administration jobs               | ✅ Fonctionnel | Trigger + historique                  |
+| Administration utilisateurs       | ✅ Fonctionnel | Création + liste                      |
+| Importation automatique tirages   | ✅ Fonctionnel | Scheduler + scrapers                  |
+| Pipeline nightly                  | ✅ Fonctionnel | Stats → Scoring → Top → Portfolio     |
 
 ---
 
 ## 9.4 Fonctionnalités absentes mais attendues
 
-| Fonctionnalité | Priorité | Justification |
-|---------------|----------|---------------|
-| Vérification post-tirage | 🔴 Haute | Boucle de feedback essentielle |
-| Export PDF/image des grilles | 🟠 Moyenne | Rend le produit actionnable |
-| Résumé intelligent des analyses | 🔴 Haute | Différencie le produit d'un tableur |
-| Page profil numéro (toutes stats d'un seul numéro) | 🟠 Moyenne | Navigation croisée entre analyses |
-| Backtesting de portefeuille | 🟠 Moyenne | Preuve de valeur du portefeuille |
-| Historique des grilles générées | 🟡 Basse | Permet de suivre l'évolution |
-| Notifications nouveau tirage | 🟡 Basse | Engage l'utilisateur |
-| Modification manuelle d'une grille avec rescoring live | 🟡 Basse | Pour utilisateurs avancés |
-| Comparaison de deux portefeuilles | 🟡 Basse | Aide à la décision |
+| Fonctionnalité                                         | Priorité  | Justification                       |
+| ------------------------------------------------------ | --------- | ----------------------------------- |
+| Vérification post-tirage                               | 🔴 Haute   | Boucle de feedback essentielle      |
+| Export PDF/image des grilles                           | 🟠 Moyenne | Rend le produit actionnable         |
+| Résumé intelligent des analyses                        | 🔴 Haute   | Différencie le produit d'un tableur |
+| Page profil numéro (toutes stats d'un seul numéro)     | 🟠 Moyenne | Navigation croisée entre analyses   |
+| Backtesting de portefeuille                            | 🟠 Moyenne | Preuve de valeur du portefeuille    |
+| Historique des grilles générées                        | 🟡 Basse   | Permet de suivre l'évolution        |
+| Notifications nouveau tirage                           | 🟡 Basse   | Engage l'utilisateur                |
+| Modification manuelle d'une grille avec rescoring live | 🟡 Basse   | Pour utilisateurs avancés           |
+| Comparaison de deux portefeuilles                      | 🟡 Basse   | Aide à la décision                  |
 
 ---
 

@@ -236,48 +236,48 @@ La dette technique est classée par type :
 
 ### Dette de conception
 
-| Élément | Description | Sévérité |
-|---------|-------------|----------|
-| game_config global | Config non filtrée par game_id | 🔴 Critique |
-| select_method figé | SA jamais utilisé | 🟠 Important |
-| Pipeline timing-based | Pas de chaînage des jobs | 🟡 Modéré |
-| Pas de DTO couche service | Les models SQLAlchemy traversent toutes les couches | 🟡 Modéré |
+| Élément                   | Description                                         | Sévérité    |
+| ------------------------- | --------------------------------------------------- | ----------- |
+| game_config global        | Config non filtrée par game_id                      | 🔴 Critique  |
+| select_method figé        | SA jamais utilisé                                   | 🟠 Important |
+| Pipeline timing-based     | Pas de chaînage des jobs                            | 🟡 Modéré    |
+| Pas de DTO couche service | Les models SQLAlchemy traversent toutes les couches | 🟡 Modéré    |
 
 ### Dette d'implémentation
 
-| Élément | Description | Sévérité |
-|---------|-------------|----------|
-| count() inefficace | Charge tout en mémoire | 🟠 Important |
-| PRAGMA FK non activé | Intégrité non garantie | 🟠 Important |
-| URLs scrapers hardcodées | Pas de configuration externe | 🟡 Modéré |
-| Étoiles ignorées | EuroMillions incomplet | 🔴 Critique |
+| Élément                  | Description                  | Sévérité    |
+| ------------------------ | ---------------------------- | ----------- |
+| count() inefficace       | Charge tout en mémoire       | 🟠 Important |
+| PRAGMA FK non activé     | Intégrité non garantie       | 🟠 Important |
+| URLs scrapers hardcodées | Pas de configuration externe | 🟡 Modéré    |
+| Étoiles ignorées         | EuroMillions incomplet       | 🔴 Critique  |
 
 ### Dette d'infrastructure
 
-| Élément | Description | Sévérité |
-|---------|-------------|----------|
-| Pas d'Alembic | Pas de migration de schéma | 🔴 Critique |
-| Pas de backup auto | Aucune sauvegarde de la base | 🟡 Modéré |
-| Pas de CI/CD | Tests manuels uniquement | 🟡 Modéré |
-| Pas de conteneurisation | Pas de Docker | 🟡 Faible |
+| Élément                 | Description                  | Sévérité   |
+| ----------------------- | ---------------------------- | ---------- |
+| Pas d'Alembic           | Pas de migration de schéma   | 🔴 Critique |
+| Pas de backup auto      | Aucune sauvegarde de la base | 🟡 Modéré   |
+| Pas de CI/CD            | Tests manuels uniquement     | 🟡 Modéré   |
+| Pas de conteneurisation | Pas de Docker                | 🟡 Faible   |
 
 ### Dette de tests
 
-| Élément | Description | Sévérité |
-|---------|-------------|----------|
-| 0 tests frontend | React sans tests | 🟠 Important |
-| 0 tests multi-loteries | Bug game_config non détecté | 🔴 Critique |
-| 0 tests E2E | Parcours utilisateur non vérifié | 🟡 Modéré |
-| 0 tests de performance | Aucun benchmark | 🟡 Modéré |
+| Élément                | Description                      | Sévérité    |
+| ---------------------- | -------------------------------- | ----------- |
+| 0 tests frontend       | React sans tests                 | 🟠 Important |
+| 0 tests multi-loteries | Bug game_config non détecté      | 🔴 Critique  |
+| 0 tests E2E            | Parcours utilisateur non vérifié | 🟡 Modéré    |
+| 0 tests de performance | Aucun benchmark                  | 🟡 Modéré    |
 
 ### Dette UX
 
-| Élément | Description | Sévérité |
-|---------|-------------|----------|
-| 0 tooltips | Données non expliquées | 🟠 Important |
-| Messages d'erreur techniques | Non orientés utilisateur | 🟡 Modéré |
-| Pas d'aide contextuelle | Pas de coach, pas de guide | 🟡 Modéré |
-| États vides basiques | « Aucune donnée » sans aide | 🟡 Modéré |
+| Élément                      | Description                 | Sévérité    |
+| ---------------------------- | --------------------------- | ----------- |
+| 0 tooltips                   | Données non expliquées      | 🟠 Important |
+| Messages d'erreur techniques | Non orientés utilisateur    | 🟡 Modéré    |
+| Pas d'aide contextuelle      | Pas de coach, pas de guide  | 🟡 Modéré    |
+| États vides basiques         | « Aucune donnée » sans aide | 🟡 Modéré    |
 
 ---
 
@@ -305,13 +305,13 @@ PROBABILITÉ
 
 ## 11.6 Évaluation du risque projet global
 
-| Dimension | Risque | Justification |
-|-----------|--------|---------------|
-| Fonctionnel | 🟠 Modéré-élevé | EuroMillions cassé, profil non câblé |
-| Technique | 🟡 Modéré | Pas de migration, count inefficace |
-| Performance | 🟢 Faible | SQLite tient la charge mono-user |
-| Sécurité | 🟢 Faible | Auth solide, rate limiting partiel |
-| Maintenabilité | 🟡 Modéré | Code propre mais dette cachée |
-| Scalabilité | 🟠 Modéré | SQLite, accumulation, pas de cache |
+| Dimension      | Risque         | Justification                        |
+| -------------- | -------------- | ------------------------------------ |
+| Fonctionnel    | 🟠 Modéré-élevé | EuroMillions cassé, profil non câblé |
+| Technique      | 🟡 Modéré       | Pas de migration, count inefficace   |
+| Performance    | 🟢 Faible       | SQLite tient la charge mono-user     |
+| Sécurité       | 🟢 Faible       | Auth solide, rate limiting partiel   |
+| Maintenabilité | 🟡 Modéré       | Code propre mais dette cachée        |
+| Scalabilité    | 🟠 Modéré       | SQLite, accumulation, pas de cache   |
 
 **Verdict** : Le projet porte une dette technique concentrée autour du multi-loteries et des outils de développement (migrations, tests). L'architecture de base est saine et la dette est remboursable avec un effort ciblé de 2-3 semaines de développement focalisé.

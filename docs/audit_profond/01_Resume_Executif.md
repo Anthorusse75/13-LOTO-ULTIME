@@ -19,18 +19,18 @@ Cependant, le projet se trouve aujourd'hui à un **point d'inflexion critique** 
 
 ## Forces identifiées
 
-| Domaine | Évaluation | Commentaire |
-|---------|-----------|-------------|
-| Architecture backend | ★★★★☆ | Layered proprement, async bout en bout, exceptions bien hiérarchisées |
-| Couverture fonctionnelle | ★★★★☆ | 34 endpoints couvrant toute la chaîne de valeur |
-| Multi-loteries | ★★★☆☆ | Structure en place, mais un **bug critique** empêche le fonctionnement réel |
-| Moteurs statistiques | ★★★☆☆ | 7 moteurs implémentés, mais sophistication inégale (de BASIQUE à ÉLEVÉE) |
-| Moteurs d'optimisation | ★★★☆☆ | 5 algorithmes, mais un bug empêche l'utilisation du recuit simulé |
-| Scoring | ★★☆☆☆ | 6 critères, mais normalisation instable et seuils arbitraires |
-| Sécurité | ★★★★☆ | JWT + bcrypt + RBAC + rate limiting sur les points sensibles |
-| Frontend | ★★★☆☆ | Interface fonctionnelle mais pas encore « produit » |
-| UX / Aide contextuelle | ★★☆☆☆ | Déficit majeur en tooltips, feedback et pédagogie |
-| Tests | ★★★★☆ | 337 tests passants, bonne couverture des modules critiques |
+| Domaine                  | Évaluation | Commentaire                                                                 |
+| ------------------------ | ---------- | --------------------------------------------------------------------------- |
+| Architecture backend     | ★★★★☆      | Layered proprement, async bout en bout, exceptions bien hiérarchisées       |
+| Couverture fonctionnelle | ★★★★☆      | 34 endpoints couvrant toute la chaîne de valeur                             |
+| Multi-loteries           | ★★★☆☆      | Structure en place, mais un **bug critique** empêche le fonctionnement réel |
+| Moteurs statistiques     | ★★★☆☆      | 7 moteurs implémentés, mais sophistication inégale (de BASIQUE à ÉLEVÉE)    |
+| Moteurs d'optimisation   | ★★★☆☆      | 5 algorithmes, mais un bug empêche l'utilisation du recuit simulé           |
+| Scoring                  | ★★☆☆☆      | 6 critères, mais normalisation instable et seuils arbitraires               |
+| Sécurité                 | ★★★★☆      | JWT + bcrypt + RBAC + rate limiting sur les points sensibles                |
+| Frontend                 | ★★★☆☆      | Interface fonctionnelle mais pas encore « produit »                         |
+| UX / Aide contextuelle   | ★★☆☆☆      | Déficit majeur en tooltips, feedback et pédagogie                           |
+| Tests                    | ★★★★☆      | 337 tests passants, bonne couverture des modules critiques                  |
 
 ---
 
@@ -81,13 +81,13 @@ Combler ce décalage est l'enjeu central des prochaines phases de développement
 
 ## Synthèse de l'effort estimé
 
-| Catégorie | Nombre d'actions | Criticité |
-|-----------|-----------------|-----------|
-| Corrections critiques (bugs bloquants) | 6 | 🔴 Immédiat |
-| Corrections importantes (qualité) | 14 | 🟠 Court terme |
-| Améliorations algorithmiques | 22 | 🟡 Moyen terme |
-| Améliorations UX/UI | 18 | 🟡 Moyen terme |
-| Améliorations produit (premium) | 12 | 🟢 Long terme |
-| **Total** | **72 actions identifiées** | |
+| Catégorie                              | Nombre d'actions           | Criticité     |
+| -------------------------------------- | -------------------------- | ------------- |
+| Corrections critiques (bugs bloquants) | 6                          | 🔴 Immédiat    |
+| Corrections importantes (qualité)      | 14                         | 🟠 Court terme |
+| Améliorations algorithmiques           | 22                         | 🟡 Moyen terme |
+| Améliorations UX/UI                    | 18                         | 🟡 Moyen terme |
+| Améliorations produit (premium)        | 12                         | 🟢 Long terme  |
+| **Total**                              | **72 actions identifiées** |               |
 
 Ce rapport détaille chacune de ces actions dans les sections suivantes, avec leur justification, leur impact attendu et leur priorité relative.

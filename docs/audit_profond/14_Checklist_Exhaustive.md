@@ -314,31 +314,31 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Par priorité
 
-| Priorité | Total | Cochées | Restantes |
-|----------|-------|---------|-----------|
-| 🔴 P0 — Indispensable | 30 | 0 | 30 |
-| 🟠 P1 — Très utile | 46 | 0 | 46 |
-| 🟡 P2 — Avancé | 54 | 0 | 54 |
-| 🔵 P3 — Premium | 15 | 0 | 15 |
-| **TOTAL** | **145** | **0** | **145** |
+| Priorité             | Total   | Cochées | Restantes |
+| -------------------- | ------- | ------- | --------- |
+| 🔴 P0 — Indispensable | 30      | 0       | 30        |
+| 🟠 P1 — Très utile    | 46      | 0       | 46        |
+| 🟡 P2 — Avancé        | 54      | 0       | 54        |
+| 🔵 P3 — Premium       | 15      | 0       | 15        |
+| **TOTAL**            | **145** | **0**   | **145**   |
 
 ### Par domaine
 
-| Domaine | Total |
-|---------|-------|
-| Backend — Corrections critiques | 28 |
-| Backend — API et services | 14 |
-| Backend — Scheduler et pipeline | 12 |
-| Backend — Tests | 10 |
-| Frontend — Corrections | 5 |
-| Frontend — UX et compréhension | 26 |
-| Frontend — Qualité visuelle | 12 |
-| Frontend — Nouvelles fonctionnalités | 20 |
-| Frontend — Tests | 8 |
-| Infrastructure et DevOps | 12 |
-| Sécurité | 7 |
-| Multi-loteries | 5 |
-| **TOTAL** | **145** (avec recoupements possibles) |
+| Domaine                              | Total                                 |
+| ------------------------------------ | ------------------------------------- |
+| Backend — Corrections critiques      | 28                                    |
+| Backend — API et services            | 14                                    |
+| Backend — Scheduler et pipeline      | 12                                    |
+| Backend — Tests                      | 10                                    |
+| Frontend — Corrections               | 5                                     |
+| Frontend — UX et compréhension       | 26                                    |
+| Frontend — Qualité visuelle          | 12                                    |
+| Frontend — Nouvelles fonctionnalités | 20                                    |
+| Frontend — Tests                     | 8                                     |
+| Infrastructure et DevOps             | 12                                    |
+| Sécurité                             | 7                                     |
+| Multi-loteries                       | 5                                     |
+| **TOTAL**                            | **145** (avec recoupements possibles) |
 
 ---
 

@@ -14,15 +14,15 @@ Le moteur se décompose en **quatre étages** :
 
 ### Vue d'ensemble
 
-| Moteur | Sophistication | Verdict | Problème principal |
-|--------|---------------|---------|-------------------|
-| FrequencyEngine | BASIQUE | ⚠️ Suffisant mais limité | Pas de pondération temporelle |
-| GapEngine | MODÉRÉ | ⚠️ Correct | expected_gap hardcodé |
-| CooccurrenceEngine | MODÉRÉ | ⚠️ Correct | Pas de test de significativité |
-| DistributionEngine | MODÉRÉ-ÉLEVÉ | ⚠️ Bon sauf bug | decade_size=10 casse pour pools non divisibles par 10 |
-| BayesianEngine | ÉLEVÉ | ✅ Bon | Pas de posterior predictive |
-| GraphEngine | ÉLEVÉ | ⚠️ Bon sauf erreur silencieuse | Eigenvector failure silencieux |
-| TemporalEngine | MODÉRÉ-ÉLEVÉ | ⚠️ Fragile | Régression linéaire sur 4 points |
+| Moteur             | Sophistication | Verdict                       | Problème principal                                    |
+| ------------------ | -------------- | ----------------------------- | ----------------------------------------------------- |
+| FrequencyEngine    | BASIQUE        | ⚠️ Suffisant mais limité       | Pas de pondération temporelle                         |
+| GapEngine          | MODÉRÉ         | ⚠️ Correct                     | expected_gap hardcodé                                 |
+| CooccurrenceEngine | MODÉRÉ         | ⚠️ Correct                     | Pas de test de significativité                        |
+| DistributionEngine | MODÉRÉ-ÉLEVÉ   | ⚠️ Bon sauf bug                | decade_size=10 casse pour pools non divisibles par 10 |
+| BayesianEngine     | ÉLEVÉ          | ✅ Bon                         | Pas de posterior predictive                           |
+| GraphEngine        | ÉLEVÉ          | ⚠️ Bon sauf erreur silencieuse | Eigenvector failure silencieux                        |
+| TemporalEngine     | MODÉRÉ-ÉLEVÉ   | ⚠️ Fragile                     | Régression linéaire sur 4 points                      |
 
 ### Analyse détaillée par moteur
 
@@ -176,14 +176,14 @@ Le scoring est l'étape qui convertit les observations statistiques en un **scor
 
 ### Vue d'ensemble
 
-| Critère | Sophistication | Problème principal |
-|---------|---------------|-------------------|
-| FrequencyCriterion | BASIQUE | Normalisation min-max instable |
-| GapCriterion | MODÉRÉ | Paramètre sigmoid arbitraire (sensitivity=3.0) |
-| CooccurrenceCriterion | MODÉRÉ | Paires manquantes scorées 0.5 (injustifié) |
-| BalanceCriterion | BASIQUE | « Magic number » facteur 2 |
-| StructureCriterion | MODÉRÉ-ÉLEVÉ | Pondérations hardcodées [0.30, 0.30, 0.20, 0.20] |
-| PatternPenalty | ÉLEVÉ mais dangereux | Pénalités qui s'empilent sans limite |
+| Critère               | Sophistication       | Problème principal                               |
+| --------------------- | -------------------- | ------------------------------------------------ |
+| FrequencyCriterion    | BASIQUE              | Normalisation min-max instable                   |
+| GapCriterion          | MODÉRÉ               | Paramètre sigmoid arbitraire (sensitivity=3.0)   |
+| CooccurrenceCriterion | MODÉRÉ               | Paires manquantes scorées 0.5 (injustifié)       |
+| BalanceCriterion      | BASIQUE              | « Magic number » facteur 2                       |
+| StructureCriterion    | MODÉRÉ-ÉLEVÉ         | Pondérations hardcodées [0.30, 0.30, 0.20, 0.20] |
+| PatternPenalty        | ÉLEVÉ mais dangereux | Pénalités qui s'empilent sans limite             |
 
 ### Analyse approfondie
 
@@ -236,13 +236,13 @@ Les paires de numéros absentes de la matrice de co-occurrence reçoivent un sco
 
 #### ⚠️ Magic numbers partout
 
-| Critère | Constante | Valeur | Justification |
-|---------|-----------|--------|---------------|
-| GapCriterion | sensitivity | 3.0 | Aucune |
-| BalanceCriterion | facteur d'échelle | 2 | Aucune |
-| StructureCriterion | pondérations | [0.30, 0.30, 0.20, 0.20] | Aucune |
-| TemporalEngine | seuils momentum | ±0.02 | Aucune |
-| PatternPenalty | 7 seuils | variables | Partiellement justifiés |
+| Critère            | Constante         | Valeur                   | Justification           |
+| ------------------ | ----------------- | ------------------------ | ----------------------- |
+| GapCriterion       | sensitivity       | 3.0                      | Aucune                  |
+| BalanceCriterion   | facteur d'échelle | 2                        | Aucune                  |
+| StructureCriterion | pondérations      | [0.30, 0.30, 0.20, 0.20] | Aucune                  |
+| TemporalEngine     | seuils momentum   | ±0.02                    | Aucune                  |
+| PatternPenalty     | 7 seuils          | variables                | Partiellement justifiés |
 
 Chaque constante devrait être soit paramétrable via la configuration, soit accompagnée d'un commentaire expliquant le raisonnement.
 
@@ -254,13 +254,13 @@ Chaque constante devrait être soit paramétrable via la configuration, soit acc
 
 ### Vue d'ensemble
 
-| Algorithme | Sophistication | Problème principal |
-|-----------|---------------|-------------------|
-| HillClimbing | BASIQUE | 100 restarts × 50 stagnation, échanges 1-élément seulement |
-| GeneticAlgorithm | MODÉRÉ-ÉLEVÉ | Bon paramétrage (pop=200, gen=500) |
-| SimulatedAnnealing | ÉLEVÉ | **JAMAIS EXÉCUTÉ** (bug select_method) + 50K itérations coûteux |
-| TabuSearch | MODÉRÉ-ÉLEVÉ | Pas de critère d'aspiration |
-| NSGA-II (MultiObjective) | ÉLEVÉ | 3 objectifs pertinents (score, diversité, couverture) |
+| Algorithme               | Sophistication | Problème principal                                              |
+| ------------------------ | -------------- | --------------------------------------------------------------- |
+| HillClimbing             | BASIQUE        | 100 restarts × 50 stagnation, échanges 1-élément seulement      |
+| GeneticAlgorithm         | MODÉRÉ-ÉLEVÉ   | Bon paramétrage (pop=200, gen=500)                              |
+| SimulatedAnnealing       | ÉLEVÉ          | **JAMAIS EXÉCUTÉ** (bug select_method) + 50K itérations coûteux |
+| TabuSearch               | MODÉRÉ-ÉLEVÉ   | Pas de critère d'aspiration                                     |
+| NSGA-II (MultiObjective) | ÉLEVÉ          | 3 objectifs pertinents (score, diversité, couverture)           |
 
 ### 🔴 Bug critique : select_method()
 

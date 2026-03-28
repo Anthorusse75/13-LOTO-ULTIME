@@ -6,16 +6,16 @@
 
 L'API expose **34 endpoints** répartis en 8 domaines fonctionnels :
 
-| Domaine | Endpoints | Auth requise | Calcul intensif |
-|---------|-----------|-------------|-----------------|
-| Auth | 5 | Partiel (login/register publics avec rate limit) | Non |
-| Games | 2 | Non | Non |
-| Draws | 2 | Non | Non |
-| Statistics | 8 + recompute | Partiel (bayesian/graph protégés) | **Oui (recompute)** |
-| Grids | 4 | Utilisateur | **Oui (generate, score)** |
-| Portfolios | 1 | Utilisateur | **Oui** |
-| Simulation | 4 | Utilisateur | **Oui** |
-| Jobs | 4 | Admin | **Oui (trigger)** |
+| Domaine    | Endpoints     | Auth requise                                     | Calcul intensif           |
+| ---------- | ------------- | ------------------------------------------------ | ------------------------- |
+| Auth       | 5             | Partiel (login/register publics avec rate limit) | Non                       |
+| Games      | 2             | Non                                              | Non                       |
+| Draws      | 2             | Non                                              | Non                       |
+| Statistics | 8 + recompute | Partiel (bayesian/graph protégés)                | **Oui (recompute)**       |
+| Grids      | 4             | Utilisateur                                      | **Oui (generate, score)** |
+| Portfolios | 1             | Utilisateur                                      | **Oui**                   |
+| Simulation | 4             | Utilisateur                                      | **Oui**                   |
+| Jobs       | 4             | Admin                                            | **Oui (trigger)**         |
 
 **Verdict** : La couverture fonctionnelle est excellente. L'API couvre l'intégralité de la chaîne d'analyse.
 
@@ -169,16 +169,16 @@ Les 7 repositories spécialisés ajoutent des requêtes pertinentes :
 
 Le scheduler APScheduler est correctement configuré avec 8 jobs cron :
 
-| Job | Schedule | Durée estimée |
-|-----|----------|---------------|
-| fetch_loto | Lun/Mer/Sam 22h | ~5s |
-| fetch_euromillions | Mar/Ven 22h | ~5s |
-| compute_stats | Quotidien 23h | 10-30s |
-| compute_scoring | Quotidien 23h30 | 5-15s |
-| compute_top_grids | Quotidien 23h45 | 30-120s |
-| optimize_portfolio | Quotidien 0h00 | 30-120s |
-| cleanup | Quotidien 3h | <1s |
-| health_check | Toutes les 30min | <1s |
+| Job                | Schedule         | Durée estimée |
+| ------------------ | ---------------- | ------------- |
+| fetch_loto         | Lun/Mer/Sam 22h  | ~5s           |
+| fetch_euromillions | Mar/Ven 22h      | ~5s           |
+| compute_stats      | Quotidien 23h    | 10-30s        |
+| compute_scoring    | Quotidien 23h30  | 5-15s         |
+| compute_top_grids  | Quotidien 23h45  | 30-120s       |
+| optimize_portfolio | Quotidien 0h00   | 30-120s       |
+| cleanup            | Quotidien 3h     | <1s           |
+| health_check       | Toutes les 30min | <1s           |
 
 **Forces** :
 - `coalesce=True` et `max_instances=1` évitent les exécutions multiples
@@ -282,13 +282,13 @@ L'authentification est bien implémentée :
 
 ### Points d'attention
 
-| Aspect | État | Risque |
-|--------|------|--------|
-| Complexité password | ❌ Aucune validation | Un mot de passe vide est accepté |
-| Révocation de token | ❌ Pas de blacklist | Un token volé est valide jusqu'à expiration |
-| Vérification email | ❌ Absente | N'importe quelle adresse est acceptée |
-| Brute-force refresh | ⚠️ Non limité | Le endpoint `/refresh` n'a pas de rate limit |
-| Admin password en dur | ⚠️ Default dans config | `ChangeMe123!` dans le code source |
+| Aspect                | État                  | Risque                                       |
+| --------------------- | --------------------- | -------------------------------------------- |
+| Complexité password   | ❌ Aucune validation   | Un mot de passe vide est accepté             |
+| Révocation de token   | ❌ Pas de blacklist    | Un token volé est valide jusqu'à expiration  |
+| Vérification email    | ❌ Absente             | N'importe quelle adresse est acceptée        |
+| Brute-force refresh   | ⚠️ Non limité          | Le endpoint `/refresh` n'a pas de rate limit |
+| Admin password en dur | ⚠️ Default dans config | `ChangeMe123!` dans le code source           |
 
 **Classement** :
 - Complexité password : 🔧 Correction importante
@@ -321,15 +321,15 @@ Le middleware de timing ajoute `X-Process-Time-Ms` à chaque réponse, ce qui pe
 
 ## 4.8 Synthèse backend
 
-| Composant | Qualité | Action prioritaire |
-|-----------|---------|-------------------|
-| API REST (34 endpoints) | ★★★★☆ | Rate limiting sur calculs |
-| Services (3 services) | ★★★★☆ | Paralléliser les engines |
-| Repositories (7 + base) | ★★★☆☆ | Corriger count(), ajouter index |
-| Scheduler (8 jobs) | ★★★★☆ | Timezone, chaînage explicite |
-| Runner + retry | ★★★★☆ | Ajouter timeout |
-| Scrapers | ★★★★☆ | Externaliser URLs, factoriser |
-| Auth | ★★★★☆ | Password complexity, rate limit refresh |
-| Logging | ★★★★☆ | Métriques pour production |
+| Composant               | Qualité | Action prioritaire                      |
+| ----------------------- | ------- | --------------------------------------- |
+| API REST (34 endpoints) | ★★★★☆   | Rate limiting sur calculs               |
+| Services (3 services)   | ★★★★☆   | Paralléliser les engines                |
+| Repositories (7 + base) | ★★★☆☆   | Corriger count(), ajouter index         |
+| Scheduler (8 jobs)      | ★★★★☆   | Timezone, chaînage explicite            |
+| Runner + retry          | ★★★★☆   | Ajouter timeout                         |
+| Scrapers                | ★★★★☆   | Externaliser URLs, factoriser           |
+| Auth                    | ★★★★☆   | Password complexity, rate limit refresh |
+| Logging                 | ★★★★☆   | Métriques pour production               |
 
 Le backend est **la partie la plus mature du projet**. Les corrections identifiées sont ciblées et ne remettent pas en cause l'architecture globale. Le bug de résolution `game_config` reste le problème critique numéro un à adresser.

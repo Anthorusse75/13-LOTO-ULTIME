@@ -228,18 +228,18 @@ User (id, username, email, hashed_password, role, is_active, last_login)
 
 ## 3.6 Synthèse architecturale
 
-| Aspect | Verdict | Action requise |
-|--------|---------|----------------|
-| Layered architecture | ✅ Solide | Aucune |
-| Async de bout en bout | ✅ Bon choix | Aucune |
-| Configuration typée | ✅ Excellente | Aucune |
-| Exception hierarchy | ✅ Propre | Aucune |
-| Game config resolution | 🔴 Bug critique | Corriger immédiatement |
-| Couche DTO | ⚠️ Absente | Ajouter des schémas Pydantic response |
-| Offloading calculs CPU | ⚠️ Manquant | `asyncio.to_thread()` minimum |
-| Gestion sessions jobs | ⚠️ Fragile | Context manager dédié |
-| Migrations DB | ⚠️ Absentes | Intégrer Alembic |
-| Index DB | ⚠️ Manquants | Ajouter sur colonnes filtrées |
-| Design system frontend | ⚠️ Absent | Extraire composants réutilisables |
+| Aspect                 | Verdict        | Action requise                        |
+| ---------------------- | -------------- | ------------------------------------- |
+| Layered architecture   | ✅ Solide       | Aucune                                |
+| Async de bout en bout  | ✅ Bon choix    | Aucune                                |
+| Configuration typée    | ✅ Excellente   | Aucune                                |
+| Exception hierarchy    | ✅ Propre       | Aucune                                |
+| Game config resolution | 🔴 Bug critique | Corriger immédiatement                |
+| Couche DTO             | ⚠️ Absente      | Ajouter des schémas Pydantic response |
+| Offloading calculs CPU | ⚠️ Manquant     | `asyncio.to_thread()` minimum         |
+| Gestion sessions jobs  | ⚠️ Fragile      | Context manager dédié                 |
+| Migrations DB          | ⚠️ Absentes     | Intégrer Alembic                      |
+| Index DB               | ⚠️ Manquants    | Ajouter sur colonnes filtrées         |
+| Design system frontend | ⚠️ Absent       | Extraire composants réutilisables     |
 
 L'architecture est une des forces du projet. Les corrections nécessaires sont ciblées et n'imposent pas de refactoring structurel. Le bug de résolution `game_config` est le seul point véritablement critique à résoudre en priorité.

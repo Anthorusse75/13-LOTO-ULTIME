@@ -20,23 +20,23 @@ Aujourd'hui, le produit satisfait partiellement ces quatre critères. L'objectif
 
 ### Grille de maturité (1 à 5)
 
-| Domaine | Maturité | Niveau | Explication |
-|---------|----------|--------|-------------|
-| Ingestion de données | 4/5 | Solide | Scrapers FDJ opérationnels pour les deux jeux, validation robuste, fetch incrémental |
-| Architecture backend | 4/5 | Solide | Layers propres, async, exception handling, logging structuré |
-| Moteurs statistiques | 2.5/5 | En développement | 7 moteurs présents mais sophistication très inégale ; certains sont basiques |
-| Moteur de scoring | 2/5 | Immature | Normalisation instable (min-max), seuils arbitraires, magic numbers |
-| Moteurs d'optimisation | 3/5 | Fonctionnel | 5 algorithmes, mais select_method bugué et SA jamais utilisé |
-| Simulation | 3/5 | Fonctionnel | Monte Carlo + bootstrap, mais pas d'intervalles de confiance |
-| Portefeuille | 3/5 | Fonctionnel | 4 stratégies, metrics pertinentes, mais pas encore de backtesting |
-| Multi-loteries | 2/5 | Structurel | Architecture prête mais bug de résolution config invalide tout le pipeline EuroMillions |
-| API REST | 4/5 | Solide | 34 endpoints bien organisés, auth/RBAC, exception handlers |
-| Scheduler | 3.5/5 | Bon | 8 jobs, retry automatique, tracking, mais pas de chaînage explicite |
-| Sécurité | 3.5/5 | Bon | JWT + bcrypt + RBAC + rate limiting, mais endpoints lourds non protégés |
-| Frontend React | 3/5 | Fonctionnel | Toutes les pages existent, routing correct, mais qualité inégale |
-| UX / Pédagogie | 1.5/5 | Insuffisant | Quasi aucun tooltip, feedback minimal, terminologie non expliquée |
-| Tests | 4/5 | Solide | 337 tests passants, couverture des modules critiques |
-| Documentation | 3/5 | Partielle | 18 documents d'architecture initiaux, mais pas de guide utilisateur |
+| Domaine                | Maturité | Niveau           | Explication                                                                             |
+| ---------------------- | -------- | ---------------- | --------------------------------------------------------------------------------------- |
+| Ingestion de données   | 4/5      | Solide           | Scrapers FDJ opérationnels pour les deux jeux, validation robuste, fetch incrémental    |
+| Architecture backend   | 4/5      | Solide           | Layers propres, async, exception handling, logging structuré                            |
+| Moteurs statistiques   | 2.5/5    | En développement | 7 moteurs présents mais sophistication très inégale ; certains sont basiques            |
+| Moteur de scoring      | 2/5      | Immature         | Normalisation instable (min-max), seuils arbitraires, magic numbers                     |
+| Moteurs d'optimisation | 3/5      | Fonctionnel      | 5 algorithmes, mais select_method bugué et SA jamais utilisé                            |
+| Simulation             | 3/5      | Fonctionnel      | Monte Carlo + bootstrap, mais pas d'intervalles de confiance                            |
+| Portefeuille           | 3/5      | Fonctionnel      | 4 stratégies, metrics pertinentes, mais pas encore de backtesting                       |
+| Multi-loteries         | 2/5      | Structurel       | Architecture prête mais bug de résolution config invalide tout le pipeline EuroMillions |
+| API REST               | 4/5      | Solide           | 34 endpoints bien organisés, auth/RBAC, exception handlers                              |
+| Scheduler              | 3.5/5    | Bon              | 8 jobs, retry automatique, tracking, mais pas de chaînage explicite                     |
+| Sécurité               | 3.5/5    | Bon              | JWT + bcrypt + RBAC + rate limiting, mais endpoints lourds non protégés                 |
+| Frontend React         | 3/5      | Fonctionnel      | Toutes les pages existent, routing correct, mais qualité inégale                        |
+| UX / Pédagogie         | 1.5/5    | Insuffisant      | Quasi aucun tooltip, feedback minimal, terminologie non expliquée                       |
+| Tests                  | 4/5      | Solide           | 337 tests passants, couverture des modules critiques                                    |
+| Documentation          | 3/5      | Partielle        | 18 documents d'architecture initiaux, mais pas de guide utilisateur                     |
 
 ### Radar synthétique
 
@@ -91,12 +91,12 @@ Résultat : l'écran affiche des données statistiquement valides que **personne
 
 Plusieurs éléments de l'interface donnent l'impression d'être interactifs sans l'être réellement :
 
-| Élément | Apparence | Réalité |
-|---------|-----------|---------|
-| Sélecteur de profil de scoring | 4 options cliquables | Valeur jamais transmise à l'API |
-| Cartes « À venir — Phase 9 » (admin) | Visuellement présentes | Aucune fonctionnalité derrière |
-| Handler clic sur NumberHeatmap | Propriété définie | Jamais connectée à un callback parent |
-| Sélecteur de jeu (header) | Dropdown fonctionnel | Mais tous les calculs utilisent la même config |
+| Élément                              | Apparence              | Réalité                                        |
+| ------------------------------------ | ---------------------- | ---------------------------------------------- |
+| Sélecteur de profil de scoring       | 4 options cliquables   | Valeur jamais transmise à l'API                |
+| Cartes « À venir — Phase 9 » (admin) | Visuellement présentes | Aucune fonctionnalité derrière                 |
+| Handler clic sur NumberHeatmap       | Propriété définie      | Jamais connectée à un callback parent          |
+| Sélecteur de jeu (header)            | Dropdown fonctionnel   | Mais tous les calculs utilisent la même config |
 
 Ce type de décalage est particulièrement dangereux car il **érode la confiance** de l'utilisateur. Si un élément ressemble à un contrôle mais ne fait rien, l'utilisateur commence à douter de tout le reste.
 
