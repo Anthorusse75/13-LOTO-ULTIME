@@ -67,7 +67,11 @@ export default function Sidebar() {
 
   const navContent = (mobile: boolean) => (
     <>
-      <nav className="flex-1 py-2" role="navigation" aria-label="Menu principal">
+      <nav
+        className="flex-1 py-2"
+        role="navigation"
+        aria-label="Menu principal"
+      >
         {filteredNavItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}

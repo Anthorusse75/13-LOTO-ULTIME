@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 describe("LoadingSpinner", () => {
   it("renders without message", () => {

@@ -15,10 +15,10 @@
 
 ### Loteries supportées
 
-| Loterie | Configuration | Jours de tirage |
-|---|---|---|
-| Loto FDJ | 5 numéros / 49 + 1 complémentaire / 10 | Lun, Mer, Sam |
-| EuroMillions | 5 numéros / 50 + 2 étoiles / 12 | Mar, Ven |
+| Loterie      | Configuration                          | Jours de tirage |
+| ------------ | -------------------------------------- | --------------- |
+| Loto FDJ     | 5 numéros / 49 + 1 complémentaire / 10 | Lun, Mer, Sam   |
+| EuroMillions | 5 numéros / 50 + 2 étoiles / 12        | Mar, Ven        |
 
 L'architecture est **game-agnostic** : toute loterie peut être ajoutée via configuration YAML.
 
@@ -55,12 +55,12 @@ API (FastAPI Routers)
 
 ### Moteurs
 
-| Moteur | Rôle |
-|---|---|
+| Moteur                      | Rôle                                                                         |
+| --------------------------- | ---------------------------------------------------------------------------- |
 | **Statistique** (7 engines) | Fréquences, écarts, cooccurrences, tendances, distribution, bayésien, graphe |
-| **Scoring** | Score multicritères 0-10 avec 6 critères + pénalités patterns |
-| **Optimisation** | Recuit simulé, algorithme génétique, tabou, hill climbing, NSGA-II |
-| **Simulation** | Monte Carlo, analyse de robustesse, validation bootstrap |
+| **Scoring**                 | Score multicritères 0-10 avec 6 critères + pénalités patterns                |
+| **Optimisation**            | Recuit simulé, algorithme génétique, tabou, hill climbing, NSGA-II           |
+| **Simulation**              | Monte Carlo, analyse de robustesse, validation bootstrap                     |
 
 ---
 
@@ -68,26 +68,26 @@ API (FastAPI Routers)
 
 La documentation complète du projet se trouve dans le dossier [`docs/`](docs/) :
 
-| # | Document | Description |
-|---|---|---|
-| 01 | [Vision du Projet](docs/01_Vision_Projet.md) | Objectifs, contraintes, périmètre |
-| 02 | [Architecture Globale](docs/02_Architecture_Globale.md) | Vue système, stack technique, flux de données |
-| 03 | [Architecture Backend](docs/03_Architecture_Backend.md) | Couches, DI, configuration, scrapers |
-| 04 | [Architecture Frontend](docs/04_Architecture_Frontend.md) | React SPA, routing, state management |
-| 05 | [Modèle de Données](docs/05_Modele_Donnees.md) | Schéma ER, modèles SQLAlchemy, migrations |
-| 06 | [API Design](docs/06_API_Design.md) | Catalogue REST complet, exemples requêtes/réponses |
-| 07 | [Moteur Statistique](docs/07_Moteur_Statistique.md) | 7 engines avec fondements mathématiques |
-| 08 | [Moteur de Scoring](docs/08_Moteur_Scoring.md) | Formule multicritères, profils de poids |
-| 09 | [Moteur d'Optimisation](docs/09_Moteur_Optimisation.md) | Méta-heuristiques, portefeuilles, Pareto |
-| 10 | [Moteur de Simulation](docs/10_Moteur_Simulation.md) | Monte Carlo, robustesse, validation |
-| 11 | [Scheduler et Jobs](docs/11_Scheduler_et_Jobs.md) | APScheduler, chaîne de jobs, retry |
-| 12 | [Sécurité et Authentification](docs/12_Securite_et_Authentification.md) | JWT, RBAC, rate limiting, audit |
-| 13 | [Architecture UI/UX](docs/13_Architecture_UI_UX.md) | Design system, wireframes, composants |
-| 14 | [Performance et Scalabilité](docs/14_Performance_et_Scalabilite.md) | Cache, optimisations, scaling |
-| 15 | [Observabilité](docs/15_Observabilite.md) | Logging structuré, métriques, health check |
-| 16 | [Stratégie de Tests](docs/16_Strategie_Tests.md) | Pyramide tests, fixtures, couverture ≥80% |
-| 17 | [Roadmap de Développement](docs/17_Roadmap_Developpement.md) | 10 phases détaillées |
-| 18 | [Checklist Globale](docs/18_Checklist_Globale.md) | 188 tâches atomiques à cocher |
+| #   | Document                                                                | Description                                        |
+| --- | ----------------------------------------------------------------------- | -------------------------------------------------- |
+| 01  | [Vision du Projet](docs/01_Vision_Projet.md)                            | Objectifs, contraintes, périmètre                  |
+| 02  | [Architecture Globale](docs/02_Architecture_Globale.md)                 | Vue système, stack technique, flux de données      |
+| 03  | [Architecture Backend](docs/03_Architecture_Backend.md)                 | Couches, DI, configuration, scrapers               |
+| 04  | [Architecture Frontend](docs/04_Architecture_Frontend.md)               | React SPA, routing, state management               |
+| 05  | [Modèle de Données](docs/05_Modele_Donnees.md)                          | Schéma ER, modèles SQLAlchemy, migrations          |
+| 06  | [API Design](docs/06_API_Design.md)                                     | Catalogue REST complet, exemples requêtes/réponses |
+| 07  | [Moteur Statistique](docs/07_Moteur_Statistique.md)                     | 7 engines avec fondements mathématiques            |
+| 08  | [Moteur de Scoring](docs/08_Moteur_Scoring.md)                          | Formule multicritères, profils de poids            |
+| 09  | [Moteur d'Optimisation](docs/09_Moteur_Optimisation.md)                 | Méta-heuristiques, portefeuilles, Pareto           |
+| 10  | [Moteur de Simulation](docs/10_Moteur_Simulation.md)                    | Monte Carlo, robustesse, validation                |
+| 11  | [Scheduler et Jobs](docs/11_Scheduler_et_Jobs.md)                       | APScheduler, chaîne de jobs, retry                 |
+| 12  | [Sécurité et Authentification](docs/12_Securite_et_Authentification.md) | JWT, RBAC, rate limiting, audit                    |
+| 13  | [Architecture UI/UX](docs/13_Architecture_UI_UX.md)                     | Design system, wireframes, composants              |
+| 14  | [Performance et Scalabilité](docs/14_Performance_et_Scalabilite.md)     | Cache, optimisations, scaling                      |
+| 15  | [Observabilité](docs/15_Observabilite.md)                               | Logging structuré, métriques, health check         |
+| 16  | [Stratégie de Tests](docs/16_Strategie_Tests.md)                        | Pyramide tests, fixtures, couverture ≥80%          |
+| 17  | [Roadmap de Développement](docs/17_Roadmap_Developpement.md)            | 10 phases détaillées                               |
+| 18  | [Checklist Globale](docs/18_Checklist_Globale.md)                       | 188 tâches atomiques à cocher                      |
 
 ---
 
@@ -163,18 +163,18 @@ Le frontend est servi via Nginx (port 80), le backend via Uvicorn (port 8000).
 
 ## Roadmap
 
-| Phase | Description | Statut |
-|---|---|---|
-| 1 | Architecture & Documentation | ✅ Complète |
-| 2 | Fondations Backend | ✅ Complète |
-| 3 | Moteur Statistique | ✅ Complète |
-| 4 | Moteur de Scoring | ✅ Complète |
-| 5 | Moteur d'Optimisation | ✅ Complète |
-| 6 | Moteur de Simulation | ✅ Complète |
-| 7 | Interface Frontend | ✅ Complète |
-| 8 | Scheduler & Jobs | ✅ Complète |
-| 9 | Sécurité & Auth | ✅ Complète |
-| 10 | Polish & Déploiement | 🔄 En cours |
+| Phase | Description                  | Statut     |
+| ----- | ---------------------------- | ---------- |
+| 1     | Architecture & Documentation | ✅ Complète |
+| 2     | Fondations Backend           | ✅ Complète |
+| 3     | Moteur Statistique           | ✅ Complète |
+| 4     | Moteur de Scoring            | ✅ Complète |
+| 5     | Moteur d'Optimisation        | ✅ Complète |
+| 6     | Moteur de Simulation         | ✅ Complète |
+| 7     | Interface Frontend           | ✅ Complète |
+| 8     | Scheduler & Jobs             | ✅ Complète |
+| 9     | Sécurité & Auth              | ✅ Complète |
+| 10    | Polish & Déploiement         | 🔄 En cours |
 
 Voir [17_Roadmap](docs/17_Roadmap_Developpement.md) et [18_Checklist](docs/18_Checklist_Globale.md) pour le détail.
 

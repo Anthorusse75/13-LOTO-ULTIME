@@ -53,8 +53,7 @@ export function useToggleFavorite() {
   const gameId = useGameStore((s) => s.currentGameId);
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (gridId: number) =>
-      gridService.toggleFavorite(gameId!, gridId),
+    mutationFn: (gridId: number) => gridService.toggleFavorite(gameId!, gridId),
     onSuccess: (data) => {
       toast.success(
         data.is_favorite ? "Ajoutée aux favoris" : "Retirée des favoris",

@@ -1,7 +1,11 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
-import { useGenerateGrids, useToggleFavorite, useTopGrids } from "@/hooks/useGrids";
+import {
+  useGenerateGrids,
+  useToggleFavorite,
+  useTopGrids,
+} from "@/hooks/useGrids";
 import type { GridScoreResponse } from "@/types/grid";
 import {
   OPTIMIZATION_METHODS,
@@ -179,9 +183,7 @@ export default function GridsPage() {
       {/* Top grids from DB */}
       <div className="bg-surface rounded-lg border border-border p-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold">
-            Top 10 — Meilleures grilles
-          </h2>
+          <h2 className="text-sm font-semibold">Top 10 — Meilleures grilles</h2>
           <select
             value={topMethodFilter}
             onChange={(e) => setTopMethodFilter(e.target.value)}
@@ -189,7 +191,9 @@ export default function GridsPage() {
           >
             <option value="all">Toutes méthodes</option>
             {OPTIMIZATION_METHODS.filter((m) => m.value !== "auto").map((m) => (
-              <option key={m.value} value={m.value}>{m.label}</option>
+              <option key={m.value} value={m.value}>
+                {m.label}
+              </option>
             ))}
           </select>
         </div>
@@ -198,32 +202,45 @@ export default function GridsPage() {
         ) : topGrids && topGrids.length > 0 ? (
           <div className="space-y-2">
             {topGrids
-              .filter((g) => topMethodFilter === "all" || g.method === topMethodFilter)
+              .filter(
+                (g) =>
+                  topMethodFilter === "all" || g.method === topMethodFilter,
+              )
               .map((g, i) => (
-              <div
-                key={g.id}
-                className="flex items-center gap-4 p-2 rounded-md hover:bg-surface-hover"
-              >
-                <span className="text-xs text-text-secondary w-6">
-                  #{i + 1}
-                </span>
-                <DrawBalls numbers={g.numbers} stars={g.stars} size="sm" />
-                <span className="text-xs text-text-secondary">{g.method}</span>
-                <button
-                  onClick={() => toggleFavoriteMutation.mutate(g.id)}
-                  className="p-1 rounded hover:bg-surface-hover transition-colors"
-                  aria-label={g.is_favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+                <div
+                  key={g.id}
+                  className="flex items-center gap-4 p-2 rounded-md hover:bg-surface-hover"
                 >
-                  <Heart
-                    size={16}
-                    className={g.is_favorite ? "fill-accent-red text-accent-red" : "text-text-secondary"}
-                  />
-                </button>
-                <span className="ml-auto font-mono text-accent-green">
-                  {formatScore(g.total_score)}
-                </span>
-              </div>
-            ))}
+                  <span className="text-xs text-text-secondary w-6">
+                    #{i + 1}
+                  </span>
+                  <DrawBalls numbers={g.numbers} stars={g.stars} size="sm" />
+                  <span className="text-xs text-text-secondary">
+                    {g.method}
+                  </span>
+                  <button
+                    onClick={() => toggleFavoriteMutation.mutate(g.id)}
+                    className="p-1 rounded hover:bg-surface-hover transition-colors"
+                    aria-label={
+                      g.is_favorite
+                        ? "Retirer des favoris"
+                        : "Ajouter aux favoris"
+                    }
+                  >
+                    <Heart
+                      size={16}
+                      className={
+                        g.is_favorite
+                          ? "fill-accent-red text-accent-red"
+                          : "text-text-secondary"
+                      }
+                    />
+                  </button>
+                  <span className="ml-auto font-mono text-accent-green">
+                    {formatScore(g.total_score)}
+                  </span>
+                </div>
+              ))}
           </div>
         ) : (
           <div className="text-center py-6">

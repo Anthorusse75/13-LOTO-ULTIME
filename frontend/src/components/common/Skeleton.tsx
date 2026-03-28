@@ -3,7 +3,10 @@ interface SkeletonProps {
   count?: number;
 }
 
-export default function Skeleton({ className = "h-4 w-full", count = 1 }: SkeletonProps) {
+export default function Skeleton({
+  className = "h-4 w-full",
+  count = 1,
+}: SkeletonProps) {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (

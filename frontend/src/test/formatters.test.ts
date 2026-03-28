@@ -1,10 +1,10 @@
-import { describe, expect, it } from "vitest";
 import {
   formatDate,
   formatNumber,
   formatPercent,
   formatScore,
 } from "@/utils/formatters";
+import { describe, expect, it } from "vitest";
 
 describe("formatters", () => {
   it("formatNumber returns string with decimals", () => {

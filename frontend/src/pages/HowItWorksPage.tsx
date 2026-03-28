@@ -1,4 +1,11 @@
-import { BookOpen, Brain, Dices, FlaskConical, LineChart, Target } from "lucide-react";
+import {
+  BookOpen,
+  Brain,
+  Dices,
+  FlaskConical,
+  LineChart,
+  Target,
+} from "lucide-react";
 
 const steps = [
   {

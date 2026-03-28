@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
 import Skeleton from "@/components/common/Skeleton";
+import { render } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 describe("Skeleton", () => {
   it("renders one skeleton by default", () => {

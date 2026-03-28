@@ -1,10 +1,10 @@
-import { describe, expect, it } from "vitest";
 import {
   OPTIMIZATION_METHODS,
-  SCORING_PROFILES,
   PORTFOLIO_STRATEGIES,
   SCORE_CRITERIA,
+  SCORING_PROFILES,
 } from "@/utils/constants";
+import { describe, expect, it } from "vitest";
 
 describe("constants", () => {
   it("has 5 optimization methods", () => {
