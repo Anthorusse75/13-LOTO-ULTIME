@@ -98,8 +98,7 @@ class SimulationService:
         draws = await self._draw_repo.get_numbers_matrix(game_id)
         if draws.shape[0] < MIN_DRAWS_FOR_BOOTSTRAP:
             raise InsufficientDataError(
-                f"Need at least {MIN_DRAWS_FOR_BOOTSTRAP} draws for bootstrap, "
-                f"got {draws.shape[0]}"
+                f"Need at least {MIN_DRAWS_FOR_BOOTSTRAP} draws for bootstrap, got {draws.shape[0]}"
             )
 
         scorer = GridScorer.from_profile(profile)

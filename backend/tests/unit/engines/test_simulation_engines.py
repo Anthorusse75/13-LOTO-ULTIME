@@ -17,7 +17,6 @@ from app.engines.simulation.robustness import (
     StabilityResult,
 )
 
-
 # ── Fixtures ──
 
 SMALL_CONFIG = GameConfig(
@@ -56,7 +55,7 @@ def small_draws():
 @pytest.fixture
 def small_statistics(small_draws):
     """Statistics dict for the small game."""
-    from app.engines.statistics import FrequencyEngine, GapEngine, CooccurrenceEngine
+    from app.engines.statistics import CooccurrenceEngine, FrequencyEngine, GapEngine
 
     game = SMALL_CONFIG
     return {

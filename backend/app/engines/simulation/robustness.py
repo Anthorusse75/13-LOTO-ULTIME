@@ -5,8 +5,8 @@ from dataclasses import dataclass
 import numpy as np
 
 from app.core.game_definitions import GameConfig
-from app.engines.scoring.scorer import GridScorer, ScoredResult
-from app.engines.statistics import FrequencyEngine, GapEngine, CooccurrenceEngine
+from app.engines.scoring.scorer import GridScorer
+from app.engines.statistics import CooccurrenceEngine, FrequencyEngine, GapEngine
 
 
 @dataclass

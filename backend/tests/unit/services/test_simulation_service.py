@@ -7,7 +7,12 @@ import pytest
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import GameConfig
-from app.engines.simulation import SimulationResult, PortfolioSimulationResult, StabilityResult, ComparisonResult
+from app.engines.simulation import (
+    ComparisonResult,
+    PortfolioSimulationResult,
+    SimulationResult,
+    StabilityResult,
+)
 from app.models.statistics import StatisticsSnapshot
 from app.services.simulation import SimulationService
 
@@ -28,8 +33,7 @@ def small_config():
 def mock_snapshot():
     snapshot = MagicMock(spec=StatisticsSnapshot)
     snapshot.frequencies = {
-        str(n): {"count": 10, "relative": 0.3, "ratio": 1.0, "last_seen": 0}
-        for n in range(1, 11)
+        str(n): {"count": 10, "relative": 0.3, "ratio": 1.0, "last_seen": 0} for n in range(1, 11)
     }
     snapshot.gaps = {
         str(n): {
