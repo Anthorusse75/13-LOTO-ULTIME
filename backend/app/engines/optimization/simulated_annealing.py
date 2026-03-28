@@ -33,7 +33,8 @@ class SimulatedAnnealing(BaseOptimizer):
 
         for _ in range(n_grids):
             grid = self._random_grid()
-            current_score = self._score(grid)
+            stars = self._random_stars()
+            current_score = self._score(grid, stars or None)
             best = current_score
             t = self.t_initial
 
@@ -41,13 +42,21 @@ class SimulatedAnnealing(BaseOptimizer):
                 if t < self.t_min:
                     break
 
-                neighbor = self._neighbor(grid)
-                neighbor_score = self._score(neighbor)
+                # Mutate either numbers or stars
+                if stars and self.rng.random() < 0.3:
+                    new_grid = grid
+                    new_stars = self._star_neighbor(stars)
+                else:
+                    new_grid = self._neighbor(grid)
+                    new_stars = stars
+
+                neighbor_score = self._score(new_grid, new_stars or None)
 
                 delta = neighbor_score.total_score - current_score.total_score
 
                 if delta > 0 or self.rng.random() < np.exp(delta / t):
-                    grid = neighbor
+                    grid = new_grid
+                    stars = new_stars
                     current_score = neighbor_score
 
                 if current_score.total_score > best.total_score:

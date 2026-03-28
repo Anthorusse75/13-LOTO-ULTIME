@@ -53,6 +53,21 @@ def mock_snapshot():
         "expected_pair_count": 5.0,
         "matrix_shape": [49, 49],
     }
+    snapshot.star_frequencies = {
+        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0}
+        for n in range(1, 11)
+    }
+    snapshot.star_gaps = {
+        str(n): {
+            "current_gap": 3,
+            "avg_gap": 5.0,
+            "max_gap": 10,
+            "min_gap": 1,
+            "median_gap": 4.0,
+            "expected_gap": 10.0,
+        }
+        for n in range(1, 11)
+    }
     return snapshot
 
 

@@ -29,29 +29,35 @@ class TabuSearch(BaseOptimizer):
 
         for _ in range(n_grids):
             grid = self._random_grid()
-            current = self._score(grid)
+            stars = self._random_stars()
+            current = self._score(grid, stars or None)
             best = current
-            tabu_list: list[tuple[int, ...]] = []
+            tabu_list: list[tuple] = []
 
             for _ in range(self.max_iterations):
                 # Generate neighbors
-                neighbors: list[tuple[list[int], ScoredResult]] = []
+                neighbors: list[tuple[list[int], list[int], ScoredResult]] = []
                 for _ in range(self.n_neighbors):
-                    candidate = self._neighbor(grid)
-                    key = tuple(candidate)
+                    if stars and self.rng.random() < 0.3:
+                        cand_grid = grid
+                        cand_stars = self._star_neighbor(stars)
+                    else:
+                        cand_grid = self._neighbor(grid)
+                        cand_stars = stars
+                    key = (tuple(cand_grid), tuple(cand_stars))
                     if key not in tabu_list:
-                        scored = self._score(candidate)
-                        neighbors.append((candidate, scored))
+                        scored = self._score(cand_grid, cand_stars or None)
+                        neighbors.append((cand_grid, cand_stars, scored))
 
                 if not neighbors:
                     break
 
                 # Pick the best non-tabu neighbor
-                neighbors.sort(key=lambda x: -x[1].total_score)
-                grid, current = neighbors[0]
+                neighbors.sort(key=lambda x: -x[2].total_score)
+                grid, stars, current = neighbors[0]
 
                 # Update tabu list
-                tabu_list.append(tuple(grid))
+                tabu_list.append((tuple(grid), tuple(stars)))
                 if len(tabu_list) > self.tabu_size:
                     tabu_list.pop(0)
 

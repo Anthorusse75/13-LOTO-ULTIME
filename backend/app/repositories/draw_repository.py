@@ -38,6 +38,19 @@ class DrawRepository(BaseRepository[Draw]):
             return np.array([]).reshape(0, 0)
         return np.array(rows)
 
+    async def get_stars_matrix(self, game_id: int) -> np.ndarray:
+        """Retourne toutes les étoiles/numéros chance comme matrice NumPy (N × stars_drawn)."""
+        stmt = (
+            select(Draw.stars)
+            .where(Draw.game_id == game_id, Draw.stars.isnot(None))
+            .order_by(Draw.draw_date.asc())
+        )
+        result = await self._session.execute(stmt)
+        rows = [r for r in result.scalars().all() if r]
+        if not rows:
+            return np.array([]).reshape(0, 0)
+        return np.array(rows)
+
     async def exists(self, game_id: int, draw_date: date) -> bool:
         stmt = select(Draw.id).where(Draw.game_id == game_id, Draw.draw_date == draw_date)
         result = await self._session.execute(stmt)

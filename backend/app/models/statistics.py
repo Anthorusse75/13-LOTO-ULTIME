@@ -23,5 +23,9 @@ class StatisticsSnapshot(Base):
     graph_metrics: Mapped[dict] = mapped_column(JSON)
     distribution_stats: Mapped[dict] = mapped_column(JSON)
 
+    # Star/complementary number statistics (nullable — only for games with stars)
+    star_frequencies: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=None)
+    star_gaps: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=None)
+
     def __repr__(self) -> str:
         return f"<StatisticsSnapshot(game_id={self.game_id}, at={self.computed_at})>"

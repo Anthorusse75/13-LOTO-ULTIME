@@ -27,15 +27,23 @@ class HillClimbing(BaseOptimizer):
 
         for _ in range(self.n_restarts):
             grid = self._random_grid()
-            current = self._score(grid)
+            stars = self._random_stars()
+            current = self._score(grid, stars or None)
             no_improve = 0
 
             while no_improve < self.max_no_improve:
-                neighbor = self._neighbor(grid)
-                neighbor_score = self._score(neighbor)
+                if stars and self.rng.random() < 0.3:
+                    new_grid = grid
+                    new_stars = self._star_neighbor(stars)
+                else:
+                    new_grid = self._neighbor(grid)
+                    new_stars = stars
+
+                neighbor_score = self._score(new_grid, new_stars or None)
 
                 if neighbor_score.total_score > current.total_score:
-                    grid = neighbor
+                    grid = new_grid
+                    stars = new_stars
                     current = neighbor_score
                     no_improve = 0
                 else:

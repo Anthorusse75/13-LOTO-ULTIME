@@ -69,7 +69,28 @@ class StatisticsService:
                 log.error("engine_failed", engine=name, error=str(exc))
                 raise EngineComputationError(f"Engine '{name}' failed: {exc}") from exc
 
-        # 3. Persist snapshot
+        # 3. Compute star statistics (if game has stars)
+        star_frequencies = None
+        star_gaps = None
+        if game.stars_pool and game.stars_drawn:
+            star_draws = await self._draw_repo.get_stars_matrix(game_id)
+            if star_draws.shape[0] >= MIN_DRAWS_REQUIRED:
+                star_game = GameConfig(
+                    name=game.name,
+                    slug=game.slug,
+                    numbers_pool=game.stars_pool,
+                    numbers_drawn=game.stars_drawn,
+                    min_number=1,
+                    max_number=game.stars_pool,
+                )
+                try:
+                    star_frequencies = FrequencyEngine().compute(star_draws, star_game)
+                    star_gaps = GapEngine().compute(star_draws, star_game)
+                    log.info("star_statistics_computed", n_star_draws=star_draws.shape[0])
+                except Exception as exc:
+                    log.warning("star_statistics_failed", error=str(exc))
+
+        # 4. Persist snapshot
         snapshot = StatisticsSnapshot(
             game_id=game_id,
             computed_at=datetime.now(UTC),
@@ -81,6 +102,8 @@ class StatisticsService:
             distribution_stats=results["distribution"],
             bayesian_priors=results["bayesian"],
             graph_metrics=results["graph"],
+            star_frequencies=star_frequencies,
+            star_gaps=star_gaps,
         )
 
         created = await self._stats_repo.create(snapshot)

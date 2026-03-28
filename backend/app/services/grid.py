@@ -62,6 +62,10 @@ class GridService:
             "gaps": snapshot.gaps,
             "cooccurrence": snapshot.cooccurrence_matrix,
         }
+        if snapshot.star_frequencies:
+            statistics["star_frequency"] = snapshot.star_frequencies
+        if snapshot.star_gaps:
+            statistics["star_gaps"] = snapshot.star_gaps
 
         if custom_weights:
             scorer = GridScorer(weights=custom_weights)
@@ -82,11 +86,16 @@ class GridService:
 
     def _build_statistics(self, snapshot) -> dict:
         """Build statistics dict from a snapshot."""
-        return {
+        stats = {
             "frequency": snapshot.frequencies,
             "gaps": snapshot.gaps,
             "cooccurrence": snapshot.cooccurrence_matrix,
         }
+        if snapshot.star_frequencies:
+            stats["star_frequency"] = snapshot.star_frequencies
+        if snapshot.star_gaps:
+            stats["star_gaps"] = snapshot.star_gaps
+        return stats
 
     async def generate_grids(
         self,

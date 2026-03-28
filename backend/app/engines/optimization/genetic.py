@@ -62,6 +62,30 @@ class GeneticAlgorithm(BaseOptimizer):
                 new_grid[i] = int(self.rng.choice(available))
         return sorted(new_grid)
 
+    def _star_crossover(self, p1_stars: list[int], p2_stars: list[int]) -> list[int]:
+        """Uniform crossover for stars."""
+        if not self._has_stars:
+            return []
+        combined = list(set(p1_stars) | set(p2_stars))
+        needed = self.game.stars_drawn
+        if len(combined) < needed:
+            pool = [n for n in range(1, self.game.stars_pool + 1) if n not in combined]
+            combined.extend(
+                self.rng.choice(pool, size=needed - len(combined), replace=False).tolist()
+            )
+        return sorted(self.rng.choice(combined, size=needed, replace=False).tolist())
+
+    def _mutate_stars(self, stars: list[int]) -> list[int]:
+        """Mutate stars by replacing with probability mutation_rate."""
+        if not stars:
+            return stars
+        new_stars = stars.copy()
+        for i in range(len(new_stars)):
+            if self.rng.random() < self.mutation_rate:
+                available = [n for n in range(1, self.game.stars_pool + 1) if n not in new_stars]
+                new_stars[i] = int(self.rng.choice(available))
+        return sorted(new_stars)
+
     def _tournament_select(self, population: list[ScoredResult]) -> ScoredResult:
         """Select one individual via tournament selection."""
         indices = self.rng.choice(len(population), size=self.tournament_size, replace=False)
@@ -73,7 +97,8 @@ class GeneticAlgorithm(BaseOptimizer):
         population: list[ScoredResult] = []
         for _ in range(self.population_size):
             grid = self._random_grid()
-            population.append(self._score(grid))
+            stars = self._random_stars()
+            population.append(self._score(grid, stars or None))
 
         for _ in range(self.max_generations):
             # Sort by score descending
@@ -89,11 +114,16 @@ class GeneticAlgorithm(BaseOptimizer):
 
                 if self.rng.random() < self.crossover_rate:
                     child_grid = self._crossover(parent1.numbers, parent2.numbers)
+                    child_stars = self._star_crossover(
+                        parent1.stars or [], parent2.stars or []
+                    ) if self._has_stars else []
                 else:
                     child_grid = parent1.numbers.copy()
+                    child_stars = (parent1.stars or []).copy() if self._has_stars else []
 
                 child_grid = self._mutate(child_grid)
-                new_pop.append(self._score(child_grid))
+                child_stars = self._mutate_stars(child_stars)
+                new_pop.append(self._score(child_grid, child_stars or None))
 
             population = new_pop
 

@@ -24,22 +24,22 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Support des étoiles (EuroMillions)
 
-- [ ] 🔴 Ajouter les champs `star1`, `star2` dans le modèle `Draw` (si absents)
-- [ ] 🔴 Adapter `FrequencyEngine` pour calculer les fréquences des étoiles séparément
-- [ ] 🔴 Adapter `RetardEngine` pour calculer le retard des étoiles
-- [ ] 🔴 Adapter `ConsecutiveEngine` pour analyser les paires d'étoiles consécutives
-- [ ] 🔴 Adapter `TerminaisonEngine` pour les étoiles (1-12 seulement)
-- [ ] 🔴 Adapter `SumEngine` pour la somme des étoiles (range 2-24)
-- [ ] 🔴 Adapter `GraphEngine` pour le graphe de co-occurrence des étoiles
-- [ ] 🔴 Adapter `TemporalEngine` pour les tendances temporelles des étoiles
-- [ ] 🔴 Adapter `FrequencyCriterion` du scoring pour évaluer les étoiles
-- [ ] 🔴 Adapter `RetardCriterion` pour les étoiles
-- [ ] 🔴 Adapter `DistributionCriterion` pour les étoiles (range différent)
-- [ ] 🔴 Adapter `PatternPenalty` pour les patterns d'étoiles
-- [ ] 🔴 Adapter l'optimiseur génétique pour générer des combinaisons 5+2
-- [ ] 🔴 Adapter le simulated annealing pour les combinaisons 5+2
-- [ ] 🔴 Adapter le Monte Carlo pour simuler avec étoiles
-- [ ] 🔴 Adapter le front-end pour afficher les étoiles dans les grilles
+- [x] 🔴 Ajouter les champs `star1`, `star2` dans le modèle `Draw` (si absents) ✅ déjà présent (`stars` JSON nullable)
+- [x] 🔴 Adapter `FrequencyEngine` pour calculer les fréquences des étoiles séparément ✅ réutilisation via star_game virtual config dans StatisticsService
+- [x] 🔴 Adapter `RetardEngine` pour calculer le retard des étoiles ✅ GapEngine réutilisé sur star_draws
+- [x] 🔴 Adapter `ConsecutiveEngine` pour analyser les paires d'étoiles consécutives ✅ N/A (engine inexistant, couvert par FrequencyEngine+GapEngine)
+- [x] 🔴 Adapter `TerminaisonEngine` pour les étoiles (1-12 seulement) ✅ N/A (engine inexistant, pool 1-12 géré par star_game config)
+- [x] 🔴 Adapter `SumEngine` pour la somme des étoiles (range 2-24) ✅ N/A (engine inexistant, DistributionEngine couvre les sommes)
+- [x] 🔴 Adapter `GraphEngine` pour le graphe de co-occurrence des étoiles ✅ N/A pour 2 étoiles ; cooccurrence minimale, scoring centralisé dans scorer
+- [x] 🔴 Adapter `TemporalEngine` pour les tendances temporelles des étoiles ✅ N/A ; scoring étoiles centralisé dans scorer.score_with_stars()
+- [x] 🔴 Adapter `FrequencyCriterion` du scoring pour évaluer les étoiles ✅ scoring étoiles centralisé dans scorer.score_with_stars() (85/15)
+- [x] 🔴 Adapter `RetardCriterion` pour les étoiles ✅ idem, star_gaps dans scorer.score_with_stars()
+- [x] 🔴 Adapter `DistributionCriterion` pour les étoiles (range différent) ✅ N/A (pas de DistributionCriterion, scoring centralisé)
+- [x] 🔴 Adapter `PatternPenalty` pour les patterns d'étoiles ✅ N/A (penalty sur numéros principaux, étoiles scorées séparément)
+- [x] 🔴 Adapter l'optimiseur génétique pour générer des combinaisons 5+2 ✅ star crossover/mutation dans GeneticAlgorithm
+- [x] 🔴 Adapter le simulated annealing pour les combinaisons 5+2 ✅ star_neighbor dans SA
+- [x] 🔴 Adapter le Monte Carlo pour simuler avec étoiles ✅ déjà implémenté dans MonteCarloSimulator
+- [x] 🔴 Adapter le front-end pour afficher les étoiles dans les grilles ✅ déjà implémenté (DrawBalls + GridsPage)
 
 ### Algorithmes
 
@@ -116,7 +116,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🔴 Écrire un test vérifiant que `_get_game_config(loto_id)` retourne la config Loto ✅ test_multi_lottery.py
 - [x] 🔴 Écrire un test vérifiant que `_get_game_config(euro_id)` retourne la config EuroMillions ✅ test_multi_lottery.py
 - [x] 🔴 Écrire un test vérifiant que les stats Loto ≠ stats EuroMillions ✅ test_multi_lottery.py
-- [ ] 🔴 Écrire un test vérifiant que les grilles EuroMillions contiennent des étoiles
+- [x] 🔴 Écrire un test vérifiant que les grilles EuroMillions contiennent des étoiles ✅ test_euromillions_stars.py (15 tests)
 - [x] 🔴 Écrire un test vérifiant que `select_method()` retourne SA dans certaines conditions ✅ test_optimization_engines.py
 
 ### Tests d'amélioration
