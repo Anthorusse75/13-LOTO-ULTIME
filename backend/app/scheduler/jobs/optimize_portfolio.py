@@ -20,12 +20,12 @@ PORTFOLIO_GRID_COUNT = 7
 STRATEGIES = ["balanced", "max_diversity", "max_coverage", "min_correlation"]
 
 
-async def optimize_portfolio_job() -> None:
+async def optimize_portfolio_job(triggered_by: str = "scheduler") -> None:
     """Scheduled job: regenerate portfolios for all active games."""
     await execute_with_tracking(
         job_name="optimize_portfolio",
         func=_do_optimize_portfolio,
-        triggered_by="scheduler",
+        triggered_by=triggered_by,
     )
 
 

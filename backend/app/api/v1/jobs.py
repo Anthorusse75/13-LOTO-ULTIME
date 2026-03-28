@@ -53,7 +53,16 @@ async def trigger_job(
     import asyncio
 
     job_func = _resolve_job_func(module_name)
-    task = asyncio.create_task(job_func(*args))
+
+    async def _run_job():
+        """Wrapper to catch and log exceptions from fire-and-forget tasks."""
+        try:
+            await job_func(*args, triggered_by="manual")
+        except Exception:
+            import structlog
+            structlog.get_logger("jobs").exception("trigger_job.background_error", job=job_name)
+
+    task = asyncio.create_task(_run_job())
     # We don't await — return immediately with a PENDING status indicator
 
     # Return the latest execution record (will be RUNNING once the task starts)

@@ -13,12 +13,12 @@ from app.services.statistics import StatisticsService
 logger = structlog.get_logger(__name__)
 
 
-async def compute_stats_job() -> None:
+async def compute_stats_job(triggered_by: str = "scheduler") -> None:
     """Scheduled job: recompute statistics for all active games."""
     await execute_with_tracking(
         job_name="compute_stats",
         func=_do_compute_stats,
-        triggered_by="scheduler",
+        triggered_by=triggered_by,
     )
 
 

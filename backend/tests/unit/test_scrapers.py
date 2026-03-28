@@ -1,5 +1,8 @@
 """Unit tests for scrapers (base, FDJ, EuroMillions)."""
 
+import csv
+import io
+import zipfile
 from datetime import date
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -127,33 +130,69 @@ class TestDrawValidator:
         assert validated.stars == [2, 11]
 
 
+def _make_loto_zip(rows: list[dict]) -> bytes:
+    """Build an in-memory ZIP containing a Loto CSV."""
+    header = (
+        "annee_numero_de_tirage;jour_de_tirage;date_de_tirage;"
+        "date_de_forclusion;boule_1;boule_2;boule_3;boule_4;boule_5;"
+        "numero_chance;combinaison_gagnante_en_ordre_croissant;"
+        "nombre_de_gagnant_au_rang1;rapport_du_rang1;devise;\n"
+    )
+    buf = io.StringIO()
+    buf.write(header)
+    for r in rows:
+        buf.write(
+            f"{r['num']};{r['jour']};{r['date']};{r.get('forcl', '')};"
+            f"{r['b1']};{r['b2']};{r['b3']};{r['b4']};{r['b5']};"
+            f"{r['chance']};{r.get('combo', '')};0;0;eur;\n"
+        )
+    zbuf = io.BytesIO()
+    with zipfile.ZipFile(zbuf, "w") as zf:
+        zf.writestr("loto_201911.csv", buf.getvalue())
+    return zbuf.getvalue()
+
+
+def _make_euromillions_zip(rows: list[dict]) -> bytes:
+    """Build an in-memory ZIP containing an EuroMillions CSV."""
+    header = (
+        "annee_numero_de_tirage;jour_de_tirage;date_de_tirage;"
+        "numéro_de_tirage_dans_le_cycle;date_de_forclusion;"
+        "boule_1;boule_2;boule_3;boule_4;boule_5;etoile_1;etoile_2;"
+        "boules_gagnantes_en_ordre_croissant;etoiles_gagnantes_en_ordre_croissant;\n"
+    )
+    buf = io.StringIO()
+    buf.write(header)
+    for r in rows:
+        buf.write(
+            f"{r['num']};{r['jour']};{r['date']};1;{r.get('forcl', '')};"
+            f"{r['b1']};{r['b2']};{r['b3']};{r['b4']};{r['b5']};"
+            f"{r['e1']};{r['e2']};-;-;\n"
+        )
+    zbuf = io.BytesIO()
+    with zipfile.ZipFile(zbuf, "w") as zf:
+        zf.writestr("euromillions_202002.csv", buf.getvalue())
+    return zbuf.getvalue()
+
+
 class TestFDJLotoScraper:
     """Tests for FDJ Loto scraper with mocked HTTP."""
 
     @pytest.fixture
-    def mock_response_data(self):
-        return [
-            {
-                "date": "2024-01-15",
-                "numero": 2024001,
-                "numeros": [5, 12, 23, 34, 45],
-                "numero_chance": 7,
-            },
-            {
-                "date": "2024-01-13",
-                "numero": 2024000,
-                "numeros": [1, 8, 19, 28, 40],
-                "numero_chance": 3,
-            },
-        ]
+    def mock_zip_data(self):
+        return _make_loto_zip([
+            {"num": "2024001", "jour": "LUNDI", "date": "15/01/2024",
+             "b1": "5", "b2": "12", "b3": "23", "b4": "34", "b5": "45", "chance": "7"},
+            {"num": "2024000", "jour": "SAMEDI", "date": "13/01/2024",
+             "b1": "1", "b2": "8", "b3": "19", "b4": "28", "b5": "40", "chance": "3"},
+        ])
 
     @pytest.mark.asyncio
-    async def test_fetch_latest_draws(self, mock_response_data):
+    async def test_fetch_latest_draws(self, mock_zip_data):
         from app.scrapers.fdj_loto import FDJLotoScraper
 
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = mock_response_data
+        mock_response.content = mock_zip_data
         mock_response.raise_for_status = MagicMock()
 
         mock_client = AsyncMock()
@@ -167,14 +206,16 @@ class TestFDJLotoScraper:
 
         assert len(draws) >= 1
         assert all(isinstance(d, RawDraw) for d in draws)
+        assert draws[0].numbers == [5, 12, 23, 34, 45]
+        assert draws[0].stars == [7]
 
     @pytest.mark.asyncio
-    async def test_fetch_with_since_date(self, mock_response_data):
+    async def test_fetch_with_since_date(self, mock_zip_data):
         from app.scrapers.fdj_loto import FDJLotoScraper
 
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = mock_response_data
+        mock_response.content = mock_zip_data
         mock_response.raise_for_status = MagicMock()
 
         mock_client = AsyncMock()
@@ -188,7 +229,7 @@ class TestFDJLotoScraper:
 
         # Should only return draws after since_date
         for d in draws:
-            assert d.draw_date >= date(2024, 1, 14)
+            assert d.draw_date > date(2024, 1, 14)
 
 
 class TestEuroMillionsScraper:
@@ -198,16 +239,15 @@ class TestEuroMillionsScraper:
     async def test_fetch_latest_draws(self):
         from app.scrapers.euromillions import EuroMillionsScraper
 
+        zip_data = _make_euromillions_zip([
+            {"num": "2024002", "jour": "MARDI", "date": "16/01/2024",
+             "b1": "3", "b2": "15", "b3": "27", "b4": "38", "b5": "49",
+             "e1": "2", "e2": "11"},
+        ])
+
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = [
-            {
-                "date": "2024-01-16",
-                "numero": 2024002,
-                "numeros": [3, 15, 27, 38, 49],
-                "etoiles": [2, 11],
-            }
-        ]
+        mock_response.content = zip_data
         mock_response.raise_for_status = MagicMock()
 
         mock_client = AsyncMock()

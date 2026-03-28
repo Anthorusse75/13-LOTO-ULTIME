@@ -1,71 +1,285 @@
-import { Settings, Database, Clock, Users } from "lucide-react";
+import { useState } from "react";
+import {
+  Settings,
+  Database,
+  Clock,
+  Users,
+  Play,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+} from "lucide-react";
+import { useJobs, useSchedulerStatus, useTriggerJob } from "@/hooks/useJobs";
+import type { JobExecution, JobStatus } from "@/types/job";
+
+const JOB_LABELS: Record<string, string> = {
+  fetch_loto: "Scraping Loto FDJ",
+  fetch_euromillions: "Scraping EuroMillions",
+  compute_stats: "Calcul statistiques",
+  compute_scoring: "Scoring grilles",
+  compute_top_grids: "Top grilles",
+  optimize_portfolio: "Optimisation portefeuille",
+  cleanup: "Nettoyage données",
+  health_check: "Health check",
+};
+
+const STATUS_CONFIG: Record<
+  JobStatus,
+  { color: string; bg: string; icon: typeof CheckCircle2 }
+> = {
+  SUCCESS: { color: "text-accent-green", bg: "bg-accent-green/20", icon: CheckCircle2 },
+  FAILED: { color: "text-accent-red", bg: "bg-accent-red/20", icon: XCircle },
+  RUNNING: { color: "text-accent-blue", bg: "bg-accent-blue/20", icon: Loader2 },
+  PENDING: { color: "text-accent-yellow", bg: "bg-accent-yellow/20", icon: Clock },
+  CANCELLED: { color: "text-text-secondary", bg: "bg-surface", icon: XCircle },
+};
+
+function formatDuration(seconds: number | null): string {
+  if (seconds === null) return "—";
+  if (seconds < 1) return `${Math.round(seconds * 1000)}ms`;
+  if (seconds < 60) return `${seconds.toFixed(1)}s`;
+  return `${Math.floor(seconds / 60)}m ${Math.round(seconds % 60)}s`;
+}
+
+function formatDate(iso: string | null): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function StatusBadge({ status }: { status: JobStatus }) {
+  const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.PENDING;
+  const Icon = cfg.icon;
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${cfg.bg} ${cfg.color}`}
+    >
+      <Icon size={12} className={status === "RUNNING" ? "animate-spin" : ""} />
+      {status}
+    </span>
+  );
+}
+
+function JobsPanel() {
+  const { data: jobs, isLoading: jobsLoading } = useJobs(30);
+  const { data: status } = useSchedulerStatus();
+  const triggerMutation = useTriggerJob();
+  const [triggering, setTriggering] = useState<string | null>(null);
+
+  const handleTrigger = async (jobName: string) => {
+    setTriggering(jobName);
+    try {
+      await triggerMutation.mutateAsync(jobName);
+    } catch {
+      // error handled by mutation
+    } finally {
+      setTriggering(null);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Status summary */}
+      <div className="flex items-center gap-3 text-sm text-text-secondary">
+        <span className="flex items-center gap-1">
+          <span
+            className={`h-2 w-2 rounded-full ${
+              status?.running_count ? "bg-accent-green animate-pulse" : "bg-text-secondary"
+            }`}
+          />
+          {status?.running_count ?? 0} job(s) en cours
+        </span>
+      </div>
+
+      {/* Trigger buttons */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        {Object.entries(JOB_LABELS).map(([key, label]) => {
+          const isRunning =
+            triggering === key || status?.running_jobs?.some((r) => r.includes(key.replace("fetch_loto", "fetch_draws").replace("fetch_euromillions", "fetch_draws")));
+          return (
+            <button
+              key={key}
+              onClick={() => handleTrigger(key)}
+              disabled={!!isRunning}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border text-sm hover:border-accent-blue/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isRunning ? (
+                <Loader2 size={14} className="animate-spin text-accent-blue" />
+              ) : (
+                <Play size={14} className="text-accent-green" />
+              )}
+              <span className="truncate">{label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* History table */}
+      <div className="bg-surface rounded-lg border border-border overflow-hidden">
+        <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+          <h3 className="font-medium text-sm">Historique récent</h3>
+          <span className="text-xs text-text-secondary">
+            {jobs?.length ?? 0} exécutions
+          </span>
+        </div>
+
+        {jobsLoading ? (
+          <div className="p-6 text-center text-text-secondary">
+            <Loader2 className="animate-spin mx-auto mb-2" size={20} />
+            Chargement…
+          </div>
+        ) : !jobs?.length ? (
+          <div className="p-6 text-center text-text-secondary text-sm">
+            Aucune exécution enregistrée.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-text-secondary border-b border-border">
+                  <th className="px-4 py-2 font-medium">Job</th>
+                  <th className="px-4 py-2 font-medium">Statut</th>
+                  <th className="px-4 py-2 font-medium">Démarré</th>
+                  <th className="px-4 py-2 font-medium">Durée</th>
+                  <th className="px-4 py-2 font-medium">Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                {jobs.map((job: JobExecution) => (
+                  <tr
+                    key={job.id}
+                    className="border-b border-border/50 hover:bg-surface-hover/50 transition-colors"
+                  >
+                    <td className="px-4 py-2 font-mono text-xs">
+                      {job.job_name}
+                    </td>
+                    <td className="px-4 py-2">
+                      <StatusBadge status={job.status} />
+                    </td>
+                    <td className="px-4 py-2 text-text-secondary">
+                      {formatDate(job.started_at)}
+                    </td>
+                    <td className="px-4 py-2 text-text-secondary">
+                      {formatDuration(job.duration_seconds)}
+                    </td>
+                    <td className="px-4 py-2 text-text-secondary">
+                      {job.triggered_by}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function AdminPage() {
+  const [activeTab, setActiveTab] = useState<"overview" | "jobs">("overview");
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Administration</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
-          <div className="p-2 rounded-lg bg-accent-blue/20">
-            <Database size={20} className="text-accent-blue" />
-          </div>
-          <div>
-            <h2 className="font-semibold mb-1">Gestion des jeux</h2>
-            <p className="text-sm text-text-secondary">
-              Configurer les jeux de loterie et leurs paramètres.
-            </p>
-            <p className="text-xs text-text-secondary mt-2 italic">
-              À venir — Phase 8
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
-          <div className="p-2 rounded-lg bg-accent-green/20">
-            <Clock size={20} className="text-accent-green" />
-          </div>
-          <div>
-            <h2 className="font-semibold mb-1">Jobs & Scheduler</h2>
-            <p className="text-sm text-text-secondary">
-              Historique des tâches de scraping et recalcul.
-            </p>
-            <p className="text-xs text-text-secondary mt-2 italic">
-              À venir — Phase 8
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
-          <div className="p-2 rounded-lg bg-accent-purple/20">
-            <Users size={20} className="text-accent-purple" />
-          </div>
-          <div>
-            <h2 className="font-semibold mb-1">Utilisateurs</h2>
-            <p className="text-sm text-text-secondary">
-              Gestion des comptes et des rôles.
-            </p>
-            <p className="text-xs text-text-secondary mt-2 italic">
-              À venir — Phase 9
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
-          <div className="p-2 rounded-lg bg-accent-yellow/20">
-            <Settings size={20} className="text-accent-yellow" />
-          </div>
-          <div>
-            <h2 className="font-semibold mb-1">Paramètres</h2>
-            <p className="text-sm text-text-secondary">
-              Configuration du système et logs.
-            </p>
-            <p className="text-xs text-text-secondary mt-2 italic">
-              À venir — Phase 9
-            </p>
-          </div>
-        </div>
+      {/* Tab navigation */}
+      <div className="flex gap-1 border-b border-border">
+        <button
+          onClick={() => setActiveTab("overview")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === "overview"
+              ? "border-accent-blue text-accent-blue"
+              : "border-transparent text-text-secondary hover:text-text"
+          }`}
+        >
+          Vue d'ensemble
+        </button>
+        <button
+          onClick={() => setActiveTab("jobs")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === "jobs"
+              ? "border-accent-blue text-accent-blue"
+              : "border-transparent text-text-secondary hover:text-text"
+          }`}
+        >
+          Jobs & Scheduler
+        </button>
       </div>
+
+      {activeTab === "overview" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
+            <div className="p-2 rounded-lg bg-accent-blue/20">
+              <Database size={20} className="text-accent-blue" />
+            </div>
+            <div>
+              <h2 className="font-semibold mb-1">Gestion des jeux</h2>
+              <p className="text-sm text-text-secondary">
+                Configurer les jeux de loterie et leurs paramètres.
+              </p>
+              <p className="text-xs text-text-secondary mt-2 italic">
+                À venir — Phase 9
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setActiveTab("jobs")}
+            className="bg-surface rounded-lg border border-accent-green/30 p-6 flex items-start gap-4 text-left hover:border-accent-green/60 transition-colors"
+          >
+            <div className="p-2 rounded-lg bg-accent-green/20">
+              <Clock size={20} className="text-accent-green" />
+            </div>
+            <div>
+              <h2 className="font-semibold mb-1">Jobs & Scheduler</h2>
+              <p className="text-sm text-text-secondary">
+                Historique des tâches de scraping et recalcul.
+              </p>
+              <p className="text-xs text-accent-green mt-2 font-medium">
+                Actif — voir le détail →
+              </p>
+            </div>
+          </button>
+
+          <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
+            <div className="p-2 rounded-lg bg-accent-purple/20">
+              <Users size={20} className="text-accent-purple" />
+            </div>
+            <div>
+              <h2 className="font-semibold mb-1">Utilisateurs</h2>
+              <p className="text-sm text-text-secondary">
+                Gestion des comptes et des rôles.
+              </p>
+              <p className="text-xs text-text-secondary mt-2 italic">
+                À venir — Phase 9
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
+            <div className="p-2 rounded-lg bg-accent-yellow/20">
+              <Settings size={20} className="text-accent-yellow" />
+            </div>
+            <div>
+              <h2 className="font-semibold mb-1">Paramètres</h2>
+              <p className="text-sm text-text-secondary">
+                Configuration du système et logs.
+              </p>
+              <p className="text-xs text-text-secondary mt-2 italic">
+                À venir — Phase 9
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "jobs" && <JobsPanel />}
     </div>
   );
 }

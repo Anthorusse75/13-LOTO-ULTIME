@@ -17,12 +17,12 @@ logger = structlog.get_logger(__name__)
 TOP_GRIDS_COUNT = 10
 
 
-async def compute_top_grids_job() -> None:
+async def compute_top_grids_job(triggered_by: str = "scheduler") -> None:
     """Scheduled job: regenerate top grids for all active games."""
     await execute_with_tracking(
         job_name="compute_top_grids",
         func=_do_compute_top_grids,
-        triggered_by="scheduler",
+        triggered_by=triggered_by,
     )
 
 

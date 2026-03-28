@@ -220,7 +220,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] Portefeuille — visualisation couverture (NumberHeatmap)
 - [x] Simulation — paramètres + résultats (3 onglets : Monte Carlo, Stabilité, Comparaison)
 - [x] Admin — monitoring système (placeholder Phase 8-9)
-- [ ] Admin — gestion jobs → Phase 8
+- [x] Admin — gestion jobs (tableau historique, boutons trigger, statut scheduler)
 - [ ] Admin — gestion utilisateurs → Phase 9
 
 ### 7.4 Composants
@@ -311,8 +311,8 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 | 4. Moteur de Scoring            | 13      | ✅ Complète    |
 | 5. Moteur d'Optimisation        | 14      | ✅ Complète    |
 | 6. Moteur de Simulation         | 11      | ✅ Complète    |
-| 7. Interface Frontend           | 39      | 🟡 33/39 (85%) |
-| 8. Scheduler & Jobs             | 16      | ⬜             |
+| 7. Interface Frontend           | 39      | 🟡 34/39 (87%) |
+| 8. Scheduler & Jobs             | 16      | ✅ Complète    |
 | 9. Sécurité & Auth              | 15      | ⬜             |
 | 10. Polish & Déploiement        | 16      | ⬜             |
 | **TOTAL**                       | **188** |               |

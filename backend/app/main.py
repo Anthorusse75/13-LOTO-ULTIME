@@ -22,6 +22,46 @@ from app.models.base import close_db, init_db
 settings = get_settings()
 
 
+async def _seed_games() -> None:
+    """Seed game_definitions from YAML configs if the table is empty."""
+    from app.core.game_definitions import load_all_game_configs
+    from app.models.base import get_session
+    from app.models.game import GameDefinition
+    from app.repositories.game_repository import GameRepository
+
+    logger = structlog.get_logger("seed")
+
+    async for session in get_session():
+        repo = GameRepository(session)
+        existing = await repo.get_active_games()
+        if existing:
+            logger.info("seed_games.skipped", count=len(existing))
+            break
+
+        configs = load_all_game_configs()
+        for cfg in configs.values():
+            game = GameDefinition(
+                name=cfg.name,
+                slug=cfg.slug,
+                numbers_pool=cfg.numbers_pool,
+                numbers_drawn=cfg.numbers_drawn,
+                min_number=cfg.min_number,
+                max_number=cfg.max_number,
+                stars_pool=cfg.stars_pool,
+                stars_drawn=cfg.stars_drawn,
+                star_name=cfg.star_name,
+                draw_frequency=cfg.draw_frequency,
+                historical_source=cfg.historical_source,
+                description=cfg.description,
+                is_active=True,
+            )
+            session.add(game)
+
+        await session.commit()
+        logger.info("seed_games.done", games=[c.slug for c in configs.values()])
+        break
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup / shutdown logic."""
@@ -29,6 +69,9 @@ async def lifespan(app: FastAPI):
     init_db(settings.DATABASE_URL)
     logger = structlog.get_logger("app")
     logger.info("application_started", version=settings.APP_VERSION)
+
+    # Seed games from YAML if table is empty
+    await _seed_games()
 
     # Start scheduler if enabled
     scheduler = None

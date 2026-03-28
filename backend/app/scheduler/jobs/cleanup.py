@@ -17,12 +17,12 @@ RETENTION_DAYS_SNAPSHOTS = 30
 MAX_SNAPSHOTS_PER_GAME = 10
 
 
-async def cleanup_job() -> None:
+async def cleanup_job(triggered_by: str = "scheduler") -> None:
     """Scheduled job: cleanup old data."""
     await execute_with_tracking(
         job_name="cleanup",
         func=_do_cleanup,
-        triggered_by="scheduler",
+        triggered_by=triggered_by,
     )
 
 

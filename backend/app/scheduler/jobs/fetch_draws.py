@@ -13,7 +13,7 @@ from app.scrapers import DrawValidator, get_scraper
 logger = structlog.get_logger(__name__)
 
 
-async def fetch_draws_job(game_slug: str) -> None:
+async def fetch_draws_job(game_slug: str, triggered_by: str = "scheduler") -> None:
     """Scheduled job: fetch new draws for a game and chain compute_stats."""
     # Resolve game from DB
     async for session in get_session():
@@ -30,7 +30,7 @@ async def fetch_draws_job(game_slug: str) -> None:
         func=_do_fetch,
         game_slug=game_slug,
         game_id=game_id,
-        triggered_by="scheduler",
+        triggered_by=triggered_by,
     )
 
 

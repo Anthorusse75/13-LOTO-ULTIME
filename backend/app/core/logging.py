@@ -36,6 +36,10 @@ def setup_logging(log_level: str = "INFO", json_output: bool = False) -> None:
         level=getattr(logging, log_level.upper(), logging.INFO),
     )
 
+    # Silence noisy third-party loggers
+    for noisy in ("aiosqlite", "asyncio", "watchfiles", "httpcore", "httpx"):
+        logging.getLogger(noisy).setLevel(logging.WARNING)
+
 
 def get_logger(name: str | None = None) -> structlog.stdlib.BoundLogger:
     """Retourne un logger structuré."""

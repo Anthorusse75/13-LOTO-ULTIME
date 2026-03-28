@@ -13,12 +13,12 @@ from app.scheduler.runner import execute_with_tracking
 logger = structlog.get_logger(__name__)
 
 
-async def compute_scoring_job() -> None:
+async def compute_scoring_job(triggered_by: str = "scheduler") -> None:
     """Scheduled job: rescore all grids for active games."""
     await execute_with_tracking(
         job_name="compute_scoring",
         func=_do_compute_scoring,
-        triggered_by="scheduler",
+        triggered_by=triggered_by,
     )
 
 

@@ -15,12 +15,12 @@ logger = structlog.get_logger(__name__)
 STALE_THRESHOLD_DAYS = 7
 
 
-async def health_check_job() -> None:
+async def health_check_job(triggered_by: str = "scheduler") -> None:
     """Scheduled job: verify system health."""
     await execute_with_tracking(
         job_name="health_check",
         func=_do_health_check,
-        triggered_by="scheduler",
+        triggered_by=triggered_by,
     )
 
 
@@ -28,6 +28,7 @@ async def _do_health_check() -> dict:
     """Core logic — check DB, data freshness, recent job failures."""
     results = {"status": "healthy", "checks": {}}
     now = datetime.now(UTC)
+    today = now.date()
 
     async for session in get_session():
         game_repo = GameRepository(session)
@@ -42,7 +43,7 @@ async def _do_health_check() -> dict:
         stale_games = []
         for game in games:
             latest = await draw_repo.get_latest(game.id, limit=1)
-            if not latest or (now.date() - latest[0].draw_date) > timedelta(
+            if not latest or (today - latest[0].draw_date) > timedelta(
                 days=STALE_THRESHOLD_DAYS
             ):
                 stale_games.append(game.slug)
@@ -56,11 +57,12 @@ async def _do_health_check() -> dict:
         results["checks"]["running_jobs"] = len(running)
 
         # Check for stuck jobs (running > 1h)
-        stuck = [
-            j.job_name
-            for j in running
-            if j.started_at and (now - j.started_at) > timedelta(hours=1)
-        ]
+        stuck = []
+        for j in running:
+            if j.started_at:
+                started = j.started_at.replace(tzinfo=UTC) if j.started_at.tzinfo is None else j.started_at
+                if (now - started) > timedelta(hours=1):
+                    stuck.append(j.job_name)
         if stuck:
             results["checks"]["stuck_jobs"] = stuck
             results["status"] = "warning"

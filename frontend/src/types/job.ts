@@ -17,3 +17,17 @@ export interface JobExecution {
   error_message: string | null;
   triggered_by: string;
 }
+
+export interface SchedulerStatus {
+  running_jobs: string[];
+  running_count: number;
+  last_runs: Record<
+    string,
+    {
+      status: string;
+      started_at: string;
+      finished_at: string | null;
+      duration_seconds: number | null;
+    }
+  >;
+}

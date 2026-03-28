@@ -13,7 +13,7 @@ from app.repositories.job_repository import JobRepository
 logger = structlog.get_logger(__name__)
 
 MAX_RETRIES = 3
-RETRY_DELAYS = [0, 300, 1800]  # seconds: immediate, 5min, 30min
+RETRY_DELAYS = [0, 5, 30]  # seconds: immediate, 5s, 30s
 
 
 async def execute_with_tracking(
@@ -72,8 +72,11 @@ async def execute_with_tracking(
                 log.error("job_max_retries_exceeded", error=str(exc))
 
     job_execution.finished_at = datetime.now(UTC)
+    started = job_execution.started_at
+    if started.tzinfo is None:
+        started = started.replace(tzinfo=UTC)
     job_execution.duration_seconds = (
-        job_execution.finished_at - job_execution.started_at
+        job_execution.finished_at - started
     ).total_seconds()
 
     # Persist final state
