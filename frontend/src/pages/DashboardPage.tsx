@@ -1,20 +1,27 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { TrendingUp, TrendingDown, Hash, Award, Activity, Calendar } from "lucide-react";
-import { useStatistics } from "@/hooks/useStatistics";
+import Disclaimer from "@/components/common/Disclaimer";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import DrawBalls from "@/components/draws/DrawBalls";
 import { useDraws, useLatestDraw } from "@/hooks/useDraws";
 import { useTopGrids } from "@/hooks/useGrids";
 import { useSchedulerStatus } from "@/hooks/useJobs";
-import DrawBalls from "@/components/draws/DrawBalls";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import Disclaimer from "@/components/common/Disclaimer";
+import { useStatistics } from "@/hooks/useStatistics";
 import { formatDate, formatScore } from "@/utils/formatters";
+import {
+  Activity,
+  Award,
+  Calendar,
+  Hash,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useStatistics();
@@ -23,7 +30,8 @@ export default function DashboardPage() {
   const { data: topGrids } = useTopGrids(5);
   const { data: schedulerStatus } = useSchedulerStatus();
 
-  if (statsLoading) return <LoadingSpinner message="Chargement du dashboard..." />;
+  if (statsLoading)
+    return <LoadingSpinner message="Chargement du dashboard..." />;
 
   const topFreq = stats?.frequencies
     .slice()
@@ -41,7 +49,11 @@ export default function DashboardPage() {
           icon={<Hash size={18} />}
           value={
             latest ? (
-              <DrawBalls numbers={latest.numbers} stars={latest.stars} size="sm" />
+              <DrawBalls
+                numbers={latest.numbers}
+                stars={latest.stars}
+                size="sm"
+              />
             ) : (
               "—"
             )
@@ -72,7 +84,14 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <KpiCard
           title="Pipeline nocturne"
-          icon={<Activity size={18} className={schedulerStatus ? "text-accent-green" : "text-accent-red"} />}
+          icon={
+            <Activity
+              size={18}
+              className={
+                schedulerStatus ? "text-accent-green" : "text-accent-red"
+              }
+            />
+          }
           value={schedulerStatus ? "Actif" : "Inactif"}
           sub={`${schedulerStatus?.running_count ?? 0} jobs en cours`}
         />
@@ -80,7 +99,11 @@ export default function DashboardPage() {
           title="Meilleure grille"
           icon={<Calendar size={18} />}
           value={topGrids?.[0] ? formatScore(topGrids[0].total_score) : "—"}
-          sub={topGrids?.[0] ? `méthode ${topGrids[0].method}` : "aucune grille générée"}
+          sub={
+            topGrids?.[0]
+              ? `méthode ${topGrids[0].method}`
+              : "aucune grille générée"
+          }
         />
       </div>
 
@@ -91,25 +114,33 @@ export default function DashboardPage() {
           <h2 className="text-sm font-semibold mb-4">Top 10 Fréquences</h2>
           {topFreq && topFreq.length > 0 ? (
             <>
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={topFreq}>
-                <XAxis
-                  dataKey="number"
-                  tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
-                />
-                <YAxis tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
-                <Tooltip
-                  contentStyle={{
-                    background: "var(--color-surface)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: 6,
-                  }}
-                  labelStyle={{ color: "var(--color-text-primary)" }}
-                />
-                <Bar dataKey="relative" fill="var(--color-accent-blue)" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-            <p className="text-xs text-text-secondary mt-2">Fréquences relatives des 10 numéros les plus tirés.</p>
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={topFreq}>
+                  <XAxis
+                    dataKey="number"
+                    tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
+                  />
+                  <YAxis
+                    tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--color-surface)",
+                      border: "1px solid var(--color-border)",
+                      borderRadius: 6,
+                    }}
+                    labelStyle={{ color: "var(--color-text-primary)" }}
+                  />
+                  <Bar
+                    dataKey="relative"
+                    fill="var(--color-accent-blue)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+              <p className="text-xs text-text-secondary mt-2">
+                Fréquences relatives des 10 numéros les plus tirés.
+              </p>
             </>
           ) : (
             <p className="text-text-secondary text-sm">Aucune donnée</p>

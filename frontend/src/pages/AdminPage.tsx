@@ -502,8 +502,11 @@ function GamesPanel() {
       </div>
 
       <p className="text-xs text-text-secondary">
-        Les jeux sont définis via les fichiers YAML dans <code className="bg-surface-hover px-1 rounded">backend/game_configs/</code>.
-        Ajoutez un nouveau fichier YAML et relancez le backend pour l'activer.
+        Les jeux sont définis via les fichiers YAML dans{" "}
+        <code className="bg-surface-hover px-1 rounded">
+          backend/game_configs/
+        </code>
+        . Ajoutez un nouveau fichier YAML et relancez le backend pour l'activer.
       </p>
     </div>
   );
@@ -521,9 +524,13 @@ function SettingsPanel() {
             <div className="flex justify-between">
               <span className="text-text-secondary">Status</span>
               <span className="flex items-center gap-1">
-                <span className={`h-2 w-2 rounded-full ${
-                  status?.running_count ? "bg-accent-green animate-pulse" : "bg-accent-green"
-                }`} />
+                <span
+                  className={`h-2 w-2 rounded-full ${
+                    status?.running_count
+                      ? "bg-accent-green animate-pulse"
+                      : "bg-accent-green"
+                  }`}
+                />
                 Actif
               </span>
             </div>
@@ -600,9 +607,9 @@ function SettingsPanel() {
 }
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<"overview" | "jobs" | "users" | "games" | "settings">(
-    "overview",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "jobs" | "users" | "games" | "settings"
+  >("overview");
 
   return (
     <div className="space-y-6">

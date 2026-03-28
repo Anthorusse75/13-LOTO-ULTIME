@@ -73,7 +73,10 @@ export default function SimulationPage() {
 
   // Stability (backend caps at 1000)
   const handleStability = () => {
-    stabMutation.mutate({ numbers: parseNumbers(), n_bootstrap: Math.min(nSim, 1000) });
+    stabMutation.mutate({
+      numbers: parseNumbers(),
+      n_bootstrap: Math.min(nSim, 1000),
+    });
   };
   const stab = stabMutation.data;
 
@@ -285,12 +288,16 @@ export default function SimulationPage() {
             Analyser la stabilité
           </button>
           {nSim > 1000 && (
-            <p className="text-xs text-text-secondary">Bootstrap limité à 1 000 itérations.</p>
+            <p className="text-xs text-text-secondary">
+              Bootstrap limité à 1 000 itérations.
+            </p>
           )}
 
           {stabMutation.isError && (
             <div className="bg-surface rounded-lg border border-accent-red/30 p-4">
-              <p className="text-accent-red text-sm">Erreur lors de l'analyse de stabilité. Veuillez réessayer.</p>
+              <p className="text-accent-red text-sm">
+                Erreur lors de l'analyse de stabilité. Veuillez réessayer.
+              </p>
             </div>
           )}
 

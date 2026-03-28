@@ -99,22 +99,26 @@ export default function PortfolioPage() {
       {/* Error state */}
       {generateMutation.isError && !generateMutation.isPending && (
         <div className="bg-surface rounded-lg border border-accent-red/30 p-6 text-center">
-          <p className="text-accent-red text-sm">Erreur lors de la génération du portefeuille. Veuillez réessayer.</p>
+          <p className="text-accent-red text-sm">
+            Erreur lors de la génération du portefeuille. Veuillez réessayer.
+          </p>
         </div>
       )}
 
       {/* Empty state */}
-      {!portfolio && !generateMutation.isPending && !generateMutation.isError && (
-        <div className="bg-surface rounded-lg border border-border p-8 text-center">
-          <p className="text-text-secondary text-sm mb-2">
-            Aucun portefeuille généré.
-          </p>
-          <p className="text-text-secondary text-xs">
-            Choisissez le nombre de grilles et la stratégie, puis cliquez sur «
-            Générer portefeuille » pour optimiser votre jeu.
-          </p>
-        </div>
-      )}
+      {!portfolio &&
+        !generateMutation.isPending &&
+        !generateMutation.isError && (
+          <div className="bg-surface rounded-lg border border-border p-8 text-center">
+            <p className="text-text-secondary text-sm mb-2">
+              Aucun portefeuille généré.
+            </p>
+            <p className="text-text-secondary text-xs">
+              Choisissez le nombre de grilles et la stratégie, puis cliquez sur
+              « Générer portefeuille » pour optimiser votre jeu.
+            </p>
+          </div>
+        )}
 
       {/* Results */}
       {portfolio && (

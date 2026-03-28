@@ -20,7 +20,9 @@ export const gridService = {
     gameId: number,
     req: GridGenerateRequest,
   ): Promise<GridGenerateResponse> => {
-    const { data } = await api.post(`/games/${gameId}/grids/generate`, req, { timeout: 120_000 });
+    const { data } = await api.post(`/games/${gameId}/grids/generate`, req, {
+      timeout: 120_000,
+    });
     return data;
   },
 

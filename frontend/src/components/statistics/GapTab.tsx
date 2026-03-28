@@ -189,7 +189,11 @@ export default function GapTab() {
                     borderRadius: 6,
                   }}
                 />
-                <Bar dataKey="current_gap" fill="#a855f7" radius={[4, 4, 0, 0]} />
+                <Bar
+                  dataKey="current_gap"
+                  fill="#a855f7"
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
