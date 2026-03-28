@@ -46,9 +46,7 @@ class GeneticAlgorithm(BaseOptimizer):
                 ).tolist()
             )
         return sorted(
-            self.rng.choice(
-                combined, size=self.game.numbers_drawn, replace=False
-            ).tolist()
+            self.rng.choice(combined, size=self.game.numbers_drawn, replace=False).tolist()
         )
 
     def _mutate(self, grid: list[int]) -> list[int]:
@@ -64,9 +62,7 @@ class GeneticAlgorithm(BaseOptimizer):
                 new_grid[i] = int(self.rng.choice(available))
         return sorted(new_grid)
 
-    def _tournament_select(
-        self, population: list[ScoredResult]
-    ) -> ScoredResult:
+    def _tournament_select(self, population: list[ScoredResult]) -> ScoredResult:
         """Select one individual via tournament selection."""
         indices = self.rng.choice(len(population), size=self.tournament_size, replace=False)
         candidates = [population[i] for i in indices]

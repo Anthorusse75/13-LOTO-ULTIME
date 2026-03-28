@@ -153,7 +153,11 @@ class TestGridService:
         stats_repo, grid_repo = mock_repos
         service = GridService(stats_repo, grid_repo)
         results, method_used, elapsed = await service.generate_grids(
-            game_id=1, game=loto_config, count=3, method="auto", seed=42,
+            game_id=1,
+            game=loto_config,
+            count=3,
+            method="auto",
+            seed=42,
         )
         assert len(results) == 3
         assert isinstance(method_used, str)
@@ -167,7 +171,11 @@ class TestGridService:
         stats_repo, grid_repo = mock_repos
         service = GridService(stats_repo, grid_repo)
         results, method_used, _ = await service.generate_grids(
-            game_id=1, game=loto_config, count=2, method="annealing", seed=42,
+            game_id=1,
+            game=loto_config,
+            count=2,
+            method="annealing",
+            seed=42,
         )
         assert method_used == "annealing"
         assert len(results) == 2
@@ -180,7 +188,10 @@ class TestGridService:
         service = GridService(stats_repo, grid_repo)
         with pytest.raises(InsufficientDataError):
             await service.generate_grids(
-                game_id=1, game=loto_config, count=3, method="auto",
+                game_id=1,
+                game=loto_config,
+                count=3,
+                method="auto",
             )
 
     @pytest.mark.asyncio
@@ -189,7 +200,10 @@ class TestGridService:
         service = GridService(stats_repo, grid_repo)
         with pytest.raises(ValueError, match="Unknown method"):
             await service.generate_grids(
-                game_id=1, game=loto_config, count=3, method="nonexistent",
+                game_id=1,
+                game=loto_config,
+                count=3,
+                method="nonexistent",
             )
 
     @pytest.mark.asyncio
@@ -197,7 +211,11 @@ class TestGridService:
         stats_repo, grid_repo = mock_repos
         service = GridService(stats_repo, grid_repo)
         result, method_used, elapsed = await service.generate_portfolio(
-            game_id=1, game=loto_config, grid_count=3, strategy="balanced", seed=42,
+            game_id=1,
+            game=loto_config,
+            grid_count=3,
+            strategy="balanced",
+            seed=42,
         )
         assert len(result.grids) == 3
         assert result.strategy == "balanced"

@@ -38,9 +38,7 @@ class BaseOptimizer(ABC):
         new_grid = grid.copy()
         idx = self.rng.integers(0, len(new_grid))
         available = [
-            n
-            for n in range(self.game.min_number, self.game.max_number + 1)
-            if n not in new_grid
+            n for n in range(self.game.min_number, self.game.max_number + 1) if n not in new_grid
         ]
         new_grid[idx] = int(self.rng.choice(available))
         return sorted(new_grid)

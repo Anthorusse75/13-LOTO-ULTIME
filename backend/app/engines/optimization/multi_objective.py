@@ -179,9 +179,7 @@ class MultiObjectiveOptimizer(BaseOptimizer):
                 else:
                     remaining = self.population_size - len(new_population)
                     crowding = self._crowding_distance(front_indices, objectives)
-                    paired = sorted(
-                        zip(front_indices, crowding), key=lambda x: -x[1]
-                    )
+                    paired = sorted(zip(front_indices, crowding), key=lambda x: -x[1])
                     new_population.extend(combined[idx] for idx, _ in paired[:remaining])
                     break
 

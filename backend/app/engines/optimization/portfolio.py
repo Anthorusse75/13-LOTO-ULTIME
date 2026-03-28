@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from app.core.game_definitions import GameConfig
 from app.engines.scoring.scorer import ScoredResult
 
-
 STRATEGY_WEIGHTS: dict[str, tuple[float, float, float, float]] = {
     "balanced": (0.30, 0.25, 0.25, 0.20),
     "max_diversity": (0.15, 0.45, 0.25, 0.15),
@@ -51,9 +50,7 @@ class PortfolioOptimizer:
         score_component = w_score * candidate.total_score
 
         # Diversity: min Hamming distance to existing grids (normalized)
-        min_dist = min(
-            self._hamming_distance(candidate.numbers, g.numbers) for g in portfolio
-        )
+        min_dist = min(self._hamming_distance(candidate.numbers, g.numbers) for g in portfolio)
         diversity_component = w_div * (min_dist / max_dist)
 
         # Coverage: new numbers brought in (normalized)
@@ -64,16 +61,12 @@ class PortfolioOptimizer:
         coverage_component = w_cov * (new_numbers / self.game.numbers_drawn)
 
         # Anti-correlation: max overlap with any existing grid (penalty)
-        max_overlap = max(
-            len(set(candidate.numbers) & set(g.numbers)) for g in portfolio
-        )
+        max_overlap = max(len(set(candidate.numbers) & set(g.numbers)) for g in portfolio)
         correlation_component = w_corr * (max_overlap / self.game.numbers_drawn)
 
         return score_component + diversity_component + coverage_component - correlation_component
 
-    def _compute_metrics(
-        self, grids: list[ScoredResult]
-    ) -> tuple[float, float, float, float]:
+    def _compute_metrics(self, grids: list[ScoredResult]) -> tuple[float, float, float, float]:
         """Return (diversity_score, coverage_score, avg_score, min_hamming)."""
         if not grids:
             return (0.0, 0.0, 0.0, 0.0)
@@ -126,9 +119,12 @@ class PortfolioOptimizer:
 
         if not candidate_grids:
             return PortfolioResult(
-                grids=[], strategy=strategy,
-                diversity_score=0.0, coverage_score=0.0,
-                avg_grid_score=0.0, min_hamming_distance=0.0,
+                grids=[],
+                strategy=strategy,
+                diversity_score=0.0,
+                coverage_score=0.0,
+                avg_grid_score=0.0,
+                min_hamming_distance=0.0,
             )
 
         # Sort candidates by score descending, start with the best

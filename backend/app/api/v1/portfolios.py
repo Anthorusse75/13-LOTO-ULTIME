@@ -1,6 +1,6 @@
 """Portfolios API — optimized portfolio generation and management."""
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Query
+from fastapi import APIRouter, Depends, HTTPException, Path
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
@@ -47,8 +47,7 @@ async def generate_portfolio(
         strategy=result.strategy,
         grid_count=len(result.grids),
         grids=[
-            {"numbers": g.numbers, "stars": g.stars, "score": g.total_score}
-            for g in result.grids
+            {"numbers": g.numbers, "stars": g.stars, "score": g.total_score} for g in result.grids
         ],
         diversity_score=result.diversity_score,
         coverage_score=result.coverage_score,

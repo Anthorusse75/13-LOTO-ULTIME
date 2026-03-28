@@ -120,7 +120,10 @@ class GridService:
             raise ValueError(f"Unknown method '{method}'. Available: {list(OPTIMIZER_MAP.keys())}")
 
         optimizer = optimizer_cls(
-            scorer=scorer, statistics=statistics, game=game, seed=seed,
+            scorer=scorer,
+            statistics=statistics,
+            game=game,
+            seed=seed,
         )
 
         start = time.perf_counter()

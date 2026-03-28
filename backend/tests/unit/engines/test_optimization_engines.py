@@ -1,12 +1,8 @@
 """Tests for optimization engines — meta-heuristics + portfolio."""
 
-from unittest.mock import MagicMock
-
-import numpy as np
 import pytest
 
 from app.core.game_definitions import GameConfig
-from app.engines.optimization.base import BaseOptimizer
 from app.engines.optimization.genetic import GeneticAlgorithm
 from app.engines.optimization.hill_climbing import HillClimbing
 from app.engines.optimization.method_selector import select_method
@@ -19,7 +15,6 @@ from app.engines.optimization.portfolio import (
 from app.engines.optimization.simulated_annealing import SimulatedAnnealing
 from app.engines.optimization.tabu import TabuSearch
 from app.engines.scoring.scorer import GridScorer, ScoredResult
-
 
 # ── Fixtures ──
 
@@ -56,8 +51,7 @@ def loto_config():
 def sample_statistics():
     """Minimal statistics dict for scoring."""
     frequencies = {
-        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0}
-        for n in range(1, 50)
+        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0} for n in range(1, 50)
     }
     gaps = {
         str(n): {
@@ -90,8 +84,7 @@ def sample_statistics():
 def small_statistics():
     """Minimal statistics for the small game (10 numbers)."""
     frequencies = {
-        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0}
-        for n in range(1, 11)
+        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0} for n in range(1, 11)
     }
     gaps = {
         str(n): {
@@ -159,8 +152,11 @@ class TestSimulatedAnnealing:
     def test_optimize_returns_correct_count(self, small_config, small_statistics):
         scorer = GridScorer()
         sa = SimulatedAnnealing(
-            scorer, small_statistics, small_config,
-            max_iterations=100, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            max_iterations=100,
+            seed=42,
         )
         results = sa.optimize(n_grids=3)
         assert len(results) == 3
@@ -169,8 +165,11 @@ class TestSimulatedAnnealing:
     def test_results_sorted_descending(self, small_config, small_statistics):
         scorer = GridScorer()
         sa = SimulatedAnnealing(
-            scorer, small_statistics, small_config,
-            max_iterations=100, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            max_iterations=100,
+            seed=42,
         )
         results = sa.optimize(n_grids=5)
         scores = [r.total_score for r in results]
@@ -179,8 +178,11 @@ class TestSimulatedAnnealing:
     def test_grids_are_valid(self, small_config, small_statistics):
         scorer = GridScorer()
         sa = SimulatedAnnealing(
-            scorer, small_statistics, small_config,
-            max_iterations=50, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            max_iterations=50,
+            seed=42,
         )
         results = sa.optimize(n_grids=2)
         for r in results:
@@ -201,9 +203,13 @@ class TestSimulatedAnnealing:
     def test_temperature_floor_stops_early(self, small_config, small_statistics):
         scorer = GridScorer()
         sa = SimulatedAnnealing(
-            scorer, small_statistics, small_config,
-            t_initial=0.001, t_min=0.01,  # t_initial < t_min → immediate stop
-            max_iterations=10000, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            t_initial=0.001,
+            t_min=0.01,  # t_initial < t_min → immediate stop
+            max_iterations=10000,
+            seed=42,
         )
         results = sa.optimize(n_grids=1)
         assert len(results) == 1
@@ -216,8 +222,12 @@ class TestGeneticAlgorithm:
     def test_optimize_returns_correct_count(self, small_config, small_statistics):
         scorer = GridScorer()
         ga = GeneticAlgorithm(
-            scorer, small_statistics, small_config,
-            population_size=20, max_generations=5, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=20,
+            max_generations=5,
+            seed=42,
         )
         results = ga.optimize(n_grids=3)
         assert len(results) == 3
@@ -225,8 +235,12 @@ class TestGeneticAlgorithm:
     def test_results_sorted(self, small_config, small_statistics):
         scorer = GridScorer()
         ga = GeneticAlgorithm(
-            scorer, small_statistics, small_config,
-            population_size=20, max_generations=5, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=20,
+            max_generations=5,
+            seed=42,
         )
         results = ga.optimize(n_grids=5)
         scores = [r.total_score for r in results]
@@ -235,8 +249,12 @@ class TestGeneticAlgorithm:
     def test_crossover_produces_valid_child(self, small_config, small_statistics):
         scorer = GridScorer()
         ga = GeneticAlgorithm(
-            scorer, small_statistics, small_config,
-            population_size=10, max_generations=1, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=10,
+            max_generations=1,
+            seed=42,
         )
         child = ga._crossover([1, 3, 5], [2, 4, 6])
         assert len(child) == small_config.numbers_drawn
@@ -246,8 +264,11 @@ class TestGeneticAlgorithm:
     def test_mutate_keeps_valid_grid(self, small_config, small_statistics):
         scorer = GridScorer()
         ga = GeneticAlgorithm(
-            scorer, small_statistics, small_config,
-            mutation_rate=1.0, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            mutation_rate=1.0,
+            seed=42,
         )
         mutated = ga._mutate([1, 3, 5])
         assert len(mutated) == small_config.numbers_drawn
@@ -257,8 +278,11 @@ class TestGeneticAlgorithm:
     def test_tournament_selection(self, small_config, small_statistics):
         scorer = GridScorer()
         ga = GeneticAlgorithm(
-            scorer, small_statistics, small_config,
-            tournament_size=2, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            tournament_size=2,
+            seed=42,
         )
         pop = [
             ScoredResult(numbers=[1, 2, 3], total_score=0.5, score_breakdown={}),
@@ -271,12 +295,20 @@ class TestGeneticAlgorithm:
     def test_seed_reproducibility(self, small_config, small_statistics):
         scorer = GridScorer()
         r1 = GeneticAlgorithm(
-            scorer, small_statistics, small_config,
-            population_size=10, max_generations=3, seed=99,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=10,
+            max_generations=3,
+            seed=99,
         ).optimize(2)
         r2 = GeneticAlgorithm(
-            scorer, small_statistics, small_config,
-            population_size=10, max_generations=3, seed=99,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=10,
+            max_generations=3,
+            seed=99,
         ).optimize(2)
         assert [r.numbers for r in r1] == [r.numbers for r in r2]
 
@@ -288,8 +320,13 @@ class TestTabuSearch:
     def test_optimize_returns_correct_count(self, small_config, small_statistics):
         scorer = GridScorer()
         ts = TabuSearch(
-            scorer, small_statistics, small_config,
-            max_iterations=50, tabu_size=10, n_neighbors=5, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            max_iterations=50,
+            tabu_size=10,
+            n_neighbors=5,
+            seed=42,
         )
         results = ts.optimize(n_grids=3)
         assert len(results) == 3
@@ -297,8 +334,13 @@ class TestTabuSearch:
     def test_results_sorted(self, small_config, small_statistics):
         scorer = GridScorer()
         ts = TabuSearch(
-            scorer, small_statistics, small_config,
-            max_iterations=50, tabu_size=10, n_neighbors=5, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            max_iterations=50,
+            tabu_size=10,
+            n_neighbors=5,
+            seed=42,
         )
         results = ts.optimize(n_grids=4)
         scores = [r.total_score for r in results]
@@ -307,8 +349,12 @@ class TestTabuSearch:
     def test_valid_grids(self, small_config, small_statistics):
         scorer = GridScorer()
         ts = TabuSearch(
-            scorer, small_statistics, small_config,
-            max_iterations=20, n_neighbors=3, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            max_iterations=20,
+            n_neighbors=3,
+            seed=42,
         )
         results = ts.optimize(n_grids=2)
         for r in results:
@@ -318,12 +364,20 @@ class TestTabuSearch:
     def test_seed_reproducibility(self, small_config, small_statistics):
         scorer = GridScorer()
         r1 = TabuSearch(
-            scorer, small_statistics, small_config,
-            max_iterations=20, n_neighbors=3, seed=55,
+            scorer,
+            small_statistics,
+            small_config,
+            max_iterations=20,
+            n_neighbors=3,
+            seed=55,
         ).optimize(2)
         r2 = TabuSearch(
-            scorer, small_statistics, small_config,
-            max_iterations=20, n_neighbors=3, seed=55,
+            scorer,
+            small_statistics,
+            small_config,
+            max_iterations=20,
+            n_neighbors=3,
+            seed=55,
         ).optimize(2)
         assert [r.numbers for r in r1] == [r.numbers for r in r2]
 
@@ -335,8 +389,12 @@ class TestHillClimbing:
     def test_optimize_returns_correct_count(self, small_config, small_statistics):
         scorer = GridScorer()
         hc = HillClimbing(
-            scorer, small_statistics, small_config,
-            n_restarts=5, max_no_improve=10, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            n_restarts=5,
+            max_no_improve=10,
+            seed=42,
         )
         results = hc.optimize(n_grids=3)
         assert len(results) == 3
@@ -344,8 +402,12 @@ class TestHillClimbing:
     def test_results_sorted(self, small_config, small_statistics):
         scorer = GridScorer()
         hc = HillClimbing(
-            scorer, small_statistics, small_config,
-            n_restarts=5, max_no_improve=10, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            n_restarts=5,
+            max_no_improve=10,
+            seed=42,
         )
         results = hc.optimize(n_grids=5)
         scores = [r.total_score for r in results]
@@ -354,8 +416,12 @@ class TestHillClimbing:
     def test_valid_grids(self, small_config, small_statistics):
         scorer = GridScorer()
         hc = HillClimbing(
-            scorer, small_statistics, small_config,
-            n_restarts=3, max_no_improve=5, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            n_restarts=3,
+            max_no_improve=5,
+            seed=42,
         )
         results = hc.optimize(n_grids=2)
         for r in results:
@@ -365,12 +431,20 @@ class TestHillClimbing:
     def test_seed_reproducibility(self, small_config, small_statistics):
         scorer = GridScorer()
         r1 = HillClimbing(
-            scorer, small_statistics, small_config,
-            n_restarts=3, max_no_improve=5, seed=77,
+            scorer,
+            small_statistics,
+            small_config,
+            n_restarts=3,
+            max_no_improve=5,
+            seed=77,
         ).optimize(2)
         r2 = HillClimbing(
-            scorer, small_statistics, small_config,
-            n_restarts=3, max_no_improve=5, seed=77,
+            scorer,
+            small_statistics,
+            small_config,
+            n_restarts=3,
+            max_no_improve=5,
+            seed=77,
         ).optimize(2)
         assert [r.numbers for r in r1] == [r.numbers for r in r2]
 
@@ -382,8 +456,12 @@ class TestMultiObjectiveOptimizer:
     def test_optimize_returns_correct_count(self, small_config, small_statistics):
         scorer = GridScorer()
         mo = MultiObjectiveOptimizer(
-            scorer, small_statistics, small_config,
-            population_size=15, max_generations=3, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=15,
+            max_generations=3,
+            seed=42,
         )
         results = mo.optimize(n_grids=3)
         assert len(results) == 3
@@ -391,8 +469,12 @@ class TestMultiObjectiveOptimizer:
     def test_results_sorted(self, small_config, small_statistics):
         scorer = GridScorer()
         mo = MultiObjectiveOptimizer(
-            scorer, small_statistics, small_config,
-            population_size=15, max_generations=3, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=15,
+            max_generations=3,
+            seed=42,
         )
         results = mo.optimize(n_grids=5)
         scores = [r.total_score for r in results]
@@ -413,8 +495,12 @@ class TestMultiObjectiveOptimizer:
     def test_valid_grids(self, small_config, small_statistics):
         scorer = GridScorer()
         mo = MultiObjectiveOptimizer(
-            scorer, small_statistics, small_config,
-            population_size=10, max_generations=2, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=10,
+            max_generations=2,
+            seed=42,
         )
         results = mo.optimize(n_grids=2)
         for r in results:
@@ -424,12 +510,20 @@ class TestMultiObjectiveOptimizer:
     def test_seed_reproducibility(self, small_config, small_statistics):
         scorer = GridScorer()
         r1 = MultiObjectiveOptimizer(
-            scorer, small_statistics, small_config,
-            population_size=10, max_generations=2, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=10,
+            max_generations=2,
+            seed=42,
         ).optimize(3)
         r2 = MultiObjectiveOptimizer(
-            scorer, small_statistics, small_config,
-            population_size=10, max_generations=2, seed=42,
+            scorer,
+            small_statistics,
+            small_config,
+            population_size=10,
+            max_generations=2,
+            seed=42,
         ).optimize(3)
         assert [r.numbers for r in r1] == [r.numbers for r in r2]
 
@@ -513,36 +607,48 @@ class TestPortfolioOptimizer:
 class TestMethodSelector:
     def test_auto_small_space(self):
         game = GameConfig(
-            name="Tiny", slug="tiny",
-            numbers_pool=10, numbers_drawn=3,
-            min_number=1, max_number=10,
+            name="Tiny",
+            slug="tiny",
+            numbers_pool=10,
+            numbers_drawn=3,
+            min_number=1,
+            max_number=10,
         )
         method = select_method(game, n_grids=3, time_budget=15)
         assert method == "simulated_annealing"
 
     def test_auto_few_grids(self):
         game = GameConfig(
-            name="Loto", slug="loto",
-            numbers_pool=49, numbers_drawn=5,
-            min_number=1, max_number=49,
+            name="Loto",
+            slug="loto",
+            numbers_pool=49,
+            numbers_drawn=5,
+            min_number=1,
+            max_number=49,
         )
         method = select_method(game, n_grids=3, time_budget=10)
         assert method == "simulated_annealing"
 
     def test_auto_many_grids(self):
         game = GameConfig(
-            name="Loto", slug="loto",
-            numbers_pool=49, numbers_drawn=5,
-            min_number=1, max_number=49,
+            name="Loto",
+            slug="loto",
+            numbers_pool=49,
+            numbers_drawn=5,
+            min_number=1,
+            max_number=49,
         )
         method = select_method(game, n_grids=25)
         assert method == "genetic"
 
     def test_auto_default(self):
         game = GameConfig(
-            name="Loto", slug="loto",
-            numbers_pool=49, numbers_drawn=5,
-            min_number=1, max_number=49,
+            name="Loto",
+            slug="loto",
+            numbers_pool=49,
+            numbers_drawn=5,
+            min_number=1,
+            max_number=49,
         )
         method = select_method(game, n_grids=10)
         assert method == "genetic"
@@ -554,7 +660,10 @@ class TestMethodSelector:
 class TestStrategyWeights:
     def test_all_strategies_defined(self):
         assert set(STRATEGY_WEIGHTS.keys()) == {
-            "balanced", "max_diversity", "max_coverage", "min_correlation"
+            "balanced",
+            "max_diversity",
+            "max_coverage",
+            "min_correlation",
         }
 
     def test_weights_sum_to_one(self):
