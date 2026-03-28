@@ -1,22 +1,24 @@
-import { useState } from "react";
-import { useGenerateGrids, useTopGrids } from "@/hooks/useGrids";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { formatScore } from "@/utils/formatters";
+import { useGenerateGrids, useTopGrids } from "@/hooks/useGrids";
+import type { GridScoreResponse } from "@/types/grid";
 import {
   OPTIMIZATION_METHODS,
-  SCORING_PROFILES,
   SCORE_CRITERIA,
+  SCORING_PROFILES,
 } from "@/utils/constants";
-import type { GridScoreResponse } from "@/types/grid";
+import { formatScore } from "@/utils/formatters";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export default function GridsPage() {
   const [count, setCount] = useState(10);
   const [method, setMethod] = useState("auto");
   const [profile, setProfile] = useState("equilibre");
-  const [selectedGrid, setSelectedGrid] = useState<GridScoreResponse | null>(null);
+  const [selectedGrid, setSelectedGrid] = useState<GridScoreResponse | null>(
+    null,
+  );
 
   const { data: topGrids, isLoading: topLoading } = useTopGrids(10);
   const generateMutation = useGenerateGrids();
@@ -91,7 +93,9 @@ export default function GridsPage() {
           disabled={generateMutation.isPending}
           className="px-6 py-2 bg-accent-blue text-white rounded-md text-sm font-medium hover:bg-accent-blue/90 disabled:opacity-50 flex items-center gap-2"
         >
-          {generateMutation.isPending && <Loader2 size={16} className="animate-spin" />}
+          {generateMutation.isPending && (
+            <Loader2 size={16} className="animate-spin" />
+          )}
           Générer
         </button>
 
@@ -119,7 +123,9 @@ export default function GridsPage() {
                     : "hover:bg-surface-hover"
                 }`}
               >
-                <span className="text-xs text-text-secondary w-6">#{i + 1}</span>
+                <span className="text-xs text-text-secondary w-6">
+                  #{i + 1}
+                </span>
                 <DrawBalls numbers={g.numbers} stars={g.stars} size="sm" />
                 <span className="ml-auto font-mono text-accent-green">
                   {formatScore(g.total_score)}
@@ -137,14 +143,22 @@ export default function GridsPage() {
             Détail — Score: {formatScore(selectedGrid.total_score)}/10
           </h2>
           <div className="mb-4">
-            <DrawBalls numbers={selectedGrid.numbers} stars={selectedGrid.stars} size="lg" />
+            <DrawBalls
+              numbers={selectedGrid.numbers}
+              stars={selectedGrid.stars}
+              size="lg"
+            />
           </div>
           <div className="space-y-2">
             {SCORE_CRITERIA.map((c) => (
               <ScoreBar
                 key={c.key}
                 label={c.label}
-                value={selectedGrid.score_breakdown[c.key as keyof typeof selectedGrid.score_breakdown]}
+                value={
+                  selectedGrid.score_breakdown[
+                    c.key as keyof typeof selectedGrid.score_breakdown
+                  ]
+                }
               />
             ))}
           </div>
@@ -161,7 +175,9 @@ export default function GridsPage() {
 
       {/* Top grids from DB */}
       <div className="bg-surface rounded-lg border border-border p-4">
-        <h2 className="text-sm font-semibold mb-4">Top 10 — Meilleures grilles</h2>
+        <h2 className="text-sm font-semibold mb-4">
+          Top 10 — Meilleures grilles
+        </h2>
         {topLoading ? (
           <LoadingSpinner />
         ) : topGrids && topGrids.length > 0 ? (
@@ -171,7 +187,9 @@ export default function GridsPage() {
                 key={g.id}
                 className="flex items-center gap-4 p-2 rounded-md hover:bg-surface-hover"
               >
-                <span className="text-xs text-text-secondary w-6">#{i + 1}</span>
+                <span className="text-xs text-text-secondary w-6">
+                  #{i + 1}
+                </span>
                 <DrawBalls numbers={g.numbers} stars={g.stars} size="sm" />
                 <span className="text-xs text-text-secondary">{g.method}</span>
                 <span className="ml-auto font-mono text-accent-green">
