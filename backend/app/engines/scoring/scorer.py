@@ -57,7 +57,9 @@ def normalize_weights(raw: dict[str, float]) -> dict[str, float]:
     if total_main <= 0:
         total_main = 1.0
     normalized = {k: raw[k] / total_main for k in main_keys}
-    normalized["pattern_penalty"] = penalty / (total_main + penalty) if (total_main + penalty) > 0 else 0.0
+    normalized["pattern_penalty"] = (
+        penalty / (total_main + penalty) if (total_main + penalty) > 0 else 0.0
+    )
     return normalized
 
 
@@ -106,9 +108,7 @@ class GridScorer:
 
         breakdown: dict[str, float] = {}
 
-        breakdown["frequency"] = self._frequency.compute(
-            grid, game, frequencies=frequencies
-        )
+        breakdown["frequency"] = self._frequency.compute(grid, game, frequencies=frequencies)
         breakdown["gap"] = self._gap.compute(grid, game, gaps=gaps)
         breakdown["cooccurrence"] = self._cooccurrence.compute(
             grid, game, cooccurrences=cooccurrences
@@ -119,10 +119,13 @@ class GridScorer:
 
         w = normalize_weights(self.weights)
 
-        total = sum(
-            w[name] * breakdown[name]
-            for name in ("frequency", "gap", "cooccurrence", "structure", "balance")
-        ) - w["pattern_penalty"] * breakdown["pattern_penalty"]
+        total = (
+            sum(
+                w[name] * breakdown[name]
+                for name in ("frequency", "gap", "cooccurrence", "structure", "balance")
+            )
+            - w["pattern_penalty"] * breakdown["pattern_penalty"]
+        )
 
         total = max(0.0, min(1.0, total))
 
@@ -156,6 +159,7 @@ class GridScorer:
                 g_avg = g_data.get("avg_gap", 1)
                 g_ratio = (g_current - g_avg) / g_avg if g_avg > 0 else 0
                 import math
+
                 g_score = 1.0 / (1.0 + math.exp(-3.0 * g_ratio))
                 star_scores.append(0.5 * f_score + 0.5 * g_score)
 

@@ -30,11 +30,17 @@ def mock_snapshot():
     """A mock StatisticsSnapshot with minimal data."""
     snapshot = MagicMock(spec=StatisticsSnapshot)
     snapshot.frequencies = {
-        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0}
-        for n in range(1, 50)
+        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0} for n in range(1, 50)
     }
     snapshot.gaps = {
-        str(n): {"current_gap": 5, "avg_gap": 10.0, "max_gap": 20, "min_gap": 1, "median_gap": 9.0, "expected_gap": 9.8}
+        str(n): {
+            "current_gap": 5,
+            "avg_gap": 10.0,
+            "max_gap": 20,
+            "min_gap": 1,
+            "median_gap": 9.0,
+            "expected_gap": 9.8,
+        }
         for n in range(1, 50)
     }
     snapshot.cooccurrence_matrix = {
@@ -93,8 +99,12 @@ class TestGridService:
             game=loto_config,
             numbers=[5, 12, 23, 34, 47],
             custom_weights={
-                "frequency": 1.0, "gap": 0.0, "cooccurrence": 0.0,
-                "structure": 0.0, "balance": 0.0, "pattern_penalty": 0.0,
+                "frequency": 1.0,
+                "gap": 0.0,
+                "cooccurrence": 0.0,
+                "structure": 0.0,
+                "balance": 0.0,
+                "pattern_penalty": 0.0,
             },
         )
         assert 0 <= result.total_score <= 1
@@ -119,9 +129,7 @@ class TestGridService:
         grid_repo = AsyncMock()
         service = GridService(stats_repo, grid_repo)
         with pytest.raises(InsufficientDataError, match="No statistics snapshot"):
-            await service.score_grid(
-                game_id=1, game=loto_config, numbers=[1, 2, 3, 4, 5]
-            )
+            await service.score_grid(game_id=1, game=loto_config, numbers=[1, 2, 3, 4, 5])
 
     @pytest.mark.asyncio
     async def test_get_top_grids(self, mock_repos):

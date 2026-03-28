@@ -14,9 +14,7 @@ class BalanceCriterion(BaseScoringCriterion):
         n = game.max_number - game.min_number + 1
 
         # Ideal positions (uniform spread)
-        ideal_positions = [
-            game.min_number + (i + 1) * n / (k + 1) for i in range(k)
-        ]
+        ideal_positions = [game.min_number + (i + 1) * n / (k + 1) for i in range(k)]
 
         # Average normalised deviation
         deviations = [abs(sorted_grid[i] - ideal_positions[i]) / n for i in range(k)]

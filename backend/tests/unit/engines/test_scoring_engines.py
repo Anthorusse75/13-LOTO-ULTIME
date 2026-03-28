@@ -1,8 +1,5 @@
 """Tests for all 6 scoring criteria + GridScorer."""
 
-import math
-
-import numpy as np
 import pytest
 
 from app.core.game_definitions import GameConfig
@@ -18,7 +15,6 @@ from app.engines.scoring.scorer import (
     normalize_weights,
 )
 from app.engines.scoring.structure_criterion import StructureCriterion
-
 
 # ── Fixtures ──
 
@@ -128,12 +124,8 @@ class TestFrequencyCriterion:
     def test_high_frequency_numbers_score_higher(self, loto_config, sample_frequencies):
         high_nums = [45, 46, 47, 48, 49]  # Higher ratios
         low_nums = [1, 2, 3, 4, 5]  # Lower ratios
-        high_score = self.criterion.compute(
-            high_nums, loto_config, frequencies=sample_frequencies
-        )
-        low_score = self.criterion.compute(
-            low_nums, loto_config, frequencies=sample_frequencies
-        )
+        high_score = self.criterion.compute(high_nums, loto_config, frequencies=sample_frequencies)
+        low_score = self.criterion.compute(low_nums, loto_config, frequencies=sample_frequencies)
         assert high_score > low_score
 
     def test_empty_frequencies(self, loto_config):
@@ -161,25 +153,17 @@ class TestGapCriterion:
         assert self.criterion.get_name() == "gap"
 
     def test_returns_float_in_range(self, loto_config, sample_gaps):
-        score = self.criterion.compute(
-            [5, 12, 23, 34, 47], loto_config, gaps=sample_gaps
-        )
+        score = self.criterion.compute([5, 12, 23, 34, 47], loto_config, gaps=sample_gaps)
         assert 0 <= score <= 1
 
     def test_overdue_numbers_score_high(self, loto_config):
-        gaps = {
-            str(n): {"current_gap": 50, "avg_gap": 10.0}
-            for n in range(1, 50)
-        }
+        gaps = {str(n): {"current_gap": 50, "avg_gap": 10.0} for n in range(1, 50)}
         score = self.criterion.compute([1, 2, 3, 4, 5], loto_config, gaps=gaps)
         # current >> avg → ratio = 4 → sigmoid(12) ≈ 1
         assert score > 0.9
 
     def test_recent_numbers_score_low(self, loto_config):
-        gaps = {
-            str(n): {"current_gap": 0, "avg_gap": 10.0}
-            for n in range(1, 50)
-        }
+        gaps = {str(n): {"current_gap": 0, "avg_gap": 10.0} for n in range(1, 50)}
         score = self.criterion.compute([1, 2, 3, 4, 5], loto_config, gaps=gaps)
         # current << avg → ratio = -1 → sigmoid(-3) ≈ 0.047
         assert score < 0.1
@@ -232,15 +216,11 @@ class TestCooccurrenceCriterion:
         assert high_score > low_score
 
     def test_empty_pairs(self, loto_config):
-        score = self.criterion.compute(
-            [1, 2, 3, 4, 5], loto_config, cooccurrences={"pairs": {}}
-        )
+        score = self.criterion.compute([1, 2, 3, 4, 5], loto_config, cooccurrences={"pairs": {}})
         assert score == 0.5
 
     def test_single_number_grid(self, loto_config, sample_cooccurrences):
-        score = self.criterion.compute(
-            [5], loto_config, cooccurrences=sample_cooccurrences
-        )
+        score = self.criterion.compute([5], loto_config, cooccurrences=sample_cooccurrences)
         assert score == 0.5  # No pairs → default
 
 
@@ -374,7 +354,12 @@ class TestGridScorer:
         assert isinstance(result, ScoredResult)
         assert 0 <= result.total_score <= 1
         assert set(result.score_breakdown.keys()) == {
-            "frequency", "gap", "cooccurrence", "structure", "balance", "pattern_penalty"
+            "frequency",
+            "gap",
+            "cooccurrence",
+            "structure",
+            "balance",
+            "pattern_penalty",
         }
 
     def test_all_breakdown_scores_in_range(self, loto_config, sample_statistics):
@@ -413,18 +398,14 @@ class TestGridScorer:
 
     def test_score_with_stars(self, loto_config, sample_statistics):
         scorer = GridScorer()
-        result = scorer.score_with_stars(
-            [5, 12, 23, 34, 47], [3], sample_statistics, loto_config
-        )
+        result = scorer.score_with_stars([5, 12, 23, 34, 47], [3], sample_statistics, loto_config)
         assert result.stars == [3]
         assert result.star_score is not None
         assert 0 <= result.total_score <= 1
 
     def test_score_with_stars_no_star_data(self, loto_config, sample_statistics):
         scorer = GridScorer()
-        result = scorer.score_with_stars(
-            [5, 12, 23, 34, 47], [3], sample_statistics, loto_config
-        )
+        result = scorer.score_with_stars([5, 12, 23, 34, 47], [3], sample_statistics, loto_config)
         # No star_frequency/star_gaps in statistics → star_score defaults to 0.5
         assert result.star_score == 0.5
 

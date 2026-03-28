@@ -1,10 +1,8 @@
 """Grid service — scoring orchestration and persistence."""
 
-from datetime import UTC, datetime
-
 import structlog
 
-from app.core.exceptions import GameNotFoundError, InsufficientDataError
+from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import GameConfig
 from app.engines.scoring.scorer import GridScorer, ScoredResult
 from app.models.grid import ScoredGrid
@@ -56,9 +54,7 @@ class GridService:
             return scorer.score_with_stars(numbers, stars, statistics, game)
         return scorer.score(numbers, statistics, game)
 
-    async def get_top_grids(
-        self, game_id: int, limit: int = 10
-    ) -> list[ScoredGrid]:
+    async def get_top_grids(self, game_id: int, limit: int = 10) -> list[ScoredGrid]:
         """Return the top-scored grids for a game."""
         return await self._grid_repo.get_top_grids(game_id, limit)
 

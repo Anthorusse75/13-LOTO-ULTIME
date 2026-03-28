@@ -1,12 +1,11 @@
 """Integration tests for grids API endpoints."""
 
-from datetime import UTC, date, datetime
+from datetime import UTC, datetime
 
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.draw import Draw
 from app.models.game import GameDefinition
 from app.models.grid import ScoredGrid
 from app.models.statistics import StatisticsSnapshot
@@ -132,9 +131,7 @@ class TestGridsAPI:
 
         engine = db_session.bind
         base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(
-            bind=engine, expire_on_commit=False
-        )
+        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
         try:
             from app.main import create_app
@@ -152,7 +149,12 @@ class TestGridsAPI:
             assert 0 <= data["total_score"] <= 1
             assert "score_breakdown" in data
             assert set(data["score_breakdown"].keys()) == {
-                "frequency", "gap", "cooccurrence", "structure", "balance", "pattern_penalty"
+                "frequency",
+                "gap",
+                "cooccurrence",
+                "structure",
+                "balance",
+                "pattern_penalty",
             }
         finally:
             base_module._engine = original_engine
@@ -168,9 +170,7 @@ class TestGridsAPI:
         original_engine = base_module._engine
         original_factory = base_module._session_factory
         base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(
-            bind=engine, expire_on_commit=False
-        )
+        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
         try:
             from app.main import create_app
@@ -215,9 +215,7 @@ class TestGridsAPI:
         original_engine = base_module._engine
         original_factory = base_module._session_factory
         base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(
-            bind=engine, expire_on_commit=False
-        )
+        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
         try:
             from app.main import create_app
@@ -244,9 +242,7 @@ class TestGridsAPI:
         original_engine = base_module._engine
         original_factory = base_module._session_factory
         base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(
-            bind=engine, expire_on_commit=False
-        )
+        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
         try:
             from app.main import create_app
@@ -254,9 +250,7 @@ class TestGridsAPI:
             test_app = create_app()
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.get(
-                    f"/api/v1/games/{game.id}/grids/top?limit=10"
-                )
+                resp = await client.get(f"/api/v1/games/{game.id}/grids/top?limit=10")
             assert resp.status_code == 200
             data = resp.json()
             assert isinstance(data, list)
@@ -277,9 +271,7 @@ class TestGridsAPI:
         original_engine = base_module._engine
         original_factory = base_module._session_factory
         base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(
-            bind=engine, expire_on_commit=False
-        )
+        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
         try:
             from app.main import create_app
@@ -287,9 +279,7 @@ class TestGridsAPI:
             test_app = create_app()
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.get(
-                    f"/api/v1/games/{game.id}/grids/{grids[0].id}"
-                )
+                resp = await client.get(f"/api/v1/games/{game.id}/grids/{grids[0].id}")
             assert resp.status_code == 200
             data = resp.json()
             assert data["numbers"] == grids[0].numbers
@@ -307,9 +297,7 @@ class TestGridsAPI:
         original_engine = base_module._engine
         original_factory = base_module._session_factory
         base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(
-            bind=engine, expire_on_commit=False
-        )
+        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
         try:
             from app.main import create_app
@@ -317,9 +305,7 @@ class TestGridsAPI:
             test_app = create_app()
             transport = ASGITransport(app=test_app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.get(
-                    f"/api/v1/games/{game.id}/grids/99999"
-                )
+                resp = await client.get(f"/api/v1/games/{game.id}/grids/99999")
             assert resp.status_code == 404
         finally:
             base_module._engine = original_engine
