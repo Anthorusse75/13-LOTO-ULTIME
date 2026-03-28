@@ -241,22 +241,22 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 
 ## Phase 8 — Scheduler & Jobs
 
-- [ ] APScheduler configuré et démarré dans le lifespan
-- [ ] Job `scrape_draws` (Loto FDJ)
-- [ ] Job `scrape_draws` (EuroMillions)
-- [ ] Scraper FDJ fonctionnel avec validation
-- [ ] Scraper EuroMillions fonctionnel avec validation
-- [ ] Job `compute_statistics` (chaîné après scraping)
-- [ ] Job `score_grids`
-- [ ] Job `update_top_grids`
-- [ ] Job `generate_portfolio`
-- [ ] Job `cleanup_old_data`
-- [ ] Job `check_system_health`
-- [ ] Déclenchement manuel via API admin
-- [ ] Historisation dans JobExecution
-- [ ] Retry automatique (3 tentatives)
-- [ ] Verrouillage concurrence (max_instances=1)
-- [ ] Tests avec mocks scraper
+- [x] APScheduler configuré et démarré dans le lifespan
+- [x] Job `scrape_draws` (Loto FDJ)
+- [x] Job `scrape_draws` (EuroMillions)
+- [x] Scraper FDJ fonctionnel avec validation
+- [x] Scraper EuroMillions fonctionnel avec validation
+- [x] Job `compute_statistics` (chaîné après scraping)
+- [x] Job `score_grids`
+- [x] Job `update_top_grids`
+- [x] Job `generate_portfolio`
+- [x] Job `cleanup_old_data`
+- [x] Job `check_system_health`
+- [x] Déclenchement manuel via API admin
+- [x] Historisation dans JobExecution
+- [x] Retry automatique (3 tentatives)
+- [x] Verrouillage concurrence (max_instances=1)
+- [x] Tests avec mocks scraper (314 tests, 85.65% coverage)
 
 ---
 

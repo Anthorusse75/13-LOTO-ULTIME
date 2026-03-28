@@ -29,7 +29,23 @@ async def lifespan(app: FastAPI):
     init_db(settings.DATABASE_URL)
     logger = structlog.get_logger("app")
     logger.info("application_started", version=settings.APP_VERSION)
+
+    # Start scheduler if enabled
+    scheduler = None
+    if settings.SCHEDULER_ENABLED:
+        from app.scheduler import create_scheduler
+
+        scheduler = create_scheduler(settings)
+        scheduler.start()
+        logger.info("scheduler_started")
+
     yield
+
+    # Shutdown scheduler
+    if scheduler is not None:
+        scheduler.shutdown(wait=False)
+        logger.info("scheduler_stopped")
+
     await close_db()
     logger.info("application_stopped")
 
