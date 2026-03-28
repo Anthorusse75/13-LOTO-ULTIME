@@ -6,15 +6,16 @@ import TemporalTab from "@/components/statistics/TemporalTab";
 import DistributionTab from "@/components/statistics/DistributionTab";
 import BayesianTab from "@/components/statistics/BayesianTab";
 import GraphTab from "@/components/statistics/GraphTab";
+import InfoTooltip from "@/components/common/InfoTooltip";
 
 const TABS = [
-  { key: "frequencies", label: "Fréquences" },
-  { key: "gaps", label: "Écarts" },
-  { key: "cooccurrences", label: "Cooccurrences" },
-  { key: "temporal", label: "Tendances" },
-  { key: "distribution", label: "Distribution" },
-  { key: "bayesian", label: "Bayésien" },
-  { key: "graph", label: "Graphe" },
+  { key: "frequencies", label: "Fréquences", tooltip: "Nombre de fois où chaque numéro a été tiré." },
+  { key: "gaps", label: "Écarts", tooltip: "Nombre de tirages depuis la dernière apparition de chaque numéro." },
+  { key: "cooccurrences", label: "Cooccurrences", tooltip: "Paires de numéros qui apparaissent souvent ensemble." },
+  { key: "temporal", label: "Tendances", tooltip: "Évolution des fréquences sur différentes fenêtres temporelles." },
+  { key: "distribution", label: "Distribution", tooltip: "Analyse de l'uniformité et de la répartition des tirages." },
+  { key: "bayesian", label: "Bayésien", tooltip: "Estimation bayésienne des probabilités d'apparition (modèle Beta-Binomial)." },
+  { key: "graph", label: "Graphe", tooltip: "Réseau de co-occurrence : communautés et centralité des numéros." },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -50,6 +51,7 @@ export default function StatisticsPage() {
             }`}
           >
             {tab.label}
+            <InfoTooltip text={tab.tooltip} />
           </button>
         ))}
       </div>

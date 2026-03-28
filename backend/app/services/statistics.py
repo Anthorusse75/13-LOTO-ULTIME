@@ -67,7 +67,7 @@ class StatisticsService:
                 log.debug("engine_completed", engine=name)
             except Exception as exc:
                 log.error("engine_failed", engine=name, error=str(exc))
-                raise EngineComputationError(f"Engine '{name}' failed: {exc}") from exc
+                results[name] = {}  # empty dict — partial result, pipeline continues
 
         # 3. Compute star statistics (if game has stars)
         star_frequencies = None

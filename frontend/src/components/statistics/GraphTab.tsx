@@ -68,7 +68,7 @@ export default function GraphTab() {
       .selectAll("line")
       .data(links)
       .join("line")
-      .attr("stroke", "#27272a")
+      .attr("stroke", "var(--color-border)")
       .attr("stroke-opacity", 0.3)
       .attr("stroke-width", 1);
 
@@ -85,7 +85,7 @@ export default function GraphTab() {
       .join("circle")
       .attr("r", (d) => nodeSize(d.degree))
       .attr("fill", (d) => communityColors(String(d.community)))
-      .attr("stroke", "#0a0a0b")
+      .attr("stroke", "var(--color-background)")
       .attr("stroke-width", 1.5)
       .call(
         d3
@@ -114,7 +114,7 @@ export default function GraphTab() {
       .join("text")
       .text((d) => String(d.id))
       .attr("font-size", "10px")
-      .attr("fill", "#fafafa")
+      .attr("fill", "var(--color-text-primary)")
       .attr("text-anchor", "middle")
       .attr("dy", "0.35em")
       .attr("font-family", "JetBrains Mono, monospace")
@@ -153,6 +153,7 @@ export default function GraphTab() {
           Graphe de réseau — Communautés
         </h3>
         <svg ref={svgRef} className="w-full" style={{ height: 500 }} />
+        <p className="text-xs text-text-secondary mt-2">Réseau de co-occurrence : chaque couleur représente une communauté détectée, la taille des nœuds reflète la centralité.</p>
       </div>
 
       {/* Stats */}

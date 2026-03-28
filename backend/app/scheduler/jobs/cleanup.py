@@ -1,4 +1,4 @@
-"""Job: cleanup old data (snapshots, job history, old grids)."""
+"""Job: cleanup old data (snapshots, job history, old grids, old portfolios)."""
 
 from datetime import UTC, datetime, timedelta
 
@@ -6,7 +6,9 @@ import structlog
 from sqlalchemy import delete
 
 from app.models.base import get_session
+from app.models.grid import ScoredGrid
 from app.models.job import JobExecution
+from app.models.portfolio import Portfolio
 from app.models.statistics import StatisticsSnapshot
 from app.scheduler.runner import execute_with_tracking
 
@@ -14,6 +16,8 @@ logger = structlog.get_logger(__name__)
 
 RETENTION_DAYS_JOBS = 90
 RETENTION_DAYS_SNAPSHOTS = 30
+RETENTION_DAYS_GRIDS = 30
+RETENTION_DAYS_PORTFOLIOS = 30
 MAX_SNAPSHOTS_PER_GAME = 10
 
 
@@ -27,7 +31,7 @@ async def cleanup_job(triggered_by: str = "scheduler") -> None:
 
 
 async def _do_cleanup() -> dict:
-    """Core logic — delete old job records and old snapshots."""
+    """Core logic — delete old job records, old snapshots, old grids, old portfolios."""
     now = datetime.now(UTC)
     results = {}
 
@@ -43,6 +47,21 @@ async def _do_cleanup() -> dict:
         stmt = delete(StatisticsSnapshot).where(StatisticsSnapshot.computed_at < cutoff_stats)
         result = await session.execute(stmt)
         results["snapshots_deleted"] = result.rowcount
+
+        # Clean old scored grids (non-top, older than 30 days)
+        cutoff_grids = now - timedelta(days=RETENTION_DAYS_GRIDS)
+        stmt = delete(ScoredGrid).where(
+            ScoredGrid.computed_at < cutoff_grids,
+            ScoredGrid.is_top == False,  # noqa: E712
+        )
+        result = await session.execute(stmt)
+        results["grids_deleted"] = result.rowcount
+
+        # Clean old portfolios
+        cutoff_portfolios = now - timedelta(days=RETENTION_DAYS_PORTFOLIOS)
+        stmt = delete(Portfolio).where(Portfolio.computed_at < cutoff_portfolios)
+        result = await session.execute(stmt)
+        results["portfolios_deleted"] = result.rowcount
 
         await session.commit()
         break

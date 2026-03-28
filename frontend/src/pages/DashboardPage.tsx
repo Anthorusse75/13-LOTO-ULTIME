@@ -76,20 +76,21 @@ export default function DashboardPage() {
               <BarChart data={topFreq}>
                 <XAxis
                   dataKey="number"
-                  tick={{ fill: "#a1a1aa", fontSize: 12 }}
+                  tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
                 />
-                <YAxis tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+                <YAxis tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
                 <Tooltip
                   contentStyle={{
-                    background: "#141416",
-                    border: "1px solid #27272a",
+                    background: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
                     borderRadius: 6,
                   }}
-                  labelStyle={{ color: "#fafafa" }}
+                  labelStyle={{ color: "var(--color-text-primary)" }}
                 />
-                <Bar dataKey="relative" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="relative" fill="var(--color-accent-blue)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
+            <p className="text-xs text-text-secondary mt-2">Fréquences relatives des 10 numéros les plus tirés.</p>
           ) : (
             <p className="text-text-secondary text-sm">Aucune donnée</p>
           )}

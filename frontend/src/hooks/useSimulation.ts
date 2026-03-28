@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { simulationService } from "@/services/simulationService";
 import { useGameStore } from "@/stores/gameStore";
+import { toast } from "sonner";
 import type {
   MonteCarloGridRequest,
   MonteCarloPortfolioRequest,
@@ -13,6 +14,9 @@ export function useMonteCarloGrid() {
   return useMutation({
     mutationFn: (req: MonteCarloGridRequest) =>
       simulationService.monteCarlo(gameId!, req),
+    onSuccess: () => {
+      toast.success("Simulation Monte Carlo terminée");
+    },
   });
 }
 
@@ -21,6 +25,9 @@ export function useMonteCarloPortfolio() {
   return useMutation({
     mutationFn: (req: MonteCarloPortfolioRequest) =>
       simulationService.monteCarloPortfolio(gameId!, req),
+    onSuccess: () => {
+      toast.success("Simulation portefeuille terminée");
+    },
   });
 }
 
@@ -29,6 +36,9 @@ export function useStability() {
   return useMutation({
     mutationFn: (req: StabilityRequest) =>
       simulationService.stability(gameId!, req),
+    onSuccess: () => {
+      toast.success("Analyse de stabilité terminée");
+    },
   });
 }
 
@@ -37,5 +47,8 @@ export function useCompareRandom() {
   return useMutation({
     mutationFn: (req: ComparisonRequest) =>
       simulationService.compareRandom(gameId!, req),
+    onSuccess: () => {
+      toast.success("Comparaison terminée");
+    },
   });
 }

@@ -92,6 +92,14 @@ export default function PortfolioPage() {
 
       {generateMutation.isPending && <LoadingSpinner message="Optimisation en cours..." />}
 
+      {/* Empty state */}
+      {!portfolio && !generateMutation.isPending && (
+        <div className="bg-surface rounded-lg border border-border p-8 text-center">
+          <p className="text-text-secondary text-sm mb-2">Aucun portefeuille généré.</p>
+          <p className="text-text-secondary text-xs">Choisissez le nombre de grilles et la stratégie, puis cliquez sur « Générer portefeuille » pour optimiser votre jeu.</p>
+        </div>
+      )}
+
       {/* Results */}
       {portfolio && (
         <>

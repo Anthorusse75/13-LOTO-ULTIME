@@ -1,8 +1,11 @@
+import InfoTooltip from "@/components/common/InfoTooltip";
+
 interface ScoreBarProps {
   value: number;
   max?: number;
   label: string;
   weight?: number;
+  tooltip?: string;
 }
 
 export default function ScoreBar({
@@ -10,6 +13,7 @@ export default function ScoreBar({
   max = 1,
   label,
   weight,
+  tooltip,
 }: ScoreBarProps) {
   const pct = Math.min((value / max) * 100, 100);
 
@@ -21,7 +25,10 @@ export default function ScoreBar({
 
   return (
     <div className="flex items-center gap-3 text-sm">
-      <span className="w-28 text-text-secondary truncate">{label}</span>
+      <span className="w-28 text-text-secondary truncate flex items-center">
+        {label}
+        {tooltip && <InfoTooltip text={tooltip} />}
+      </span>
       <div className="flex-1 h-2.5 bg-border rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${getColor(value / max)}`}

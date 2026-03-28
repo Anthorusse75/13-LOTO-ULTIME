@@ -66,7 +66,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### API endpoints
 
-- [ ] 🟠 Ajouter rate limiting sur `POST /statistics/recompute`
+- [x] 🟠 Ajouter rate limiting sur `POST /statistics/recompute` ✅ slowapi 5/min
 - [x] 🟠 Ajouter rate limiting sur `POST /grids/generate` ✅ slowapi 10/min
 - [x] 🟠 Ajouter rate limiting sur `POST /optimization/run` ✅ slowapi 10/min
 - [x] 🟠 Ajouter rate limiting sur `POST /simulation/run` ✅ slowapi 10/min (4 endpoints)
@@ -77,7 +77,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Services
 
-- [ ] 🟠 Rendre `StatisticsService` résilient : un engine en échec ne bloque pas les autres
+- [x] 🟠 Rendre `StatisticsService` résilient : un engine en échec ne bloque pas les autres ✅ fallback {} par engine
 - [ ] 🟡 Ajouter un mécanisme de circuit breaker sur les appels HTTP scrapers
 - [ ] 🟡 Créer une couche DTO/schema séparant les models ORM des réponses API
 - [ ] 🟡 Externaliser les URLs des scrapers dans la configuration (pas hardcodées)
@@ -88,15 +88,15 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Pipeline
 
-- [ ] 🟠 Créer un job orchestrateur `nightly_pipeline()` qui chaîne les étapes séquentiellement
-- [ ] 🟠 Remplacer les jobs individuels cronés par l'appel à l'orchestrateur
+- [x] 🟠 Créer un job orchestrateur `nightly_pipeline()` qui chaîne les étapes séquentiellement ✅ nightly_pipeline.py
+- [x] 🟠 Remplacer les jobs individuels cronés par l'appel à l'orchestrateur ✅ scheduler.py (3 jobs)
 - [ ] 🟡 Ajouter un timezone explicite au scheduler APScheduler
 - [ ] 🟡 Implémenter un verrouillage : un même type de job ne peut pas s'exécuter en parallèle
 
 ### Maintenance des données
 
-- [ ] 🟠 Créer un job de nettoyage des grilles scorées > 30 jours
-- [ ] 🟠 Créer un job de nettoyage des portfolios > 30 jours
+- [x] 🟠 Créer un job de nettoyage des grilles scorées > 30 jours ✅ cleanup.py
+- [x] 🟠 Créer un job de nettoyage des portfolios > 30 jours ✅ cleanup.py
 - [ ] 🟡 Ajouter un backup automatique hebdomadaire de `loto_ultime.db`
 - [ ] 🟡 Implémenter un graceful shutdown avec `wait=True` et timeout de 30s
 
@@ -121,7 +121,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Tests d'amélioration
 
-- [ ] 🟠 Ajouter des tests de non-régression (golden file) pour les scores de grilles connues
+- [x] 🟠 Ajouter des tests de non-régression (golden file) pour les scores de grilles connues ✅ test_golden_file_scoring.py (6 tests)
 - [ ] 🟡 Ajouter des tests de performance : génération de 10 grilles < 5 secondes
 - [ ] 🟡 Ajouter des tests de performance : simulation 10 000 itérations < 30 secondes
 - [ ] 🟡 Ajouter des tests de nettoyage de données (cleanup job)
@@ -134,12 +134,12 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 ### Composants cassés ou non câblés
 
 - [x] 🔴 Câbler `ProfileSelector` dans `GridsPage` → transmettre la valeur à l'API `/grids/generate` ✅ schema + service + API + frontend
-- [ ] 🟠 Supprimer les imports inutilisés et le code mort identifié
-- [ ] 🟠 Vérifier que chaque `useMutation` a un `onSuccess` et un `onError` avec feedback
+- [x] 🟠 Supprimer les imports inutilisés et le code mort identifié ✅ déjà propre (tsc --noEmit clean)
+- [x] 🟠 Vérifier que chaque `useMutation` a un `onSuccess` et un `onError` avec feedback ✅ toasts ajoutés, onError global via interceptor
 
 ### Gestion d'état
 
-- [ ] 🟠 Vérifier que le store Zustand `useGameStore` est utilisé partout où le `game_id` est nécessaire
+- [x] 🟠 Vérifier que le store Zustand `useGameStore` est utilisé partout où le `game_id` est nécessaire ✅ audit confirmé
 - [ ] 🟡 Ajouter la persistance du jeu sélectionné dans `localStorage`
 
 ---
@@ -148,37 +148,37 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Tooltips et aide contextuelle
 
-- [ ] 🟠 Ajouter un composant `InfoTooltip` réutilisable (icône ℹ️ + texte au hover)
-- [ ] 🟠 Ajouter des tooltips sur chaque métrique de la page Statistiques (fréquence, retard, écart-type, etc.)
-- [ ] 🟠 Ajouter des tooltips sur chaque critère de score dans la page Grilles
-- [ ] 🟠 Ajouter des tooltips sur les métriques de simulation (taux de correspondance, ROI, etc.)
-- [ ] 🟠 Ajouter des tooltips sur les colonnes du tableau de tirages
-- [ ] 🟠 Ajouter une légende explicative sous chaque graphique D3/Recharts
+- [x] 🟠 Ajouter un composant `InfoTooltip` réutilisable (icône ℹ️ + texte au hover) ✅ InfoTooltip.tsx
+- [x] 🟠 Ajouter des tooltips sur chaque métrique de la page Statistiques (fréquence, retard, écart-type, etc.) ✅ 7 onglets
+- [x] 🟠 Ajouter des tooltips sur chaque critère de score dans la page Grilles ✅ 6 critères ScoreBar
+- [x] 🟠 Ajouter des tooltips sur les métriques de simulation (taux de correspondance, ROI, etc.) ✅ MC + Stabilité
+- [x] 🟠 Ajouter des tooltips sur les colonnes du tableau de tirages ✅ DrawsPage
+- [x] 🟠 Ajouter une légende explicative sous chaque graphique D3/Recharts ✅ tous les charts
 - [ ] 🟡 Ajouter une page ou panel « Comment ça marche ? » expliquant le pipeline de calcul
 - [ ] 🟡 Ajouter un glossaire accessible des termes techniques (retard, fréquence, scoring, etc.)
 
 ### Messages d'erreur
 
-- [ ] 🟠 Créer un catalogue de messages d'erreur user-friendly en français
-- [ ] 🟠 Mapper chaque code d'erreur API à un message compréhensible
-- [ ] 🟠 Remplacer « Insufficient data for computation » par « Pas assez de tirages. Lancez l'import depuis l'administration. »
-- [ ] 🟠 Remplacer « Internal server error » par « Une erreur inattendue s'est produite. Réessayez dans quelques instants. »
+- [x] 🟠 Créer un catalogue de messages d'erreur user-friendly en français ✅ api.ts mapDetailToFrench()
+- [x] 🟠 Mapper chaque code d'erreur API à un message compréhensible ✅ extractErrorMessage()
+- [x] 🟠 Remplacer « Insufficient data for computation » par « Pas assez de tirages. Lancez l'import depuis l'administration. » ✅
+- [x] 🟠 Remplacer « Internal server error » par « Une erreur inattendue s'est produite. Réessayez dans quelques instants. » ✅
 - [ ] 🟡 Ajouter un lien « Que faire ? » dans les messages d'erreur
 
 ### États vides
 
-- [ ] 🟠 Page Statistiques sans données : afficher un CTA « Lancez /recompute pour calculer les statistiques »
-- [ ] 🟠 Page Grilles sans grilles : afficher un CTA « Générez vos premières grilles »
-- [ ] 🟠 Page Portfolio sans portfolio : afficher un CTA « Lancez l'optimisation pour créer votre premier portefeuille »
-- [ ] 🟠 Page Simulation sans résultat : afficher un guide « Lancez une simulation pour évaluer vos grilles »
+- [x] 🟠 Page Statistiques sans données : afficher un CTA « Lancez /recompute pour calculer les statistiques » ✅ chaque tab a un état vide
+- [x] 🟠 Page Grilles sans grilles : afficher un CTA « Générez vos premières grilles » ✅
+- [x] 🟠 Page Portfolio sans portfolio : afficher un CTA « Lancez l'optimisation pour créer votre premier portefeuille » ✅
+- [x] 🟠 Page Simulation sans résultat : afficher un guide « Lancez une simulation pour évaluer vos grilles » ✅ 3 onglets
 - [ ] 🟡 Admin Jobs sans historique : afficher « Aucun job exécuté. Le pipeline nightly démarre à 22h. »
 
 ### Feedback utilisateur
 
-- [ ] 🟠 Ajouter un toast de succès après chaque action de génération
-- [ ] 🟠 Ajouter un toast de succès après lancement d'une simulation
-- [ ] 🟠 Ajouter un toast de succès après sauvegarde des paramètres
-- [ ] 🟠 Ajouter un toast de succès après impôrtation des tirages
+- [x] 🟠 Ajouter un toast de succès après chaque action de génération ✅ useGrids + usePortfolios
+- [x] 🟠 Ajouter un toast de succès après lancement d'une simulation ✅ useSimulation (4 hooks)
+- [x] 🟠 Ajouter un toast de succès après sauvegarde des paramètres ✅ pas de settings save, couvert
+- [x] 🟠 Ajouter un toast de succès après impôrtation des tirages ✅ AdminPage jobs via useJobs
 - [ ] 🟡 Ajouter des confirmations modales avant : suppression de grille, relance de calcul complet
 - [ ] 🟡 Ajouter un indicateur de progression pendant les calculs longs (barre de progression ou skeleton)
 
@@ -188,8 +188,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Mode sombre / clair
 
-- [ ] 🟠 Remplacer les couleurs hardcodées dans les composants Recharts par des CSS variables
-- [ ] 🟠 Remplacer les couleurs hardcodées dans les composants D3 par des CSS variables
+- [x] 🟠 Remplacer les couleurs hardcodées dans les composants Recharts par des CSS variables ✅ FrequencyTab, GapTab, BayesianTab, DashboardPage, SimulationPage
+- [x] 🟠 Remplacer les couleurs hardcodées dans les composants D3 par des CSS variables ✅ GraphTab
 - [ ] 🟡 Vérifier le contraste des textes sur graphiques en mode clair et sombre
 - [ ] 🟡 Tester l'ensemble de l'application dans les deux modes et corriger les incohérences
 
@@ -290,7 +290,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ## 14.11 Sécurité (P1-P2)
 
-- [ ] 🟠 Vérifier que les tokens JWT expirent correctement (access: 30min, refresh: 7 jours)
+- [x] 🟠 Vérifier que les tokens JWT expirent correctement (access: 30min, refresh: 7 jours) ✅ test_jwt_expiry.py (7 tests)
 - [ ] 🟡 Ajouter la rotation du secret JWT via variable d'environnement
 - [ ] 🟡 Implémenter un blacklist de tokens (invalidation après logout)
 - [ ] 🟡 Ajouter un log d'audit des actions admin (qui a lancé quel job, quand)
@@ -316,11 +316,11 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 | Priorité             | Total   | Cochées | Restantes |
 | -------------------- | ------- | ------- | --------- |
-| 🔴 P0 — Indispensable | 30      | 0       | 30        |
-| 🟠 P1 — Très utile    | 46      | 0       | 46        |
+| 🔴 P0 — Indispensable | 30      | 30      | 0         |
+| 🟠 P1 — Très utile    | 46      | 46      | 0         |
 | 🟡 P2 — Avancé        | 54      | 0       | 54        |
 | 🔵 P3 — Premium       | 15      | 0       | 15        |
-| **TOTAL**            | **145** | **0**   | **145**   |
+| **TOTAL**            | **145** | **76**  | **69**    |
 
 ### Par domaine
 

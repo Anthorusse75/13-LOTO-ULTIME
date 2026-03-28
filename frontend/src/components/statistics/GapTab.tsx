@@ -49,24 +49,25 @@ export default function GapTab() {
         <h3 className="text-sm font-semibold mb-3">Écarts courants par numéro</h3>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={sorted.slice(0, 20)}>
-            <XAxis dataKey="number" tick={{ fill: "#a1a1aa", fontSize: 12 }} />
-            <YAxis tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+            <XAxis dataKey="number" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
+            <YAxis tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
             <Tooltip
               contentStyle={{
-                background: "#141416",
-                border: "1px solid #27272a",
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
                 borderRadius: 6,
               }}
             />
             <ReferenceLine
               y={avgExpected}
-              stroke="#f59e0b"
+              stroke="var(--color-accent-amber)"
               strokeDasharray="3 3"
-              label={{ value: "Moy. attendue", fill: "#f59e0b", fontSize: 11 }}
+              label={{ value: "Moy. attendue", fill: "var(--color-accent-amber)", fontSize: 11 }}
             />
-            <Bar dataKey="current_gap" fill="#ef4444" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="current_gap" fill="var(--color-accent-red)" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
+        <p className="text-xs text-text-secondary mt-2">Écart courant des 20 numéros les plus en retard. La ligne pointillée représente la moyenne attendue.</p>
       </div>
 
       {/* Table */}

@@ -8,6 +8,7 @@ import { useGameStore } from "@/stores/gameStore";
 import { useQuery } from "@tanstack/react-query";
 import { gameService } from "@/services/gameService";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import InfoTooltip from "@/components/common/InfoTooltip";
 import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
 import { Loader2, TrendingUp, BarChart3, ShieldCheck, Dices } from "lucide-react";
@@ -162,6 +163,12 @@ export default function SimulationPage() {
             Lancer Monte Carlo
           </button>
 
+          {!mc && !mcMutation.isPending && (
+            <div className="bg-surface rounded-lg border border-border p-6 text-center">
+              <p className="text-text-secondary text-sm">Saisissez une grille et lancez la simulation Monte Carlo pour estimer vos chances de correspondance.</p>
+            </div>
+          )}
+
           {mcMutation.isPending && (
             <LoadingSpinner message="Simulation en cours..." />
           )}
@@ -170,15 +177,15 @@ export default function SimulationPage() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">Simulations</p>
+                  <p className="text-xs text-text-secondary flex items-center">Simulations<InfoTooltip text="Nombre total de tirages simulés aléatoirement." /></p>
                   <p className="font-mono text-lg">{mc.n_simulations.toLocaleString()}</p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">Moyenne correspondances</p>
+                  <p className="text-xs text-text-secondary flex items-center">Moyenne correspondances<InfoTooltip text="Nombre moyen de numéros de votre grille retrouvés dans les tirages simulés." /></p>
                   <p className="font-mono text-lg text-accent-green">{mc.avg_matches.toFixed(2)}</p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">Espérance théorique</p>
+                  <p className="text-xs text-text-secondary flex items-center">Espérance théorique<InfoTooltip text="Nombre de correspondances attendu par les mathématiques pures (distribution hypergéométrique)." /></p>
                   <p className="font-mono text-lg">{mc.expected_matches.toFixed(2)}</p>
                 </div>
               </div>
@@ -204,6 +211,7 @@ export default function SimulationPage() {
                     <Bar dataKey="count" fill="var(--color-accent-blue)" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
+                <p className="text-xs text-text-secondary mt-2">Distribution des correspondances observées lors de la simulation Monte Carlo.</p>
               </div>
 
               <p className="text-xs text-text-secondary">
@@ -225,6 +233,12 @@ export default function SimulationPage() {
             Analyser la stabilité
           </button>
 
+          {!stab && !stabMutation.isPending && (
+            <div className="bg-surface rounded-lg border border-border p-6 text-center">
+              <p className="text-text-secondary text-sm">Testez la robustesse de votre grille par bootstrap : entrez vos numéros et lancez l'analyse de stabilité.</p>
+            </div>
+          )}
+
           {stabMutation.isPending && (
             <LoadingSpinner message="Bootstrap en cours..." />
           )}
@@ -233,17 +247,17 @@ export default function SimulationPage() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">Score moyen</p>
+                  <p className="text-xs text-text-secondary flex items-center">Score moyen<InfoTooltip text="Score moyen obtenu par bootstrap (ré-échantillonnage répété de l'historique)." /></p>
                   <p className="font-mono text-lg text-accent-green">
                     {stab.mean_score.toFixed(2)}
                   </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">Écart-type</p>
+                  <p className="text-xs text-text-secondary flex items-center">Écart-type<InfoTooltip text="Mesure de dispersion du score : un écart-type faible indique une grille stable." /></p>
                   <p className="font-mono text-lg">{stab.std_score.toFixed(3)}</p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
-                  <p className="text-xs text-text-secondary">CV</p>
+                  <p className="text-xs text-text-secondary flex items-center">CV<InfoTooltip text="Coefficient de variation = écart-type / moyenne. Plus il est bas, plus la grille est stable." /></p>
                   <p className="font-mono text-lg">{(stab.cv * 100).toFixed(1)}%</p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
@@ -291,6 +305,12 @@ export default function SimulationPage() {
             {compMutation.isPending && <Loader2 size={16} className="animate-spin" />}
             Comparer au hasard
           </button>
+
+          {!comp && !compMutation.isPending && (
+            <div className="bg-surface rounded-lg border border-border p-6 text-center">
+              <p className="text-text-secondary text-sm">Comparez le score de votre grille à celui de grilles générées aléatoirement pour évaluer sa qualité relative.</p>
+            </div>
+          )}
 
           {compMutation.isPending && (
             <LoadingSpinner message="Comparaison en cours..." />

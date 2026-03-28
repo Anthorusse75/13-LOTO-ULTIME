@@ -1,6 +1,8 @@
 """Statistics endpoints — /api/v1/games/{game_id}/statistics."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from app.core.exceptions import GameNotFoundError, InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
@@ -27,6 +29,7 @@ from app.schemas.statistics import (
 )
 from app.services.statistics import StatisticsService
 
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter()
 
 
@@ -216,7 +219,9 @@ async def get_graph(
 
 
 @router.post("/recompute", response_model=StatisticsResponse)
+@limiter.limit("5/minute")
 async def recompute_statistics(
+    request: Request,
     game_id: int,
     game_repo: GameRepository = Depends(get_game_repository),
     stats_service: StatisticsService = Depends(get_statistics_service),

@@ -94,15 +94,17 @@ class TestStatisticsServiceComputeAll:
             await svc.compute_all(game_id=1, game=game_config)
 
     @pytest.mark.asyncio
-    async def test_engine_failure_propagates(self, service, game_config):
-        # Replace one engine with a broken one
+    async def test_engine_failure_is_resilient(self, service, game_config):
+        # Replace one engine with a broken one — compute_all should NOT raise
         broken = MagicMock()
         broken.compute = MagicMock(side_effect=ValueError("boom"))
         broken.get_name = MagicMock(return_value="broken")
         service._engines["frequency"] = broken
 
-        with pytest.raises(EngineComputationError, match="frequency"):
-            await service.compute_all(game_id=1, game=game_config)
+        snapshot = await service.compute_all(game_id=1, game=game_config)
+        # The broken engine should produce an empty dict, other engines still work
+        assert snapshot.frequencies == {}
+        assert snapshot.gaps is not None
 
 
 class TestStatisticsServiceGetLatest:

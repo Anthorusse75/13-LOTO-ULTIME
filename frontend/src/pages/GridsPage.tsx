@@ -154,6 +154,7 @@ export default function GridsPage() {
               <ScoreBar
                 key={c.key}
                 label={c.label}
+                tooltip={c.tooltip}
                 value={
                   selectedGrid.score_breakdown[
                     c.key as keyof typeof selectedGrid.score_breakdown
@@ -199,7 +200,10 @@ export default function GridsPage() {
             ))}
           </div>
         ) : (
-          <p className="text-text-secondary text-sm">Aucune grille en base</p>
+          <div className="text-center py-6">
+            <p className="text-text-secondary text-sm mb-3">Aucune grille scorée en base.</p>
+            <p className="text-text-secondary text-xs">Utilisez le formulaire ci-dessus pour générer vos premières grilles, ou lancez le job de scoring depuis l'administration.</p>
+          </div>
         )}
       </div>
     </div>

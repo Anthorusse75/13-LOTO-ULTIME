@@ -56,23 +56,24 @@ export default function FrequencyTab() {
           <h3 className="text-sm font-semibold mb-3">Top 10 fréquences</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={top10} layout="vertical">
-              <XAxis type="number" tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+              <XAxis type="number" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
               <YAxis
                 type="category"
                 dataKey="number"
-                tick={{ fill: "#a1a1aa", fontSize: 12 }}
+                tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
                 width={30}
               />
               <Tooltip
                 contentStyle={{
-                  background: "#141416",
-                  border: "1px solid #27272a",
+                  background: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
                   borderRadius: 6,
                 }}
               />
-              <Bar dataKey="relative" fill="#22c55e" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="relative" fill="var(--color-accent-green)" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
+          <p className="text-xs text-text-secondary mt-2">Fréquence relative des 10 numéros les plus tirés.</p>
         </div>
 
         {/* Bottom frequencies */}
@@ -80,23 +81,24 @@ export default function FrequencyTab() {
           <h3 className="text-sm font-semibold mb-3">Bottom 10 fréquences</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={bottom10} layout="vertical">
-              <XAxis type="number" tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+              <XAxis type="number" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
               <YAxis
                 type="category"
                 dataKey="number"
-                tick={{ fill: "#a1a1aa", fontSize: 12 }}
+                tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }}
                 width={30}
               />
               <Tooltip
                 contentStyle={{
-                  background: "#141416",
-                  border: "1px solid #27272a",
+                  background: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
                   borderRadius: 6,
                 }}
               />
-              <Bar dataKey="relative" fill="#ef4444" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="relative" fill="var(--color-accent-red)" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
+          <p className="text-xs text-text-secondary mt-2">Fréquence relative des 10 numéros les moins tirés.</p>
         </div>
       </div>
 

@@ -18,16 +18,11 @@ class TestSchedulerCreation:
         scheduler = create_scheduler(settings)
         jobs = scheduler.get_jobs()
 
-        # Should have 8 jobs registered
-        assert len(jobs) == 8
+        # Should have 3 jobs registered (nightly_pipeline, cleanup, health_check)
+        assert len(jobs) == 3
 
         job_ids = {j.id for j in jobs}
-        assert "fetch_loto" in job_ids
-        assert "fetch_euromillions" in job_ids
-        assert "compute_stats" in job_ids
-        assert "compute_scoring" in job_ids
-        assert "compute_top_grids" in job_ids
-        assert "optimize_portfolio" in job_ids
+        assert "nightly_pipeline" in job_ids
         assert "cleanup" in job_ids
         assert "health_check" in job_ids
 
@@ -61,7 +56,7 @@ class TestSchedulerCreation:
         scheduler = create_scheduler(settings)
         assert not scheduler.running
 
-    def test_fetch_loto_cron_schedule(self):
+    def test_nightly_pipeline_cron_schedule(self):
         from app.core.config import Settings
 
         settings = Settings(
@@ -72,10 +67,10 @@ class TestSchedulerCreation:
         from app.scheduler.scheduler import create_scheduler
 
         scheduler = create_scheduler(settings)
-        fetch_loto = scheduler.get_job("fetch_loto")
+        pipeline = scheduler.get_job("nightly_pipeline")
 
-        assert fetch_loto is not None
-        trigger = fetch_loto.trigger
+        assert pipeline is not None
+        trigger = pipeline.trigger
         # Verify it's a cron trigger
         assert trigger.__class__.__name__ == "CronTrigger"
 

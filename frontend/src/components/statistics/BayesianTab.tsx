@@ -34,20 +34,21 @@ export default function BayesianTab() {
         </h3>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={chartData}>
-            <XAxis dataKey="number" tick={{ fill: "#a1a1aa", fontSize: 12 }} />
-            <YAxis tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+            <XAxis dataKey="number" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
+            <YAxis tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
             <Tooltip
               contentStyle={{
-                background: "#141416",
-                border: "1px solid #27272a",
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
                 borderRadius: 6,
               }}
             />
-            <Bar dataKey="posterior_mean" fill="#a855f7" radius={[4, 4, 0, 0]}>
-              <ErrorBar dataKey="errorRange" stroke="#a855f7" strokeWidth={1.5} />
+            <Bar dataKey="posterior_mean" fill="var(--color-accent-purple)" radius={[4, 4, 0, 0]}>
+              <ErrorBar dataKey="errorRange" stroke="var(--color-accent-purple)" strokeWidth={1.5} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+        <p className="text-xs text-text-secondary mt-2">Moyenne postérieure (modèle Beta-Binomial) avec intervalle de confiance à 95%.</p>
       </div>
 
       {/* Table */}

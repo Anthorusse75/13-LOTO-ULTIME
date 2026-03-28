@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDraws } from "@/hooks/useDraws";
 import DrawBalls from "@/components/draws/DrawBalls";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import InfoTooltip from "@/components/common/InfoTooltip";
 import { formatDate } from "@/utils/formatters";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -22,13 +23,13 @@ export default function DrawsPage() {
           <thead>
             <tr className="border-b border-border bg-surface-hover">
               <th className="text-left px-4 py-3 text-text-secondary font-medium">
-                #
+                <span className="flex items-center">#<InfoTooltip text="Numéro officiel du tirage." /></span>
               </th>
               <th className="text-left px-4 py-3 text-text-secondary font-medium">
-                Date
+                <span className="flex items-center">Date<InfoTooltip text="Date à laquelle le tirage a eu lieu." /></span>
               </th>
               <th className="text-left px-4 py-3 text-text-secondary font-medium">
-                Numéros
+                <span className="flex items-center">Numéros<InfoTooltip text="Numéros tirés (+étoiles pour EuroMillions)." /></span>
               </th>
             </tr>
           </thead>
