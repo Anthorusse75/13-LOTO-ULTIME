@@ -106,4 +106,6 @@ export interface StatisticsResponse {
   cold_numbers: number[];
   distribution_entropy: number;
   uniformity_score: number;
+  star_frequencies: FrequencyItem[] | null;
+  star_gaps: GapItem[] | null;
 }

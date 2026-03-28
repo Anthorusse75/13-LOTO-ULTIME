@@ -127,5 +127,33 @@ class GeneticAlgorithm(BaseOptimizer):
 
             population = new_pop
 
+        # Select diverse top grids: pick best, then greedily add diverse ones
         population.sort(key=lambda x: -x.total_score)
-        return population[:n_grids]
+        selected: list[ScoredResult] = [population[0]]
+        for candidate in population[1:]:
+            if len(selected) >= n_grids:
+                break
+            # Skip exact duplicates (same numbers + same stars)
+            if any(candidate.numbers == s.numbers and candidate.stars == s.stars for s in selected):
+                continue
+            # Allow max 2 grids with same numbers (different stars)
+            same_numbers_count = sum(1 for s in selected if candidate.numbers == s.numbers)
+            if same_numbers_count >= 2:
+                continue
+            selected.append(candidate)
+
+        # If not enough diverse grids, fill with random mutations from best
+        while len(selected) < n_grids and len(population) > 0:
+            base = selected[0]
+            new_grid = self._mutate(base.numbers)
+            new_stars = self._random_stars() if self._has_stars else []
+            result = self._score(new_grid, new_stars or None)
+            if not any(result.numbers == s.numbers for s in selected):
+                selected.append(result)
+            else:
+                # Force at least 2 mutations
+                new_grid = self._mutate(self._mutate(base.numbers))
+                new_stars = self._random_stars() if self._has_stars else []
+                selected.append(self._score(new_grid, new_stars or None))
+
+        return selected[:n_grids]

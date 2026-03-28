@@ -18,6 +18,7 @@ export const simulationService = {
     const { data } = await api.post(
       `/games/${gameId}/simulation/monte-carlo`,
       req,
+      { timeout: 120_000 },
     );
     return data;
   },
@@ -29,6 +30,7 @@ export const simulationService = {
     const { data } = await api.post(
       `/games/${gameId}/simulation/monte-carlo/portfolio`,
       req,
+      { timeout: 120_000 },
     );
     return data;
   },
@@ -40,6 +42,7 @@ export const simulationService = {
     const { data } = await api.post(
       `/games/${gameId}/simulation/stability`,
       req,
+      { timeout: 120_000 },
     );
     return data;
   },
@@ -51,6 +54,7 @@ export const simulationService = {
     const { data } = await api.post(
       `/games/${gameId}/simulation/compare-random`,
       req,
+      { timeout: 120_000 },
     );
     return data;
   },

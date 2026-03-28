@@ -1,12 +1,13 @@
 from collections.abc import AsyncGenerator
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, Path
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings, get_settings
 from app.core.exceptions import AuthenticationError, AuthorizationError
+from app.core.game_definitions import GameConfig, load_all_game_configs
 from app.core.security import decode_access_token
 from app.models.base import get_session
 from app.models.user import User, UserRole
@@ -90,6 +91,37 @@ def get_simulation_service(
     stats_repo: StatisticsRepository = Depends(get_statistics_repository),
 ) -> SimulationService:
     return SimulationService(draw_repo, stats_repo)
+
+
+# ── Game config resolution ──
+
+_game_configs_by_slug = load_all_game_configs()
+
+
+async def get_game_config(
+    game_id: int = Path(..., gt=0),
+    game_repo: GameRepository = Depends(get_game_repository),
+) -> GameConfig:
+    """Resolve game_id → GameConfig via DB lookup + YAML configs."""
+    game = await game_repo.get(game_id)
+    if game is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    cfg = _game_configs_by_slug.get(game.slug)
+    if cfg is not None:
+        return cfg
+    # Fallback: build GameConfig from DB record (e.g. for test games)
+    return GameConfig(
+        name=game.name,
+        slug=game.slug,
+        numbers_pool=game.numbers_pool,
+        numbers_drawn=game.numbers_drawn,
+        min_number=game.min_number,
+        max_number=game.max_number,
+        stars_pool=game.stars_pool,
+        stars_drawn=game.stars_drawn,
+        star_name=game.star_name,
+        draw_frequency=game.draw_frequency,
+    )
 
 
 # ── Auth ──

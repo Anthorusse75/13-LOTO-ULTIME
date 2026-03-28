@@ -36,33 +36,34 @@ class TestLoadAllGameConfigs:
         assert loto.stars_drawn == 1
 
 
-class TestGameConfigById:
-    """Verify the _game_config_by_id mapping matches the DB-seeded order."""
+class TestGameConfigBySlug:
+    """Verify load_all_game_configs returns configs keyed by slug."""
 
-    def _build_config_by_id(self):
+    def test_euromillions_config(self):
         configs = load_all_game_configs()
-        return {i + 1: cfg for i, cfg in enumerate(configs.values())}
+        assert "euromillions" in configs
+        assert configs["euromillions"].numbers_pool == 50
+        assert configs["euromillions"].stars_drawn == 2
 
-    def test_game_id_1_is_euromillions(self):
-        by_id = self._build_config_by_id()
-        assert by_id[1].slug == "euromillions"
-        assert by_id[1].numbers_pool == 50
-        assert by_id[1].stars_drawn == 2
+    def test_loto_fdj_config(self):
+        configs = load_all_game_configs()
+        assert "loto-fdj" in configs
+        assert configs["loto-fdj"].numbers_pool == 49
+        assert configs["loto-fdj"].stars_drawn == 1
 
-    def test_game_id_2_is_keno(self):
-        by_id = self._build_config_by_id()
-        assert by_id[2].slug == "keno"
-        assert by_id[2].numbers_pool == 70
-        assert by_id[2].stars_drawn == 0
+    def test_keno_config(self):
+        configs = load_all_game_configs()
+        assert "keno" in configs
+        assert configs["keno"].numbers_pool == 70
 
-    def test_unknown_game_id_returns_none(self):
-        by_id = self._build_config_by_id()
-        assert by_id.get(99) is None
+    def test_unknown_slug_returns_none(self):
+        configs = load_all_game_configs()
+        assert configs.get("unknown") is None
 
     def test_configs_differ(self):
-        by_id = self._build_config_by_id()
-        assert by_id[1] != by_id[2]
-        assert by_id[1].stars_pool != by_id[2].stars_pool
+        configs = load_all_game_configs()
+        assert configs["euromillions"] != configs["loto-fdj"]
+        assert configs["euromillions"].stars_pool != configs["loto-fdj"].stars_pool
 
 
 class TestGameConfigIsolation:

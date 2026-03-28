@@ -1,5 +1,7 @@
 import { useJobs, useSchedulerStatus, useTriggerJob } from "@/hooks/useJobs";
 import { authService } from "@/services/authService";
+import { gameService } from "@/services/gameService";
+import type { GameDefinition } from "@/types/game";
 import type { JobExecution, JobStatus } from "@/types/job";
 import type { User, UserRole } from "@/types/user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -415,8 +417,190 @@ function UsersPanel() {
   );
 }
 
+function GamesPanel() {
+  const { data: games, isLoading } = useQuery<GameDefinition[]>({
+    queryKey: ["games"],
+    queryFn: gameService.getAll,
+  });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-text-secondary">
+          {games?.length ?? 0} jeu(x) configuré(s)
+        </span>
+      </div>
+
+      <div className="bg-surface rounded-lg border border-border overflow-hidden">
+        {isLoading ? (
+          <div className="p-6 text-center text-text-secondary">
+            <Loader2 className="animate-spin mx-auto mb-2" size={20} />
+            Chargement…
+          </div>
+        ) : !games?.length ? (
+          <div className="p-6 text-center text-text-secondary text-sm">
+            Aucun jeu configuré.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-text-secondary border-b border-border">
+                  <th className="px-4 py-2 font-medium">ID</th>
+                  <th className="px-4 py-2 font-medium">Nom</th>
+                  <th className="px-4 py-2 font-medium">Slug</th>
+                  <th className="px-4 py-2 font-medium">Numéros</th>
+                  <th className="px-4 py-2 font-medium">Étoiles / Chance</th>
+                  <th className="px-4 py-2 font-medium">Fréquence</th>
+                  <th className="px-4 py-2 font-medium">Actif</th>
+                </tr>
+              </thead>
+              <tbody>
+                {games.map((g) => (
+                  <tr
+                    key={g.id}
+                    className="border-b border-border/50 hover:bg-surface-hover/50 transition-colors"
+                  >
+                    <td className="px-4 py-2 font-mono text-xs text-text-secondary">
+                      {g.id}
+                    </td>
+                    <td className="px-4 py-2 font-medium">{g.name}</td>
+                    <td className="px-4 py-2 font-mono text-xs text-text-secondary">
+                      {g.slug}
+                    </td>
+                    <td className="px-4 py-2">
+                      {g.numbers_drawn} / {g.numbers_pool}
+                    </td>
+                    <td className="px-4 py-2">
+                      {g.stars_pool ? (
+                        <span>
+                          {g.stars_drawn} / {g.stars_pool}{" "}
+                          <span className="text-text-secondary text-xs">
+                            ({g.star_name})
+                          </span>
+                        </span>
+                      ) : (
+                        <span className="text-text-secondary">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 text-text-secondary">
+                      {g.draw_frequency}
+                    </td>
+                    <td className="px-4 py-2">
+                      {g.is_active ? (
+                        <CheckCircle2 size={16} className="text-accent-green" />
+                      ) : (
+                        <XCircle size={16} className="text-accent-red" />
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      <p className="text-xs text-text-secondary">
+        Les jeux sont définis via les fichiers YAML dans <code className="bg-surface-hover px-1 rounded">backend/game_configs/</code>.
+        Ajoutez un nouveau fichier YAML et relancez le backend pour l'activer.
+      </p>
+    </div>
+  );
+}
+
+function SettingsPanel() {
+  const { data: status } = useSchedulerStatus();
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-surface rounded-lg border border-border p-4 space-y-3">
+          <h3 className="text-sm font-semibold">Scheduler</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Status</span>
+              <span className="flex items-center gap-1">
+                <span className={`h-2 w-2 rounded-full ${
+                  status?.running_count ? "bg-accent-green animate-pulse" : "bg-accent-green"
+                }`} />
+                Actif
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Pipeline nocturne</span>
+              <span>22h00 (Europe/Paris)</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Jobs en cours</span>
+              <span>{status?.running_count ?? 0}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-surface rounded-lg border border-border p-4 space-y-3">
+          <h3 className="text-sm font-semibold">Base de données</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Type</span>
+              <span>SQLite (aiosqlite)</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Migrations</span>
+              <span>Alembic</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-surface rounded-lg border border-border p-4 space-y-3">
+          <h3 className="text-sm font-semibold">Authentification</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Méthode</span>
+              <span>JWT HS256</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Access token</span>
+              <span>30 min</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Refresh token</span>
+              <span>7 jours</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-surface rounded-lg border border-border p-4 space-y-3">
+          <h3 className="text-sm font-semibold">API</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Framework</span>
+              <span>FastAPI</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Rate limiting</span>
+              <span>slowapi</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">Docs</span>
+              <a
+                href="/api/v1/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent-blue hover:underline"
+              >
+                /api/v1/docs →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<"overview" | "jobs" | "users">(
+  const [activeTab, setActiveTab] = useState<"overview" | "jobs" | "users" | "games" | "settings">(
     "overview",
   );
 
@@ -456,11 +640,34 @@ export default function AdminPage() {
         >
           Utilisateurs
         </button>
+        <button
+          onClick={() => setActiveTab("games")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === "games"
+              ? "border-accent-blue text-accent-blue"
+              : "border-transparent text-text-secondary hover:text-text"
+          }`}
+        >
+          Jeux
+        </button>
+        <button
+          onClick={() => setActiveTab("settings")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === "settings"
+              ? "border-accent-blue text-accent-blue"
+              : "border-transparent text-text-secondary hover:text-text"
+          }`}
+        >
+          Paramètres
+        </button>
       </div>
 
       {activeTab === "overview" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
+          <button
+            onClick={() => setActiveTab("games")}
+            className="bg-surface rounded-lg border border-accent-blue/30 p-6 flex items-start gap-4 text-left hover:border-accent-blue/60 transition-colors"
+          >
             <div className="p-2 rounded-lg bg-accent-blue/20">
               <Database size={20} className="text-accent-blue" />
             </div>
@@ -469,11 +676,11 @@ export default function AdminPage() {
               <p className="text-sm text-text-secondary">
                 Configurer les jeux de loterie et leurs paramètres.
               </p>
-              <p className="text-xs text-text-secondary mt-2 italic">
-                À venir — Phase 9
+              <p className="text-xs text-accent-blue mt-2 font-medium">
+                Actif — voir le détail →
               </p>
             </div>
-          </div>
+          </button>
 
           <button
             onClick={() => setActiveTab("jobs")}
@@ -511,7 +718,10 @@ export default function AdminPage() {
             </div>
           </button>
 
-          <div className="bg-surface rounded-lg border border-border p-6 flex items-start gap-4">
+          <button
+            onClick={() => setActiveTab("settings")}
+            className="bg-surface rounded-lg border border-accent-yellow/30 p-6 flex items-start gap-4 text-left hover:border-accent-yellow/60 transition-colors"
+          >
             <div className="p-2 rounded-lg bg-accent-yellow/20">
               <Settings size={20} className="text-accent-yellow" />
             </div>
@@ -520,16 +730,18 @@ export default function AdminPage() {
               <p className="text-sm text-text-secondary">
                 Configuration du système et logs.
               </p>
-              <p className="text-xs text-text-secondary mt-2 italic">
-                À venir — Phase 9
+              <p className="text-xs text-accent-yellow mt-2 font-medium">
+                Actif — voir le détail →
               </p>
             </div>
-          </div>
+          </button>
         </div>
       )}
 
       {activeTab === "jobs" && <JobsPanel />}
       {activeTab === "users" && <UsersPanel />}
+      {activeTab === "games" && <GamesPanel />}
+      {activeTab === "settings" && <SettingsPanel />}
     </div>
   );
 }

@@ -90,6 +90,7 @@ export default function DashboardPage() {
         <div className="bg-surface rounded-lg border border-border p-4">
           <h2 className="text-sm font-semibold mb-4">Top 10 Fréquences</h2>
           {topFreq && topFreq.length > 0 ? (
+            <>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={topFreq}>
                 <XAxis
@@ -109,6 +110,7 @@ export default function DashboardPage() {
               </BarChart>
             </ResponsiveContainer>
             <p className="text-xs text-text-secondary mt-2">Fréquences relatives des 10 numéros les plus tirés.</p>
+            </>
           ) : (
             <p className="text-text-secondary text-sm">Aucune donnée</p>
           )}

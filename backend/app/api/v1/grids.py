@@ -5,8 +5,8 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from app.core.exceptions import InsufficientDataError
-from app.core.game_definitions import load_all_game_configs
-from app.dependencies import get_grid_service, require_role
+from app.core.game_definitions import GameConfig
+from app.dependencies import get_game_config, get_grid_service, require_role
 from app.models.user import UserRole
 from app.schemas.grid import (
     GridGenerateRequest,
@@ -20,26 +20,15 @@ from app.services.grid import GridService
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
 limiter = Limiter(key_func=get_remote_address)
 
-_game_configs = load_all_game_configs()
-_game_config_by_id = {i + 1: cfg for i, cfg in enumerate(_game_configs.values())}
-
-
-def _get_game_config(game_id: int):
-    """Resolve game config by game_id (matches against DB-seeded order)."""
-    cfg = _game_config_by_id.get(game_id)
-    if cfg is None:
-        raise HTTPException(status_code=404, detail="Game not found")
-    return cfg
-
 
 @router.post("/score", response_model=GridScoreResponse)
 async def score_grid(
     request: GridScoreRequest,
     game_id: int = Path(..., gt=0),
+    game_config: GameConfig = Depends(get_game_config),
     service: GridService = Depends(get_grid_service),
 ):
     """Score a grid against the latest statistics snapshot."""
-    game_config = _get_game_config(game_id)
 
     try:
         result = await service.score_grid(
@@ -68,10 +57,10 @@ async def generate_grids(
     request: Request,
     body: GridGenerateRequest,
     game_id: int = Path(..., gt=0),
+    game_config: GameConfig = Depends(get_game_config),
     service: GridService = Depends(get_grid_service),
 ):
     """Generate optimized grids using meta-heuristics."""
-    game_config = _get_game_config(game_id)
 
     try:
         results, method_used, elapsed_ms = await service.generate_grids(

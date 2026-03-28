@@ -154,7 +154,8 @@ class MultiObjectiveOptimizer(BaseOptimizer):
     def optimize(self, n_grids: int = 10) -> list[ScoredResult]:
         # Initialize population
         population: list[ScoredResult] = [
-            self._score(self._random_grid()) for _ in range(self.population_size)
+            self._score(self._random_grid(), self._random_stars() or None)
+            for _ in range(self.population_size)
         ]
 
         for _ in range(self.max_generations):
@@ -163,7 +164,8 @@ class MultiObjectiveOptimizer(BaseOptimizer):
             for _ in range(self.population_size):
                 parent = population[int(self.rng.integers(0, len(population)))]
                 child_grid = self._mutate(parent.numbers)
-                offspring.append(self._score(child_grid))
+                child_stars = self._star_neighbor(parent.stars or []) if self._has_stars else []
+                offspring.append(self._score(child_grid, child_stars or None))
 
             combined = population + offspring
             objectives = self._evaluate(combined)

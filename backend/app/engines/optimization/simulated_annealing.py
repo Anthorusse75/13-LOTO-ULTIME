@@ -67,4 +67,25 @@ class SimulatedAnnealing(BaseOptimizer):
             best_results.append(best)
 
         best_results.sort(key=lambda r: -r.total_score)
-        return best_results
+
+        # Deduplicate: keep diverse grids
+        selected: list[ScoredResult] = []
+        for r in best_results:
+            if not any(r.numbers == s.numbers and r.stars == s.stars for s in selected):
+                selected.append(r)
+            if len(selected) >= n_grids:
+                break
+
+        # Fill gaps with mutations if not enough unique grids
+        attempts = 0
+        while len(selected) < n_grids and attempts < n_grids * 10:
+            attempts += 1
+            base = selected[0] if selected else best_results[0]
+            new_grid = self._neighbor(base.numbers)
+            new_stars = self._random_stars() if self._has_stars else []
+            result = self._score(new_grid, new_stars or None)
+            if not any(result.numbers == s.numbers and result.stars == s.stars for s in selected):
+                selected.append(result)
+
+        selected.sort(key=lambda r: -r.total_score)
+        return selected[:n_grids]

@@ -12,6 +12,7 @@ export const portfolioService = {
     const { data } = await api.post(
       `/games/${gameId}/portfolios/generate`,
       req,
+      { timeout: 120_000 },
     );
     return data;
   },

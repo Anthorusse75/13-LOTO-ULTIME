@@ -5,8 +5,8 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from app.core.exceptions import InsufficientDataError
-from app.core.game_definitions import load_all_game_configs
-from app.dependencies import get_simulation_service, require_role
+from app.core.game_definitions import GameConfig
+from app.dependencies import get_game_config, get_simulation_service, require_role
 from app.models.user import UserRole
 from app.schemas.simulation import (
     ComparisonRequest,
@@ -23,17 +23,6 @@ from app.services.simulation import SimulationService
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
 limiter = Limiter(key_func=get_remote_address)
 
-_game_configs = load_all_game_configs()
-_game_config_by_id = {i + 1: cfg for i, cfg in enumerate(_game_configs.values())}
-
-
-def _get_game_config(game_id: int):
-    """Resolve game config by game_id (matches against DB-seeded order)."""
-    cfg = _game_config_by_id.get(game_id)
-    if cfg is None:
-        raise HTTPException(status_code=404, detail="Game not found")
-    return cfg
-
 
 @router.post("/monte-carlo", response_model=MonteCarloGridResponse)
 @limiter.limit("10/minute")
@@ -41,10 +30,10 @@ async def simulate_grid(
     request: Request,
     body: MonteCarloGridRequest,
     game_id: int = Path(..., gt=0),
+    game_config: GameConfig = Depends(get_game_config),
     service: SimulationService = Depends(get_simulation_service),
 ):
     """Run Monte Carlo simulation on a single grid."""
-    game_config = _get_game_config(game_id)
 
     result, elapsed_ms = await service.simulate_grid(
         game_id=game_id,
@@ -73,10 +62,10 @@ async def simulate_portfolio(
     request: Request,
     body: MonteCarloPortfolioRequest,
     game_id: int = Path(..., gt=0),
+    game_config: GameConfig = Depends(get_game_config),
     service: SimulationService = Depends(get_simulation_service),
 ):
     """Run Monte Carlo simulation on a portfolio of grids."""
-    game_config = _get_game_config(game_id)
 
     result, elapsed_ms = await service.simulate_portfolio(
         game_id=game_id,
@@ -103,10 +92,10 @@ async def analyze_stability(
     request: Request,
     body: StabilityRequest,
     game_id: int = Path(..., gt=0),
+    game_config: GameConfig = Depends(get_game_config),
     service: SimulationService = Depends(get_simulation_service),
 ):
     """Bootstrap stability analysis for a grid."""
-    game_config = _get_game_config(game_id)
 
     try:
         result, elapsed_ms = await service.analyze_stability(
@@ -139,10 +128,10 @@ async def compare_with_random(
     request: Request,
     body: ComparisonRequest,
     game_id: int = Path(..., gt=0),
+    game_config: GameConfig = Depends(get_game_config),
     service: SimulationService = Depends(get_simulation_service),
 ):
     """Compare a grid's score against random grids."""
-    game_config = _get_game_config(game_id)
 
     try:
         result, elapsed_ms = await service.compare_with_random(

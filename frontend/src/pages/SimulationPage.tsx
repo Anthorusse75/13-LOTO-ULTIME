@@ -71,9 +71,9 @@ export default function SimulationPage() {
         .sort((a, b) => a.matches - b.matches)
     : [];
 
-  // Stability
+  // Stability (backend caps at 1000)
   const handleStability = () => {
-    stabMutation.mutate({ numbers: parseNumbers(), n_bootstrap: nSim });
+    stabMutation.mutate({ numbers: parseNumbers(), n_bootstrap: Math.min(nSim, 1000) });
   };
   const stab = stabMutation.data;
 
@@ -284,8 +284,17 @@ export default function SimulationPage() {
             )}
             Analyser la stabilité
           </button>
+          {nSim > 1000 && (
+            <p className="text-xs text-text-secondary">Bootstrap limité à 1 000 itérations.</p>
+          )}
 
-          {!stab && !stabMutation.isPending && (
+          {stabMutation.isError && (
+            <div className="bg-surface rounded-lg border border-accent-red/30 p-4">
+              <p className="text-accent-red text-sm">Erreur lors de l'analyse de stabilité. Veuillez réessayer.</p>
+            </div>
+          )}
+
+          {!stab && !stabMutation.isPending && !stabMutation.isError && (
             <div className="bg-surface rounded-lg border border-border p-6 text-center">
               <p className="text-text-secondary text-sm">
                 Testez la robustesse de votre grille par bootstrap : entrez vos

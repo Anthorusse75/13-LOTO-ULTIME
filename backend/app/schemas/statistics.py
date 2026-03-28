@@ -134,3 +134,5 @@ class StatisticsResponse(BaseModel):
     cold_numbers: list[int]
     distribution_entropy: float
     uniformity_score: float
+    star_frequencies: list[FrequencyItem] | None = None
+    star_gaps: list[GapItem] | None = None

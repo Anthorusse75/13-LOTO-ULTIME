@@ -67,6 +67,22 @@ async def get_statistics(
     hot_numbers = [f.number for f in frequencies[:5]]
     cold_numbers = [f.number for f in sorted(frequencies, key=lambda f: f.count)[:5]]
 
+    # Build star statistics if available
+    star_freq_items = None
+    star_gap_items = None
+    if snapshot.star_frequencies:
+        star_freq_items = [
+            FrequencyItem(number=int(num), **data)
+            for num, data in snapshot.star_frequencies.items()
+        ]
+        star_freq_items.sort(key=lambda f: -f.count)
+    if snapshot.star_gaps:
+        star_gap_items = [
+            GapItem(number=int(num), **data)
+            for num, data in snapshot.star_gaps.items()
+        ]
+        star_gap_items.sort(key=lambda g: -g.current_gap)
+
     return StatisticsResponse(
         game_id=snapshot.game_id,
         computed_at=snapshot.computed_at,
@@ -77,6 +93,8 @@ async def get_statistics(
         cold_numbers=cold_numbers,
         distribution_entropy=snapshot.distribution_stats.get("entropy", 0),
         uniformity_score=snapshot.distribution_stats.get("uniformity_score", 0),
+        star_frequencies=star_freq_items,
+        star_gaps=star_gap_items,
     )
 
 
