@@ -1,8 +1,8 @@
 """Scraper factory — returns the appropriate scraper for a game slug."""
 
 from app.scrapers.base import BaseScraper, DrawValidator, RawDraw
-from app.scrapers.fdj_loto import FDJLotoScraper
 from app.scrapers.euromillions import EuroMillionsScraper
+from app.scrapers.fdj_loto import FDJLotoScraper
 
 SCRAPER_MAP: dict[str, type[BaseScraper]] = {
     "loto-fdj": FDJLotoScraper,

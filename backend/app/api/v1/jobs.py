@@ -1,7 +1,7 @@
 """Jobs API — manual trigger and history endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select, func
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import get_db, get_job_repository
@@ -60,9 +60,7 @@ async def trigger_job(
     # Give a small moment for the task to create its record
     await asyncio.sleep(0.1)
 
-    latest = await job_repo.get_latest_by_name(
-        f"{module_name}_{args[0]}" if args else module_name
-    )
+    latest = await job_repo.get_latest_by_name(f"{module_name}_{args[0]}" if args else module_name)
     if latest is None:
         # Job hasn't created its record yet — return a synthetic response
         from datetime import UTC, datetime
@@ -90,12 +88,7 @@ async def list_job_executions(
     session: AsyncSession = Depends(get_db),
 ):
     """List recent job executions (paginated)."""
-    stmt = (
-        select(JobExecution)
-        .order_by(JobExecution.started_at.desc())
-        .offset(offset)
-        .limit(limit)
-    )
+    stmt = select(JobExecution).order_by(JobExecution.started_at.desc()).offset(offset).limit(limit)
     result = await session.execute(stmt)
     return list(result.scalars().all())
 

@@ -62,13 +62,13 @@ class FDJLotoScraper(BaseScraper):
         """Parse a single draw entry from the FDJ API response."""
         # Adapt to actual FDJ API format — this handles common patterns
         draw_date = date.fromisoformat(str(entry.get("date", entry.get("draw_date", "")))[:10])
-        draw_number = entry.get("draw_number", entry.get("numero", None))
+        draw_number = entry.get("draw_number", entry.get("numero"))
 
         numbers = entry.get("numbers", entry.get("numeros", []))
         if isinstance(numbers, str):
             numbers = [int(n.strip()) for n in numbers.split(",")]
 
-        stars = entry.get("stars", entry.get("numero_chance", entry.get("complementaire", None)))
+        stars = entry.get("stars", entry.get("numero_chance", entry.get("complementaire")))
         if isinstance(stars, int):
             stars = [stars]
         elif isinstance(stars, str):

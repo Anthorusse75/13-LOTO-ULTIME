@@ -1,8 +1,7 @@
 """Scheduler setup — APScheduler AsyncIOScheduler configuration."""
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-
 import structlog
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from app.core.config import Settings
 
@@ -27,13 +26,13 @@ def create_scheduler(settings: Settings) -> AsyncIOScheduler:
 
 def _register_jobs(scheduler: AsyncIOScheduler) -> None:
     """Register all scheduled jobs."""
-    from app.scheduler.jobs.fetch_draws import fetch_draws_job
-    from app.scheduler.jobs.compute_statistics import compute_stats_job
-    from app.scheduler.jobs.compute_scoring import compute_scoring_job
-    from app.scheduler.jobs.compute_top_grids import compute_top_grids_job
-    from app.scheduler.jobs.optimize_portfolio import optimize_portfolio_job
     from app.scheduler.jobs.cleanup import cleanup_job
+    from app.scheduler.jobs.compute_scoring import compute_scoring_job
+    from app.scheduler.jobs.compute_statistics import compute_stats_job
+    from app.scheduler.jobs.compute_top_grids import compute_top_grids_job
+    from app.scheduler.jobs.fetch_draws import fetch_draws_job
     from app.scheduler.jobs.health_check import health_check_job
+    from app.scheduler.jobs.optimize_portfolio import optimize_portfolio_job
 
     # Loto FDJ : lundi, mercredi, samedi à 22h
     scheduler.add_job(

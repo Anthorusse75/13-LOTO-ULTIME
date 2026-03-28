@@ -9,8 +9,8 @@ from app.models.base import get_session
 from app.repositories.game_repository import GameRepository
 from app.repositories.grid_repository import GridRepository
 from app.repositories.statistics_repository import StatisticsRepository
-from app.services.grid import GridService
 from app.scheduler.runner import execute_with_tracking
+from app.services.grid import GridService
 
 logger = structlog.get_logger(__name__)
 

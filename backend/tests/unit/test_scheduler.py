@@ -1,9 +1,5 @@
 """Unit tests for the scheduler configuration."""
 
-from unittest.mock import MagicMock
-
-import pytest
-
 
 class TestSchedulerCreation:
     """Tests for scheduler setup and job registration."""

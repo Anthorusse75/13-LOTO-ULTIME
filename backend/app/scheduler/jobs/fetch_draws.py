@@ -7,8 +7,8 @@ from app.models.base import get_session
 from app.models.draw import Draw
 from app.repositories.draw_repository import DrawRepository
 from app.repositories.game_repository import GameRepository
-from app.scrapers import DrawValidator, get_scraper
 from app.scheduler.runner import execute_with_tracking
+from app.scrapers import DrawValidator, get_scraper
 
 logger = structlog.get_logger(__name__)
 

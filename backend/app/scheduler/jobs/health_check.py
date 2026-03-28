@@ -5,8 +5,8 @@ from datetime import UTC, datetime, timedelta
 import structlog
 
 from app.models.base import get_session
-from app.repositories.game_repository import GameRepository
 from app.repositories.draw_repository import DrawRepository
+from app.repositories.game_repository import GameRepository
 from app.repositories.job_repository import JobRepository
 from app.scheduler.runner import execute_with_tracking
 
@@ -42,9 +42,9 @@ async def _do_health_check() -> dict:
         stale_games = []
         for game in games:
             latest = await draw_repo.get_latest(game.id, limit=1)
-            if not latest:
-                stale_games.append(game.slug)
-            elif (now.date() - latest[0].draw_date) > timedelta(days=STALE_THRESHOLD_DAYS):
+            if not latest or (now.date() - latest[0].draw_date) > timedelta(
+                days=STALE_THRESHOLD_DAYS
+            ):
                 stale_games.append(game.slug)
 
         results["checks"]["stale_games"] = stale_games

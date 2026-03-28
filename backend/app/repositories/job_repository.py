@@ -31,9 +31,7 @@ class JobRepository(BaseRepository[JobExecution]):
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_history(
-        self, job_name: str, limit: int = 20
-    ) -> list[JobExecution]:
+    async def get_history(self, job_name: str, limit: int = 20) -> list[JobExecution]:
         stmt = (
             select(JobExecution)
             .where(JobExecution.job_name.contains(job_name))

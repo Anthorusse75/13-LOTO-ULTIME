@@ -45,9 +45,7 @@ class DrawValidator:
         """Validate and return the draw, raising ValueError if invalid."""
         # Check numbers count
         if len(raw.numbers) != self.numbers_drawn:
-            raise ValueError(
-                f"Expected {self.numbers_drawn} numbers, got {len(raw.numbers)}"
-            )
+            raise ValueError(f"Expected {self.numbers_drawn} numbers, got {len(raw.numbers)}")
 
         # Check numbers range
         for n in raw.numbers:
@@ -63,9 +61,7 @@ class DrawValidator:
             if raw.stars is None:
                 raise ValueError("Stars expected but not provided")
             if len(raw.stars) != self.stars_drawn:
-                raise ValueError(
-                    f"Expected {self.stars_drawn} stars, got {len(raw.stars)}"
-                )
+                raise ValueError(f"Expected {self.stars_drawn} stars, got {len(raw.stars)}")
             for s in raw.stars:
                 if not (1 <= s <= (self.stars_pool or 0)):
                     raise ValueError(f"Star {s} out of range [1, {self.stars_pool}]")

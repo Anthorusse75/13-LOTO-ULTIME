@@ -7,8 +7,8 @@ from app.models.base import get_session
 from app.repositories.draw_repository import DrawRepository
 from app.repositories.game_repository import GameRepository
 from app.repositories.statistics_repository import StatisticsRepository
-from app.services.statistics import StatisticsService
 from app.scheduler.runner import execute_with_tracking
+from app.services.statistics import StatisticsService
 
 logger = structlog.get_logger(__name__)
 

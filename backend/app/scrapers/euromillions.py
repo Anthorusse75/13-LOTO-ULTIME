@@ -60,7 +60,7 @@ class EuroMillionsScraper(BaseScraper):
     def _parse_entry(self, entry: dict) -> RawDraw:
         """Parse a single draw entry from the EuroMillions API response."""
         draw_date = date.fromisoformat(str(entry.get("date", entry.get("draw_date", "")))[:10])
-        draw_number = entry.get("draw_number", entry.get("numero", None))
+        draw_number = entry.get("draw_number", entry.get("numero"))
 
         numbers = entry.get("numbers", entry.get("numeros", []))
         if isinstance(numbers, str):

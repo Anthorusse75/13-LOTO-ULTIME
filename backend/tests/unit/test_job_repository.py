@@ -17,9 +17,7 @@ class TestJobRepository:
         return JobRepository(db_session)
 
     @pytest.fixture
-    async def sample_jobs(
-        self, db_session: AsyncSession
-    ) -> list[JobExecution]:
+    async def sample_jobs(self, db_session: AsyncSession) -> list[JobExecution]:
         now = datetime.utcnow()
         jobs = [
             JobExecution(
@@ -61,9 +59,7 @@ class TestJobRepository:
             await db_session.refresh(j)
         return jobs
 
-    async def test_get_running_jobs(
-        self, job_repo: JobRepository, sample_jobs: list[JobExecution]
-    ):
+    async def test_get_running_jobs(self, job_repo: JobRepository, sample_jobs: list[JobExecution]):
         running = await job_repo.get_running_jobs()
         assert len(running) == 1
         assert running[0].status == JobStatus.RUNNING
@@ -82,9 +78,7 @@ class TestJobRepository:
         latest = await job_repo.get_latest_by_name("nonexistent")
         assert latest is None
 
-    async def test_get_history(
-        self, job_repo: JobRepository, sample_jobs: list[JobExecution]
-    ):
+    async def test_get_history(self, job_repo: JobRepository, sample_jobs: list[JobExecution]):
         history = await job_repo.get_history("fetch_draws")
         assert len(history) == 2
         # Most recent first

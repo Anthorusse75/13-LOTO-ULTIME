@@ -1,11 +1,10 @@
 """Unit tests for the job execution runner."""
 
-from datetime import UTC, datetime
 from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from app.models.job import JobExecution, JobStatus
+from app.models.job import JobStatus
 
 
 class TestExecuteWithTracking:

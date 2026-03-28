@@ -11,8 +11,8 @@ from app.repositories.game_repository import GameRepository
 from app.repositories.grid_repository import GridRepository
 from app.repositories.portfolio_repository import PortfolioRepository
 from app.repositories.statistics_repository import StatisticsRepository
-from app.services.grid import GridService
 from app.scheduler.runner import execute_with_tracking
+from app.services.grid import GridService
 
 logger = structlog.get_logger(__name__)
 
@@ -70,7 +70,8 @@ async def _do_optimize_portfolio() -> dict:
                         grids=grids_data,
                         diversity_score=portfolio_result.diversity_score,
                         coverage_score=portfolio_result.coverage_score,
-                        avg_grid_score=sum(g.total_score for g in portfolio_result.grids) / len(portfolio_result.grids),
+                        avg_grid_score=sum(g.total_score for g in portfolio_result.grids)
+                        / len(portfolio_result.grids),
                         computed_at=datetime.now(UTC),
                     )
                     await portfolio_repo.create(portfolio)
