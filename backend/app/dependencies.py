@@ -12,6 +12,7 @@ from app.repositories.portfolio_repository import PortfolioRepository
 from app.repositories.statistics_repository import StatisticsRepository
 from app.repositories.user_repository import UserRepository
 from app.services.grid import GridService
+from app.services.simulation import SimulationService
 from app.services.statistics import StatisticsService
 
 # ── Database session ──
@@ -72,3 +73,10 @@ def get_grid_service(
     grid_repo: GridRepository = Depends(get_grid_repository),
 ) -> GridService:
     return GridService(stats_repo, grid_repo)
+
+
+def get_simulation_service(
+    draw_repo: DrawRepository = Depends(get_draw_repository),
+    stats_repo: StatisticsRepository = Depends(get_statistics_repository),
+) -> SimulationService:
+    return SimulationService(draw_repo, stats_repo)
