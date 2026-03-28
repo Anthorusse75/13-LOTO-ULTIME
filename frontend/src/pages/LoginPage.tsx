@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useAuthStore } from "@/stores/authStore";
 import { authService } from "@/services/authService";
-import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
 import { Loader2, Lock } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -19,7 +19,10 @@ export default function LoginPage() {
     try {
       const tokenRes = await authService.login({ username, password });
       // Temporarily store token so the API interceptor includes it in /me request
-      localStorage.setItem("auth-storage", JSON.stringify({ state: { token: tokenRes.access_token } }));
+      localStorage.setItem(
+        "auth-storage",
+        JSON.stringify({ state: { token: tokenRes.access_token } }),
+      );
       const user = await authService.me();
       login(tokenRes.access_token, user);
       navigate("/");

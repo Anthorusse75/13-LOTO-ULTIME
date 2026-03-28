@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, Query
 from app.core.exceptions import GameNotFoundError, InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
 from app.dependencies import (
-    get_current_user,
     get_game_repository,
     get_statistics_service,
     require_role,

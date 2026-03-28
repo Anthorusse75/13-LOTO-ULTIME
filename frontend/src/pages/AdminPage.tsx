@@ -1,8 +1,8 @@
 import { useJobs, useSchedulerStatus, useTriggerJob } from "@/hooks/useJobs";
+import { authService } from "@/services/authService";
 import type { JobExecution, JobStatus } from "@/types/job";
 import type { User, UserRole } from "@/types/user";
-import { authService } from "@/services/authService";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CheckCircle2,
   Clock,
@@ -268,11 +268,7 @@ function UsersPanel() {
           onClick={() => setShowForm(!showForm)}
           className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-accent-blue text-white text-sm hover:bg-accent-blue/90 transition-colors"
         >
-          {showForm ? (
-            <XCircle size={14} />
-          ) : (
-            <UserPlus size={14} />
-          )}
+          {showForm ? <XCircle size={14} /> : <UserPlus size={14} />}
           {showForm ? "Annuler" : "Nouvel utilisateur"}
         </button>
       </div>
@@ -345,9 +341,7 @@ function UsersPanel() {
               </select>
             </div>
           </div>
-          {formError && (
-            <p className="text-xs text-accent-red">{formError}</p>
-          )}
+          {formError && <p className="text-xs text-accent-red">{formError}</p>}
           <button
             type="submit"
             disabled={createMutation.isPending}
@@ -394,9 +388,7 @@ function UsersPanel() {
                       {u.id}
                     </td>
                     <td className="px-4 py-2 font-medium">{u.username}</td>
-                    <td className="px-4 py-2 text-text-secondary">
-                      {u.email}
-                    </td>
+                    <td className="px-4 py-2 text-text-secondary">{u.email}</td>
                     <td className="px-4 py-2">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${ROLE_COLORS[u.role]}`}
@@ -406,10 +398,7 @@ function UsersPanel() {
                     </td>
                     <td className="px-4 py-2">
                       {u.is_active ? (
-                        <CheckCircle2
-                          size={16}
-                          className="text-accent-green"
-                        />
+                        <CheckCircle2 size={16} className="text-accent-green" />
                       ) : (
                         <XCircle size={16} className="text-accent-red" />
                       )}
@@ -427,7 +416,7 @@ function UsersPanel() {
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "jobs" | "users">(
-    "overview"
+    "overview",
   );
 
   return (

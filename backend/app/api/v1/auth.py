@@ -27,9 +27,7 @@ async def login(
     auth_service: AuthService = Depends(get_auth_service),
 ):
     """Authenticate a user and return JWT tokens."""
-    access_token, refresh_token, _user = await auth_service.login(
-        body.username, body.password
-    )
+    access_token, refresh_token, _user = await auth_service.login(body.username, body.password)
     return TokenResponse(access_token=access_token, refresh_token=refresh_token)
 
 

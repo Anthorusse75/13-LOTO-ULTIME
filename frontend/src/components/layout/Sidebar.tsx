@@ -1,17 +1,17 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import {
-  LayoutDashboard,
-  Dices,
-  BarChart3,
-  Target,
-  Briefcase,
-  FlaskConical,
-  Settings,
-  Menu,
-  LogOut,
-} from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { useSettingsStore } from "@/stores/settingsStore";
+import {
+  BarChart3,
+  Briefcase,
+  Dices,
+  FlaskConical,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Settings,
+  Target,
+} from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -58,29 +58,36 @@ export default function Sidebar() {
 
       <nav className="flex-1 py-2">
         {navItems
-          .filter((item) => !("adminOnly" in item && item.adminOnly) || user?.role === "ADMIN")
+          .filter(
+            (item) =>
+              !("adminOnly" in item && item.adminOnly) ||
+              user?.role === "ADMIN",
+          )
           .map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === "/"}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2.5 mx-2 rounded-md text-sm transition-colors ${
-                isActive
-                  ? "bg-accent-blue/10 text-accent-blue border-l-2 border-accent-blue"
-                  : "text-text-secondary hover:bg-surface-hover hover:text-text-primary"
-              }`
-            }
-          >
-            <Icon size={20} />
-            {!collapsed && <span>{label}</span>}
-          </NavLink>
-        ))}
+            <NavLink
+              key={to}
+              to={to}
+              end={to === "/"}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-2.5 mx-2 rounded-md text-sm transition-colors ${
+                  isActive
+                    ? "bg-accent-blue/10 text-accent-blue border-l-2 border-accent-blue"
+                    : "text-text-secondary hover:bg-surface-hover hover:text-text-primary"
+                }`
+              }
+            >
+              <Icon size={20} />
+              {!collapsed && <span>{label}</span>}
+            </NavLink>
+          ))}
       </nav>
 
       <div className="p-4 border-t border-border">
         {!collapsed && user && (
-          <p className="text-xs text-text-secondary mb-2 truncate" title={user.email}>
+          <p
+            className="text-xs text-text-secondary mb-2 truncate"
+            title={user.email}
+          >
             {user.username} ({user.role})
           </p>
         )}

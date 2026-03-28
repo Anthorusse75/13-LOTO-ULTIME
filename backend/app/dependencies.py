@@ -137,9 +137,7 @@ def require_role(minimum_role: UserRole):
 
     async def role_checker(current_user: User = Depends(get_current_user)) -> User:
         if ROLE_HIERARCHY.get(current_user.role, 0) < ROLE_HIERARCHY[minimum_role]:
-            raise AuthorizationError(
-                f"Accès réservé au rôle {minimum_role.value} minimum"
-            )
+            raise AuthorizationError(f"Accès réservé au rôle {minimum_role.value} minimum")
         return current_user
 
     return role_checker

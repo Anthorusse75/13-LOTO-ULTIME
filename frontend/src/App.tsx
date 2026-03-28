@@ -1,16 +1,16 @@
-import { Routes, Route } from "react-router-dom";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RequireRole from "@/components/auth/RequireRole";
 import MainLayout from "@/components/layout/MainLayout";
+import AdminPage from "@/pages/AdminPage";
 import DashboardPage from "@/pages/DashboardPage";
 import DrawsPage from "@/pages/DrawsPage";
-import StatisticsPage from "@/pages/StatisticsPage";
 import GridsPage from "@/pages/GridsPage";
-import PortfolioPage from "@/pages/PortfolioPage";
-import SimulationPage from "@/pages/SimulationPage";
-import AdminPage from "@/pages/AdminPage";
 import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import PortfolioPage from "@/pages/PortfolioPage";
+import SimulationPage from "@/pages/SimulationPage";
+import StatisticsPage from "@/pages/StatisticsPage";
+import { Route, Routes } from "react-router-dom";
 
 export default function App() {
   return (

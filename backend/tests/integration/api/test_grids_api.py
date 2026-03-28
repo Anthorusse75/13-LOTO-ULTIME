@@ -7,9 +7,9 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.game import GameDefinition
-from tests.integration.api.conftest import override_auth
 from app.models.grid import ScoredGrid
 from app.models.statistics import StatisticsSnapshot
+from tests.integration.api.conftest import override_auth
 
 
 @pytest.fixture

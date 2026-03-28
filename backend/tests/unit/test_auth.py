@@ -1,11 +1,9 @@
 """Tests for authentication: login, register, JWT, RBAC, refresh."""
 
 import pytest
-from httpx import ASGITransport, AsyncClient
 
 from app.core.security import create_access_token, create_refresh_token, hash_password
 from app.models.user import User, UserRole
-
 
 # ── Fixtures ──
 
@@ -162,7 +160,9 @@ class TestAuthService:
         )
         service = AuthService(repo, settings)
 
-        user = await service.register("newuser", "new@test.local", "NewPass123!", UserRole.UTILISATEUR)
+        user = await service.register(
+            "newuser", "new@test.local", "NewPass123!", UserRole.UTILISATEUR
+        )
         assert user.username == "newuser"
         assert user.role == UserRole.UTILISATEUR
 
@@ -279,7 +279,6 @@ class TestPasswordValidation:
 class TestRequireRole:
     @pytest.mark.asyncio
     async def test_admin_passes_admin_check(self, db_session, admin_user):
-        from unittest.mock import AsyncMock
 
         from app.dependencies import require_role
 

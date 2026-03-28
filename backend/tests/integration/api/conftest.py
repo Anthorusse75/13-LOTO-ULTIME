@@ -13,6 +13,7 @@ TEST_SECRET = "test-secret-key-for-testing-min-32-chars!!"
 @dataclass
 class FakeUser:
     """Lightweight user stand-in for dependency overrides (no SQLAlchemy state)."""
+
     id: int
     username: str
     email: str
