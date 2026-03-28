@@ -48,7 +48,10 @@ class GraphEngine(BaseStatisticsEngine):
         try:
             eigenvector = nx.eigenvector_centrality(graph, weight="weight", max_iter=1000)
         except nx.PowerIterationFailedConvergence:
-            eigenvector = {node: 0.0 for node in graph.nodes()}
+            # Fallback: uniform values instead of zeros so downstream scoring stays balanced
+            n_nodes = graph.number_of_nodes()
+            uniform = 1.0 / n_nodes if n_nodes > 0 else 0.0
+            eigenvector = {node: uniform for node in graph.nodes()}
 
         # Community detection (Louvain)
         try:

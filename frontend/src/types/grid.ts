@@ -36,6 +36,7 @@ export interface GridResponse {
 export interface GridGenerateRequest {
   count?: number;
   method?: string;
+  profile?: string;
   weights?: Record<string, number> | null;
 }
 

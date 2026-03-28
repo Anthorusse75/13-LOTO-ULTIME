@@ -15,14 +15,14 @@ import { Loader2 } from "lucide-react";
 export default function GridsPage() {
   const [count, setCount] = useState(10);
   const [method, setMethod] = useState("auto");
-  const [profile] = useState("equilibre");
+  const [profile, setProfile] = useState("equilibre");
   const [selectedGrid, setSelectedGrid] = useState<GridScoreResponse | null>(null);
 
   const { data: topGrids, isLoading: topLoading } = useTopGrids(10);
   const generateMutation = useGenerateGrids();
 
   const handleGenerate = () => {
-    generateMutation.mutate({ count, method });
+    generateMutation.mutate({ count, method, profile });
   };
 
   const grids = generateMutation.data?.grids ?? [];
@@ -70,16 +70,18 @@ export default function GridsPage() {
             </label>
             <div className="flex gap-2 flex-wrap">
               {SCORING_PROFILES.map((p) => (
-                <span
+                <button
                   key={p.value}
-                  className={`px-2 py-1 rounded text-xs ${
+                  type="button"
+                  onClick={() => setProfile(p.value)}
+                  className={`px-2 py-1 rounded text-xs cursor-pointer transition-colors ${
                     profile === p.value
                       ? "bg-accent-blue text-white"
-                      : "bg-surface-hover text-text-secondary"
+                      : "bg-surface-hover text-text-secondary hover:bg-surface-hover/80"
                   }`}
                 >
                   {p.label}
-                </span>
+                </button>
               ))}
             </div>
           </div>

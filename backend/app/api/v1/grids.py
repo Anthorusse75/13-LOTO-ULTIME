@@ -1,6 +1,8 @@
 """Grids API — scoring, generation, and grid management endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Query
+from fastapi import APIRouter, Depends, HTTPException, Path, Query, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
@@ -16,16 +18,18 @@ from app.schemas.grid import (
 from app.services.grid import GridService
 
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
+limiter = Limiter(key_func=get_remote_address)
 
 _game_configs = load_all_game_configs()
+_game_config_by_id = {i + 1: cfg for i, cfg in enumerate(_game_configs.values())}
 
 
 def _get_game_config(game_id: int):
-    """Resolve game config by game_id (uses slug mapping loaded once)."""
-    configs = list(_game_configs.values())
-    for cfg in configs:
-        return cfg
-    raise HTTPException(status_code=404, detail="Game not found")
+    """Resolve game config by game_id (matches against DB-seeded order)."""
+    cfg = _game_config_by_id.get(game_id)
+    if cfg is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    return cfg
 
 
 @router.post("/score", response_model=GridScoreResponse)
@@ -35,15 +39,7 @@ async def score_grid(
     service: GridService = Depends(get_grid_service),
 ):
     """Score a grid against the latest statistics snapshot."""
-    # Load game configs and find by game_id
-    configs = load_all_game_configs()
-    game_config = None
-    for cfg in configs.values():
-        game_config = cfg
-        break
-
-    if game_config is None:
-        raise HTTPException(status_code=404, detail="No game configuration found")
+    game_config = _get_game_config(game_id)
 
     try:
         result = await service.score_grid(
@@ -67,8 +63,10 @@ async def score_grid(
 
 
 @router.post("/generate", response_model=GridGenerateResponse)
+@limiter.limit("10/minute")
 async def generate_grids(
-    request: GridGenerateRequest,
+    request: Request,
+    body: GridGenerateRequest,
     game_id: int = Path(..., gt=0),
     service: GridService = Depends(get_grid_service),
 ):
@@ -79,9 +77,10 @@ async def generate_grids(
         results, method_used, elapsed_ms = await service.generate_grids(
             game_id=game_id,
             game=game_config,
-            count=request.count,
-            method=request.method,
-            custom_weights=request.weights,
+            count=body.count,
+            method=body.method,
+            profile=body.profile,
+            custom_weights=body.weights,
         )
     except InsufficientDataError as exc:
         raise HTTPException(status_code=422, detail=str(exc))

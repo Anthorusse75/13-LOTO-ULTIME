@@ -505,7 +505,7 @@ class TestGraphEngine:
         assert result["density"] >= 0
 
     def test_eigenvector_convergence_failure(self, small_draws, small_config):
-        """When eigenvector_centrality fails, fallback to 0.0 for all nodes."""
+        """When eigenvector_centrality fails, fallback to uniform values for all nodes."""
         from unittest.mock import patch
 
         with patch(
@@ -513,8 +513,10 @@ class TestGraphEngine:
             side_effect=nx.PowerIterationFailedConvergence(1000),
         ):
             result = self.engine.compute(small_draws, small_config)
+        n_nodes = small_config.numbers_pool
+        expected = round(1.0 / n_nodes, 4)
         for data in result["centrality"].values():
-            assert data["eigenvector"] == 0.0
+            assert data["eigenvector"] == expected
 
     def test_louvain_failure(self, small_draws, small_config):
         """When louvain_communities raises, communities should be empty."""

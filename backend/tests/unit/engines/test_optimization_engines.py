@@ -615,7 +615,7 @@ class TestMethodSelector:
             max_number=10,
         )
         method = select_method(game, n_grids=3, time_budget=15)
-        assert method == "simulated_annealing"
+        assert method == "annealing"
 
     def test_auto_few_grids(self):
         game = GameConfig(
@@ -627,7 +627,7 @@ class TestMethodSelector:
             max_number=49,
         )
         method = select_method(game, n_grids=3, time_budget=10)
-        assert method == "simulated_annealing"
+        assert method == "annealing"
 
     def test_auto_many_grids(self):
         game = GameConfig(

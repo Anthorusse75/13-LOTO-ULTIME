@@ -1,6 +1,6 @@
 from typing import Generic, TypeVar
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.base import Base
@@ -39,6 +39,8 @@ class BaseRepository(Generic[T]):
         await self._session.flush()
 
     async def count(self, **filters) -> int:
-        stmt = select(self._model_class).filter_by(**filters)
+        stmt = select(func.count()).select_from(
+            select(self._model_class).filter_by(**filters).subquery()
+        )
         result = await self._session.execute(stmt)
-        return len(result.scalars().all())
+        return result.scalar_one()

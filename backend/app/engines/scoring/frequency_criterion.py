@@ -19,7 +19,10 @@ class FrequencyCriterion(BaseScoringCriterion):
             return 0.5
 
         min_r, max_r = min(all_ratios), max(all_ratios)
-        range_r = max_r - min_r if max_r > min_r else 1.0
+        if max_r == min_r:
+            # All frequencies identical → neutral score
+            return 0.5
+        range_r = max_r - min_r
 
         normalized = []
         for num in grid:

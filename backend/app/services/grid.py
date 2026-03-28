@@ -94,6 +94,7 @@ class GridService:
         game: GameConfig,
         count: int = 10,
         method: str = "auto",
+        profile: str = "equilibre",
         custom_weights: dict[str, float] | None = None,
         seed: int | None = None,
     ) -> tuple[list[ScoredResult], str, float]:
@@ -109,7 +110,7 @@ class GridService:
         if custom_weights:
             scorer = GridScorer(weights=custom_weights)
         else:
-            scorer = GridScorer.from_profile("equilibre")
+            scorer = GridScorer.from_profile(profile)
 
         # Resolve method
         if method == "auto":

@@ -138,8 +138,8 @@ class TestFrequencyCriterion:
             for n in range(1, 50)
         }
         score = self.criterion.compute([1, 2, 3, 4, 5], loto_config, frequencies=flat)
-        # All ratios equal → min_r == max_r → range_r = 1 → normalized = 0
-        assert score == 0.0
+        # All ratios equal → min_r == max_r → neutral score
+        assert score == 0.5
 
 
 # ── GapCriterion ──
@@ -301,7 +301,7 @@ class TestPatternPenalty:
     def test_arithmetic_sequence_max_penalty(self, loto_config):
         # 5, 10, 15, 20, 25 → arithmetic (step=5) + all multiples of 5
         score = self.criterion.compute([5, 10, 15, 20, 25], loto_config)
-        assert score == 1.0  # Capped at 1.0
+        assert score == 0.7  # Capped at 0.7
 
     def test_consecutive_numbers_penalty(self, loto_config):
         score = self.criterion.compute([10, 11, 12, 13, 30], loto_config)

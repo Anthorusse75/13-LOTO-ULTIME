@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import func
+from sqlalchemy import event, func, text
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     AsyncSession,
@@ -35,6 +35,15 @@ def init_db(database_url: str) -> None:
 
     _engine = create_async_engine(database_url, echo=False, connect_args=connect_args)
     _session_factory = async_sessionmaker(_engine, expire_on_commit=False)
+
+    # Activate PRAGMA foreign_keys for SQLite connections
+    if database_url.startswith("sqlite"):
+
+        @event.listens_for(_engine.sync_engine, "connect")
+        def _set_sqlite_pragma(dbapi_conn, connection_record):
+            cursor = dbapi_conn.cursor()
+            cursor.execute("PRAGMA foreign_keys=ON")
+            cursor.close()
 
 
 async def get_session() -> AsyncSession:

@@ -47,7 +47,7 @@ class PatternPenalty(BaseScoringCriterion):
         if span < 15 and k > 1:
             penalties.append(0.3 * (1 - span / 15))
 
-        return min(sum(penalties), 1.0)
+        return min(sum(penalties), 0.7)
 
     def get_name(self) -> str:
         return "pattern_penalty"

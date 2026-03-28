@@ -14,13 +14,13 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Configuration et données
 
-- [ ] 🔴 Corriger `_get_game_config()` dans `StatisticsService` : filtrer `WHERE game_id = :game_id`
-- [ ] 🔴 Corriger `_get_game_config()` dans `ScoringService` : filtrer `WHERE game_id = :game_id`
-- [ ] 🔴 Corriger `_get_game_config()` dans `OptimizationService` : filtrer `WHERE game_id = :game_id`
-- [ ] 🔴 Corriger `_get_game_config()` dans `SimulationService` : filtrer `WHERE game_id = :game_id`
-- [ ] 🔴 Activer `PRAGMA foreign_keys = ON` via un event listener SQLAlchemy à chaque connexion
-- [ ] 🔴 Intégrer Alembic : `alembic init`, générer la migration initiale, configurer `env.py`
-- [ ] 🔴 Créer le fichier `alembic.ini` avec la connection string SQLite
+- [x] 🔴 Corriger `_get_game_config()` dans `StatisticsService` : filtrer `WHERE game_id = :game_id` ✅ dict `_game_config_by_id` dans grids.py
+- [x] 🔴 Corriger `_get_game_config()` dans `ScoringService` : filtrer `WHERE game_id = :game_id` ✅ idem
+- [x] 🔴 Corriger `_get_game_config()` dans `OptimizationService` : filtrer `WHERE game_id = :game_id` ✅ portfolios.py
+- [x] 🔴 Corriger `_get_game_config()` dans `SimulationService` : filtrer `WHERE game_id = :game_id` ✅ simulations.py
+- [x] 🔴 Activer `PRAGMA foreign_keys = ON` via un event listener SQLAlchemy à chaque connexion ✅ models/base.py
+- [x] 🔴 Intégrer Alembic : `alembic init`, générer la migration initiale, configurer `env.py` ✅ déjà en place
+- [x] 🔴 Créer le fichier `alembic.ini` avec la connection string SQLite ✅ déjà en place
 
 ### Support des étoiles (EuroMillions)
 
@@ -43,10 +43,10 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Algorithmes
 
-- [ ] 🔴 Corriger `select_method()` : exposer le choix GA vs SA à l'utilisateur
-- [ ] 🔴 Corriger `GraphEngine` : retourner des valeurs uniformes (et non zéros) quand eigenvector ne converge pas
-- [ ] 🟠 Corriger `FrequencyCriterion` : retourner 0.5 quand min == max (au lieu de 0.0)
-- [ ] 🟠 Plafonner `PatternPenalty` à -0.3 maximum de pénalité cumulée
+- [x] 🔴 Corriger `select_method()` : exposer le choix GA vs SA à l'utilisateur ✅ retourne "annealing" correctement
+- [x] 🔴 Corriger `GraphEngine` : retourner des valeurs uniformes (et non zéros) quand eigenvector ne converge pas ✅ 1.0/n_nodes
+- [x] 🟠 Corriger `FrequencyCriterion` : retourner 0.5 quand min == max (au lieu de 0.0) ✅
+- [x] 🟠 Plafonner `PatternPenalty` à -0.3 maximum de pénalité cumulée ✅ cap à 0.7
 - [ ] 🟡 Rendre le nombre de fenêtres temporelles configurable (8-12 au lieu de 4)
 - [ ] 🟡 Ajouter un indicateur de confiance R² sur la régression temporelle
 - [ ] 🟡 Ne retourner les tendances que si R² > 0.5
@@ -57,19 +57,19 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Repositories
 
-- [ ] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `DrawRepository`
-- [ ] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `StatisticsSnapshotRepository`
-- [ ] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `ScoredGridRepository`
-- [ ] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `PortfolioRepository`
-- [ ] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `JobExecutionRepository`
-- [ ] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `UserRepository`
+- [x] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `DrawRepository` ✅ BaseRepository.count() corrigé
+- [x] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `StatisticsSnapshotRepository` ✅ idem
+- [x] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `ScoredGridRepository` ✅ idem
+- [x] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `PortfolioRepository` ✅ idem
+- [x] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `JobExecutionRepository` ✅ idem
+- [x] 🟠 Remplacer `count()` par `SELECT COUNT(*)` dans `UserRepository` ✅ idem
 
 ### API endpoints
 
 - [ ] 🟠 Ajouter rate limiting sur `POST /statistics/recompute`
-- [ ] 🟠 Ajouter rate limiting sur `POST /grids/generate`
-- [ ] 🟠 Ajouter rate limiting sur `POST /optimization/run`
-- [ ] 🟠 Ajouter rate limiting sur `POST /simulation/run`
+- [x] 🟠 Ajouter rate limiting sur `POST /grids/generate` ✅ slowapi 10/min
+- [x] 🟠 Ajouter rate limiting sur `POST /optimization/run` ✅ slowapi 10/min
+- [x] 🟠 Ajouter rate limiting sur `POST /simulation/run` ✅ slowapi 10/min (4 endpoints)
 - [ ] 🟡 Ajouter endpoint `DELETE /grids/{id}`
 - [ ] 🟡 Ajouter endpoint `DELETE /portfolios/{id}`
 - [ ] 🟡 Ajouter endpoint `PATCH /grids/{id}/favorite` (pour les favoris)
@@ -113,11 +113,11 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Tests critiques manquants
 
-- [ ] 🔴 Écrire un test vérifiant que `_get_game_config(loto_id)` retourne la config Loto
-- [ ] 🔴 Écrire un test vérifiant que `_get_game_config(euro_id)` retourne la config EuroMillions
-- [ ] 🔴 Écrire un test vérifiant que les stats Loto ≠ stats EuroMillions
+- [x] 🔴 Écrire un test vérifiant que `_get_game_config(loto_id)` retourne la config Loto ✅ test_multi_lottery.py
+- [x] 🔴 Écrire un test vérifiant que `_get_game_config(euro_id)` retourne la config EuroMillions ✅ test_multi_lottery.py
+- [x] 🔴 Écrire un test vérifiant que les stats Loto ≠ stats EuroMillions ✅ test_multi_lottery.py
 - [ ] 🔴 Écrire un test vérifiant que les grilles EuroMillions contiennent des étoiles
-- [ ] 🔴 Écrire un test vérifiant que `select_method()` retourne SA dans certaines conditions
+- [x] 🔴 Écrire un test vérifiant que `select_method()` retourne SA dans certaines conditions ✅ test_optimization_engines.py
 
 ### Tests d'amélioration
 
@@ -133,7 +133,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Composants cassés ou non câblés
 
-- [ ] 🔴 Câbler `ProfileSelector` dans `GridsPage` → transmettre la valeur à l'API `/grids/generate`
+- [x] 🔴 Câbler `ProfileSelector` dans `GridsPage` → transmettre la valeur à l'API `/grids/generate` ✅ schema + service + API + frontend
 - [ ] 🟠 Supprimer les imports inutilisés et le code mort identifié
 - [ ] 🟠 Vérifier que chaque `useMutation` a un `onSuccess` et un `onError` avec feedback
 
