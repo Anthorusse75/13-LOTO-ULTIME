@@ -46,8 +46,6 @@ backend/.venv/Scripts/python -m pytest backend -v --cov=app --cov-report=term-mi
 
 ## Frontend (React + Vite)
 
-> *À venir — Phase 7*
-
 ### Installation (une seule fois)
 
 ```bash
