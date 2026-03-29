@@ -1,5 +1,7 @@
 """Scheduler setup — APScheduler AsyncIOScheduler configuration."""
 
+from __future__ import annotations
+
 import structlog
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -7,9 +9,19 @@ from app.core.config import Settings
 
 logger = structlog.get_logger(__name__)
 
+# Module-level reference so health check can inspect the running scheduler
+_scheduler_instance: AsyncIOScheduler | None = None
+
+
+def get_scheduler() -> AsyncIOScheduler | None:
+    """Return the running scheduler instance (or None if not started)."""
+    return _scheduler_instance
+
 
 def create_scheduler(settings: Settings) -> AsyncIOScheduler:
     """Create and configure the APScheduler instance."""
+    global _scheduler_instance
+
     job_defaults = {
         "coalesce": True,
         "max_instances": 1,
@@ -22,6 +34,7 @@ def create_scheduler(settings: Settings) -> AsyncIOScheduler:
     )
 
     _register_jobs(scheduler)
+    _scheduler_instance = scheduler
 
     logger.info("scheduler_configured", job_count=len(scheduler.get_jobs()))
     return scheduler

@@ -146,9 +146,11 @@ async def get_current_user(
     try:
         payload = decode_access_token(
             credentials.credentials,
-            settings.SECRET_KEY,
+            settings.get_jwt_verify_key(),
             settings.JWT_ALGORITHM,
-            previous_secret_key=settings.PREVIOUS_SECRET_KEY,
+            previous_secret_key=(
+                settings.PREVIOUS_SECRET_KEY if settings.JWT_ALGORITHM == "HS256" else None
+            ),
         )
         if payload.get("type") != "access":
             raise AuthenticationError("Type de token invalide")

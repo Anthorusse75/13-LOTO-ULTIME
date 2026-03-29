@@ -18,7 +18,10 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(
     data: dict, secret_key: str, algorithm: str = "HS256", expires_minutes: int = 60
 ) -> str:
-    """Crée un token JWT signé avec un JTI unique."""
+    """Crée un token JWT signé avec un JTI unique.
+
+    Pour RS256, `secret_key` doit contenir le contenu PEM de la clé privée RSA.
+    """
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(minutes=expires_minutes)
     to_encode.update({"exp": expire, "type": "access", "jti": uuid.uuid4().hex})
@@ -28,7 +31,10 @@ def create_access_token(
 def create_refresh_token(
     data: dict, secret_key: str, algorithm: str = "HS256", expires_days: int = 7
 ) -> str:
-    """Crée un refresh token JWT signé avec un JTI unique."""
+    """Crée un refresh token JWT signé avec un JTI unique.
+
+    Pour RS256, `secret_key` doit contenir le contenu PEM de la clé privée RSA.
+    """
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(days=expires_days)
     to_encode.update({"exp": expire, "type": "refresh", "jti": uuid.uuid4().hex})
@@ -41,10 +47,16 @@ def decode_access_token(
     algorithm: str = "HS256",
     previous_secret_key: str | None = None,
 ) -> dict:
-    """Décode et valide un token JWT. Essaie previous_secret_key en fallback (rotation)."""
+    """Décode et valide un token JWT.
+
+    Pour RS256 : `secret_key` doit contenir le contenu PEM de la clé *publique*.
+    Les algorithmes asymétriques (RS256) ne nécessitent pas de previous_secret_key
+    car la rotation se fait par rotation de clé publique.
+    """
     try:
         return jwt.decode(token, secret_key, algorithms=[algorithm])
     except Exception:
-        if previous_secret_key:
+        if previous_secret_key and algorithm == "HS256":
+            # Rotation gracieuse uniquement pour HS256 (clé symétrique)
             return jwt.decode(token, previous_secret_key, algorithms=[algorithm])
         raise

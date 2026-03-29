@@ -29,8 +29,17 @@ def load_game_config(path: Path) -> GameConfig:
     return GameConfig(**data)
 
 
-def load_all_game_configs(config_dir: Path | None = None) -> dict[str, GameConfig]:
-    """Charge toutes les configurations de jeu depuis un dossier."""
+def load_all_game_configs(
+    config_dir: Path | None = None,
+    include_plugins: bool = True,
+) -> dict[str, GameConfig]:
+    """Charge toutes les configurations de jeu depuis un dossier.
+
+    If *include_plugins* is True (default), configs provided by registered
+    :class:`~app.plugins.base.LotteryPlugin` instances are merged in after
+    the YAML configs.  Plugin configs do **not** override YAML configs that
+    share the same slug.
+    """
     if config_dir is None:
         config_dir = Path(__file__).resolve().parent.parent.parent / "game_configs"
 
@@ -39,4 +48,15 @@ def load_all_game_configs(config_dir: Path | None = None) -> dict[str, GameConfi
         for yaml_file in sorted(config_dir.glob("*.yaml")):
             config = load_game_config(yaml_file)
             configs[config.slug] = config
+
+    if include_plugins:
+        try:
+            from app.plugins.registry import get_registry  # local import avoids circular dep
+
+            for slug, cfg in get_registry().game_configs().items():
+                if slug not in configs:  # YAML configs take precedence
+                    configs[slug] = cfg
+        except Exception:  # pragma: no cover
+            pass  # Plugin registry unavailable — degrade gracefully
+
     return configs

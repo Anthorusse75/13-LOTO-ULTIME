@@ -29,10 +29,18 @@ export default function ScoreBar({
         {label}
         {tooltip && <InfoTooltip text={tooltip} />}
       </span>
-      <div className="flex-1 h-2.5 bg-border rounded-full overflow-hidden">
+      <div
+        className="flex-1 h-2.5 bg-border rounded-full overflow-hidden"
+        role="progressbar"
+        aria-valuenow={Math.round(pct)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`${label} : ${(value * 10).toFixed(1)} / 10`}
+      >
         <div
           className={`h-full rounded-full transition-all duration-500 ${getColor(value / max)}`}
           style={{ width: `${pct}%` }}
+          aria-hidden="true"
         />
       </div>
       <span className="w-12 text-right font-mono text-text-primary">
@@ -40,7 +48,7 @@ export default function ScoreBar({
       </span>
       {weight !== undefined && (
         <span className="w-14 text-right text-text-secondary text-xs">
-          ×{weight.toFixed(2)}
+          &times;{weight.toFixed(2)}
         </span>
       )}
     </div>

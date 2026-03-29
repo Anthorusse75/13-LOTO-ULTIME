@@ -1,23 +1,73 @@
 services:
   backend:
     build: ./backend
+    container_name: loto-ultime-backend
     ports:
       - "8000:8000"
     volumes:
       - sqlite-data:/app/data
+      - ./logs:/var/log/loto-ultime
     environment:
       - DATABASE_URL=sqlite+aiosqlite:///data/loto_ultime.db
       - SCHEDULER_ENABLED=true
       - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - APP_ENV=${APP_ENV:-production}
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
 
   frontend:
     build: ./frontend
+    container_name: loto-ultime-frontend
     ports:
       - "80:80"
     depends_on:
       - backend
     restart: unless-stopped
 
+  # ── Observability stack ──────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: loto-ultime-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: loto-ultime-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./deploy/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 volumes:
   sqlite-data:
+  prometheus-data:
+  grafana-data:
+

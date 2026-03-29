@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: LOTO ULTIME
+    orgId: 1
+    folder: "LOTO ULTIME"
+    type: file
+    disableDeletion: false
+    editable: true
+    updateIntervalSeconds: 30
+    options:
+      path: /etc/grafana/provisioning/dashboards

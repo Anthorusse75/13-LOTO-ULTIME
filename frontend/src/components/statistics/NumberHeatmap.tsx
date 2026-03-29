@@ -57,7 +57,8 @@ export default function NumberHeatmap({
                 ? `${getColor(val)} text-white`
                 : "bg-surface text-text-secondary"
             } hover:ring-1 hover:ring-accent-blue`}
-            title={val !== undefined ? `${n}: ${val.toFixed(3)}` : `${n}: N/A`}
+            aria-label={val !== undefined ? `Numéro ${n} : ${val.toFixed(3)}` : `Numéro ${n} : N/A`}
+            aria-pressed={undefined}
           >
             {n}
           </button>

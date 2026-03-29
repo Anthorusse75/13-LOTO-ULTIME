@@ -47,10 +47,11 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-xs text-text-secondary block mb-1">
+              <label htmlFor="login-username" className="text-xs text-text-secondary block mb-1">
                 Utilisateur ou email
               </label>
               <input
+                id="login-username"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -60,10 +61,11 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-secondary block mb-1">
+              <label htmlFor="login-password" className="text-xs text-text-secondary block mb-1">
                 Mot de passe
               </label>
               <input
+                id="login-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -74,7 +76,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-xs text-accent-red text-center">{error}</p>
+              <p role="alert" className="text-xs text-accent-red text-center">{error}</p>
             )}
 
             <button
@@ -82,7 +84,7 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full py-2 bg-accent-blue text-white rounded-md text-sm font-medium hover:bg-accent-blue/90 disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading && <Loader2 size={16} className="animate-spin" />}
+              {loading && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
               Se connecter
             </button>
           </form>

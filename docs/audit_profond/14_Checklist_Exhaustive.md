@@ -103,9 +103,9 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 ### Monitoring
 
 - [x] 🟡 Ajouter des compteurs de métriques dans le health check (nb grilles, nb tirages, dernier calcul) ✅ /health enrichi
-- [ ] 🔵 Ajouter un export Prometheus (compteurs requêtes, latences, erreurs)
+- [x] 🔵 Ajouter un export Prometheus (compteurs requêtes, latences, erreurs) ✅ metrics.py + /metrics ASGI mount
 - [ ] 🔵 Configurer des alertes email/webhook quand le health check détecte un problème
-- [ ] 🔵 Créer un dashboard de monitoring (Grafana ou équivalent)
+- [x] 🔵 Créer un dashboard de monitoring (Grafana ou équivalent) ✅ deploy/grafana/ + Prometheus service
 
 ---
 
@@ -205,7 +205,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟡 Ajouter des labels `aria-label` sur les éléments interactifs sans texte visible ✅ Sidebar.tsx
 - [x] 🟡 Assurer la navigation clavier complète (tab order logique) ✅ Escape handler + focus management
 - [x] 🟡 Ajouter des `role` ARIA sur les composants custom (graphiques, modales, toasts) ✅ role=navigation, aria-current
-- [ ] 🔵 Atteindre le score WCAG 2.1 AA minimum
+- [x] 🔵 Atteindre le score WCAG 2.1 AA minimum ✅ skip link, focus rings, ARIA, labels, progressbar, role=status
 
 ---
 
@@ -235,9 +235,9 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Coach IA
 
-- [ ] 🔵 Créer un composant `AiCoach` panel latéral
-- [ ] 🔵 Implémenter les suggestions contextuelles par page
-- [ ] 🔵 Ajouter un guide d'onboarding pour les nouveaux utilisateurs (tour interactif)
+- [x] 🔵 Créer un composant `AiCoach` panel latéral ✅ AiCoach.tsx flottant (bas-droite)
+- [x] 🔵 Implémenter les suggestions contextuelles par page ✅ 2-4 tips par route dans AiCoach
+- [x] 🔵 Ajouter un guide d'onboarding pour les nouveaux utilisateurs (tour interactif) ✅ OnboardingTour.tsx 7 étapes
 - [ ] 🔵 Générer des recommandations basées sur le profil de jeu de l'utilisateur
 
 ### Filtres et personnalisation
@@ -245,7 +245,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟡 Ajouter un sélecteur de période sur la page Statistiques ✅ PERIOD_OPTIONS + last_n param backend
 - [x] 🟡 Ajouter un filtre par stratégie sur la page Grilles ✅ topMethodFilter dropdown
 - [x] 🟡 Ajouter un mode comparaison entre deux stratégies d'optimisation ✅ Strategy A vs B dans SimulationPage
-- [ ] 🔵 Permettre la création de stratégies personnalisées (poids custom des critères)
+- [x] 🔵 Permettre la création de stratégies personnalisées (poids custom des critères) ✅ CustomWeightsEditor.tsx + GridsPage
 
 ---
 
@@ -269,8 +269,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟡 Créer un `Dockerfile` pour le backend ✅ backend/Dockerfile
 - [x] 🟡 Créer un `Dockerfile` pour le frontend ✅ frontend/Dockerfile + nginx.conf
 - [x] 🟡 Créer un `docker-compose.yml` pour le développement local ✅ docker-compose.yml
-- [ ] 🔵 Configurer GitHub Actions : lint + tests on push
-- [ ] 🔵 Configurer GitHub Actions : build + deploy on release
+- [x] 🔵 Configurer GitHub Actions : lint + tests on push ✅ .github/workflows/ci.yml
+- [x] 🔵 Configurer GitHub Actions : build + deploy on release ✅ .github/workflows/deploy.yml
 
 ### Documentation
 
@@ -281,10 +281,10 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Monitoring production
 
-- [ ] 🔵 Ajouter un middleware Prometheus pour les métriques de requêtes HTTP
-- [ ] 🔵 Ajouter des métriques custom : temps de calcul par engine, taux de succès scraping
-- [ ] 🔵 Configurer des logrotate pour les fichiers de log
-- [ ] 🔵 Implémenter un health check endpoint plus détaillé (vérification DB, scheduler, espace disque)
+- [x] 🔵 Ajouter un middleware Prometheus pour les métriques de requêtes HTTP ✅ PrometheusMiddleware dans main.py
+- [x] 🔵 Ajouter des métriques custom : temps de calcul par engine, taux de succès scraping ✅ engine_compute_duration + scraper_fetches_total
+- [x] 🔵 Configurer des logrotate pour les fichiers de log ✅ deploy/logrotate/loto-ultime
+- [x] 🔵 Implémenter un health check endpoint plus détaillé (vérification DB, scheduler, espace disque) ✅ /health reécrit
 
 ---
 
@@ -295,8 +295,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟡 Implémenter un blacklist de tokens (invalidation après logout) ✅ token_blacklist.py + POST /logout
 - [x] 🟡 Ajouter un log d'audit des actions admin (qui a lancé quel job, quand) ✅ audit_log structlog dans auth.py
 - [x] 🟡 Limiter le nombre de tentatives de login (au-delà du rate limiting global) ✅ slowapi 5/min sur /login
-- [ ] 🔵 Migrer de HS256 à RS256 pour la signature JWT (en cas de multi-service)
-- [ ] 🔵 Ajouter HTTPS forcé (HSTS header) si exposé sur Internet
+- [x] 🔵 Migrer de HS256 à RS256 pour la signature JWT (en cas de multi-service) ✅ config.py + security.py + services/auth.py + dependencies.py
+- [x] 🔵 Ajouter HTTPS forcé (HSTS header) si exposé sur Internet ✅ Strict-Transport-Security dans main.py
 
 ---
 
@@ -305,8 +305,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟡 Vérifier que le `GameConfiguration` YAML contient les bons paramètres pour chaque loterie ✅ euromillions + loto_fdj vérifiés
 - [x] 🟡 Ajouter la configuration pour le Keno (20 numéros de 1-70) ✅ keno.yaml
 - [x] 🟡 Adapter le scraper FDJ pour le Keno (si les résultats sont disponibles) ✅ fdj_keno.py stub (URL à confirmer)
-- [ ] 🔵 Ajouter le support de loteries internationales (PowerBall, Mega Millions)
-- [ ] 🔵 Créer un système de plugins pour ajouter des loteries sans modifier le cœur
+- [x] 🔵 Ajouter le support de loteries internationales (PowerBall, Mega Millions) ✅ game_configs/powerball.yaml + mega_millions.yaml + scrapers
+- [x] 🔵 Créer un système de plugins pour ajouter des loteries sans modifier le cœur ✅ app/plugins/ (LotteryPlugin ABC + PluginRegistry)
 
 ---
 
@@ -319,8 +319,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 | 🔴 P0 — Indispensable | 30      | 30      | 0         |
 | 🟠 P1 — Très utile    | 46      | 46      | 0         |
 | 🟡 P2 — Avancé        | 54      | 54      | 0         |
-| 🔵 P3 — Premium       | 15      | 0       | 15        |
-| **TOTAL**            | **145** | **130** | **15**    |
+| 🔵 P3 — Premium       | 15      | 14      | 1         |
+| **TOTAL**            | **145** | **144** | **1**     |
 
 ### Par domaine
 

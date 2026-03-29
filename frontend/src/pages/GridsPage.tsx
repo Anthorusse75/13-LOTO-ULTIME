@@ -1,6 +1,7 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
+import CustomWeightsEditor from "@/components/grids/CustomWeightsEditor";
 import ScoreBar from "@/components/grids/ScoreBar";
 import {
   useGenerateGrids,
@@ -26,13 +27,14 @@ export default function GridsPage() {
   const [selectedGrid, setSelectedGrid] = useState<GridScoreResponse | null>(
     null,
   );
+  const [customWeights, setCustomWeights] = useState<Record<string, number> | null>(null);
 
   const { data: topGrids, isLoading: topLoading } = useTopGrids(10);
   const generateMutation = useGenerateGrids();
   const toggleFavoriteMutation = useToggleFavorite();
 
   const handleGenerate = () => {
-    generateMutation.mutate({ count, method, profile });
+    generateMutation.mutate({ count, method, profile, weights: customWeights ?? undefined });
   };
 
   const grids = generateMutation.data?.grids ?? [];
@@ -140,6 +142,11 @@ export default function GridsPage() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Custom weights */}
+        <div className="mb-4">
+          <CustomWeightsEditor onChange={setCustomWeights} />
         </div>
         <button
           onClick={handleGenerate}

@@ -8,9 +8,9 @@ from app.core.game_definitions import GameConfig, load_all_game_configs
 class TestLoadAllGameConfigs:
     """Verify YAML configs load and sort correctly."""
 
-    def test_loads_three_games(self):
+    def test_loads_five_games(self):
         configs = load_all_game_configs()
-        assert len(configs) == 3
+        assert len(configs) == 5
 
     def test_sorted_order_euromillions_first(self):
         configs = load_all_game_configs()
@@ -18,6 +18,8 @@ class TestLoadAllGameConfigs:
         assert slugs[0] == "euromillions"
         assert "loto-fdj" in slugs
         assert "keno" in slugs
+        assert "mega-millions" in slugs
+        assert "powerball" in slugs
 
     def test_euromillions_fields(self):
         configs = load_all_game_configs()
@@ -55,6 +57,26 @@ class TestGameConfigBySlug:
         configs = load_all_game_configs()
         assert "keno" in configs
         assert configs["keno"].numbers_pool == 70
+
+    def test_powerball_config(self):
+        configs = load_all_game_configs()
+        assert "powerball" in configs
+        pb = configs["powerball"]
+        assert pb.numbers_pool == 69
+        assert pb.numbers_drawn == 5
+        assert pb.stars_pool == 26
+        assert pb.stars_drawn == 1
+        assert pb.star_name == "PowerBall"
+
+    def test_mega_millions_config(self):
+        configs = load_all_game_configs()
+        assert "mega-millions" in configs
+        mm = configs["mega-millions"]
+        assert mm.numbers_pool == 70
+        assert mm.numbers_drawn == 5
+        assert mm.stars_pool == 25
+        assert mm.stars_drawn == 1
+        assert mm.star_name == "Mega Ball"
 
     def test_unknown_slug_returns_none(self):
         configs = load_all_game_configs()

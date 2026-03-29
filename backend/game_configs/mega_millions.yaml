@@ -1,0 +1,12 @@
+name: "Mega Millions"
+slug: "mega-millions"
+numbers_pool: 70
+numbers_drawn: 5
+min_number: 1
+max_number: 70
+stars_pool: 25
+stars_drawn: 1
+star_name: "Mega Ball"
+draw_frequency: "mar/ven"
+historical_source: "mega-millions"
+description: "Mega Millions — Loterie américaine multi-états"

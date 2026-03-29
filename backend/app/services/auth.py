@@ -86,7 +86,7 @@ class AuthService:
     def _create_access_token(self, user: User) -> str:
         return create_access_token(
             data={"sub": str(user.id), "username": user.username, "role": user.role.value},
-            secret_key=self._settings.SECRET_KEY,
+            secret_key=self._settings.get_jwt_signing_key(),
             algorithm=self._settings.JWT_ALGORITHM,
             expires_minutes=self._settings.JWT_EXPIRATION_MINUTES,
         )
@@ -94,7 +94,7 @@ class AuthService:
     def _create_refresh_token(self, user: User) -> str:
         return create_refresh_token(
             data={"sub": str(user.id)},
-            secret_key=self._settings.SECRET_KEY,
+            secret_key=self._settings.get_jwt_signing_key(),
             algorithm=self._settings.JWT_ALGORITHM,
             expires_days=self._settings.REFRESH_TOKEN_EXPIRE_DAYS,
         )

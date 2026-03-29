@@ -39,7 +39,11 @@ export default function Header() {
         {/* Game selector */}
         {games && games.length > 1 && (
           <div className="relative">
+            <label htmlFor="game-selector" className="sr-only">
+              Choisir un jeu
+            </label>
             <select
+              id="game-selector"
               value={currentGameId ?? ""}
               onChange={(e) => {
                 const g = games.find((g) => g.id === Number(e.target.value));
@@ -56,6 +60,7 @@ export default function Header() {
             <ChevronDown
               size={14}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none"
+              aria-hidden="true"
             />
           </div>
         )}
@@ -64,9 +69,13 @@ export default function Header() {
         <button
           onClick={toggleTheme}
           className="p-2 rounded-md hover:bg-surface-hover text-text-secondary"
-          aria-label="Toggle theme"
+          aria-label={theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
         >
-          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          {theme === "dark" ? (
+            <Sun size={18} aria-hidden="true" />
+          ) : (
+            <Moon size={18} aria-hidden="true" />
+          )}
         </button>
       </div>
     </header>

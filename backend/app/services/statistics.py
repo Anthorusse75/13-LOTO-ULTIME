@@ -1,5 +1,6 @@
 """Statistics service — orchestrates all statistical engines."""
 
+import time
 from datetime import UTC, datetime
 
 import numpy as np
@@ -7,6 +8,11 @@ import structlog
 
 from app.core.exceptions import EngineComputationError, InsufficientDataError
 from app.core.game_definitions import GameConfig
+from app.core.metrics import (
+    engine_compute_duration_seconds,
+    engine_errors_total,
+    last_statistics_snapshot_timestamp,
+)
 from app.engines.statistics import (
     BayesianEngine,
     CooccurrenceEngine,
@@ -62,10 +68,15 @@ class StatisticsService:
         # 2. Run all engines
         results = {}
         for name, engine in self._engines.items():
+            t0 = time.perf_counter()
             try:
                 results[name] = engine.compute(draws, game)
+                engine_compute_duration_seconds.labels(engine=name, game=game.slug).observe(
+                    time.perf_counter() - t0
+                )
                 log.debug("engine_completed", engine=name)
             except Exception as exc:
+                engine_errors_total.labels(engine=name, game=game.slug).inc()
                 log.error("engine_failed", engine=name, error=str(exc))
                 results[name] = {}  # empty dict — partial result, pipeline continues
 
@@ -107,6 +118,8 @@ class StatisticsService:
         )
 
         created = await self._stats_repo.create(snapshot)
+        # Update Prometheus gauge with snapshot timestamp
+        last_statistics_snapshot_timestamp.labels(game=game.slug).set_to_current_time()
         log.info("statistics_pipeline_completed", snapshot_id=created.id)
         return created
 

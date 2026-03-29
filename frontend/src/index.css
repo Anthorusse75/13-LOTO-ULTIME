@@ -34,6 +34,46 @@
     --color-text-primary: #09090b;
     --color-text-secondary: #71717a;
   }
+
+  /* WCAG 2.4.7 — Visible focus ring for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-blue);
+    outline-offset: 2px;
+  }
+
+  /* WCAG 2.4.1 — Skip to main content link */
+  .skip-link {
+    position: absolute;
+    top: -3rem;
+    left: 1rem;
+    z-index: 9999;
+    padding: 0.5rem 1rem;
+    background: var(--color-accent-blue);
+    color: #fff;
+    border-radius: 0 0 0.25rem 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: top 0.1s;
+  }
+  .skip-link:focus {
+    top: 0;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  /* Visually hidden — accessible text for screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
 }
 
 ::-webkit-scrollbar {

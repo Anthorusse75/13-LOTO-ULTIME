@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Logrotate configuration for LOTO ULTIME
+#
+# Installation:
+#   sudo cp logrotate/loto-ultime /etc/logrotate.d/loto-ultime
+#
+# Manual test:
+#   sudo logrotate --debug /etc/logrotate.d/loto-ultime
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Backend application logs
+/var/log/loto-ultime/app.log
+/var/log/loto-ultime/error.log {
+    daily
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    create 0640 www-data adm
+    sharedscripts
+    postrotate
+        # Reload uvicorn / docker container to pick up new log file
+        if [ -f /var/run/loto-ultime/uvicorn.pid ]; then
+            kill -USR1 $(cat /var/run/loto-ultime/uvicorn.pid) 2>/dev/null || true
+        fi
+        # If running in Docker, send SIGHUP to the container
+        if command -v docker &>/dev/null; then
+            docker kill --signal=USR1 loto-ultime-backend 2>/dev/null || true
+        fi
+    endscript
+}
+
+# Nginx access + error logs (frontend container)
+/var/log/loto-ultime/nginx-access.log
+/var/log/loto-ultime/nginx-error.log {
+    daily
+    missingok
+    rotate 30
+    compress
+    delaycompress
+    notifempty
+    create 0640 www-data adm
+    sharedscripts
+    postrotate
+        if command -v docker &>/dev/null; then
+            docker kill --signal=HUP loto-ultime-frontend 2>/dev/null || true
+        fi
+    endscript
+}
+
+# Scheduler + scraper verbose logs (kept shorter — very large potential size)
+/var/log/loto-ultime/scheduler.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    create 0640 www-data adm
+    size 50M
+}
+
+# Database backups (not really logs, but managed the same way)
+/opt/loto-ultime/backups/*.db.gz {
+    weekly
+    missingok
+    rotate 5
+    notifempty
+    create 0640 www-data adm
+    # No compression — already gzipped
+    nocompress
+}

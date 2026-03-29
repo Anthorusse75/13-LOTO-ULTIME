@@ -1,0 +1,12 @@
+name: "PowerBall"
+slug: "powerball"
+numbers_pool: 69
+numbers_drawn: 5
+min_number: 1
+max_number: 69
+stars_pool: 26
+stars_drawn: 1
+star_name: "PowerBall"
+draw_frequency: "lun/mer/sam"
+historical_source: "powerball"
+description: "PowerBall — Loterie américaine multi-états"

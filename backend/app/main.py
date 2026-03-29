@@ -145,10 +145,28 @@ def create_app() -> FastAPI:
     # ── Middlewares ──
     @app.middleware("http")
     async def timing_middleware(request: Request, call_next):
-        start = time.perf_counter()
+        import time as _time
+
+        from app.core.metrics import http_request_duration_seconds, http_requests_total
+
+        start = _time.perf_counter()
         response: Response = await call_next(request)
-        duration_ms = (time.perf_counter() - start) * 1000
+        duration = _time.perf_counter() - start
+        duration_ms = duration * 1000
         response.headers["X-Process-Time-Ms"] = f"{duration_ms:.2f}"
+
+        # Record Prometheus metrics (skip /metrics endpoint itself)
+        path = request.url.path
+        if path != "/metrics":
+            # Normalize dynamic path segments to avoid label cardinality explosion
+            # e.g. /api/v1/games/123/draws → /api/v1/games/{id}/draws
+            import re
+            norm_path = re.sub(r"/\d+", "/{id}", path)
+            method = request.method
+            status = str(response.status_code)
+            http_requests_total.labels(method=method, endpoint=norm_path, status_code=status).inc()
+            http_request_duration_seconds.labels(method=method, endpoint=norm_path).observe(duration)
+
         return response
 
     @app.middleware("http")
@@ -166,6 +184,13 @@ def create_app() -> FastAPI:
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+        # HSTS — only in production (requires HTTPS)
+        if settings.APP_ENV == "production":
+            response.headers["Strict-Transport-Security"] = (
+                "max-age=31536000; includeSubDomains; preload"
+            )
         return response
 
     # ── Exception handlers ──
@@ -196,32 +221,136 @@ def create_app() -> FastAPI:
     # ── Health check ──
     @app.get("/health", tags=["System"])
     async def health_check():
-        from sqlalchemy import func, select
+        import shutil
+        from datetime import UTC, datetime
+        from sqlalchemy import func, select, text
 
         from app.models.base import get_session
         from app.models.draw import Draw
         from app.models.grid import ScoredGrid
+        from app.models.job import JobExecution
+        from app.models.statistics import StatisticsSnapshot
 
+        # ── Database ──
         db_status = "ok"
+        db_latency_ms: float | None = None
         draw_count = 0
         grid_count = 0
+        last_draw_date: str | None = None
+        last_stats_date: str | None = None
+        last_job_status: str | None = None
+        last_job_name: str | None = None
+        last_job_date: str | None = None
+
         try:
+            t0 = time.perf_counter()
             async for session in get_session():
+                # Connectivity ping
+                await session.execute(text("SELECT 1"))
+                db_latency_ms = round((time.perf_counter() - t0) * 1000, 2)
+
                 result = await session.execute(select(func.count(Draw.id)))
                 draw_count = result.scalar() or 0
+
                 result = await session.execute(select(func.count(ScoredGrid.id)))
                 grid_count = result.scalar() or 0
+
+                # Latest draw date across all games
+                result = await session.execute(
+                    select(func.max(Draw.draw_date))
+                )
+                latest_draw = result.scalar()
+                if latest_draw:
+                    last_draw_date = str(latest_draw)
+
+                # Latest stats snapshot
+                result = await session.execute(
+                    select(func.max(StatisticsSnapshot.computed_at))
+                )
+                latest_stats = result.scalar()
+                if latest_stats:
+                    last_stats_date = str(latest_stats)
+
+                # Latest job execution
+                result = await session.execute(
+                    select(JobExecution)
+                    .order_by(JobExecution.started_at.desc())  # type: ignore[arg-type]
+                    .limit(1)
+                )
+                last_job = result.scalars().first()
+                if last_job:
+                    last_job_status = last_job.status
+                    last_job_name = last_job.job_name
+                    last_job_date = str(last_job.started_at)
+
                 break
+        except Exception as exc:
+            db_status = f"error: {type(exc).__name__}"
+
+        # ── Scheduler ──
+        scheduler_status = "disabled"
+        scheduler_jobs: list[str] = []
+        if settings.SCHEDULER_ENABLED:
+            try:
+                from app.scheduler import get_scheduler
+
+                sched = get_scheduler()
+                if sched is not None and sched.running:
+                    scheduler_status = "running"
+                    scheduler_jobs = [job.id for job in sched.get_jobs()]
+                else:
+                    scheduler_status = "stopped"
+            except Exception:
+                scheduler_status = "error"
+
+        # ── Disk ──
+        disk_info: dict = {}
+        try:
+            db_path = settings.DATABASE_URL.replace("sqlite+aiosqlite:///", "")
+            usage = shutil.disk_usage(db_path if db_path.startswith("/") else ".")
+            disk_info = {
+                "total_gb": round(usage.total / 1e9, 2),
+                "used_gb": round(usage.used / 1e9, 2),
+                "free_gb": round(usage.free / 1e9, 2),
+                "used_percent": round(usage.used / usage.total * 100, 1),
+            }
         except Exception:
-            db_status = "error"
+            disk_info = {"error": "unavailable"}
+
+        # ── Overall status ──
+        is_healthy = db_status == "ok" and disk_info.get("used_percent", 0) < 95
+        overall = "healthy" if is_healthy else "degraded"
 
         return {
-            "status": "healthy",
+            "status": overall,
+            "timestamp": datetime.now(UTC).isoformat(),
             "version": settings.APP_VERSION,
-            "database": db_status,
-            "draws_count": draw_count,
-            "grids_count": grid_count,
+            "environment": settings.APP_ENV,
+            "database": {
+                "status": db_status,
+                "latency_ms": db_latency_ms,
+                "draws_count": draw_count,
+                "grids_count": grid_count,
+                "last_draw_date": last_draw_date,
+                "last_stats_computed_at": last_stats_date,
+            },
+            "scheduler": {
+                "status": scheduler_status,
+                "jobs": scheduler_jobs,
+            },
+            "last_job": {
+                "name": last_job_name,
+                "status": last_job_status,
+                "started_at": last_job_date,
+            },
+            "disk": disk_info,
         }
+
+
+    # ── Prometheus /metrics endpoint ──
+    from app.core.metrics import metrics_app
+
+    app.mount("/metrics", metrics_app)
 
     # ── API v1 router ──
     from app.api.v1 import api_v1_router

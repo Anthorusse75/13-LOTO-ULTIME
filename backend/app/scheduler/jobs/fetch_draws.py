@@ -4,6 +4,11 @@ import structlog
 
 from app.core.circuit_breaker import get_circuit_breaker
 from app.core.game_definitions import load_all_game_configs
+from app.core.metrics import (
+    scraper_draws_saved_total,
+    scraper_draws_skipped_total,
+    scraper_fetches_total,
+)
 from app.models.base import get_session
 from app.models.draw import Draw
 from app.repositories.draw_repository import DrawRepository
@@ -41,6 +46,7 @@ async def _do_fetch(game_slug: str) -> dict:
     cb = get_circuit_breaker(f"scraper_{game_slug}")
     if not cb.allow_request():
         logger.warning("fetch_draws.circuit_open", slug=game_slug)
+        scraper_fetches_total.labels(game=game_slug, status="circuit_open").inc()
         return {"skipped": True, "reason": "circuit_breaker_open"}
 
     # Load game config from YAML
@@ -66,8 +72,10 @@ async def _do_fetch(game_slug: str) -> dict:
         try:
             raw_draws = await scraper.fetch_latest_draws(since_date=since_date)
             cb.record_success()
+            scraper_fetches_total.labels(game=game_slug, status="success").inc()
         except Exception as exc:
             cb.record_failure()
+            scraper_fetches_total.labels(game=game_slug, status="failure").inc()
             raise exc
 
         # Validate and save
@@ -89,10 +97,12 @@ async def _do_fetch(game_slug: str) -> dict:
             except ValueError as exc:
                 logger.warning("fetch_draws.validation_failed", error=str(exc))
                 errors += 1
+                scraper_draws_skipped_total.labels(game=game_slug, reason="validation_error").inc()
                 continue
 
             if await draw_repo.exists(game.id, validated.draw_date):
                 skipped += 1
+                scraper_draws_skipped_total.labels(game=game_slug, reason="duplicate").inc()
                 continue
 
             draw = Draw(
@@ -104,6 +114,7 @@ async def _do_fetch(game_slug: str) -> dict:
             )
             await draw_repo.create(draw)
             saved_count += 1
+            scraper_draws_saved_total.labels(game=game_slug).inc()
 
         await session.commit()
         break

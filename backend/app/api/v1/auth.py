@@ -73,9 +73,11 @@ async def refresh_token(
     try:
         payload = decode_access_token(
             request.refresh_token,
-            settings.SECRET_KEY,
+            settings.get_jwt_verify_key(),
             settings.JWT_ALGORITHM,
-            previous_secret_key=settings.PREVIOUS_SECRET_KEY,
+            previous_secret_key=(
+                settings.PREVIOUS_SECRET_KEY if settings.JWT_ALGORITHM == "HS256" else None
+            ),
         )
         if payload.get("type") != "refresh":
             raise AuthenticationError("Token de type invalide")
@@ -109,9 +111,11 @@ async def logout(
     try:
         payload = decode_access_token(
             body.refresh_token,
-            settings.SECRET_KEY,
+            settings.get_jwt_verify_key(),
             settings.JWT_ALGORITHM,
-            previous_secret_key=settings.PREVIOUS_SECRET_KEY,
+            previous_secret_key=(
+                settings.PREVIOUS_SECRET_KEY if settings.JWT_ALGORITHM == "HS256" else None
+            ),
         )
         jti = payload.get("jti")
         exp = payload.get("exp")
