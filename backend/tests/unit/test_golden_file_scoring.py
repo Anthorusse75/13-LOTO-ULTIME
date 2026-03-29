@@ -9,7 +9,6 @@ import pytest
 from app.core.game_definitions import GameConfig
 from app.engines.scoring.scorer import GridScorer
 
-
 # ── Fixtures ──
 
 LOTO_GAME = GameConfig(

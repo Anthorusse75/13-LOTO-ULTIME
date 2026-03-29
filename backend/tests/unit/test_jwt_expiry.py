@@ -90,10 +90,11 @@ class TestJWTExpiry:
 
     def test_default_access_expiry_is_60_minutes(self):
         """Config default: JWT_EXPIRATION_MINUTES = 60."""
-        from app.core.config import Settings
-
         # Settings uses env: provide a minimal SECRET_KEY
         import os
+
+        from app.core.config import Settings
+
         old = os.environ.get("SECRET_KEY")
         os.environ["SECRET_KEY"] = SECRET
         try:

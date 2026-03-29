@@ -114,9 +114,11 @@ class GeneticAlgorithm(BaseOptimizer):
 
                 if self.rng.random() < self.crossover_rate:
                     child_grid = self._crossover(parent1.numbers, parent2.numbers)
-                    child_stars = self._star_crossover(
-                        parent1.stars or [], parent2.stars or []
-                    ) if self._has_stars else []
+                    child_stars = (
+                        self._star_crossover(parent1.stars or [], parent2.stars or [])
+                        if self._has_stars
+                        else []
+                    )
                 else:
                     child_grid = parent1.numbers.copy()
                     child_stars = (parent1.stars or []).copy() if self._has_stars else []

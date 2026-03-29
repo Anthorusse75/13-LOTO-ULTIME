@@ -45,7 +45,7 @@ class TestSettings:
 
         from app.core.config import Settings
 
-        with pytest.raises(Exception):
+        with pytest.raises(Exception):  # noqa: B017
             Settings(_env_file="/nonexistent/.env")
 
 

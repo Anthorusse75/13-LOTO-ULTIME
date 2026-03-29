@@ -188,7 +188,7 @@ class TestGapEngine:
 
     def test_gap_range_valid(self, small_draws, small_config):
         result = self.engine.compute(small_draws, small_config)
-        for num, data in result.items():
+        for _num, data in result.items():
             assert data["min_gap"] <= data["avg_gap"] <= data["max_gap"]
             assert data["current_gap"] >= 0
 
@@ -307,7 +307,7 @@ class TestTemporalEngine:
         assert "momentum" in result
         # Only numbers with R² >= 0.5 are included
         assert len(result["momentum"]) > 0
-        for num, data in result["momentum"].items():
+        for _num, data in result["momentum"].items():
             assert "slope" in data
             assert "r_squared" in data
             assert data["r_squared"] >= 0.5
@@ -421,7 +421,7 @@ class TestBayesianEngine:
 
     def test_posterior_mean_range(self, small_draws, small_config):
         result = self.engine.compute(small_draws, small_config)
-        for num, item in result.items():
+        for _num, item in result.items():
             assert 0 < item["posterior_mean"] < 1
 
     def test_alpha_beta_values(self, small_draws, small_config):
@@ -435,12 +435,12 @@ class TestBayesianEngine:
 
     def test_credible_interval_contains_mean(self, small_draws, small_config):
         result = self.engine.compute(small_draws, small_config)
-        for num, item in result.items():
+        for _num, item in result.items():
             assert item["ci_95_low"] <= item["posterior_mean"] <= item["ci_95_high"]
 
     def test_credible_interval_width(self, small_draws, small_config):
         result = self.engine.compute(small_draws, small_config)
-        for num, item in result.items():
+        for _num, item in result.items():
             assert item["ci_width"] > 0
             assert abs(item["ci_width"] - (item["ci_95_high"] - item["ci_95_low"])) < 1e-4
 
@@ -485,7 +485,7 @@ class TestGraphEngine:
     def test_centrality_structure(self, small_draws, small_config):
         result = self.engine.compute(small_draws, small_config)
         assert len(result["centrality"]) == 10
-        for num, data in result["centrality"].items():
+        for _num, data in result["centrality"].items():
             assert "degree" in data
             assert "betweenness" in data
             assert "eigenvector" in data

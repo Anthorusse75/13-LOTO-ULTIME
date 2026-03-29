@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.draw import Draw
 from app.models.game import GameDefinition
-from tests.integration.api.conftest import override_auth
 from app.models.statistics import StatisticsSnapshot
+from tests.integration.api.conftest import override_auth
 
 
 @pytest.fixture

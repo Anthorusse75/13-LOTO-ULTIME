@@ -98,7 +98,7 @@ class TemporalEngine(BaseStatisticsEngine):
 
             # R² computation
             ss_yy = float(((y - y_mean) ** 2).sum())
-            r_squared = (ss_xy ** 2) / (ss_xx * ss_yy) if ss_yy > 0 else 0.0
+            r_squared = (ss_xy**2) / (ss_xx * ss_yy) if ss_yy > 0 else 0.0
 
             if r_squared >= MIN_R2_THRESHOLD:
                 momentum[num] = {

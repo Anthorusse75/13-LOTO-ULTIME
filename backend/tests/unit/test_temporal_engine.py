@@ -24,7 +24,11 @@ def _make_draws(n: int, game: GameConfig, rng=None) -> np.ndarray:
         rng = np.random.default_rng(42)
     draws = []
     for _ in range(n):
-        nums = sorted(rng.choice(range(game.min_number, game.max_number + 1), game.numbers_drawn, replace=False))
+        nums = sorted(
+            rng.choice(
+                range(game.min_number, game.max_number + 1), game.numbers_drawn, replace=False
+            )
+        )
         draws.append(nums)
     return np.array(draws)
 
@@ -75,7 +79,7 @@ class TestMomentumR2:
         game = _make_game()
         draws = _make_draws(60, game)
         result = engine.compute(draws, game)
-        for num, data in result["momentum"].items():
+        for _num, data in result["momentum"].items():
             assert "slope" in data
             assert "r_squared" in data
             assert data["r_squared"] >= MIN_R2_THRESHOLD
@@ -86,7 +90,7 @@ class TestMomentumR2:
         draws = _make_draws(60, game)
         result = engine.compute(draws, game)
         # All returned momentum entries should have R² >= threshold
-        for num, data in result["momentum"].items():
+        for _num, data in result["momentum"].items():
             assert data["r_squared"] >= MIN_R2_THRESHOLD
 
     def test_momentum_empty_with_few_windows(self):

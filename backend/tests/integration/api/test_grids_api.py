@@ -125,7 +125,7 @@ class TestGridsAPI:
         import app.models.base as base_module
 
         game, snapshot = game_with_snapshot_for_scoring
-        session_factory = type(db_session)
+        _session_factory = type(db_session)
 
         original_engine = base_module._engine
         original_factory = base_module._session_factory

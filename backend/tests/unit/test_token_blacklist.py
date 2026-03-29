@@ -35,9 +35,7 @@ def test_singleton_instance():
 def test_jti_in_access_token():
     from app.core.security import create_access_token, decode_access_token
 
-    token = create_access_token(
-        data={"sub": "1"}, secret_key="test-secret", expires_minutes=60
-    )
+    token = create_access_token(data={"sub": "1"}, secret_key="test-secret", expires_minutes=60)
     payload = decode_access_token(token, "test-secret")
     assert "jti" in payload
     assert len(payload["jti"]) == 32  # hex uuid4
@@ -46,9 +44,7 @@ def test_jti_in_access_token():
 def test_jti_in_refresh_token():
     from app.core.security import create_refresh_token, decode_access_token
 
-    token = create_refresh_token(
-        data={"sub": "1"}, secret_key="test-secret", expires_days=7
-    )
+    token = create_refresh_token(data={"sub": "1"}, secret_key="test-secret", expires_days=7)
     payload = decode_access_token(token, "test-secret")
     assert "jti" in payload
     assert payload["type"] == "refresh"

@@ -54,8 +54,7 @@ def mock_snapshot():
         "matrix_shape": [49, 49],
     }
     snapshot.star_frequencies = {
-        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0}
-        for n in range(1, 11)
+        str(n): {"count": 10, "relative": 0.1, "ratio": 1.0, "last_seen": 0} for n in range(1, 11)
     }
     snapshot.star_gaps = {
         str(n): {

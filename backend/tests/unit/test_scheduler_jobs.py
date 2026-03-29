@@ -150,9 +150,9 @@ class TestComputeScoringJob:
                 "app.scheduler.jobs.compute_scoring.load_all_game_configs",
                 return_value={"loto-fdj": config},
             ),
-            patch("app.scheduler.jobs.compute_scoring.GridScorer") as MockScorer,
+            patch("app.scheduler.jobs.compute_scoring.GridScorer") as mock_scorer,
         ):
-            MockScorer.from_profile.return_value.score.return_value = score_result
+            mock_scorer.from_profile.return_value.score.return_value = score_result
 
             from app.scheduler.jobs.compute_scoring import _do_compute_scoring
 
