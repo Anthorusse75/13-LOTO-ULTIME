@@ -56,7 +56,7 @@ class TestHealthEndpoint:
 
 class TestGamesEndpoint:
     async def test_list_games_empty(self, client: AsyncClient):
-        response = await client.get("/api/v1/games/")
+        response = await client.get("/api/v1/games")
         assert response.status_code == 200
         assert response.json() == []
 

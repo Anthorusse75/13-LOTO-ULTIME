@@ -1,13 +1,17 @@
-"""PowerBall scraper — fetches draw results from the official PowerBall JSON API.
+"""PowerBall scraper — fetches draw results from NY Open Data CSV.
 
-The official PowerBall website exposes a JSON endpoint that returns recent draws.
-Historical CSV archives are also available at:
-  https://www.powerball.com/previous-results
+Data source: New York State Gaming Commission via data.ny.gov
+CSV endpoint: https://data.ny.gov/api/views/d6yy-54nr/rows.csv?accessType=DOWNLOAD
 
-NOTE: This scraper is a functional stub. Activate it by uncommenting it in
-      scrapers/__init__.py and verifying the current endpoint URLs.
+CSV format:
+  Draw Date,Winning Numbers,Multiplier
+  03/28/2026,11 42 43 59 61 25,4
+
+Note: The 6th number in "Winning Numbers" is the PowerBall.
 """
 
+import csv
+import io
 from datetime import date, datetime
 
 import httpx
@@ -17,14 +21,8 @@ from app.scrapers.base import BaseScraper, DrawValidator, RawDraw
 
 logger = structlog.get_logger(__name__)
 
-# Official Powerball results JSON endpoint (recent draws)
-# Source: https://www.powerball.com/api/v1/numbers/powerball/recent
-POWERBALL_API_URL = "https://www.powerball.com/api/v1/numbers/powerball/recent"
-
-# Historical CSV endpoint (full archive):
-# https://www.powerball.com/api/v1/numbers/powerball/history?starting=1/1/2000
-POWERBALL_HISTORY_URL = (
-    "https://www.powerball.com/api/v1/numbers/powerball/history?starting=1/1/2000"
+POWERBALL_CSV_URL = (
+    "https://data.ny.gov/api/views/d6yy-54nr/rows.csv?accessType=DOWNLOAD"
 )
 
 
@@ -39,12 +37,10 @@ class PowerBallScraper(BaseScraper):
 
     def __init__(
         self,
-        api_url: str = POWERBALL_API_URL,
-        history_url: str = POWERBALL_HISTORY_URL,
+        csv_url: str = POWERBALL_CSV_URL,
         timeout: float = 30.0,
     ):
-        self._api_url = api_url
-        self._history_url = history_url
+        self._csv_url = csv_url
         self._timeout = timeout
         self._validator = DrawValidator(
             min_number=1,
@@ -57,7 +53,7 @@ class PowerBallScraper(BaseScraper):
     async def fetch_latest_draws(self, since_date: date | None = None) -> list[RawDraw]:
         """Fetch PowerBall draws since the given date."""
         if since_date is None:
-            since_date = date(1992, 4, 22)  # First PowerBall draw
+            since_date = date(1992, 4, 22)
 
         log = logger.bind(scraper="powerball", since=str(since_date))
         log.info("scraper_fetch_start")
@@ -65,13 +61,13 @@ class PowerBallScraper(BaseScraper):
         try:
             async with httpx.AsyncClient(timeout=self._timeout, follow_redirects=True) as client:
                 response = await client.get(
-                    self._api_url,
+                    self._csv_url,
                     headers={"User-Agent": "Mozilla/5.0 (LOTO-ULTIME/1.0)"},
                 )
                 response.raise_for_status()
 
-            draws = self._parse_response(response.json(), since_date)
-            log.info("scraper_fetch_done", count=len(draws))
+            draws = self._parse_csv(response.text, since_date)
+            log.info("scraper_fetch_complete", count=len(draws))
             return draws
 
         except httpx.HTTPStatusError as exc:
@@ -81,38 +77,30 @@ class PowerBallScraper(BaseScraper):
             log.error("scraper_fetch_error", error=str(exc))
             raise
 
-    def _parse_response(self, data: list[dict], since_date: date) -> list[RawDraw]:
-        """Parse the PowerBall JSON API response into RawDraw objects.
+    def _parse_csv(self, text: str, since_date: date) -> list[RawDraw]:
+        """Parse the NY Open Data CSV into RawDraw objects.
 
-        Expected JSON format (array of draw records):
-        [
-            {
-                "field_draw_date": "2024-01-06T00:00:00",
-                "field_winning_numbers": "12 23 34 45 56",
-                "field_powerball": "7"
-            },
-            ...
-        ]
+        CSV columns: Draw Date, Winning Numbers, Multiplier
+        Date format: MM/DD/YYYY
+        The 6th number in 'Winning Numbers' is the PowerBall.
         """
         draws: list[RawDraw] = []
+        reader = csv.DictReader(io.StringIO(text))
 
-        for record in data:
+        for row in reader:
             try:
-                # Parse draw date
-                date_str: str = record.get("field_draw_date", "")
-                draw_date = datetime.fromisoformat(date_str).date()
+                draw_date = datetime.strptime(row["Draw Date"], "%m/%d/%Y").date()
 
                 if draw_date < since_date:
                     continue
 
-                # Parse white balls (space-separated)
-                numbers_str: str = record.get("field_winning_numbers", "")
-                numbers = [int(n) for n in numbers_str.split() if n.isdigit()]
+                all_numbers = [int(n) for n in row["Winning Numbers"].split() if n.isdigit()]
+                if len(all_numbers) < 6:
+                    continue
 
-                # Parse PowerBall (red ball — stored as star)
-                powerball_str: str = record.get("field_powerball", "")
-                powerball = int(powerball_str) if powerball_str.isdigit() else None
-                stars = [powerball] if powerball is not None else None
+                numbers = all_numbers[:5]
+                powerball = all_numbers[5]
+                stars = [powerball]
 
                 raw = RawDraw(
                     draw_date=draw_date,
@@ -124,9 +112,8 @@ class PowerBallScraper(BaseScraper):
                 draws.append(validated)
 
             except (ValueError, KeyError) as exc:
-                logger.warning("scraper_parse_skip", record=str(record)[:80], error=str(exc))
+                logger.warning("scraper_parse_skip", row=str(row)[:80], error=str(exc))
                 continue
 
-        # Sort by date ascending (oldest first)
         draws.sort(key=lambda d: d.draw_date)
         return draws

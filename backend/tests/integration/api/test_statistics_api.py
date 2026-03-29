@@ -177,7 +177,7 @@ class TestStatisticsEndpoints:
     @pytest.mark.asyncio
     async def test_get_statistics_summary(self, stats_client):
         client, game = stats_client
-        resp = await client.get(f"/api/v1/games/{game.id}/statistics/")
+        resp = await client.get(f"/api/v1/games/{game.id}/statistics")
         assert resp.status_code == 200
         data = resp.json()
         assert data["game_id"] == game.id
@@ -286,5 +286,5 @@ class TestStatisticsEndpoints:
 
         transport = ASGITransport(app=test_app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            resp = await client.get(f"/api/v1/games/{game.id}/statistics/")
+            resp = await client.get(f"/api/v1/games/{game.id}/statistics")
             assert resp.status_code == 422 or resp.status_code == 400

@@ -24,7 +24,7 @@ export default function LoginPage() {
       const tokenRes = await authService.login({ username, password });
       setDebugInfo("Étape 2/2 : récupération du profil...");
       const user = await authService.me(tokenRes.access_token);
-      login(tokenRes.access_token, user);
+      login(tokenRes.access_token, tokenRes.refresh_token, user);
       navigate("/");
     } catch (err) {
       if (isAxiosError(err)) {

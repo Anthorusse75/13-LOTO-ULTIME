@@ -35,12 +35,12 @@ async def client():
 
 class TestJobsListEndpoint:
     async def test_list_jobs_empty(self, client: AsyncClient):
-        response = await client.get("/api/v1/jobs/")
+        response = await client.get("/api/v1/jobs")
         assert response.status_code == 200
         assert response.json() == []
 
     async def test_list_jobs_pagination(self, client: AsyncClient):
-        response = await client.get("/api/v1/jobs/?limit=10&offset=0")
+        response = await client.get("/api/v1/jobs?limit=10&offset=0")
         assert response.status_code == 200
 
 

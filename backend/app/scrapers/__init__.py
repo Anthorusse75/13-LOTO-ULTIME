@@ -10,7 +10,9 @@ from app.scrapers.powerball import PowerBallScraper
 SCRAPER_MAP: dict[str, type[BaseScraper]] = {
     "loto-fdj": FDJLotoScraper,
     "euromillions": EuroMillionsScraper,
-    "keno": FDJKenoScraper,  # Keno FDJ — archive Nov 2025+
+    "keno": FDJKenoScraper,
+    "mega-millions": MegaMillionsScraper,
+    "powerball": PowerBallScraper,
 }
 
 

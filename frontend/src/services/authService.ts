@@ -23,6 +23,13 @@ export const authService = {
     return data;
   },
 
+  refreshTokens: async (refreshToken: string): Promise<TokenResponse> => {
+    const { data } = await api.post("/auth/refresh", {
+      refresh_token: refreshToken,
+    });
+    return data;
+  },
+
   getUsers: async (): Promise<User[]> => {
     const { data } = await api.get("/auth/users");
     return data;

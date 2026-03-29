@@ -81,13 +81,91 @@ function mapDetailToFrench(detail: string): string | null {
   return null;
 }
 
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (err: unknown) => void;
+}> = [];
+
+function processQueue(error: unknown, token: string | null) {
+  for (const prom of failedQueue) {
+    if (token) {
+      prom.resolve(token);
+    } else {
+      prom.reject(error);
+    }
+  }
+  failedQueue = [];
+}
+
 api.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<{ detail?: string }>) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("auth-storage");
-      window.location.href = "/login";
-      return Promise.reject(error);
+  async (error: AxiosError<{ detail?: string }>) => {
+    const originalRequest = error.config;
+
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !(originalRequest as Record<string, unknown>)._retry
+    ) {
+      // Don't retry refresh or login requests
+      const url = originalRequest.url ?? "";
+      if (url.includes("/auth/refresh") || url.includes("/auth/login")) {
+        localStorage.removeItem("auth-storage");
+        window.location.href = "/login";
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token: string) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              resolve(api(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+
+      (originalRequest as Record<string, unknown>)._retry = true;
+      isRefreshing = true;
+
+      try {
+        const raw = localStorage.getItem("auth-storage");
+        const parsed = raw ? JSON.parse(raw) : null;
+        const refreshToken = parsed?.state?.refreshToken;
+
+        if (!refreshToken) {
+          throw new Error("No refresh token");
+        }
+
+        const { data } = await api.post("/auth/refresh", {
+          refresh_token: refreshToken,
+        });
+
+        // Update store
+        const newState = {
+          ...parsed,
+          state: {
+            ...parsed.state,
+            token: data.access_token,
+            refreshToken: data.refresh_token,
+          },
+        };
+        localStorage.setItem("auth-storage", JSON.stringify(newState));
+
+        processQueue(null, data.access_token);
+        originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        localStorage.removeItem("auth-storage");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     }
 
     const message = extractErrorMessage(error);

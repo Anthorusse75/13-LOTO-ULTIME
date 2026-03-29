@@ -5,13 +5,14 @@ interface LoadingSpinnerProps {
 }
 
 export default function LoadingSpinner({
-  message = "Chargement\u2026",
+  message,
 }: LoadingSpinnerProps) {
+  const label = message ?? "Chargement\u2026";
   return (
     <div
       role="status"
       aria-live="polite"
-      aria-label={message}
+      aria-label={label}
       className="flex flex-col items-center justify-center py-12 gap-3"
     >
       <Loader2
@@ -19,7 +20,7 @@ export default function LoadingSpinner({
         className="animate-spin text-accent-blue"
         aria-hidden="true"
       />
-      <p className="text-sm text-text-secondary">{message}</p>
+      {message && <p className="text-sm text-text-secondary">{message}</p>}
     </div>
   );
 }
