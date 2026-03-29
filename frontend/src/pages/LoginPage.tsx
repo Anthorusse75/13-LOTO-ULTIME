@@ -106,15 +106,22 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div role="alert" className="text-xs text-accent-red text-center space-y-1">
+              <div
+                role="alert"
+                className="text-xs text-accent-red text-center space-y-1"
+              >
                 <p>{error}</p>
                 {debugInfo && (
-                  <p className="text-text-secondary font-mono break-all">{debugInfo}</p>
+                  <p className="text-text-secondary font-mono break-all">
+                    {debugInfo}
+                  </p>
                 )}
               </div>
             )}
             {loading && debugInfo && (
-              <p className="text-xs text-text-secondary text-center font-mono">{debugInfo}</p>
+              <p className="text-xs text-text-secondary text-center font-mono">
+                {debugInfo}
+              </p>
             )}
 
             <button

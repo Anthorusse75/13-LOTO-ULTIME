@@ -18,16 +18,25 @@ export default defineConfig({
         changeOrigin: true,
         configure: (proxy) => {
           proxy.on("error", (err, req) => {
-            console.error(`[PROXY ERROR] ${req.method} ${req.url} →`, err.message);
+            console.error(
+              `[PROXY ERROR] ${req.method} ${req.url} →`,
+              err.message,
+            );
           });
           proxy.on("proxyRes", (proxyRes, req) => {
             // Réécrire les headers Location pour que les redirects passent par le proxy
             const location = proxyRes.headers["location"];
-            if (location && (location.includes("localhost:8000") || location.includes("127.0.0.1:8000"))) {
+            if (
+              location &&
+              (location.includes("localhost:8000") ||
+                location.includes("127.0.0.1:8000"))
+            ) {
               proxyRes.headers["location"] = location
                 .replace(/https?:\/\/localhost:8000/, "")
                 .replace(/https?:\/\/127\.0\.0\.1:8000/, "");
-              console.log(`[PROXY REDIRECT REWRITTEN] ${req.url} → ${proxyRes.headers["location"]}`);
+              console.log(
+                `[PROXY REDIRECT REWRITTEN] ${req.url} → ${proxyRes.headers["location"]}`,
+              );
             }
           });
         },

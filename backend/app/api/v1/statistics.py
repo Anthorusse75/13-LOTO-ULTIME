@@ -7,11 +7,14 @@ from slowapi.util import get_remote_address
 from app.core.exceptions import GameNotFoundError, InsufficientDataError
 from app.core.game_definitions import load_all_game_configs
 from app.dependencies import (
+    get_draw_repository,
+    get_game_config,
     get_game_repository,
     get_statistics_service,
     require_role,
 )
 from app.models.user import User, UserRole
+from app.repositories.draw_repository import DrawRepository
 from app.repositories.game_repository import GameRepository
 from app.schemas.statistics import (
     BayesianItem,
@@ -27,8 +30,6 @@ from app.schemas.statistics import (
     SumStats,
     TemporalResponse,
 )
-from app.dependencies import get_draw_repository, get_game_config
-from app.repositories.draw_repository import DrawRepository
 from app.services.statistics import StatisticsService
 
 limiter = Limiter(key_func=get_remote_address)
@@ -80,8 +81,7 @@ async def get_statistics(
         star_freq_items.sort(key=lambda f: -f.count)
     if snapshot.star_gaps:
         star_gap_items = [
-            GapItem(number=int(num), **data)
-            for num, data in snapshot.star_gaps.items()
+            GapItem(number=int(num), **data) for num, data in snapshot.star_gaps.items()
         ]
         star_gap_items.sort(key=lambda g: -g.current_gap)
 
@@ -121,7 +121,9 @@ async def get_frequencies(
         items = [FrequencyItem(number=int(num), **data) for num, data in raw.items()]
     else:
         snapshot = await _get_snapshot(game_id, stats_service)
-        items = [FrequencyItem(number=int(num), **data) for num, data in snapshot.frequencies.items()]
+        items = [
+            FrequencyItem(number=int(num), **data) for num, data in snapshot.frequencies.items()
+        ]
     items.sort(key=lambda f: -f.count)
     return items
 
