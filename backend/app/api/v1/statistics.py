@@ -48,7 +48,7 @@ async def _get_snapshot(game_id: int, stats_service: StatisticsService):
 # ── GET /statistics — Full summary ──
 
 
-@router.get("/", response_model=StatisticsResponse)
+@router.get("", response_model=StatisticsResponse)
 async def get_statistics(
     game_id: int,
     stats_service: StatisticsService = Depends(get_statistics_service),

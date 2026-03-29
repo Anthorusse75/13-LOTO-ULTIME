@@ -42,7 +42,7 @@ function starMatchCount(
 function getResultLabel(
   matches: number,
   total: number,
-  starMatches: number,
+  _starMatches: number,
 ): string {
   const pct = matches / total;
   if (pct >= 1) return "🏆 Jackpot!";
@@ -234,8 +234,8 @@ export default function HistoryPage() {
                   borderRadius: "6px",
                   fontSize: "12px",
                 }}
-                formatter={(val: number, name: string) => [
-                  `${val}${name === "matchPct" ? "%" : ""}`,
+                formatter={(val, name) => [
+                  `${val as number}${name === "matchPct" ? "%" : ""}`,
                   name === "matchPct" ? "Correspondance" : "Score",
                 ]}
               />

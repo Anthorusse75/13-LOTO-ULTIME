@@ -28,6 +28,7 @@ export interface GridResponse {
   stars: number[] | null;
   total_score: number;
   score_breakdown: ScoreBreakdown;
+  star_score: number | null;
   rank: number | null;
   method: string;
   computed_at: string;

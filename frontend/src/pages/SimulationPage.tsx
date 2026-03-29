@@ -848,8 +848,8 @@ export default function SimulationPage() {
                                 border: "1px solid var(--color-border)",
                                 borderRadius: "6px",
                               }}
-                              formatter={(val: number, name: string) => [
-                                val.toFixed(3),
+                              formatter={(val, name) => [
+                                (val as number).toFixed(3),
                                 name === "A"
                                   ? (OPTIMIZATION_METHODS.find(
                                       (m) => m.value === stratA,

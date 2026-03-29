@@ -16,6 +16,7 @@ router = APIRouter(dependencies=[Depends(require_role(UserRole.ADMIN))])
 TRIGGERABLE_JOBS = {
     "fetch_loto": ("fetch_draws", ["loto-fdj"]),
     "fetch_euromillions": ("fetch_draws", ["euromillions"]),
+    "fetch_keno": ("fetch_draws", ["keno"]),
     "compute_stats": ("compute_statistics", []),
     "compute_scoring": ("compute_scoring", []),
     "compute_top_grids": ("compute_top_grids", []),
@@ -92,7 +93,7 @@ async def trigger_job(
     return latest
 
 
-@router.get("/", response_model=list[JobExecutionResponse])
+@router.get("", response_model=list[JobExecutionResponse])
 async def list_job_executions(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),

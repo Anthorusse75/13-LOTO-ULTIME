@@ -1,7 +1,7 @@
 name: "Keno Gagnant à Vie"
 slug: "keno"
 numbers_pool: 70
-numbers_drawn: 20
+numbers_drawn: 16
 min_number: 1
 max_number: 70
 stars_pool: 0

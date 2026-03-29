@@ -28,7 +28,7 @@ limiter = Limiter(key_func=get_remote_address)
 
 
 async def _seed_games() -> None:
-    """Seed game_definitions from YAML configs if the table is empty."""
+    """Upsert game_definitions from YAML configs — adds new games without touching existing ones."""
     from app.core.game_definitions import load_all_game_configs
     from app.models.base import get_session
     from app.models.game import GameDefinition
@@ -38,13 +38,12 @@ async def _seed_games() -> None:
 
     async for session in get_session():
         repo = GameRepository(session)
-        existing = await repo.get_active_games()
-        if existing:
-            logger.info("seed_games.skipped", count=len(existing))
-            break
-
         configs = load_all_game_configs()
+        added: list[str] = []
         for cfg in configs.values():
+            existing = await repo.get_by_slug(cfg.slug)
+            if existing:
+                continue  # already in DB — don't overwrite
             game = GameDefinition(
                 name=cfg.name,
                 slug=cfg.slug,
@@ -61,9 +60,13 @@ async def _seed_games() -> None:
                 is_active=True,
             )
             session.add(game)
+            added.append(cfg.slug)
 
-        await session.commit()
-        logger.info("seed_games.done", games=[c.slug for c in configs.values()])
+        if added:
+            await session.commit()
+            logger.info("seed_games.done", added=added)
+        else:
+            logger.info("seed_games.all_present", count=len(configs))
         break
 
 

@@ -87,7 +87,7 @@ function drawScoreBar(
       : value >= 0.4
         ? ([234, 179, 8] as const)
         : ([239, 68, 68] as const);
-  doc.setFillColor(...r);
+  doc.setFillColor(r[0], r[1], r[2]);
   if (filled > 0) doc.roundedRect(60, y - 4, filled, 5, 1, 1, "F");
 
   doc.setTextColor(...GRAY_400);

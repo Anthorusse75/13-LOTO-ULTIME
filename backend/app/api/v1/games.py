@@ -7,7 +7,7 @@ from app.schemas.game import GameDefinitionResponse
 router = APIRouter()
 
 
-@router.get("/", response_model=list[GameDefinitionResponse])
+@router.get("", response_model=list[GameDefinitionResponse])
 async def list_games(
     game_repo: GameRepository = Depends(get_game_repository),
 ):

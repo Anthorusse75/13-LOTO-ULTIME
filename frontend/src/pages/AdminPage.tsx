@@ -22,6 +22,7 @@ import { useState } from "react";
 const JOB_LABELS: Record<string, string> = {
   fetch_loto: "Scraping Loto FDJ",
   fetch_euromillions: "Scraping EuroMillions",
+  fetch_keno: "Scraping Keno",
   compute_stats: "Calcul statistiques",
   compute_scoring: "Scoring grilles",
   compute_top_grids: "Top grilles",
@@ -120,15 +121,14 @@ function JobsPanel() {
       {/* Trigger buttons */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {Object.entries(JOB_LABELS).map(([key, label]) => {
+          // Map frontend job key to the backend job_name used in running_jobs
+          const backendName = key
+            .replace("fetch_loto", "fetch_draws_loto-fdj")
+            .replace("fetch_euromillions", "fetch_draws_euromillions")
+            .replace("fetch_keno", "fetch_draws_keno");
           const isRunning =
             triggering === key ||
-            status?.running_jobs?.some((r) =>
-              r.includes(
-                key
-                  .replace("fetch_loto", "fetch_draws")
-                  .replace("fetch_euromillions", "fetch_draws"),
-              ),
-            );
+            status?.running_jobs?.some((r) => r.includes(backendName));
           return (
             <button
               key={key}

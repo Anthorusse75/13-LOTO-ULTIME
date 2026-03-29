@@ -28,6 +28,7 @@ async def _do_nightly_pipeline() -> dict:
     steps = [
         ("fetch_loto", lambda: _do_fetch("loto-fdj")),
         ("fetch_euromillions", lambda: _do_fetch("euromillions")),
+        ("fetch_keno", lambda: _do_fetch("keno")),
         ("compute_stats", _do_compute_stats),
         ("compute_scoring", _do_compute_scoring),
         ("compute_top_grids", _do_compute_top_grids),

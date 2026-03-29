@@ -10,10 +10,7 @@ from app.scrapers.powerball import PowerBallScraper
 SCRAPER_MAP: dict[str, type[BaseScraper]] = {
     "loto-fdj": FDJLotoScraper,
     "euromillions": EuroMillionsScraper,
-    # "keno-fdj": FDJKenoScraper,  # Activate once endpoint URL is confirmed
-    # US lotteries — activate once API endpoint URLs are verified:
-    # "powerball": PowerBallScraper,
-    # "mega-millions": MegaMillionsScraper,
+    "keno": FDJKenoScraper,  # Keno FDJ — archive Nov 2025+
 }
 
 

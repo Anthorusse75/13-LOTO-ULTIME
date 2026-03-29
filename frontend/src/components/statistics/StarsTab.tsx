@@ -75,7 +75,7 @@ export default function StarsTab() {
                   border: "1px solid var(--color-border)",
                   borderRadius: 6,
                 }}
-                formatter={(v: number) => [v, "Tirages"]}
+                formatter={(v) => [v as number, "Tirages"]}
               />
               <Bar
                 dataKey="count"
@@ -170,13 +170,13 @@ export default function StarsTab() {
                     border: "1px solid var(--color-border)",
                     borderRadius: 6,
                   }}
-                  formatter={(v: number, name: string) => [
-                    v,
+                  formatter={(v, name) => [
+                    v as number,
                     name === "current_gap"
                       ? "Écart actuel"
                       : name === "expected_gap"
                         ? "Écart attendu"
-                        : name,
+                        : String(name),
                   ]}
                 />
                 <ReferenceLine

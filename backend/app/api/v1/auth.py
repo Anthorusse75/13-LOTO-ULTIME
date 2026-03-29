@@ -21,7 +21,7 @@ audit_log = __import__("structlog").get_logger("audit")
 
 
 @router.post("/login", response_model=TokenResponse)
-@limiter.limit("5/minute")
+@limiter.limit("20/minute")
 async def login(
     request: Request,
     body: LoginRequest,

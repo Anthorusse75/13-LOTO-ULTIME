@@ -10,7 +10,7 @@ from app.schemas.draw import DrawResponse
 router = APIRouter()
 
 
-@router.get("/", response_model=list[DrawResponse])
+@router.get("", response_model=list[DrawResponse])
 async def list_draws(
     game_id: int,
     skip: int = Query(0, ge=0),

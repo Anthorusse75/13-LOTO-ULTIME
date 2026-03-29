@@ -17,8 +17,9 @@ export const authService = {
     return data;
   },
 
-  me: async (): Promise<User> => {
-    const { data } = await api.get("/auth/me");
+  me: async (token?: string): Promise<User> => {
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    const { data } = await api.get("/auth/me", { headers });
     return data;
   },
 

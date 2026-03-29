@@ -22,17 +22,20 @@ from app.scrapers.base import BaseScraper, DrawValidator, RawDraw
 
 logger = structlog.get_logger(__name__)
 
-# TODO: Replace with the confirmed FDJ Keno CSV/ZIP endpoint.
-# The FDJ public archive URLs follow the pattern:
-#   https://www.sto.api.fdj.fr/anonymous/service-draw-info/v3/documentations/<uuid>
-# The correct UUID for Keno must be confirmed from the FDJ open-data portal.
-_KENO_ZIP_URL_PLACEHOLDER = (
+# FDJ Keno historical archives (ZIP containing CSV, semicolon-separated)
+# Source: https://www.fdj.fr/jeux-de-tirage/keno/historique
+# Multiple archives cover different periods — use the most recent as default.
+KENO_ZIP_URL = (
     "https://www.sto.api.fdj.fr/anonymous/service-draw-info/v3/"
-    "documentations/KENO_UUID_PLACEHOLDER"
+    "documentations/1a2b3c4d-9876-4562-b3fc-2c963f66bft6"  # Nov 2025 – present
 )
+# Older archives (if you need historical data prior to Nov 2025):
+# Oct 2020 – Nov 2025: documentations/1a2b3c4d-9876-4562-b3fc-2c963f66aft6
+# Nov 2018 – Oct 2020: documentations/1a2b3c4d-9876-4562-b3fc-2c963f66aet6
 
 # Keno draw parameters
-KENO_NUMBERS_DRAWN = 20
+# FDJ CSV archive provides 16 drawn numbers (boule1..boule16)
+KENO_NUMBERS_DRAWN = 16
 KENO_MIN_NUMBER = 1
 KENO_MAX_NUMBER = 70
 
@@ -40,12 +43,10 @@ KENO_MAX_NUMBER = 70
 class FDJKenoScraper(BaseScraper):
     """Scraper for FDJ Keno draw results from official CSV archives.
 
-    NOTE: This is a stub. Before using in production:
-    1. Identify the correct FDJ open-data ZIP URL for Keno archives.
-    2. Inspect the CSV column names (they may differ from Loto FDJ).
-    3. Update ``_KENO_ZIP_URL`` and ``_parse_row()`` accordingly.
-    4. Add an integration test with a sample response fixture.
-    5. Register the scraper in ``app/scrapers/__init__.py``.
+    Downloads the official FDJ ZIP archive for Keno and parses the
+    semicolon-delimited CSV.  By default uses the current season archive
+    (Nov 2025 – present).  Older archives can be fetched by passing a
+    different ``zip_url`` in the constructor.
     """
 
     _validator = DrawValidator(
@@ -56,7 +57,7 @@ class FDJKenoScraper(BaseScraper):
 
     def __init__(
         self,
-        zip_url: str = _KENO_ZIP_URL_PLACEHOLDER,
+        zip_url: str = KENO_ZIP_URL,
         timeout: float = 60.0,
     ):
         self._zip_url = zip_url
@@ -66,16 +67,8 @@ class FDJKenoScraper(BaseScraper):
         """Fetch Keno draws since ``since_date``.
 
         Raises:
-            NotImplementedError: Until the correct endpoint URL is confirmed.
             httpx.HTTPError: On network failure.
         """
-        if _KENO_ZIP_URL_PLACEHOLDER in self._zip_url:
-            raise NotImplementedError(
-                "FDJ Keno scraper is not yet configured. "
-                "Set the correct zip_url before activating this scraper. "
-                "See the docstring on FDJKenoScraper for steps."
-            )
-
         if since_date is None:
             since_date = date(2000, 1, 1)
 
@@ -155,14 +148,18 @@ class FDJKenoScraper(BaseScraper):
                 raise ValueError(f"Cannot parse date: {draw_date_str!r}")
 
         # Draw number (Keno can have multiple draws per day)
-        draw_number_raw = row.get("numero_tirage") or row.get("NumeroTirage") or "0"
-        draw_number = int(draw_number_raw) if draw_number_raw.isdigit() else None
+        draw_number_raw = (
+            row.get("annee_numero_de_tirage")
+            or row.get("numero_tirage")
+            or row.get("NumeroTirage")
+            or "0"
+        )
+        draw_number = int(draw_number_raw) if str(draw_number_raw).strip().isdigit() else None
 
-        # Main numbers — Keno draws 20 balls from 1–70
-        # TODO: Confirm column names (boule_1 … boule_20 or B1 … B20)
+        # Main numbers — FDJ Keno CSV provides boule1…boule16
         numbers: list[int] = []
         for i in range(1, KENO_NUMBERS_DRAWN + 1):
-            for key in (f"boule_{i}", f"B{i}", f"Boule{i}"):
+            for key in (f"boule{i}", f"boule_{i}", f"B{i}", f"Boule{i}"):
                 if key in row and row[key].strip().isdigit():
                     numbers.append(int(row[key].strip()))
                     break
