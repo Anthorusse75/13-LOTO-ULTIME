@@ -17,7 +17,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
     // Default test credentials — override via env vars
     extraHTTPHeaders: {
-      "Accept": "application/json",
+      Accept: "application/json",
     },
   },
   projects: [

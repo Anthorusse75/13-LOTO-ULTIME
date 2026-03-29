@@ -39,7 +39,12 @@ function setOpenStored(key: string, val: boolean) {
   }
 }
 
-export default function PageIntro({ storageKey, description, terms, tip }: PageIntroProps) {
+export default function PageIntro({
+  storageKey,
+  description,
+  terms,
+  tip,
+}: PageIntroProps) {
   const [open, setOpen] = useState(() => isOpenStored(storageKey));
 
   function toggle() {
@@ -57,8 +62,7 @@ export default function PageIntro({ storageKey, description, terms, tip }: PageI
         aria-expanded={open}
       >
         <span className="flex items-center gap-2 text-sm font-medium text-accent-blue">
-          <HelpCircle size={14} />
-          À propos de cette page
+          <HelpCircle size={14} />À propos de cette page
         </span>
         {open ? (
           <ChevronUp size={14} className="text-accent-blue shrink-0" />
@@ -71,7 +75,9 @@ export default function PageIntro({ storageKey, description, terms, tip }: PageI
       {open && (
         <div className="px-4 py-4 space-y-4 bg-accent-blue/5 border-t border-accent-blue/15">
           {/* Description */}
-          <p className="text-sm text-text-primary leading-relaxed">{description}</p>
+          <p className="text-sm text-text-primary leading-relaxed">
+            {description}
+          </p>
 
           {/* Terms */}
           {terms && terms.length > 0 && (
@@ -85,10 +91,16 @@ export default function PageIntro({ storageKey, description, terms, tip }: PageI
                     key={t.term}
                     className="bg-surface rounded-md border border-border px-3 py-2 space-y-0.5"
                   >
-                    <p className="text-xs font-semibold text-text-primary">{t.term}</p>
-                    <p className="text-xs text-text-secondary">{t.definition}</p>
+                    <p className="text-xs font-semibold text-text-primary">
+                      {t.term}
+                    </p>
+                    <p className="text-xs text-text-secondary">
+                      {t.definition}
+                    </p>
                     {t.strength && (
-                      <p className="text-xs text-accent-green">✓ {t.strength}</p>
+                      <p className="text-xs text-accent-green">
+                        ✓ {t.strength}
+                      </p>
                     )}
                     {t.limit && (
                       <p className="text-xs text-accent-yellow">⚠ {t.limit}</p>
@@ -102,7 +114,10 @@ export default function PageIntro({ storageKey, description, terms, tip }: PageI
           {/* Tip */}
           {tip && (
             <div className="flex items-start gap-2 bg-accent-yellow/10 border border-accent-yellow/20 rounded-md px-3 py-2">
-              <Lightbulb size={13} className="text-accent-yellow mt-0.5 shrink-0" />
+              <Lightbulb
+                size={13}
+                className="text-accent-yellow mt-0.5 shrink-0"
+              />
               <p className="text-xs text-text-primary">{tip}</p>
             </div>
           )}

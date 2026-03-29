@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import { statisticsService } from "@/services/statisticsService";
 import { useGameStore } from "@/stores/gameStore";
+import { useQuery } from "@tanstack/react-query";
 
 export function useStatistics() {
   const gameId = useGameStore((s) => s.currentGameId);

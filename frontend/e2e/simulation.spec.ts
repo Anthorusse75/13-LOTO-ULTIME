@@ -15,46 +15,51 @@ authTest.describe("Simulation flow", () => {
     await expect(page.getByText(/comparaison/i)).toBeVisible();
   });
 
-  authTest("shows validation error for wrong number count", async ({ loggedInPage: page }) => {
-    await page.goto("/simulation");
+  authTest(
+    "shows validation error for wrong number count",
+    async ({ loggedInPage: page }) => {
+      await page.goto("/simulation");
 
-    const numbersInput = page.getByPlaceholder(/ex: 3, 12/i);
-    await numbersInput.fill("1, 2, 3"); // Too few numbers
-    await expect(page.getByText(/exactement|numéros entre/i)).toBeVisible();
-  });
+      const numbersInput = page.getByPlaceholder(/ex: 3, 12/i);
+      await numbersInput.fill("1, 2, 3"); // Too few numbers
+      await expect(page.getByText(/exactement|numéros entre/i)).toBeVisible();
+    },
+  );
 
-  authTest("runs Monte Carlo simulation and renders chart", async ({
-    loggedInPage: page,
-  }) => {
-    await page.goto("/simulation");
+  authTest(
+    "runs Monte Carlo simulation and renders chart",
+    async ({ loggedInPage: page }) => {
+      await page.goto("/simulation");
 
-    // EuroMillions requires 5 main numbers
-    const numbersInput = page.getByPlaceholder(/ex: 3, 12/i);
-    await numbersInput.fill("3, 12, 25, 34, 49");
+      // EuroMillions requires 5 main numbers
+      const numbersInput = page.getByPlaceholder(/ex: 3, 12/i);
+      await numbersInput.fill("3, 12, 25, 34, 49");
 
-    // Set simulations to low value for speed
-    const simInput = page.getByLabel(/nombre de simulations/i);
-    await simInput.fill("1000");
+      // Set simulations to low value for speed
+      const simInput = page.getByLabel(/nombre de simulations/i);
+      await simInput.fill("1000");
 
-    // Click Monte Carlo
-    await page.getByRole("button", { name: /lancer monte carlo/i }).click();
+      // Click Monte Carlo
+      await page.getByRole("button", { name: /lancer monte carlo/i }).click();
 
-    // Wait for results
-    await expect(page.getByText(/simulations|distribution/i)).toBeVisible({
-      timeout: 60_000,
-    });
-  });
+      // Wait for results
+      await expect(page.getByText(/simulations|distribution/i)).toBeVisible({
+        timeout: 60_000,
+      });
+    },
+  );
 
-  authTest("strategy comparison section shows two selectors", async ({
-    loggedInPage: page,
-  }) => {
-    await page.goto("/simulation");
-    await page.getByRole("button", { name: /comparaison/i }).click();
+  authTest(
+    "strategy comparison section shows two selectors",
+    async ({ loggedInPage: page }) => {
+      await page.goto("/simulation");
+      await page.getByRole("button", { name: /comparaison/i }).click();
 
-    await expect(page.getByText(/stratégie a/i)).toBeVisible();
-    await expect(page.getByText(/stratégie b/i)).toBeVisible();
-    await expect(page.getByText(/comparer deux stratégies/i)).toBeVisible();
-  });
+      await expect(page.getByText(/stratégie a/i)).toBeVisible();
+      await expect(page.getByText(/stratégie b/i)).toBeVisible();
+      await expect(page.getByText(/comparer deux stratégies/i)).toBeVisible();
+    },
+  );
 
   authTest("runs strategy comparison", async ({ loggedInPage: page }) => {
     await page.goto("/simulation");

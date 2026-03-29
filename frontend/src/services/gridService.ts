@@ -56,9 +56,7 @@ export const gridService = {
     gameId: number,
     gridId: number,
   ): Promise<GridResponse> => {
-    const { data } = await api.patch(
-      `/games/${gameId}/grids/${gridId}/played`,
-    );
+    const { data } = await api.patch(`/games/${gameId}/grids/${gridId}/played`);
     return data;
   },
 

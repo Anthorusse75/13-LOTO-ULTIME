@@ -118,12 +118,45 @@ export default function StatisticsPage() {
         description="La page Statistiques analyse l'historique complet des tirages selon 7 angles différents. Ces analyses identifient des patterns dans les données pour guider la génération de grilles."
         tip="Les onglets Fréquences et Écarts sont les plus utiles pour un débutant. Les onglets Bayésien et Graphe offrent des analyses plus avancées."
         terms={[
-          { term: "Fréquence", definition: "Nombre de fois qu'un numéro est apparu dans l'historique.", strength: "Facile à interpréter", limit: "Un numéro fréquent ne l'est pas forcément dans le futur" },
-          { term: "Écart (retard)", definition: "Nombre de tirages écoulés depuis la dernière apparition d'un numéro.", strength: "Identifie les numéros 'en retard'", limit: "Chaque tirage est indépendant : le retard ne crée pas d'obligation" },
-          { term: "Cooccurrence", definition: "Paires de numéros qui apparaissent souvent dans le même tirage.", strength: "Utile pour construire des combinaisons cohérentes" },
-          { term: "Tendance temporelle", definition: "Analyse de l'évolution des fréquences sur des fenêtres de temps récentes.", strength: "Détecte les numéros en montée ou en descente", limit: "Significatif seulement si R² > 0.5" },
-          { term: "Bayésien", definition: "Éstimation probabiliste enrichie par les données historiques. Retourne la probabilité que chaque numéro sorte.", strength: "Plus robuste que la simple fréquence" },
-          { term: "Graphe", definition: "Représentation réseau des co-occurrences. Les numéros centraux sont ceux qui 'jouent bien ensemble' avec beaucoup d'autres." },
+          {
+            term: "Fréquence",
+            definition:
+              "Nombre de fois qu'un numéro est apparu dans l'historique.",
+            strength: "Facile à interpréter",
+            limit: "Un numéro fréquent ne l'est pas forcément dans le futur",
+          },
+          {
+            term: "Écart (retard)",
+            definition:
+              "Nombre de tirages écoulés depuis la dernière apparition d'un numéro.",
+            strength: "Identifie les numéros 'en retard'",
+            limit:
+              "Chaque tirage est indépendant : le retard ne crée pas d'obligation",
+          },
+          {
+            term: "Cooccurrence",
+            definition:
+              "Paires de numéros qui apparaissent souvent dans le même tirage.",
+            strength: "Utile pour construire des combinaisons cohérentes",
+          },
+          {
+            term: "Tendance temporelle",
+            definition:
+              "Analyse de l'évolution des fréquences sur des fenêtres de temps récentes.",
+            strength: "Détecte les numéros en montée ou en descente",
+            limit: "Significatif seulement si R² > 0.5",
+          },
+          {
+            term: "Bayésien",
+            definition:
+              "Éstimation probabiliste enrichie par les données historiques. Retourne la probabilité que chaque numéro sorte.",
+            strength: "Plus robuste que la simple fréquence",
+          },
+          {
+            term: "Graphe",
+            definition:
+              "Représentation réseau des co-occurrences. Les numéros centraux sont ceux qui 'jouent bien ensemble' avec beaucoup d'autres.",
+          },
         ]}
       />
 

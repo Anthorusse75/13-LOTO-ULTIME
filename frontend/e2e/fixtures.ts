@@ -14,7 +14,9 @@ async function loginUser(page: Page) {
   await page.goto("/login");
   await page.getByLabel(/email/i).fill(E2E_EMAIL);
   await page.getByLabel(/mot de passe|password/i).fill(E2E_PASSWORD);
-  await page.getByRole("button", { name: /connexion|se connecter|login/i }).click();
+  await page
+    .getByRole("button", { name: /connexion|se connecter|login/i })
+    .click();
   await page.waitForURL("**/", { timeout: 10_000 });
 }
 

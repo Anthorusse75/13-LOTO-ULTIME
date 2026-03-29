@@ -52,10 +52,28 @@ export default function PortfolioPage() {
         description="Le Portefeuille génère un ensemble de grilles complémentaires pour un tirage donné. L'objectif est de maximiser la couverture de l'espace des numéros tout en gardant de bons scores individuels."
         tip="Une stratégie 'équilibrée' avec 7 grilles est un bon point de départ. Consultez la heatmap en bas pour visualiser votre couverture des numéros."
         terms={[
-          { term: "Couverture", definition: "Pourcentage de numéros du pool couverts par au moins une grille du portefeuille.", strength: "Réduit le risque de manquer un numéro gagnant" },
-          { term: "Diversité", definition: "Mesure à quel point les grilles du portefeuille sont différentes les unes des autres.", strength: "Évite de jouer les mêmes combinaisons en double" },
-          { term: "Stratégie équilibrée", definition: "Compromis entre score individuel des grilles et diversité de l'ensemble." },
-          { term: "Heatmap", definition: "Carte de chaleur montrant combien de grilles du portefeuille contiennent chaque numéro. Rouge = numéro très présent, bleu = peu présent." },
+          {
+            term: "Couverture",
+            definition:
+              "Pourcentage de numéros du pool couverts par au moins une grille du portefeuille.",
+            strength: "Réduit le risque de manquer un numéro gagnant",
+          },
+          {
+            term: "Diversité",
+            definition:
+              "Mesure à quel point les grilles du portefeuille sont différentes les unes des autres.",
+            strength: "Évite de jouer les mêmes combinaisons en double",
+          },
+          {
+            term: "Stratégie équilibrée",
+            definition:
+              "Compromis entre score individuel des grilles et diversité de l'ensemble.",
+          },
+          {
+            term: "Heatmap",
+            definition:
+              "Carte de chaleur montrant combien de grilles du portefeuille contiennent chaque numéro. Rouge = numéro très présent, bleu = peu présent.",
+          },
         ]}
       />
 

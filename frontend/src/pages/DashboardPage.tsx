@@ -48,10 +48,29 @@ export default function DashboardPage() {
         description="Le Dashboard est votre point d'entrée. Il résume en un coup d'œil l'état de votre activité : les derniers tirages officiels, vos meilleures grilles calculées et la santé du pipeline de calcul automatique."
         tip="Commencez par importer des tirages depuis la page Administration, puis lancez le calcul des statistiques pour alimenter toutes les analyses."
         terms={[
-          { term: "Tirage", definition: "Résultat officiel de la loterie : les numéros gagnants d'une date donnée." },
-          { term: "Score d'une grille", definition: "Note de 0 à 10 calculée par nos algorithmes. Plus il est élevé, plus la grille est statistiquement intéressante.", strength: "Permet de comparer objectivement des grilles", limit: "Ne prédit pas le résultat — la loterie reste aléatoire" },
-          { term: "Pipeline", definition: "Enchaînement automatique des étapes : import des tirages → calcul des statistiques → génération de grilles.", strength: "Se relance chaque nuit à 22h automatiquement" },
-          { term: "Fréquence", definition: "Nombre de fois qu'un numéro est apparu dans l'historique des tirages." },
+          {
+            term: "Tirage",
+            definition:
+              "Résultat officiel de la loterie : les numéros gagnants d'une date donnée.",
+          },
+          {
+            term: "Score d'une grille",
+            definition:
+              "Note de 0 à 10 calculée par nos algorithmes. Plus il est élevé, plus la grille est statistiquement intéressante.",
+            strength: "Permet de comparer objectivement des grilles",
+            limit: "Ne prédit pas le résultat — la loterie reste aléatoire",
+          },
+          {
+            term: "Pipeline",
+            definition:
+              "Enchaînement automatique des étapes : import des tirages → calcul des statistiques → génération de grilles.",
+            strength: "Se relance chaque nuit à 22h automatiquement",
+          },
+          {
+            term: "Fréquence",
+            definition:
+              "Nombre de fois qu'un numéro est apparu dans l'historique des tirages.",
+          },
         ]}
       />
 

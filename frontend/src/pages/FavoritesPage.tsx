@@ -1,13 +1,13 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import DrawBalls from "@/components/draws/DrawBalls";
 import PageIntro from "@/components/common/PageIntro";
+import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
 import { useFavoriteGrids, useToggleFavorite } from "@/hooks/useGrids";
+import type { GridResponse } from "@/types/grid";
 import { SCORE_CRITERIA } from "@/utils/constants";
 import { formatScore } from "@/utils/formatters";
 import { Heart, Star } from "lucide-react";
 import { useState } from "react";
-import type { GridResponse } from "@/types/grid";
 
 export default function FavoritesPage() {
   const { data: favorites = [], isLoading } = useFavoriteGrids();
@@ -25,8 +25,17 @@ export default function FavoritesPage() {
           description="Vos favoris sont les grilles que vous avez marquées d'un cœur depuis la page Grilles. Retrouvez-les ici pour les consulter, les comparer ou les exporter en PDF."
           tip="Ajoutez en favori les grilles avec les meilleurs scores avant chaque tirage, puis utilisez l'Historique pour suivre leurs performances dans le temps."
           terms={[
-            { term: "Score", definition: "Note de 0 à 10 résumant la qualité statistique de la grille selon 6 critères.", strength: "Plus c'est haut, mieux c'est" },
-            { term: "Critères du score", definition: "Fréquence + Écart + Cooccurrence + Structure + Équilibre - Pénalité de pattern." },
+            {
+              term: "Score",
+              definition:
+                "Note de 0 à 10 résumant la qualité statistique de la grille selon 6 critères.",
+              strength: "Plus c'est haut, mieux c'est",
+            },
+            {
+              term: "Critères du score",
+              definition:
+                "Fréquence + Écart + Cooccurrence + Structure + Équilibre - Pénalité de pattern.",
+            },
           ]}
         />
       </div>
@@ -35,11 +44,19 @@ export default function FavoritesPage() {
 
       {!isLoading && favorites.length === 0 && (
         <div className="bg-surface rounded-lg border border-border p-10 text-center">
-          <Heart size={36} className="mx-auto mb-3 text-text-secondary opacity-40" />
-          <p className="text-text-secondary text-sm">Aucune grille en favori.</p>
+          <Heart
+            size={36}
+            className="mx-auto mb-3 text-text-secondary opacity-40"
+          />
+          <p className="text-text-secondary text-sm">
+            Aucune grille en favori.
+          </p>
           <p className="text-text-secondary text-xs mt-1">
             Ajoutez des grilles depuis la page{" "}
-            <a href="/grids" className="text-accent-blue hover:underline">Grilles</a>.
+            <a href="/grids" className="text-accent-blue hover:underline">
+              Grilles
+            </a>
+            .
           </p>
         </div>
       )}
@@ -49,7 +66,8 @@ export default function FavoritesPage() {
           {/* List */}
           <div className="bg-surface rounded-lg border border-border p-4">
             <p className="text-xs text-text-secondary mb-3">
-              {favorites.length} grille{favorites.length > 1 ? "s" : ""} en favori
+              {favorites.length} grille{favorites.length > 1 ? "s" : ""} en
+              favori
             </p>
             <div className="space-y-2">
               {favorites.map((g, i) => (
@@ -62,9 +80,13 @@ export default function FavoritesPage() {
                       : "hover:bg-surface-hover"
                   }`}
                 >
-                  <span className="text-xs text-text-secondary w-5 shrink-0">#{i + 1}</span>
+                  <span className="text-xs text-text-secondary w-5 shrink-0">
+                    #{i + 1}
+                  </span>
                   <DrawBalls numbers={g.numbers} stars={g.stars} size="sm" />
-                  <span className="text-xs text-text-secondary ml-1 hidden sm:block">{g.method}</span>
+                  <span className="text-xs text-text-secondary ml-1 hidden sm:block">
+                    {g.method}
+                  </span>
                   <span className="ml-auto font-mono text-sm text-accent-green shrink-0">
                     {formatScore(g.total_score)}
                   </span>
@@ -77,7 +99,10 @@ export default function FavoritesPage() {
                     className="p-1 shrink-0 rounded hover:bg-surface-hover transition-colors"
                     aria-label="Retirer des favoris"
                   >
-                    <Heart size={15} className="fill-accent-red text-accent-red" />
+                    <Heart
+                      size={15}
+                      className="fill-accent-red text-accent-red"
+                    />
                   </button>
                 </div>
               ))}
@@ -96,10 +121,18 @@ export default function FavoritesPage() {
               <div className="space-y-4">
                 <div>
                   <p className="text-xs text-text-secondary mb-2">
-                    Score : <span className="text-accent-green font-mono">{formatScore(selected.total_score)}/10</span>
-                    {" · "}Méthode : <span className="font-mono">{selected.method}</span>
+                    Score :{" "}
+                    <span className="text-accent-green font-mono">
+                      {formatScore(selected.total_score)}/10
+                    </span>
+                    {" · "}Méthode :{" "}
+                    <span className="font-mono">{selected.method}</span>
                   </p>
-                  <DrawBalls numbers={selected.numbers} stars={selected.stars} size="md" />
+                  <DrawBalls
+                    numbers={selected.numbers}
+                    stars={selected.stars}
+                    size="md"
+                  />
                 </div>
 
                 <div className="space-y-2">

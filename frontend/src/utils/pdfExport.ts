@@ -2,8 +2,8 @@
  * PDF export utilities using jsPDF.
  * Supports exporting a single grid and a full analysis report.
  */
+import type { GridScoreResponse } from "@/types/grid";
 import jsPDF from "jspdf";
-import type { GridResponse, GridScoreResponse } from "@/types/grid";
 
 const ACCENT_BLUE = [59, 130, 246] as const; // Tailwind blue-500
 const ACCENT_GREEN = [34, 197, 94] as const; // Tailwind green-500
@@ -26,7 +26,13 @@ function addHeader(doc: jsPDF, title: string) {
   doc.text(new Date().toLocaleDateString("fr-FR"), 175, 12);
 }
 
-function addBall(doc: jsPDF, x: number, y: number, num: number, color: readonly [number, number, number]) {
+function addBall(
+  doc: jsPDF,
+  x: number,
+  y: number,
+  num: number,
+  color: readonly [number, number, number],
+) {
   doc.setFillColor(...color);
   doc.circle(x, y, 5, "F");
   doc.setTextColor(255, 255, 255);
@@ -37,7 +43,12 @@ function addBall(doc: jsPDF, x: number, y: number, num: number, color: readonly 
   doc.text(text, x - w / 2, y + 2.5);
 }
 
-function drawNumbers(doc: jsPDF, numbers: number[], stars: number[] | null | undefined, y: number) {
+function drawNumbers(
+  doc: jsPDF,
+  numbers: number[],
+  stars: number[] | null | undefined,
+  y: number,
+) {
   let x = 15;
   for (const n of numbers) {
     addBall(doc, x, y, n, ACCENT_BLUE);
@@ -52,7 +63,13 @@ function drawNumbers(doc: jsPDF, numbers: number[], stars: number[] | null | und
   }
 }
 
-function drawScoreBar(doc: jsPDF, label: string, value: number, y: number, barWidth = 80) {
+function drawScoreBar(
+  doc: jsPDF,
+  label: string,
+  value: number,
+  y: number,
+  barWidth = 80,
+) {
   doc.setTextColor(...GRAY_700);
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
@@ -64,7 +81,12 @@ function drawScoreBar(doc: jsPDF, label: string, value: number, y: number, barWi
 
   // Filled bar
   const filled = Math.max(0, Math.min(1, value)) * barWidth;
-  const r = value >= 0.7 ? ACCENT_GREEN : value >= 0.4 ? [234, 179, 8] as const : [239, 68, 68] as const;
+  const r =
+    value >= 0.7
+      ? ACCENT_GREEN
+      : value >= 0.4
+        ? ([234, 179, 8] as const)
+        : ([239, 68, 68] as const);
   doc.setFillColor(...r);
   if (filled > 0) doc.roundedRect(60, y - 4, filled, 5, 1, 1, "F");
 
@@ -72,7 +94,11 @@ function drawScoreBar(doc: jsPDF, label: string, value: number, y: number, barWi
   doc.text(`${(value * 10).toFixed(1)}`, 145, y);
 }
 
-export function exportGridPDF(grid: GridScoreResponse, gameName = "Jeu", method = "auto") {
+export function exportGridPDF(
+  grid: GridScoreResponse,
+  gameName = "Jeu",
+  method = "auto",
+) {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
   addHeader(doc, `Grille — ${gameName}`);
@@ -113,7 +139,8 @@ export function exportGridPDF(grid: GridScoreResponse, gameName = "Jeu", method 
 
   let y = 90;
   for (const c of criteria) {
-    const val = grid.score_breakdown[c.key as keyof typeof grid.score_breakdown] ?? 0;
+    const val =
+      grid.score_breakdown[c.key as keyof typeof grid.score_breakdown] ?? 0;
     drawScoreBar(doc, c.label, val, y);
     y += 10;
   }
@@ -123,8 +150,16 @@ export function exportGridPDF(grid: GridScoreResponse, gameName = "Jeu", method 
   doc.rect(0, 278, 210, 19, "F");
   doc.setFontSize(7);
   doc.setTextColor(...GRAY_400);
-  doc.text("Généré par Loto Ultime — outil d'aide statistique uniquement. Aucune garantie de gain.", 15, 285);
-  doc.text("Le jeu excessif peut être dangereux. Jouez avec modération.", 15, 290);
+  doc.text(
+    "Généré par Loto Ultime — outil d'aide statistique uniquement. Aucune garantie de gain.",
+    15,
+    285,
+  );
+  doc.text(
+    "Le jeu excessif peut être dangereux. Jouez avec modération.",
+    15,
+    290,
+  );
 
   doc.save(`grille-${grid.numbers.join("-")}.pdf`);
 }
@@ -136,7 +171,12 @@ interface ReportData {
   computationMs: number;
 }
 
-export function exportReportPDF({ gameName, grids, method, computationMs }: ReportData) {
+export function exportReportPDF({
+  gameName,
+  grids,
+  method,
+  computationMs,
+}: ReportData) {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
   addHeader(doc, `Rapport d'analyse — ${gameName}`);
@@ -149,8 +189,16 @@ export function exportReportPDF({ gameName, grids, method, computationMs }: Repo
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...GRAY_400);
-  doc.text(`Méthode : ${method}  ·  Grilles analysées : ${grids.length}  ·  Temps : ${computationMs.toFixed(0)} ms`, 15, 38);
-  doc.text(`Date : ${new Date().toLocaleDateString("fr-FR")} ${new Date().toLocaleTimeString("fr-FR")}`, 15, 44);
+  doc.text(
+    `Méthode : ${method}  ·  Grilles analysées : ${grids.length}  ·  Temps : ${computationMs.toFixed(0)} ms`,
+    15,
+    38,
+  );
+  doc.text(
+    `Date : ${new Date().toLocaleDateString("fr-FR")} ${new Date().toLocaleTimeString("fr-FR")}`,
+    15,
+    44,
+  );
 
   // Summary statistics
   const scores = grids.map((g) => g.total_score);
@@ -193,7 +241,10 @@ export function exportReportPDF({ gameName, grids, method, computationMs }: Repo
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...GRAY_700);
     doc.text(String(i + 1), 13, y);
-    const nums = [...g.numbers.map(String), ...(g.stars ? g.stars.map((s) => `★${s}`) : [])].join("  ");
+    const nums = [
+      ...g.numbers.map(String),
+      ...(g.stars ? g.stars.map((s) => `★${s}`) : []),
+    ].join("  ");
     doc.text(nums, 25, y);
     doc.setTextColor(...ACCENT_GREEN);
     doc.text(`${(g.total_score * 10).toFixed(1)}`, 166, y);
@@ -214,8 +265,16 @@ export function exportReportPDF({ gameName, grids, method, computationMs }: Repo
   doc.rect(0, 278, 210, 19, "F");
   doc.setFontSize(7);
   doc.setTextColor(...GRAY_400);
-  doc.text("Généré par Loto Ultime — outil d'aide statistique uniquement. Aucune garantie de gain.", 15, 285);
-  doc.text("Le jeu excessif peut être dangereux. Jouez avec modération.", 15, 290);
+  doc.text(
+    "Généré par Loto Ultime — outil d'aide statistique uniquement. Aucune garantie de gain.",
+    15,
+    285,
+  );
+  doc.text(
+    "Le jeu excessif peut être dangereux. Jouez avec modération.",
+    15,
+    290,
+  );
 
   doc.save(`rapport-analyse-${new Date().toISOString().slice(0, 10)}.pdf`);
 }

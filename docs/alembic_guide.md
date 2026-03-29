@@ -113,14 +113,14 @@ alembic current   # Doit afficher la nouvelle révision avec "(head)"
 
 ## Bonnes pratiques
 
-| Règle | Raison |
-|-------|--------|
-| **Toujours relire** le fichier généré avant `upgrade head` | L'autogénération peut générer des DROP TABLE par erreur |
-| **Ne jamais modifier** une migration déjà appliquée en production | Cela casse la chaîne de révisions |
-| **Inclure un `downgrade()`** fonctionnel | Permet de revenir en arrière proprement |
-| **Nommer clairement** la révision | Ex: `add_played_at_to_scored_grids` (pas `fix`) |
-| **Valider le schema** après migration | Via `alembic current` et test unitaire |
-| **Committer** la migration avec le code | Toujours dans le même commit que la modification du modèle |
+| Règle                                                             | Raison                                                     |
+| ----------------------------------------------------------------- | ---------------------------------------------------------- |
+| **Toujours relire** le fichier généré avant `upgrade head`        | L'autogénération peut générer des DROP TABLE par erreur    |
+| **Ne jamais modifier** une migration déjà appliquée en production | Cela casse la chaîne de révisions                          |
+| **Inclure un `downgrade()`** fonctionnel                          | Permet de revenir en arrière proprement                    |
+| **Nommer clairement** la révision                                 | Ex: `add_played_at_to_scored_grids` (pas `fix`)            |
+| **Valider le schema** après migration                             | Via `alembic current` et test unitaire                     |
+| **Committer** la migration avec le code                           | Toujours dans le même commit que la modification du modèle |
 
 ---
 
@@ -170,9 +170,9 @@ alembic upgrade head
 
 ## Révisions actuelles
 
-| Révision | Description | Date |
-|----------|-------------|------|
+| Révision       | Description                                                              | Date    |
+| -------------- | ------------------------------------------------------------------------ | ------- |
 | `17f0eca1a355` | Schéma initial (users, games, draws, scored_grids, statistics_snapshots) | initial |
-| `6773450d8c55` | Ajout de la table `statistics_snapshots` complète | v1.1 |
-| `a3b4c5d6e7f8` | Ajout de `is_favorite` + `star_score` sur `scored_grids` | v1.2 |
-| `b1c2d3e4f5a6` | Ajout de `is_played` + `played_at` sur `scored_grids` | v1.3 |
+| `6773450d8c55` | Ajout de la table `statistics_snapshots` complète                        | v1.1    |
+| `a3b4c5d6e7f8` | Ajout de `is_favorite` + `star_score` sur `scored_grids`                 | v1.2    |
+| `b1c2d3e4f5a6` | Ajout de `is_played` + `played_at` sur `scored_grids`                    | v1.3    |

@@ -16,15 +16,22 @@ export const statisticsService = {
     return data;
   },
 
-  getFrequencies: async (gameId: number, lastN?: number): Promise<FrequencyItem[]> => {
+  getFrequencies: async (
+    gameId: number,
+    lastN?: number,
+  ): Promise<FrequencyItem[]> => {
     const params = lastN ? { last_n: lastN } : {};
-    const { data } = await api.get(`/games/${gameId}/statistics/frequencies`, { params });
+    const { data } = await api.get(`/games/${gameId}/statistics/frequencies`, {
+      params,
+    });
     return data;
   },
 
   getGaps: async (gameId: number, lastN?: number): Promise<GapItem[]> => {
     const params = lastN ? { last_n: lastN } : {};
-    const { data } = await api.get(`/games/${gameId}/statistics/gaps`, { params });
+    const { data } = await api.get(`/games/${gameId}/statistics/gaps`, {
+      params,
+    });
     return data;
   },
 

@@ -128,28 +128,28 @@ flowchart TD
 
 ## Moteurs statistiques — Détail
 
-| Moteur | Entrée | Sortie | Algorithme |
-|--------|--------|--------|------------|
-| `FrequencyEngine` | matrice N×K | `{num: {count, relative}}` | comptage + normalisation |
-| `GapEngine` | matrice N×K | `{num: {current_gap, avg_gap, max_gap}}` | scan inverse |
-| `CooccurrenceEngine` | matrice N×K | matrice Co-occurrence K×K | co-occurrence binaire |
-| `TemporalEngine` | matrice N×K | tendances sur fenêtres 10/30/100 | fréquences glissantes |
-| `DistributionEngine` | matrice N×K | entropie, score d'uniformité | chi², entropie de Shannon |
-| `BayesianEngine` | matrice N×K | priors Beta-Binomial par numéro | mise à jour bayésienne |
-| `GraphEngine` | matrice N×K | centralité, communautés | NetworkX + Louvain |
+| Moteur               | Entrée      | Sortie                                   | Algorithme                |
+| -------------------- | ----------- | ---------------------------------------- | ------------------------- |
+| `FrequencyEngine`    | matrice N×K | `{num: {count, relative}}`               | comptage + normalisation  |
+| `GapEngine`          | matrice N×K | `{num: {current_gap, avg_gap, max_gap}}` | scan inverse              |
+| `CooccurrenceEngine` | matrice N×K | matrice Co-occurrence K×K                | co-occurrence binaire     |
+| `TemporalEngine`     | matrice N×K | tendances sur fenêtres 10/30/100         | fréquences glissantes     |
+| `DistributionEngine` | matrice N×K | entropie, score d'uniformité             | chi², entropie de Shannon |
+| `BayesianEngine`     | matrice N×K | priors Beta-Binomial par numéro          | mise à jour bayésienne    |
+| `GraphEngine`        | matrice N×K | centralité, communautés                  | NetworkX + Louvain        |
 
 ---
 
 ## Optimiseurs — Comparaison
 
-| Méthode | Complexité | Points forts | Cas d'usage |
-|---------|------------|--------------|-------------|
-| `genetic` | O(N·G·P) | Explore l'espace global | Grilles très optimisées |
-| `bayesian` | O(N·iter) | Utilise les priors statistiques | Favorise les numéros historiques |
-| `simulated_annealing` | O(N·T) | Échappe aux optima locaux | Équilibre exploration/exploitation |
-| `mcts` | O(N·sqrt) | Arbre de décision stochastique | Grandes plages de numéros |
-| `random` | O(1) | Rapide, baseline | Référence de comparaison |
-| `auto` | dépend du profil | Sélection automatique | Usage général |
+| Méthode               | Complexité       | Points forts                    | Cas d'usage                        |
+| --------------------- | ---------------- | ------------------------------- | ---------------------------------- |
+| `genetic`             | O(N·G·P)         | Explore l'espace global         | Grilles très optimisées            |
+| `bayesian`            | O(N·iter)        | Utilise les priors statistiques | Favorise les numéros historiques   |
+| `simulated_annealing` | O(N·T)           | Échappe aux optima locaux       | Équilibre exploration/exploitation |
+| `mcts`                | O(N·sqrt)        | Arbre de décision stochastique  | Grandes plages de numéros          |
+| `random`              | O(1)             | Rapide, baseline                | Référence de comparaison           |
+| `auto`                | dépend du profil | Sélection automatique           | Usage général                      |
 
 ---
 

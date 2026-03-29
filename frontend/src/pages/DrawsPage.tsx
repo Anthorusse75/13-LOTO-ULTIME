@@ -1,6 +1,6 @@
 import InfoTooltip from "@/components/common/InfoTooltip";
-import PageIntro from "@/components/common/PageIntro";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
 import { useDraws } from "@/hooks/useDraws";
 import { formatDate } from "@/utils/formatters";
@@ -24,9 +24,21 @@ export default function DrawsPage() {
         description="Cette page affiche l'ensemble des tirages officiels importés depuis le site de la FDJ. C'est la source de données brute qui alimente tous les calculs statistiques."
         tip="Plus vous avez de tirages historiques, plus les statistiques sont fiables. Utilisez Administration > Importer pour récupérer les derniers tirages."
         terms={[
-          { term: "Numéro de tirage", definition: "Identifiant officiel du tirage attribué par la FDJ. Permet de retrouver le tirage sur le site officiel." },
-          { term: "Étoiles", definition: "Pour EuroMillions uniquement : 2 numéros supplémentaires tirés dans un pool de 1 à 12." },
-          { term: "Numéro chance", definition: "Pour le Loto FDJ : 1 numéro complémentaire tiré dans un pool de 1 à 10." },
+          {
+            term: "Numéro de tirage",
+            definition:
+              "Identifiant officiel du tirage attribué par la FDJ. Permet de retrouver le tirage sur le site officiel.",
+          },
+          {
+            term: "Étoiles",
+            definition:
+              "Pour EuroMillions uniquement : 2 numéros supplémentaires tirés dans un pool de 1 à 12.",
+          },
+          {
+            term: "Numéro chance",
+            definition:
+              "Pour le Loto FDJ : 1 numéro complémentaire tiré dans un pool de 1 à 10.",
+          },
         ]}
       />
 

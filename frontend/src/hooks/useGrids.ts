@@ -69,7 +69,11 @@ export function useTogglePlayed() {
   return useMutation({
     mutationFn: (gridId: number) => gridService.togglePlayed(gameId!, gridId),
     onSuccess: (data) => {
-      toast.success(data.is_played ? "Grille marquée comme jouée" : "Grille marquée comme non jouée");
+      toast.success(
+        data.is_played
+          ? "Grille marquée comme jouée"
+          : "Grille marquée comme non jouée",
+      );
       queryClient.invalidateQueries({ queryKey: ["grids", gameId] });
     },
   });

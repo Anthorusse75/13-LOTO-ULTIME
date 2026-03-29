@@ -1,13 +1,17 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import DrawBalls from "@/components/draws/DrawBalls";
 import PageIntro from "@/components/common/PageIntro";
-import { useFavoriteGrids, usePlayedGrids, useTogglePlayed } from "@/hooks/useGrids";
+import DrawBalls from "@/components/draws/DrawBalls";
+import {
+  useFavoriteGrids,
+  usePlayedGrids,
+  useTogglePlayed,
+} from "@/hooks/useGrids";
 import { drawService } from "@/services/drawService";
 import { useGameStore } from "@/stores/gameStore";
 import type { Draw } from "@/types/draw";
 import type { GridResponse } from "@/types/grid";
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2, Trophy, TrendingUp } from "lucide-react";
+import { CheckCircle2, TrendingUp, Trophy } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   CartesianGrid,
@@ -26,13 +30,20 @@ function matchCount(gridNumbers: number[], drawNumbers: number[]): number {
   return gridNumbers.filter((n) => s.has(n)).length;
 }
 
-function starMatchCount(gridStars: number[] | null, drawStars: number[] | null): number {
+function starMatchCount(
+  gridStars: number[] | null,
+  drawStars: number[] | null,
+): number {
   if (!gridStars || !drawStars) return 0;
   const s = new Set(drawStars);
   return gridStars.filter((n) => s.has(n)).length;
 }
 
-function getResultLabel(matches: number, total: number, starMatches: number): string {
+function getResultLabel(
+  matches: number,
+  total: number,
+  starMatches: number,
+): string {
   const pct = matches / total;
   if (pct >= 1) return "🏆 Jackpot!";
   if (pct >= 0.8) return "⭐ Excellent";
@@ -53,7 +64,8 @@ export default function HistoryPage() {
 
   const gameId = useGameStore((s) => s.currentGameId);
   const { data: playedGrids = [], isLoading: loadingPlayed } = usePlayedGrids();
-  const { data: favoriteGrids = [], isLoading: loadingFavorites } = useFavoriteGrids();
+  const { data: favoriteGrids = [], isLoading: loadingFavorites } =
+    useFavoriteGrids();
   const togglePlayed = useTogglePlayed();
 
   const { data: recentDraws = [] } = useQuery({
@@ -83,7 +95,13 @@ export default function HistoryPage() {
         }
       }
 
-      return { ...grid, bestDraw, bestMatch, bestStarMatch, numbersDrawn: grid.numbers.length };
+      return {
+        ...grid,
+        bestDraw,
+        bestMatch,
+        bestStarMatch,
+        numbersDrawn: grid.numbers.length,
+      };
     });
   }, [gridsToShow, recentDraws]);
 
@@ -93,7 +111,10 @@ export default function HistoryPage() {
 
     return playedGrids
       .filter((g) => g.played_at)
-      .sort((a, b) => new Date(a.played_at!).getTime() - new Date(b.played_at!).getTime())
+      .sort(
+        (a, b) =>
+          new Date(a.played_at!).getTime() - new Date(b.played_at!).getTime(),
+      )
       .map((grid, idx) => {
         let bestMatch = 0;
         for (const draw of recentDraws) {
@@ -105,7 +126,9 @@ export default function HistoryPage() {
           label: `Grille ${idx + 1}`,
           score: Math.round(grid.total_score * 100),
           matchPct: Math.round(pct),
-          date: grid.played_at ? new Date(grid.played_at).toLocaleDateString("fr-FR") : "",
+          date: grid.played_at
+            ? new Date(grid.played_at).toLocaleDateString("fr-FR")
+            : "",
         };
       });
   }, [playedGrids, recentDraws]);
@@ -119,18 +142,41 @@ export default function HistoryPage() {
         description="La page Historique vous permet de suivre vos grilles jouées et de les comparer aux tirages réels. C'est votre tableau de bord personnel pour suivre vos performances dans le temps."
         tip="Marquez vos grilles comme 'jouées' depuis la page Grilles, puis revenez ici après le tirage pour voir combien de numéros correspondaient."
         terms={[
-          { term: "Grille jouée", definition: "Une grille que vous avez marquée comme ayant été jouée à un tirage réel." },
-          { term: "Meilleure correspondance", definition: "Nombre maximum de numéros communs entre votre grille et un tirage réel récent." },
-          { term: "Performance cumulée", definition: "Évolution de votre score moyen au fil du temps. Permet de voir si vos sélections de grilles s'améliorent.", strength: "Identifie les tendances sur le long terme" },
+          {
+            term: "Grille jouée",
+            definition:
+              "Une grille que vous avez marquée comme ayant été jouée à un tirage réel.",
+          },
+          {
+            term: "Meilleure correspondance",
+            definition:
+              "Nombre maximum de numéros communs entre votre grille et un tirage réel récent.",
+          },
+          {
+            term: "Performance cumulée",
+            definition:
+              "Évolution de votre score moyen au fil du temps. Permet de voir si vos sélections de grilles s'améliorent.",
+            strength: "Identifie les tendances sur le long terme",
+          },
         ]}
       />
 
       {/* Tabs */}
       <div className="flex gap-1 border-b border-border pb-px">
-        {([
-          { key: "played" as HistoryTab, label: "Grilles jouées", count: playedGrids.length },
-          { key: "favorites" as HistoryTab, label: "Favoris", count: favoriteGrids.length },
-        ] as const).map((t) => (
+        {(
+          [
+            {
+              key: "played" as HistoryTab,
+              label: "Grilles jouées",
+              count: playedGrids.length,
+            },
+            {
+              key: "favorites" as HistoryTab,
+              label: "Favoris",
+              count: favoriteGrids.length,
+            },
+          ] as const
+        ).map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
@@ -169,9 +215,18 @@ export default function HistoryPage() {
           </h2>
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-              <XAxis dataKey="date" tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }} />
-              <YAxis tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }} unit="%" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="var(--color-border)"
+              />
+              <XAxis
+                dataKey="date"
+                tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
+              />
+              <YAxis
+                tick={{ fontSize: 11, fill: "var(--color-text-secondary)" }}
+                unit="%"
+              />
               <Tooltip
                 contentStyle={{
                   background: "var(--color-surface)",
@@ -203,7 +258,8 @@ export default function HistoryPage() {
             </LineChart>
           </ResponsiveContainer>
           <p className="text-xs text-text-secondary mt-2 text-center">
-            Bleu : score (/100) · Vert : meilleure correspondance avec les tirages réels
+            Bleu : score (/100) · Vert : meilleure correspondance avec les
+            tirages réels
           </p>
         </div>
       )}
@@ -218,12 +274,26 @@ export default function HistoryPage() {
             >
               <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div className="space-y-2">
-                  <DrawBalls numbers={grid.numbers} stars={grid.stars ?? undefined} size="sm" />
+                  <DrawBalls
+                    numbers={grid.numbers}
+                    stars={grid.stars ?? undefined}
+                    size="sm"
+                  />
                   <div className="flex items-center gap-3 text-xs text-text-secondary flex-wrap">
-                    <span>Score : <span className="text-accent-blue font-mono">{(grid.total_score * 100).toFixed(0)}/100</span></span>
-                    <span>Méthode : <span className="font-mono">{grid.method}</span></span>
+                    <span>
+                      Score :{" "}
+                      <span className="text-accent-blue font-mono">
+                        {(grid.total_score * 100).toFixed(0)}/100
+                      </span>
+                    </span>
+                    <span>
+                      Méthode : <span className="font-mono">{grid.method}</span>
+                    </span>
                     {grid.played_at && (
-                      <span>Joué le : {new Date(grid.played_at).toLocaleDateString("fr-FR")}</span>
+                      <span>
+                        Joué le :{" "}
+                        {new Date(grid.played_at).toLocaleDateString("fr-FR")}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -249,10 +319,16 @@ export default function HistoryPage() {
                     <p className="text-xs font-semibold flex items-center gap-1">
                       <Trophy size={12} className="text-accent-yellow" />
                       Meilleure correspondance — tirage du{" "}
-                      {new Date(grid.bestDraw.draw_date).toLocaleDateString("fr-FR")}
+                      {new Date(grid.bestDraw.draw_date).toLocaleDateString(
+                        "fr-FR",
+                      )}
                     </p>
                     <span className="text-xs font-semibold">
-                      {getResultLabel(grid.bestMatch, grid.numbersDrawn, grid.bestStarMatch)}
+                      {getResultLabel(
+                        grid.bestMatch,
+                        grid.numbersDrawn,
+                        grid.bestStarMatch,
+                      )}
                     </span>
                   </div>
                   <DrawBalls
@@ -263,7 +339,8 @@ export default function HistoryPage() {
                   />
                   <p className="text-xs text-text-secondary">
                     {grid.bestMatch}/{grid.numbersDrawn} numéros correspondants
-                    {grid.bestStarMatch > 0 && ` + ${grid.bestStarMatch} étoiles`}
+                    {grid.bestStarMatch > 0 &&
+                      ` + ${grid.bestStarMatch} étoiles`}
                   </p>
                 </div>
               )}
@@ -274,5 +351,3 @@ export default function HistoryPage() {
     </div>
   );
 }
-
-
