@@ -6,10 +6,15 @@ import DistributionTab from "@/components/statistics/DistributionTab";
 import FrequencyTab from "@/components/statistics/FrequencyTab";
 import GapTab from "@/components/statistics/GapTab";
 import GraphTab from "@/components/statistics/GraphTab";
+import StarsTab from "@/components/statistics/StarsTab";
 import TemporalTab from "@/components/statistics/TemporalTab";
-import { useState } from "react";
+import { useStatistics } from "@/hooks/useStatistics";
+import { gameService } from "@/services/gameService";
+import { useGameStore } from "@/stores/gameStore";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 
-const TABS = [
+const BASE_TABS = [
   {
     key: "frequencies",
     label: "Fréquences",
@@ -49,7 +54,8 @@ const TABS = [
   },
 ] as const;
 
-type TabKey = (typeof TABS)[number]["key"];
+type BaseTabKey = (typeof BASE_TABS)[number]["key"];
+type TabKey = BaseTabKey | "stars";
 
 const PERIOD_OPTIONS = [
   { value: undefined, label: "Tous les tirages" },
@@ -65,6 +71,38 @@ const PERIOD_SUPPORTED_TABS: TabKey[] = ["frequencies", "gaps"];
 export default function StatisticsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("frequencies");
   const [lastN, setLastN] = useState<PeriodValue>(undefined);
+
+  const slug = useGameStore((s) => s.currentGameSlug);
+  const { data: game } = useQuery({
+    queryKey: ["game", slug],
+    queryFn: () => gameService.getBySlug(slug!),
+    enabled: !!slug,
+  });
+  const { data: stats } = useStatistics();
+
+  const hasStars = !!(
+    stats?.star_frequencies && stats.star_frequencies.length > 0
+  );
+  const starTabLabel = game?.star_name
+    ? game.star_name.charAt(0).toUpperCase() + game.star_name.slice(1) + "s"
+    : "Étoiles";
+
+  const tabs = useMemo(() => {
+    const base = BASE_TABS as unknown as Array<{
+      key: TabKey;
+      label: string;
+      tooltip: string;
+    }>;
+    if (!hasStars) return base;
+    return [
+      ...base,
+      {
+        key: "stars" as TabKey,
+        label: starTabLabel,
+        tooltip: `Fréquences et écarts des ${starTabLabel.toLowerCase()} (numéros complémentaires).`,
+      },
+    ];
+  }, [hasStars, starTabLabel]);
 
   const showPeriodSelector = PERIOD_SUPPORTED_TABS.includes(activeTab);
 
@@ -84,6 +122,8 @@ export default function StatisticsPage() {
         return <BayesianTab />;
       case "graph":
         return <GraphTab />;
+      case "stars":
+        return <StarsTab />;
     }
   }
 
@@ -162,7 +202,7 @@ export default function StatisticsPage() {
 
       {/* Tab bar */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-px">
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
