@@ -1,8 +1,6 @@
 """Tests for multi-lottery support — ensure game_id dispatches correctly."""
 
-import pytest
-
-from app.core.game_definitions import GameConfig, load_all_game_configs
+from app.core.game_definitions import load_all_game_configs
 
 
 class TestLoadAllGameConfigs:

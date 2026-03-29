@@ -161,11 +161,14 @@ def create_app() -> FastAPI:
             # Normalize dynamic path segments to avoid label cardinality explosion
             # e.g. /api/v1/games/123/draws → /api/v1/games/{id}/draws
             import re
+
             norm_path = re.sub(r"/\d+", "/{id}", path)
             method = request.method
             status = str(response.status_code)
             http_requests_total.labels(method=method, endpoint=norm_path, status_code=status).inc()
-            http_request_duration_seconds.labels(method=method, endpoint=norm_path).observe(duration)
+            http_request_duration_seconds.labels(method=method, endpoint=norm_path).observe(
+                duration
+            )
 
         return response
 
@@ -223,6 +226,7 @@ def create_app() -> FastAPI:
     async def health_check():
         import shutil
         from datetime import UTC, datetime
+
         from sqlalchemy import func, select, text
 
         from app.models.base import get_session
@@ -256,17 +260,13 @@ def create_app() -> FastAPI:
                 grid_count = result.scalar() or 0
 
                 # Latest draw date across all games
-                result = await session.execute(
-                    select(func.max(Draw.draw_date))
-                )
+                result = await session.execute(select(func.max(Draw.draw_date)))
                 latest_draw = result.scalar()
                 if latest_draw:
                     last_draw_date = str(latest_draw)
 
                 # Latest stats snapshot
-                result = await session.execute(
-                    select(func.max(StatisticsSnapshot.computed_at))
-                )
+                result = await session.execute(select(func.max(StatisticsSnapshot.computed_at)))
                 latest_stats = result.scalar()
                 if latest_stats:
                     last_stats_date = str(latest_stats)
@@ -345,7 +345,6 @@ def create_app() -> FastAPI:
             },
             "disk": disk_info,
         }
-
 
     # ── Prometheus /metrics endpoint ──
     from app.core.metrics import metrics_app

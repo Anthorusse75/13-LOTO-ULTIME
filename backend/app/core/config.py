@@ -26,10 +26,10 @@ class Settings(BaseSettings):
     # Sécurité — RS256 (asymétrique, multi-service)
     # Fournissez le contenu PEM ou le chemin vers les fichiers.
     # Si JWT_ALGORITHM=RS256, ces deux variables sont obligatoires.
-    JWT_PRIVATE_KEY: str | None = None   # Contenu PEM de la clé privée RSA
-    JWT_PUBLIC_KEY: str | None = None    # Contenu PEM de la clé publique RSA
+    JWT_PRIVATE_KEY: str | None = None  # Contenu PEM de la clé privée RSA
+    JWT_PUBLIC_KEY: str | None = None  # Contenu PEM de la clé publique RSA
     JWT_PRIVATE_KEY_PATH: str | None = None  # Chemin fichier alternative
-    JWT_PUBLIC_KEY_PATH: str | None = None   # Chemin fichier alternative
+    JWT_PUBLIC_KEY_PATH: str | None = None  # Chemin fichier alternative
 
     # Admin initial
     ADMIN_EMAIL: str = "admin@loto-ultime.local"

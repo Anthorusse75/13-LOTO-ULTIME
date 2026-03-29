@@ -41,7 +41,7 @@ export default function NumberHeatmap({
 
   const numbers = Array.from(
     { length: maxNumber - minNumber + 1 },
-    (_, i) => i + minNumber
+    (_, i) => i + minNumber,
   );
 
   return (
@@ -57,7 +57,11 @@ export default function NumberHeatmap({
                 ? `${getColor(val)} text-white`
                 : "bg-surface text-text-secondary"
             } hover:ring-1 hover:ring-accent-blue`}
-            aria-label={val !== undefined ? `Numéro ${n} : ${val.toFixed(3)}` : `Numéro ${n} : N/A`}
+            aria-label={
+              val !== undefined
+                ? `Numéro ${n} : ${val.toFixed(3)}`
+                : `Numéro ${n} : N/A`
+            }
             aria-pressed={undefined}
           >
             {n}

@@ -5,8 +5,6 @@ import pytest
 from app.core.game_definitions import GameConfig, load_all_game_configs
 from app.plugins import LotteryPlugin, PluginRegistry, get_registry, register_plugin
 from app.plugins.base import LotteryPlugin as BaseLotteryPlugin
-from app.plugins.registry import _registry as _global_registry
-
 
 # ── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -115,9 +113,7 @@ class TestPluginRegistry:
         assert "test-lottery" in configs
         assert configs["test-lottery"].numbers_pool == 45
 
-    def test_scraper_map_only_includes_games_with_scrapers(
-        self, fresh_registry: PluginRegistry
-    ):
+    def test_scraper_map_only_includes_games_with_scrapers(self, fresh_registry: PluginRegistry):
         fresh_registry.register(_SimpleLotteryPlugin)
         fresh_registry.register(_WithScraperPlugin)
         scraper_map = fresh_registry.scraper_map()

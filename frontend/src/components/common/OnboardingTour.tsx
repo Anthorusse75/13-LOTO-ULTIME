@@ -1,7 +1,7 @@
+import { useSettingsStore } from "@/stores/settingsStore";
+import { ArrowRight, CheckCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, CheckCircle, X } from "lucide-react";
-import { useSettingsStore } from "@/stores/settingsStore";
 
 type Step = {
   title: string;
@@ -120,7 +120,11 @@ export default function OnboardingTour() {
         </button>
 
         {/* Step indicator */}
-        <div className="flex gap-1.5 mb-6" role="tablist" aria-label="Étapes du tutoriel">
+        <div
+          className="flex gap-1.5 mb-6"
+          role="tablist"
+          aria-label="Étapes du tutoriel"
+        >
           {STEPS.map((_, i) => (
             <div
               key={i}
@@ -168,7 +172,10 @@ export default function OnboardingTour() {
           >
             {isLast ? (
               <>
-                <CheckCircle className="w-4 h-4 text-green-500" aria-hidden="true" />
+                <CheckCircle
+                  className="w-4 h-4 text-green-500"
+                  aria-hidden="true"
+                />
                 Terminer
               </>
             ) : (

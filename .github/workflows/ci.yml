@@ -40,7 +40,7 @@ jobs:
 
       - name: Type check (mypy)
         run: mypy app --ignore-missing-imports
-        continue-on-error: true   # mypy strict can be noisy on 3rd-party stubs
+        continue-on-error: true # mypy strict can be noisy on 3rd-party stubs
 
       - name: Run tests with coverage
         run: |

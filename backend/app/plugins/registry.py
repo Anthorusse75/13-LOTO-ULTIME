@@ -68,17 +68,16 @@ class PluginRegistry:
 
     # ── Integration with game_definitions ────────────────────────────────────
 
-    def game_configs(self) -> dict[str, "GameConfig"]:  # type: ignore[name-defined]
+    def game_configs(self) -> dict[str, GameConfig]:  # type: ignore[name-defined]
         """Return a ``{slug: GameConfig}`` dict for all registered plugins.
 
         This dict can be *merged* with the YAML-loaded configs so that
         plugin games become first-class citizens in the engine pipeline.
         """
-        from app.core.game_definitions import GameConfig  # local import to avoid circular
 
         return {slug: plugin.game_config for slug, plugin in self._plugins.items()}
 
-    def scraper_map(self) -> dict[str, "type[BaseScraper]"]:  # type: ignore[name-defined]
+    def scraper_map(self) -> dict[str, type[BaseScraper]]:  # type: ignore[name-defined]
         """Return a ``{slug: ScraperClass}`` dict for plugins that provide a scraper."""
         from app.scrapers.base import BaseScraper  # local import
 

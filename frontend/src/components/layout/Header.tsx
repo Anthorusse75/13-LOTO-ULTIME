@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Moon, Sun, ChevronDown } from "lucide-react";
-import { useSettingsStore } from "@/stores/settingsStore";
-import { useGameStore } from "@/stores/gameStore";
 import { gameService } from "@/services/gameService";
+import { useGameStore } from "@/stores/gameStore";
+import { useSettingsStore } from "@/stores/settingsStore";
 import type { GameDefinition } from "@/types/game";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, Moon, Sun } from "lucide-react";
+import { useEffect } from "react";
 
 export default function Header() {
   const theme = useSettingsStore((s) => s.theme);
@@ -69,7 +69,9 @@ export default function Header() {
         <button
           onClick={toggleTheme}
           className="p-2 rounded-md hover:bg-surface-hover text-text-secondary"
-          aria-label={theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
+          aria-label={
+            theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"
+          }
         >
           {theme === "dark" ? (
             <Sun size={18} aria-hidden="true" />

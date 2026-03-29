@@ -1,42 +1,55 @@
-import { useState, useCallback } from "react";
-import { Sliders, RotateCcw } from "lucide-react";
 import InfoTooltip from "@/components/common/InfoTooltip";
+import { RotateCcw, Sliders } from "lucide-react";
+import { useCallback, useState } from "react";
 
 // ─── Weight keys mirror the backend scoring criteria ────────────────────────
-type WeightKey = "frequency" | "gap" | "cooccurrence" | "structure" | "balance" | "penalty";
+type WeightKey =
+  | "frequency"
+  | "gap"
+  | "cooccurrence"
+  | "structure"
+  | "balance"
+  | "penalty";
 
-const CRITERIA: Array<{ key: WeightKey; label: string; description: string }> = [
-  {
-    key: "frequency",
-    label: "Fréquence",
-    description: "Importance des numéros fréquemment tirés dans l'historique.",
-  },
-  {
-    key: "gap",
-    label: "Écart (retard)",
-    description: "Importance des numéros en retard par rapport à leur moyenne d'apparition.",
-  },
-  {
-    key: "cooccurrence",
-    label: "Co-occurrence",
-    description: "Importance des paires de numéros qui apparaissent souvent ensemble.",
-  },
-  {
-    key: "structure",
-    label: "Structure",
-    description: "Répartition par dizaines, parité et couverture du pool de numéros.",
-  },
-  {
-    key: "balance",
-    label: "Équilibre",
-    description: "Somme totale de la grille comparée à la somme moyenne historique.",
-  },
-  {
-    key: "penalty",
-    label: "Pénalité (patterns)",
-    description: "Pénalise les grilles avec des patterns trop simplistes (consécutifs, même dizaine).",
-  },
-];
+const CRITERIA: Array<{ key: WeightKey; label: string; description: string }> =
+  [
+    {
+      key: "frequency",
+      label: "Fréquence",
+      description:
+        "Importance des numéros fréquemment tirés dans l'historique.",
+    },
+    {
+      key: "gap",
+      label: "Écart (retard)",
+      description:
+        "Importance des numéros en retard par rapport à leur moyenne d'apparition.",
+    },
+    {
+      key: "cooccurrence",
+      label: "Co-occurrence",
+      description:
+        "Importance des paires de numéros qui apparaissent souvent ensemble.",
+    },
+    {
+      key: "structure",
+      label: "Structure",
+      description:
+        "Répartition par dizaines, parité et couverture du pool de numéros.",
+    },
+    {
+      key: "balance",
+      label: "Équilibre",
+      description:
+        "Somme totale de la grille comparée à la somme moyenne historique.",
+    },
+    {
+      key: "penalty",
+      label: "Pénalité (patterns)",
+      description:
+        "Pénalise les grilles avec des patterns trop simplistes (consécutifs, même dizaine).",
+    },
+  ];
 
 // Default equal weights
 const DEFAULT_WEIGHTS: Record<WeightKey, number> = {
@@ -44,8 +57,8 @@ const DEFAULT_WEIGHTS: Record<WeightKey, number> = {
   gap: 0.25,
   cooccurrence: 0.15,
   structure: 0.15,
-  balance: 0.10,
-  penalty: 0.10,
+  balance: 0.1,
+  penalty: 0.1,
 };
 
 interface CustomWeightsEditorProps {
@@ -53,9 +66,13 @@ interface CustomWeightsEditorProps {
   onChange: (weights: Record<WeightKey, number> | null) => void;
 }
 
-export default function CustomWeightsEditor({ onChange }: CustomWeightsEditorProps) {
+export default function CustomWeightsEditor({
+  onChange,
+}: CustomWeightsEditorProps) {
   const [enabled, setEnabled] = useState(false);
-  const [weights, setWeights] = useState<Record<WeightKey, number>>({ ...DEFAULT_WEIGHTS });
+  const [weights, setWeights] = useState<Record<WeightKey, number>>({
+    ...DEFAULT_WEIGHTS,
+  });
 
   const total = Object.values(weights).reduce((s, v) => s + v, 0);
   const isValid = Math.abs(total - 1.0) < 0.01;

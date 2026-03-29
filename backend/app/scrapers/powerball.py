@@ -81,9 +81,7 @@ class PowerBallScraper(BaseScraper):
             log.error("scraper_fetch_error", error=str(exc))
             raise
 
-    def _parse_response(
-        self, data: list[dict], since_date: date
-    ) -> list[RawDraw]:
+    def _parse_response(self, data: list[dict], since_date: date) -> list[RawDraw]:
         """Parse the PowerBall JSON API response into RawDraw objects.
 
         Expected JSON format (array of draw records):

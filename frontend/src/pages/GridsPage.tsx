@@ -27,14 +27,22 @@ export default function GridsPage() {
   const [selectedGrid, setSelectedGrid] = useState<GridScoreResponse | null>(
     null,
   );
-  const [customWeights, setCustomWeights] = useState<Record<string, number> | null>(null);
+  const [customWeights, setCustomWeights] = useState<Record<
+    string,
+    number
+  > | null>(null);
 
   const { data: topGrids, isLoading: topLoading } = useTopGrids(10);
   const generateMutation = useGenerateGrids();
   const toggleFavoriteMutation = useToggleFavorite();
 
   const handleGenerate = () => {
-    generateMutation.mutate({ count, method, profile, weights: customWeights ?? undefined });
+    generateMutation.mutate({
+      count,
+      method,
+      profile,
+      weights: customWeights ?? undefined,
+    });
   };
 
   const grids = generateMutation.data?.grids ?? [];

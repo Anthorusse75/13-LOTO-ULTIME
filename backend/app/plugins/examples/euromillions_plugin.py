@@ -54,6 +54,5 @@ class EuroMillionsPlugin(LotteryPlugin):
 
     def on_register(self) -> None:
         import structlog
-        structlog.get_logger(__name__).info(
-            "euromillions_plugin_registered", slug=self.slug
-        )
+
+        structlog.get_logger(__name__).info("euromillions_plugin_registered", slug=self.slug)
