@@ -1,4 +1,5 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
 import {
@@ -7,13 +8,14 @@ import {
   useTopGrids,
 } from "@/hooks/useGrids";
 import type { GridScoreResponse } from "@/types/grid";
+import { exportGridPDF, exportReportPDF } from "@/utils/pdfExport";
 import {
   OPTIMIZATION_METHODS,
   SCORE_CRITERIA,
   SCORING_PROFILES,
 } from "@/utils/constants";
 import { formatScore } from "@/utils/formatters";
-import { Heart, Loader2 } from "lucide-react";
+import { Download, FileText, Heart, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 export default function GridsPage() {
@@ -38,6 +40,20 @@ export default function GridsPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Grilles</h1>
+
+      <PageIntro
+        storageKey="grids"
+        description="La page Grilles vous permet de générer des combinaisons de numéros optimisées par nos algorithmes, et de consulter le détail du score de chaque grille."
+        tip="Essayez différentes stratégies (Génétique, Bayésien, Recuit simulé) et comparez leurs scores moyens dans l'onglet Simulation > Comparaison."
+        terms={[
+          { term: "Score total", definition: "Note globale de 0 à 10 synthétisant tous les critères : fréquence, retard, co-occurrence, structure, équilibre, pénalité.", strength: "Une seule valeur pour comparer rapidement", limit: "Dépend de l'historique disponible" },
+          { term: "Algorithme génétique", definition: "S'inspire de l'évolution biologique : croisements successifs de grilles pour faire émerger les meilleures combinaisons.", strength: "Explore un vaste espace de solutions", limit: "Calcul plus long" },
+          { term: "Recuit simulé", definition: "Optimisation par refroidissement progressif : accepte de mauvaises solutions au début pour éviter les optima locaux.", strength: "Bon équilibre vitesse/qualité" },
+          { term: "Bayésien", definition: "Utilise les probabilités a posteriori pour guider la génération. Met à jour ses estimations au fil des tirages.", strength: "S'adapte aux tendances récentes" },
+          { term: "Profil d'optimisation", definition: "Équilibré = pondération égale des critères. Audacieux = favorise les numéros rares. Prudent = favorise les numéros fréquents." },
+          { term: "Pénalité de pattern", definition: "Malus appliqué si la grille présente des patterns suspects (tous pairs, séquence arithmétique, etc.).", limit: "Ne garantit pas la diversité" },
+        ]}
+      />
 
       {/* Generation form */}
       <div className="bg-surface rounded-lg border border-border p-6">
@@ -106,11 +122,27 @@ export default function GridsPage() {
         </button>
 
         {generateMutation.data && (
-          <p className="text-xs text-text-secondary mt-2">
-            {generateMutation.data.grids.length} grilles générées en{" "}
-            {generateMutation.data.computation_time_ms.toFixed(0)}ms — méthode:{" "}
-            {generateMutation.data.method_used}
-          </p>
+          <div className="flex items-center gap-3 mt-2 flex-wrap">
+            <p className="text-xs text-text-secondary">
+              {generateMutation.data.grids.length} grilles générées en{" "}
+              {generateMutation.data.computation_time_ms.toFixed(0)}ms — méthode:{" "}
+              {generateMutation.data.method_used}
+            </p>
+            <button
+              onClick={() =>
+                exportReportPDF({
+                  gameName: generateMutation.data!.method_used,
+                  grids: generateMutation.data!.grids,
+                  method: generateMutation.data!.method_used,
+                  computationMs: generateMutation.data!.computation_time_ms,
+                })
+              }
+              className="flex items-center gap-1.5 px-3 py-1 text-xs border border-border rounded-md hover:bg-surface-hover transition-colors"
+            >
+              <FileText size={12} />
+              Rapport PDF
+            </button>
+          </div>
         )}
       </div>
 
@@ -145,9 +177,20 @@ export default function GridsPage() {
       {/* Grid detail */}
       {selectedGrid && (
         <div className="bg-surface rounded-lg border border-border p-6">
-          <h2 className="text-sm font-semibold mb-4">
-            Détail — Score: {formatScore(selectedGrid.total_score)}/10
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold">
+              Détail — Score: {formatScore(selectedGrid.total_score)}/10
+            </h2>
+            <button
+              onClick={() =>
+                exportGridPDF(selectedGrid, "Loto Ultime", generateMutation.data?.method_used ?? method)
+              }
+              className="flex items-center gap-1.5 px-3 py-1 text-xs border border-border rounded-md hover:bg-surface-hover transition-colors"
+            >
+              <Download size={12} />
+              Exporter PDF
+            </button>
+          </div>
           <div className="mb-4">
             <DrawBalls
               numbers={selectedGrid.numbers}

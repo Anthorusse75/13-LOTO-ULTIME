@@ -51,4 +51,24 @@ export const gridService = {
     );
     return data;
   },
+
+  togglePlayed: async (
+    gameId: number,
+    gridId: number,
+  ): Promise<GridResponse> => {
+    const { data } = await api.patch(
+      `/games/${gameId}/grids/${gridId}/played`,
+    );
+    return data;
+  },
+
+  getFavorites: async (gameId: number): Promise<GridResponse[]> => {
+    const { data } = await api.get(`/games/${gameId}/grids/favorites`);
+    return data;
+  },
+
+  getPlayed: async (gameId: number): Promise<GridResponse[]> => {
+    const { data } = await api.get(`/games/${gameId}/grids/played`);
+    return data;
+  },
 };

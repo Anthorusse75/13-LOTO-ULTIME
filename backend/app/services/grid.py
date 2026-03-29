@@ -1,6 +1,7 @@
 """Grid service — scoring, generation, and persistence."""
 
 import time
+from datetime import datetime, timezone
 
 import structlog
 
@@ -206,6 +207,24 @@ class GridService:
         grid.is_favorite = not grid.is_favorite
         await self._grid_repo.update(grid)
         return grid
+
+    async def toggle_played(self, grid_id: int) -> ScoredGrid | None:
+        """Toggle is_played on a grid. Sets played_at when marking as played."""
+        grid = await self._grid_repo.get(grid_id)
+        if grid is None:
+            return None
+        grid.is_played = not grid.is_played
+        grid.played_at = datetime.now(timezone.utc) if grid.is_played else None
+        await self._grid_repo.update(grid)
+        return grid
+
+    async def get_favorites(self, game_id: int) -> list[ScoredGrid]:
+        """Return all favorite grids for a game."""
+        return await self._grid_repo.get_favorites(game_id)
+
+    async def get_played_grids(self, game_id: int) -> list[ScoredGrid]:
+        """Return all played grids for a game."""
+        return await self._grid_repo.get_played(game_id)
 
     async def delete_portfolio(self, portfolio_id: int) -> bool:
         """Delete a portfolio by ID. Returns True if deleted."""

@@ -62,3 +62,35 @@ export function useToggleFavorite() {
     },
   });
 }
+
+export function useTogglePlayed() {
+  const gameId = useGameStore((s) => s.currentGameId);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (gridId: number) => gridService.togglePlayed(gameId!, gridId),
+    onSuccess: (data) => {
+      toast.success(data.is_played ? "Grille marquée comme jouée" : "Grille marquée comme non jouée");
+      queryClient.invalidateQueries({ queryKey: ["grids", gameId] });
+    },
+  });
+}
+
+export function useFavoriteGrids() {
+  const gameId = useGameStore((s) => s.currentGameId);
+  return useQuery({
+    queryKey: ["grids", gameId, "favorites"],
+    queryFn: () => gridService.getFavorites(gameId!),
+    enabled: !!gameId,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function usePlayedGrids() {
+  const gameId = useGameStore((s) => s.currentGameId);
+  return useQuery({
+    queryKey: ["grids", gameId, "played"],
+    queryFn: () => gridService.getPlayed(gameId!),
+    enabled: !!gameId,
+    staleTime: 2 * 60 * 1000,
+  });
+}

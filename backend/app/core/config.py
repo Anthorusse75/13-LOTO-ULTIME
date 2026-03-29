@@ -18,6 +18,7 @@ class Settings(BaseSettings):
 
     # Sécurité
     SECRET_KEY: str = Field(..., min_length=32)
+    PREVIOUS_SECRET_KEY: str | None = Field(None)  # Pour la rotation gracieuse du secret JWT
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_MINUTES: int = 60
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7

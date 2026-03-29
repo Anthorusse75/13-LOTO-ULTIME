@@ -137,3 +137,34 @@ async def toggle_favorite(
     if grid is None:
         raise HTTPException(status_code=404, detail="Grid not found")
     return grid
+
+
+@router.patch("/{grid_id}/played", response_model=GridResponse)
+async def toggle_played(
+    grid_id: int = Path(..., gt=0),
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+):
+    """Toggle the played status of a grid."""
+    grid = await service.toggle_played(grid_id)
+    if grid is None:
+        raise HTTPException(status_code=404, detail="Grid not found")
+    return grid
+
+
+@router.get("/favorites", response_model=list[GridResponse])
+async def get_favorites(
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+):
+    """Return all favorite grids for a game."""
+    return await service.get_favorites(game_id)
+
+
+@router.get("/played", response_model=list[GridResponse])
+async def get_played_grids(
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+):
+    """Return all grids marked as played for a game."""
+    return await service.get_played_grids(game_id)

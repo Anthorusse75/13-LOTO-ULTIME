@@ -2,11 +2,13 @@
 
 from app.scrapers.base import BaseScraper, DrawValidator, RawDraw
 from app.scrapers.euromillions import EuroMillionsScraper
+from app.scrapers.fdj_keno import FDJKenoScraper
 from app.scrapers.fdj_loto import FDJLotoScraper
 
 SCRAPER_MAP: dict[str, type[BaseScraper]] = {
     "loto-fdj": FDJLotoScraper,
     "euromillions": EuroMillionsScraper,
+    # "keno-fdj": FDJKenoScraper,  # Activate once endpoint URL is confirmed
 }
 
 
@@ -18,4 +20,4 @@ def get_scraper(game_slug: str) -> BaseScraper:
     return scraper_cls()
 
 
-__all__ = ["BaseScraper", "DrawValidator", "RawDraw", "get_scraper"]
+__all__ = ["BaseScraper", "DrawValidator", "FDJKenoScraper", "RawDraw", "get_scraper"]

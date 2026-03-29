@@ -35,6 +35,16 @@ def create_refresh_token(
     return jwt.encode(to_encode, secret_key, algorithm=algorithm)
 
 
-def decode_access_token(token: str, secret_key: str, algorithm: str = "HS256") -> dict:
-    """Décode et valide un token JWT. Lève JWTError si invalide."""
-    return jwt.decode(token, secret_key, algorithms=[algorithm])
+def decode_access_token(
+    token: str,
+    secret_key: str,
+    algorithm: str = "HS256",
+    previous_secret_key: str | None = None,
+) -> dict:
+    """Décode et valide un token JWT. Essaie previous_secret_key en fallback (rotation)."""
+    try:
+        return jwt.decode(token, secret_key, algorithms=[algorithm])
+    except Exception:
+        if previous_secret_key:
+            return jwt.decode(token, previous_secret_key, algorithms=[algorithm])
+        raise

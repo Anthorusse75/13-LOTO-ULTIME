@@ -59,6 +59,8 @@ class GridResponse(BaseModel):
     method: str
     computed_at: datetime
     is_favorite: bool = False
+    is_played: bool = False
+    played_at: datetime | None = None
 
     model_config = {"from_attributes": True}
 

@@ -12,21 +12,21 @@ export function useStatistics() {
   });
 }
 
-export function useFrequencies() {
+export function useFrequencies(lastN?: number) {
   const gameId = useGameStore((s) => s.currentGameId);
   return useQuery({
-    queryKey: ["statistics", gameId, "frequencies"],
-    queryFn: () => statisticsService.getFrequencies(gameId!),
+    queryKey: ["statistics", gameId, "frequencies", lastN ?? "all"],
+    queryFn: () => statisticsService.getFrequencies(gameId!, lastN),
     enabled: !!gameId,
     staleTime: 5 * 60 * 1000,
   });
 }
 
-export function useGaps() {
+export function useGaps(lastN?: number) {
   const gameId = useGameStore((s) => s.currentGameId);
   return useQuery({
-    queryKey: ["statistics", gameId, "gaps"],
-    queryFn: () => statisticsService.getGaps(gameId!),
+    queryKey: ["statistics", gameId, "gaps", lastN ?? "all"],
+    queryFn: () => statisticsService.getGaps(gameId!, lastN),
     enabled: !!gameId,
     staleTime: 5 * 60 * 1000,
   });

@@ -1,5 +1,6 @@
 import Disclaimer from "@/components/common/Disclaimer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
 import { useDraws, useLatestDraw } from "@/hooks/useDraws";
 import { useTopGrids } from "@/hooks/useGrids";
@@ -41,6 +42,18 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard</h1>
+
+      <PageIntro
+        storageKey="dashboard"
+        description="Le Dashboard est votre point d'entrée. Il résume en un coup d'œil l'état de votre activité : les derniers tirages officiels, vos meilleures grilles calculées et la santé du pipeline de calcul automatique."
+        tip="Commencez par importer des tirages depuis la page Administration, puis lancez le calcul des statistiques pour alimenter toutes les analyses."
+        terms={[
+          { term: "Tirage", definition: "Résultat officiel de la loterie : les numéros gagnants d'une date donnée." },
+          { term: "Score d'une grille", definition: "Note de 0 à 10 calculée par nos algorithmes. Plus il est élevé, plus la grille est statistiquement intéressante.", strength: "Permet de comparer objectivement des grilles", limit: "Ne prédit pas le résultat — la loterie reste aléatoire" },
+          { term: "Pipeline", definition: "Enchaînement automatique des étapes : import des tirages → calcul des statistiques → génération de grilles.", strength: "Se relance chaque nuit à 22h automatiquement" },
+          { term: "Fréquence", definition: "Nombre de fois qu'un numéro est apparu dans l'historique des tirages." },
+        ]}
+      />
 
       {/* KPI cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

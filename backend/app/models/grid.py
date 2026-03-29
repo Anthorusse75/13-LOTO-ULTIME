@@ -21,6 +21,8 @@ class ScoredGrid(Base):
     computed_at: Mapped[datetime] = mapped_column(DateTime)
     is_top: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     is_favorite: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
+    is_played: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
+    played_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     simulation_stats: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     def __repr__(self) -> str:

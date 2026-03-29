@@ -32,6 +32,8 @@ export interface GridResponse {
   method: string;
   computed_at: string;
   is_favorite: boolean;
+  is_played: boolean;
+  played_at: string | null;
 }
 
 export interface GridGenerateRequest {

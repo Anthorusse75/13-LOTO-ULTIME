@@ -29,27 +29,41 @@ class DrawRepository(BaseRepository[Draw]):
         result = await self._session.execute(stmt)
         return list(result.scalars().all())
 
-    async def get_numbers_matrix(self, game_id: int) -> np.ndarray:
-        """Retourne tous les numéros comme matrice NumPy (N tirages × K numéros)."""
-        stmt = select(Draw.numbers).where(Draw.game_id == game_id).order_by(Draw.draw_date.asc())
+    async def get_numbers_matrix(self, game_id: int, last_n: int | None = None) -> np.ndarray:
+        """Retourne les numéros comme matrice NumPy (N tirages × K numéros).
+
+        Args:
+            last_n: If provided, only return the last N draws (most recent).
+        """
+        stmt = select(Draw.numbers).where(Draw.game_id == game_id).order_by(Draw.draw_date.desc())
+        if last_n is not None:
+            stmt = stmt.limit(last_n)
         result = await self._session.execute(stmt)
         rows = result.scalars().all()
         if not rows:
             return np.array([]).reshape(0, 0)
-        return np.array(rows)
+        # Reverse so oldest first (chronological order)
+        return np.array(list(reversed(rows)))
 
-    async def get_stars_matrix(self, game_id: int) -> np.ndarray:
-        """Retourne toutes les étoiles/numéros chance comme matrice NumPy (N × stars_drawn)."""
+    async def get_stars_matrix(self, game_id: int, last_n: int | None = None) -> np.ndarray:
+        """Retourne toutes les étoiles/numéros chance comme matrice NumPy (N × stars_drawn).
+
+        Args:
+            last_n: If provided, only return the last N draws (most recent).
+        """
         stmt = (
             select(Draw.stars)
             .where(Draw.game_id == game_id, Draw.stars.isnot(None))
-            .order_by(Draw.draw_date.asc())
+            .order_by(Draw.draw_date.desc())
         )
+        if last_n is not None:
+            stmt = stmt.limit(last_n)
         result = await self._session.execute(stmt)
         rows = [r for r in result.scalars().all() if r]
         if not rows:
             return np.array([]).reshape(0, 0)
-        return np.array(rows)
+        # Reverse so oldest first (chronological order)
+        return np.array(list(reversed(rows)))
 
     async def exists(self, game_id: int, draw_date: date) -> bool:
         stmt = select(Draw.id).where(Draw.game_id == game_id, Draw.draw_date == draw_date)

@@ -13,8 +13,8 @@ import {
 } from "recharts";
 import NumberHeatmap from "./NumberHeatmap";
 
-export default function FrequencyTab() {
-  const { data: freqs, isLoading } = useFrequencies();
+export default function FrequencyTab({ lastN }: { lastN?: number }) {
+  const { data: freqs, isLoading } = useFrequencies(lastN);
   const { data: stats } = useStatistics();
   const slug = useGameStore((s) => s.currentGameSlug);
   const { data: game } = useQuery({

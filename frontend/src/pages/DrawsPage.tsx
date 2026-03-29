@@ -1,4 +1,5 @@
 import InfoTooltip from "@/components/common/InfoTooltip";
+import PageIntro from "@/components/common/PageIntro";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DrawBalls from "@/components/draws/DrawBalls";
 import { useDraws } from "@/hooks/useDraws";
@@ -17,6 +18,17 @@ export default function DrawsPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Historique des Tirages</h1>
+
+      <PageIntro
+        storageKey="draws"
+        description="Cette page affiche l'ensemble des tirages officiels importés depuis le site de la FDJ. C'est la source de données brute qui alimente tous les calculs statistiques."
+        tip="Plus vous avez de tirages historiques, plus les statistiques sont fiables. Utilisez Administration > Importer pour récupérer les derniers tirages."
+        terms={[
+          { term: "Numéro de tirage", definition: "Identifiant officiel du tirage attribué par la FDJ. Permet de retrouver le tirage sur le site officiel." },
+          { term: "Étoiles", definition: "Pour EuroMillions uniquement : 2 numéros supplémentaires tirés dans un pool de 1 à 12." },
+          { term: "Numéro chance", definition: "Pour le Loto FDJ : 1 numéro complémentaire tiré dans un pool de 1 à 10." },
+        ]}
+      />
 
       <div className="bg-surface rounded-lg border border-border overflow-hidden">
         <table className="w-full text-sm">

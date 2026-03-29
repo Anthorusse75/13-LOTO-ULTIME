@@ -1,4 +1,5 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
 import NumberHeatmap from "@/components/statistics/NumberHeatmap";
 import { useGeneratePortfolio } from "@/hooks/usePortfolios";
@@ -45,6 +46,18 @@ export default function PortfolioPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Portefeuille</h1>
+
+      <PageIntro
+        storageKey="portfolio"
+        description="Le Portefeuille génère un ensemble de grilles complémentaires pour un tirage donné. L'objectif est de maximiser la couverture de l'espace des numéros tout en gardant de bons scores individuels."
+        tip="Une stratégie 'équilibrée' avec 7 grilles est un bon point de départ. Consultez la heatmap en bas pour visualiser votre couverture des numéros."
+        terms={[
+          { term: "Couverture", definition: "Pourcentage de numéros du pool couverts par au moins une grille du portefeuille.", strength: "Réduit le risque de manquer un numéro gagnant" },
+          { term: "Diversité", definition: "Mesure à quel point les grilles du portefeuille sont différentes les unes des autres.", strength: "Évite de jouer les mêmes combinaisons en double" },
+          { term: "Stratégie équilibrée", definition: "Compromis entre score individuel des grilles et diversité de l'ensemble." },
+          { term: "Heatmap", definition: "Carte de chaleur montrant combien de grilles du portefeuille contiennent chaque numéro. Rouge = numéro très présent, bleu = peu présent." },
+        ]}
+      />
 
       {/* Generation form */}
       <div className="bg-surface rounded-lg border border-border p-6">

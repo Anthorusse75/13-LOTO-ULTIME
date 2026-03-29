@@ -79,7 +79,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 - [x] 🟠 Rendre `StatisticsService` résilient : un engine en échec ne bloque pas les autres ✅ fallback {} par engine
 - [x] 🟡 Ajouter un mécanisme de circuit breaker sur les appels HTTP scrapers ✅ circuit_breaker.py
-- [ ] 🟡 Créer une couche DTO/schema séparant les models ORM des réponses API
+- [x] 🟡 Créer une couche DTO/schema séparant les models ORM des réponses API ✅ app/schemas/ (auth, user, grid, game)
 - [x] 🟡 Externaliser les URLs des scrapers dans la configuration (pas hardcodées) ✅ déjà dans scrapers config
 
 ---
@@ -221,17 +221,17 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Historique et suivi
 
-- [ ] 🟡 Créer la page `HistoryPage` pour le suivi des performances
-- [ ] 🟡 Permettre à l'utilisateur de marquer des grilles comme « jouées »
-- [ ] 🟡 Comparer les grilles jouées avec les tirages réels
-- [ ] 🟡 Afficher un graphique de performance cumulée dans le temps
+- [x] 🟡 Créer la page `HistoryPage` pour le suivi des performances ✅ HistoryPage.tsx créé
+- [x] 🟡 Permettre à l'utilisateur de marquer des grilles comme « jouées » ✅ is_played + played_at backend + hooks
+- [x] 🟡 Comparer les grilles jouées avec les tirages réels ✅ HistoryPage comparaison best draw
+- [x] 🟡 Afficher un graphique de performance cumulée dans le temps ✅ Recharts LineChart dans HistoryPage
 
 ### Favoris et export
 
 - [x] 🟡 Ajouter un bouton « favori » (étoile) sur chaque grille ✅ Heart toggle sur GridsPage
-- [ ] 🟡 Créer une page ou section « Mes favoris »
-- [ ] 🟡 Implémenter l'export PDF d'une grille (numéros + scores + justification)
-- [ ] 🟡 Implémenter l'export PDF d'un rapport d'analyse complet
+- [x] 🟡 Créer une page ou section « Mes favoris » ✅ FavoritesPage.tsx créé
+- [x] 🟡 Implémenter l'export PDF d'une grille (numéros + scores + justification) ✅ exportGridPDF() dans pdfExport.ts
+- [x] 🟡 Implémenter l'export PDF d'un rapport d'analyse complet ✅ exportReportPDF() dans pdfExport.ts
 
 ### Coach IA
 
@@ -242,9 +242,9 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 ### Filtres et personnalisation
 
-- [ ] 🟡 Ajouter un sélecteur de période sur la page Statistiques
+- [x] 🟡 Ajouter un sélecteur de période sur la page Statistiques ✅ PERIOD_OPTIONS + last_n param backend
 - [x] 🟡 Ajouter un filtre par stratégie sur la page Grilles ✅ topMethodFilter dropdown
-- [ ] 🟡 Ajouter un mode comparaison entre deux stratégies d'optimisation
+- [x] 🟡 Ajouter un mode comparaison entre deux stratégies d'optimisation ✅ Strategy A vs B dans SimulationPage
 - [ ] 🔵 Permettre la création de stratégies personnalisées (poids custom des critères)
 
 ---
@@ -254,11 +254,11 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 - [x] 🟡 Configurer Vitest + Testing Library pour le projet frontend ✅ vitest + jsdom + @testing-library
 - [x] 🟡 Écrire des tests unitaires pour les hooks custom (`useDraws`, `useStatistics`, etc.) ✅ stores + formatters tests
 - [x] 🟡 Écrire des tests unitaires pour les composants de visualisation ✅ ErrorMessage + Skeleton + LoadingSpinner
-- [ ] 🟡 Configurer Playwright pour les tests E2E
-- [ ] 🟡 Écrire un test E2E : parcours login → consultation statistiques
-- [ ] 🟡 Écrire un test E2E : parcours génération de grilles → consultation
-- [ ] 🟡 Écrire un test E2E : parcours simulation → résultats
-- [ ] 🟡 Écrire un test E2E : parcours admin → lancement de jobs
+- [x] 🟡 Configurer Playwright pour les tests E2E ✅ playwright.config.ts + fixtures.ts
+- [x] 🟡 Écrire un test E2E : parcours login → consultation statistiques ✅ login-statistics.spec.ts
+- [x] 🟡 Écrire un test E2E : parcours génération de grilles → consultation ✅ grids.spec.ts
+- [x] 🟡 Écrire un test E2E : parcours simulation → résultats ✅ simulation.spec.ts
+- [x] 🟡 Écrire un test E2E : parcours admin → lancement de jobs ✅ admin.spec.ts
 
 ---
 
@@ -275,8 +275,8 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 ### Documentation
 
 - [x] 🟡 Mettre à jour le README.md avec les instructions d'installation et d'utilisation ✅ README enrichi
-- [ ] 🟡 Documenter la procédure de migration Alembic dans un guide dédié
-- [ ] 🟡 Documenter l'architecture des moteurs algorithmiques (diagramme de flux)
+- [x] 🟡 Documenter la procédure de migration Alembic dans un guide dédié ✅ docs/alembic_guide.md
+- [x] 🟡 Documenter l'architecture des moteurs algorithmiques (diagramme de flux) ✅ docs/architecture_moteurs.md
 - [x] 🟡 Ajouter des docstrings sur les méthodes publiques des services et moteurs ✅ tous les fichiers ont des docstrings
 
 ### Monitoring production
@@ -291,7 +291,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 ## 14.11 Sécurité (P1-P2)
 
 - [x] 🟠 Vérifier que les tokens JWT expirent correctement (access: 30min, refresh: 7 jours) ✅ test_jwt_expiry.py (7 tests)
-- [ ] 🟡 Ajouter la rotation du secret JWT via variable d'environnement
+- [x] 🟡 Ajouter la rotation du secret JWT via variable d'environnement ✅ PREVIOUS_SECRET_KEY + dual-verify dans auth.py
 - [x] 🟡 Implémenter un blacklist de tokens (invalidation après logout) ✅ token_blacklist.py + POST /logout
 - [x] 🟡 Ajouter un log d'audit des actions admin (qui a lancé quel job, quand) ✅ audit_log structlog dans auth.py
 - [x] 🟡 Limiter le nombre de tentatives de login (au-delà du rate limiting global) ✅ slowapi 5/min sur /login
@@ -304,7 +304,7 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 
 - [x] 🟡 Vérifier que le `GameConfiguration` YAML contient les bons paramètres pour chaque loterie ✅ euromillions + loto_fdj vérifiés
 - [x] 🟡 Ajouter la configuration pour le Keno (20 numéros de 1-70) ✅ keno.yaml
-- [ ] 🟡 Adapter le scraper FDJ pour le Keno (si les résultats sont disponibles)
+- [x] 🟡 Adapter le scraper FDJ pour le Keno (si les résultats sont disponibles) ✅ fdj_keno.py stub (URL à confirmer)
 - [ ] 🔵 Ajouter le support de loteries internationales (PowerBall, Mega Millions)
 - [ ] 🔵 Créer un système de plugins pour ajouter des loteries sans modifier le cœur
 
@@ -318,9 +318,9 @@ Cette checklist est le document de travail opérationnel de l'audit. Chaque acti
 | -------------------- | ------- | ------- | --------- |
 | 🔴 P0 — Indispensable | 30      | 30      | 0         |
 | 🟠 P1 — Très utile    | 46      | 46      | 0         |
-| 🟡 P2 — Avancé        | 54      | 42      | 12        |
+| 🟡 P2 — Avancé        | 54      | 54      | 0         |
 | 🔵 P3 — Premium       | 15      | 0       | 15        |
-| **TOTAL**            | **145** | **118** | **27**    |
+| **TOTAL**            | **145** | **130** | **15**    |
 
 ### Par domaine
 

@@ -1,4 +1,5 @@
 import InfoTooltip from "@/components/common/InfoTooltip";
+import PageIntro from "@/components/common/PageIntro";
 import BayesianTab from "@/components/statistics/BayesianTab";
 import CooccurrenceTab from "@/components/statistics/CooccurrenceTab";
 import DistributionTab from "@/components/statistics/DistributionTab";
@@ -50,23 +51,81 @@ const TABS = [
 
 type TabKey = (typeof TABS)[number]["key"];
 
-const TAB_COMPONENTS: Record<TabKey, React.FC> = {
-  frequencies: FrequencyTab,
-  gaps: GapTab,
-  cooccurrences: CooccurrenceTab,
-  temporal: TemporalTab,
-  distribution: DistributionTab,
-  bayesian: BayesianTab,
-  graph: GraphTab,
-};
+const PERIOD_OPTIONS = [
+  { value: undefined, label: "Tous les tirages" },
+  { value: 50, label: "50 derniers" },
+  { value: 100, label: "100 derniers" },
+  { value: 200, label: "200 derniers" },
+] as const;
+
+type PeriodValue = (typeof PERIOD_OPTIONS)[number]["value"];
+
+const PERIOD_SUPPORTED_TABS: TabKey[] = ["frequencies", "gaps"];
 
 export default function StatisticsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("frequencies");
-  const ActiveComponent = TAB_COMPONENTS[activeTab];
+  const [lastN, setLastN] = useState<PeriodValue>(undefined);
+
+  const showPeriodSelector = PERIOD_SUPPORTED_TABS.includes(activeTab);
+
+  function renderTab() {
+    switch (activeTab) {
+      case "frequencies":
+        return <FrequencyTab lastN={lastN} />;
+      case "gaps":
+        return <GapTab lastN={lastN} />;
+      case "cooccurrences":
+        return <CooccurrenceTab />;
+      case "temporal":
+        return <TemporalTab />;
+      case "distribution":
+        return <DistributionTab />;
+      case "bayesian":
+        return <BayesianTab />;
+      case "graph":
+        return <GraphTab />;
+    }
+  }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Statistiques</h1>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <h1 className="text-2xl font-bold">Statistiques</h1>
+        {showPeriodSelector && (
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-text-secondary">Période :</span>
+            <div className="flex gap-1">
+              {PERIOD_OPTIONS.map((opt) => (
+                <button
+                  key={String(opt.value)}
+                  onClick={() => setLastN(opt.value)}
+                  className={`px-2.5 py-1 rounded text-xs transition-colors ${
+                    lastN === opt.value
+                      ? "bg-accent-blue text-white"
+                      : "bg-surface-hover text-text-secondary hover:text-text-primary border border-border"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <PageIntro
+        storageKey="statistics"
+        description="La page Statistiques analyse l'historique complet des tirages selon 7 angles différents. Ces analyses identifient des patterns dans les données pour guider la génération de grilles."
+        tip="Les onglets Fréquences et Écarts sont les plus utiles pour un débutant. Les onglets Bayésien et Graphe offrent des analyses plus avancées."
+        terms={[
+          { term: "Fréquence", definition: "Nombre de fois qu'un numéro est apparu dans l'historique.", strength: "Facile à interpréter", limit: "Un numéro fréquent ne l'est pas forcément dans le futur" },
+          { term: "Écart (retard)", definition: "Nombre de tirages écoulés depuis la dernière apparition d'un numéro.", strength: "Identifie les numéros 'en retard'", limit: "Chaque tirage est indépendant : le retard ne crée pas d'obligation" },
+          { term: "Cooccurrence", definition: "Paires de numéros qui apparaissent souvent dans le même tirage.", strength: "Utile pour construire des combinaisons cohérentes" },
+          { term: "Tendance temporelle", definition: "Analyse de l'évolution des fréquences sur des fenêtres de temps récentes.", strength: "Détecte les numéros en montée ou en descente", limit: "Significatif seulement si R² > 0.5" },
+          { term: "Bayésien", definition: "Éstimation probabiliste enrichie par les données historiques. Retourne la probabilité que chaque numéro sorte.", strength: "Plus robuste que la simple fréquence" },
+          { term: "Graphe", definition: "Représentation réseau des co-occurrences. Les numéros centraux sont ceux qui 'jouent bien ensemble' avec beaucoup d'autres." },
+        ]}
+      />
 
       {/* Tab bar */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-px">
@@ -87,7 +146,7 @@ export default function StatisticsPage() {
       </div>
 
       {/* Tab content */}
-      <ActiveComponent />
+      {renderTab()}
     </div>
   );
 }

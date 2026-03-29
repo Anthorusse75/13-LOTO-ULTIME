@@ -27,6 +27,8 @@ from app.schemas.statistics import (
     SumStats,
     TemporalResponse,
 )
+from app.dependencies import get_draw_repository, get_game_config
+from app.repositories.draw_repository import DrawRepository
 from app.services.statistics import StatisticsService
 
 limiter = Limiter(key_func=get_remote_address)
@@ -104,11 +106,22 @@ async def get_statistics(
 @router.get("/frequencies", response_model=list[FrequencyItem])
 async def get_frequencies(
     game_id: int,
+    last_n: int | None = Query(None, ge=10, le=2000, description="Limit to the last N draws"),
     stats_service: StatisticsService = Depends(get_statistics_service),
+    draw_repo: DrawRepository = Depends(get_draw_repository),
+    game_config=Depends(get_game_config),
 ):
-    """Get detailed frequency data for all numbers."""
-    snapshot = await _get_snapshot(game_id, stats_service)
-    items = [FrequencyItem(number=int(num), **data) for num, data in snapshot.frequencies.items()]
+    """Get detailed frequency data for all numbers.
+
+    Use `last_n` to restrict the analysis to the most recent N draws.
+    """
+    if last_n is not None:
+        draws = await draw_repo.get_numbers_matrix(game_id, last_n=last_n)
+        raw = stats_service.compute_single("frequency", draws, game_config)
+        items = [FrequencyItem(number=int(num), **data) for num, data in raw.items()]
+    else:
+        snapshot = await _get_snapshot(game_id, stats_service)
+        items = [FrequencyItem(number=int(num), **data) for num, data in snapshot.frequencies.items()]
     items.sort(key=lambda f: -f.count)
     return items
 
@@ -119,11 +132,22 @@ async def get_frequencies(
 @router.get("/gaps", response_model=list[GapItem])
 async def get_gaps(
     game_id: int,
+    last_n: int | None = Query(None, ge=10, le=2000, description="Limit to the last N draws"),
     stats_service: StatisticsService = Depends(get_statistics_service),
+    draw_repo: DrawRepository = Depends(get_draw_repository),
+    game_config=Depends(get_game_config),
 ):
-    """Get detailed gap data for all numbers."""
-    snapshot = await _get_snapshot(game_id, stats_service)
-    items = [GapItem(number=int(num), **data) for num, data in snapshot.gaps.items()]
+    """Get detailed gap data for all numbers.
+
+    Use `last_n` to restrict the analysis to the most recent N draws.
+    """
+    if last_n is not None:
+        draws = await draw_repo.get_numbers_matrix(game_id, last_n=last_n)
+        raw = stats_service.compute_single("gaps", draws, game_config)
+        items = [GapItem(number=int(num), **data) for num, data in raw.items()]
+    else:
+        snapshot = await _get_snapshot(game_id, stats_service)
+        items = [GapItem(number=int(num), **data) for num, data in snapshot.gaps.items()]
     items.sort(key=lambda g: -g.current_gap)
     return items
 

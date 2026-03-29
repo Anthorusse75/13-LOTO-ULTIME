@@ -13,8 +13,8 @@ import {
   YAxis,
 } from "recharts";
 
-export default function GapTab() {
-  const { data: gaps, isLoading } = useGaps();
+export default function GapTab({ lastN }: { lastN?: number }) {
+  const { data: gaps, isLoading } = useGaps(lastN);
   const { data: stats } = useStatistics();
   const slug = useGameStore((s) => s.currentGameSlug);
   const { data: game } = useQuery({
