@@ -124,7 +124,9 @@ export default function StarsTab() {
                         {f.number}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-right font-mono">{f.count}</td>
+                    <td className="px-4 py-2 text-right font-mono">
+                      {f.count}
+                    </td>
                     <td className="px-4 py-2 text-right font-mono">
                       {f.relative.toFixed(4)}
                     </td>
