@@ -4,9 +4,7 @@ interface LoadingSpinnerProps {
   message?: string;
 }
 
-export default function LoadingSpinner({
-  message,
-}: LoadingSpinnerProps) {
+export default function LoadingSpinner({ message }: LoadingSpinnerProps) {
   const label = message ?? "Chargement\u2026";
   return (
     <div

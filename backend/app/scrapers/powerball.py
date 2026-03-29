@@ -21,9 +21,7 @@ from app.scrapers.base import BaseScraper, DrawValidator, RawDraw
 
 logger = structlog.get_logger(__name__)
 
-POWERBALL_CSV_URL = (
-    "https://data.ny.gov/api/views/d6yy-54nr/rows.csv?accessType=DOWNLOAD"
-)
+POWERBALL_CSV_URL = "https://data.ny.gov/api/views/d6yy-54nr/rows.csv?accessType=DOWNLOAD"
 
 
 class PowerBallScraper(BaseScraper):

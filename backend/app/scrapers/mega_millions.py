@@ -19,9 +19,7 @@ from app.scrapers.base import BaseScraper, DrawValidator, RawDraw
 
 logger = structlog.get_logger(__name__)
 
-MEGA_MILLIONS_CSV_URL = (
-    "https://data.ny.gov/api/views/5xaw-6ayf/rows.csv?accessType=DOWNLOAD"
-)
+MEGA_MILLIONS_CSV_URL = "https://data.ny.gov/api/views/5xaw-6ayf/rows.csv?accessType=DOWNLOAD"
 
 
 class MegaMillionsScraper(BaseScraper):

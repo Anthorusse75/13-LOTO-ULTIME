@@ -5,10 +5,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Helpers — mock get_session as async generator
 # ---------------------------------------------------------------------------
+
 
 def _make_session_ctx(mock_session):
     """Create an async-generator that yields mock_session once then breaks."""
@@ -150,9 +150,7 @@ class TestComputeScoringJob:
                 "app.scheduler.jobs.compute_scoring.load_all_game_configs",
                 return_value={"loto-fdj": config},
             ),
-            patch(
-                "app.scheduler.jobs.compute_scoring.GridScorer"
-            ) as MockScorer,
+            patch("app.scheduler.jobs.compute_scoring.GridScorer") as MockScorer,
         ):
             MockScorer.from_profile.return_value.score.return_value = score_result
 
@@ -535,17 +533,24 @@ class TestFetchDrawsJob:
         mock_draw_repo.get_latest.return_value = []
         mock_draw_repo.exists.return_value = False
 
-        raw_draw = MagicMock(draw_date="2024-01-01", draw_number=1, numbers=[1, 2, 3, 4, 5], stars=[1])
+        raw_draw = MagicMock(
+            draw_date="2024-01-01", draw_number=1, numbers=[1, 2, 3, 4, 5], stars=[1]
+        )
         mock_scraper = AsyncMock()
         mock_scraper.fetch_latest_draws.return_value = [raw_draw]
 
-        validated = MagicMock(draw_date="2024-01-01", draw_number=1, numbers=[1, 2, 3, 4, 5], stars=[1])
+        validated = MagicMock(
+            draw_date="2024-01-01", draw_number=1, numbers=[1, 2, 3, 4, 5], stars=[1]
+        )
         mock_validator = MagicMock()
         mock_validator.validate.return_value = validated
 
         config = MagicMock(
-            min_number=1, max_number=49, numbers_drawn=5,
-            stars_pool=10, stars_drawn=1,
+            min_number=1,
+            max_number=49,
+            numbers_drawn=5,
+            stars_pool=10,
+            stars_drawn=1,
         )
 
         with (
@@ -590,8 +595,11 @@ class TestFetchDrawsJob:
         mock_validator.validate.return_value = validated
 
         config = MagicMock(
-            min_number=1, max_number=49, numbers_drawn=5,
-            stars_pool=10, stars_drawn=1,
+            min_number=1,
+            max_number=49,
+            numbers_drawn=5,
+            stars_pool=10,
+            stars_drawn=1,
         )
 
         with (
@@ -633,8 +641,11 @@ class TestFetchDrawsJob:
         mock_validator.validate.side_effect = ValueError("bad data")
 
         config = MagicMock(
-            min_number=1, max_number=49, numbers_drawn=5,
-            stars_pool=10, stars_drawn=1,
+            min_number=1,
+            max_number=49,
+            numbers_drawn=5,
+            stars_pool=10,
+            stars_drawn=1,
         )
 
         with (
@@ -679,11 +690,21 @@ class TestOptimizePortfolioJob:
         mock_game_repo.get_active_games.return_value = []
 
         with (
-            patch("app.scheduler.jobs.optimize_portfolio.get_session", _make_session_ctx(mock_session)),
-            patch("app.scheduler.jobs.optimize_portfolio.GameRepository", return_value=mock_game_repo),
-            patch("app.scheduler.jobs.optimize_portfolio.StatisticsRepository", return_value=AsyncMock()),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.get_session", _make_session_ctx(mock_session)
+            ),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.GameRepository", return_value=mock_game_repo
+            ),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.StatisticsRepository",
+                return_value=AsyncMock(),
+            ),
             patch("app.scheduler.jobs.optimize_portfolio.GridRepository", return_value=AsyncMock()),
-            patch("app.scheduler.jobs.optimize_portfolio.PortfolioRepository", return_value=AsyncMock()),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.PortfolioRepository",
+                return_value=AsyncMock(),
+            ),
             patch("app.scheduler.jobs.optimize_portfolio.load_all_game_configs", return_value={}),
         ):
             from app.scheduler.jobs.optimize_portfolio import _do_optimize_portfolio
@@ -711,13 +732,28 @@ class TestOptimizePortfolioJob:
         config = MagicMock()
 
         with (
-            patch("app.scheduler.jobs.optimize_portfolio.get_session", _make_session_ctx(mock_session)),
-            patch("app.scheduler.jobs.optimize_portfolio.GameRepository", return_value=mock_game_repo),
-            patch("app.scheduler.jobs.optimize_portfolio.StatisticsRepository", return_value=AsyncMock()),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.get_session", _make_session_ctx(mock_session)
+            ),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.GameRepository", return_value=mock_game_repo
+            ),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.StatisticsRepository",
+                return_value=AsyncMock(),
+            ),
             patch("app.scheduler.jobs.optimize_portfolio.GridRepository", return_value=AsyncMock()),
-            patch("app.scheduler.jobs.optimize_portfolio.PortfolioRepository", return_value=AsyncMock()),
-            patch("app.scheduler.jobs.optimize_portfolio.GridService", return_value=mock_grid_service),
-            patch("app.scheduler.jobs.optimize_portfolio.load_all_game_configs", return_value={"loto-fdj": config}),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.PortfolioRepository",
+                return_value=AsyncMock(),
+            ),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.GridService", return_value=mock_grid_service
+            ),
+            patch(
+                "app.scheduler.jobs.optimize_portfolio.load_all_game_configs",
+                return_value={"loto-fdj": config},
+            ),
         ):
             from app.scheduler.jobs.optimize_portfolio import _do_optimize_portfolio
 
@@ -889,7 +925,9 @@ class TestNightlyPipelineJob:
             patch(
                 "app.scheduler.jobs.nightly_pipeline._do_nightly_pipeline.__module__",
                 create=True,
-            ) if False else patch(
+            )
+            if False
+            else patch(
                 "app.scheduler.jobs.fetch_draws._do_fetch",
                 new_callable=AsyncMock,
                 return_value={"fetched": 5},

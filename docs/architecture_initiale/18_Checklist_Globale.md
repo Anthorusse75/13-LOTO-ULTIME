@@ -338,19 +338,19 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 
 ## Récapitulatif
 
-| Phase                           | Tâches  | Fait     | Statut                       |
-| ------------------------------- | ------- | -------- | ---------------------------- |
-| 1. Architecture & Documentation | 20      | 19/20    | 🟡 95% (cross-refs cassées) |
-| 2. Fondations Backend           | 36      | 34/36    | 🟡 94% (.env.example + PG)  |
-| 3. Moteur Statistique           | 18      | 18/18    | ✅ Complète                   |
-| 4. Moteur de Scoring            | 13      | 13/13    | ✅ Complète                   |
-| 5. Moteur d'Optimisation        | 13      | 13/13    | ✅ Complète                   |
-| 6. Moteur de Simulation         | 10      | 10/10    | ✅ Complète                   |
-| 7. Interface Frontend           | 49      | 43/49    | 🟡 88% (6 manquants)        |
-| 8. Scheduler & Jobs             | 21      | 20/21    | 🟡 95% (Keno scraper)       |
-| 9. Sécurité & Auth              | 20      | 20/20    | ✅ Complète                   |
-| 10. Polish & Déploiement        | 19      | 7/19     | 🔴 37%                       |
-| **TOTAL**                       | **219** | **197**  | **90%**                      |
+| Phase                           | Tâches  | Fait    | Statut                     |
+| ------------------------------- | ------- | ------- | -------------------------- |
+| 1. Architecture & Documentation | 20      | 19/20   | 🟡 95% (cross-refs cassées) |
+| 2. Fondations Backend           | 36      | 34/36   | 🟡 94% (.env.example + PG)  |
+| 3. Moteur Statistique           | 18      | 18/18   | ✅ Complète                 |
+| 4. Moteur de Scoring            | 13      | 13/13   | ✅ Complète                 |
+| 5. Moteur d'Optimisation        | 13      | 13/13   | ✅ Complète                 |
+| 6. Moteur de Simulation         | 10      | 10/10   | ✅ Complète                 |
+| 7. Interface Frontend           | 49      | 43/49   | 🟡 88% (6 manquants)        |
+| 8. Scheduler & Jobs             | 21      | 20/21   | 🟡 95% (Keno scraper)       |
+| 9. Sécurité & Auth              | 20      | 20/20   | ✅ Complète                 |
+| 10. Polish & Déploiement        | 19      | 7/19    | 🔴 37%                      |
+| **TOTAL**                       | **219** | **197** | **90%**                    |
 
 ### État global mesuré (2026-03-29)
 

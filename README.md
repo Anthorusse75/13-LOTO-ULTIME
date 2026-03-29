@@ -68,8 +68,8 @@ API (FastAPI Routers)
 
 La documentation complète du projet se trouve dans le dossier [`docs/`](docs/) :
 
-| #   | Document                                                                | Description                                        |
-| --- | ----------------------------------------------------------------------- | -------------------------------------------------- |
+| #   | Document                                                                                      | Description                                        |
+| --- | --------------------------------------------------------------------------------------------- | -------------------------------------------------- |
 | 01  | [Vision du Projet](docs/architecture_initiale/01_Vision_Projet.md)                            | Objectifs, contraintes, périmètre                  |
 | 02  | [Architecture Globale](docs/architecture_initiale/02_Architecture_Globale.md)                 | Vue système, stack technique, flux de données      |
 | 03  | [Architecture Backend](docs/architecture_initiale/03_Architecture_Backend.md)                 | Couches, DI, configuration, scrapers               |
