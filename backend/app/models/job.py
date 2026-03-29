@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base
 
 
-class JobStatus(str, enum.Enum):
+class JobStatus(enum.StrEnum):
     PENDING = "PENDING"
     RUNNING = "RUNNING"
     SUCCESS = "SUCCESS"

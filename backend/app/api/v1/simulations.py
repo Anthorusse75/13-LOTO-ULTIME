@@ -107,7 +107,7 @@ async def analyze_stability(
             seed=body.seed,
         )
     except InsufficientDataError as exc:
-        raise HTTPException(status_code=422, detail=str(exc))
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     return StabilityResponse(
         mean_score=result.mean_score,
@@ -143,7 +143,7 @@ async def compare_with_random(
             seed=body.seed,
         )
     except InsufficientDataError as exc:
-        raise HTTPException(status_code=422, detail=str(exc))
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     return ComparisonResponse(
         grid_score=result.grid_score,

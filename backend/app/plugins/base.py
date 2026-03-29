@@ -57,7 +57,7 @@ class LotteryPlugin(ABC):
 
     # ── Lifecycle ────────────────────────────────────────────────────────────
 
-    def on_register(self) -> None:
+    def on_register(self) -> None:  # noqa: B027
         """Called once when the plugin is registered.
 
         Override to perform one-time initialisation (e.g. warming up a cache).

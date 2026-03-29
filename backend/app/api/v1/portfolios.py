@@ -37,7 +37,7 @@ async def generate_portfolio(
             strategy=body.strategy,
         )
     except InsufficientDataError as exc:
-        raise HTTPException(status_code=422, detail=str(exc))
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     return PortfolioGenerateResponse(
         strategy=result.strategy,

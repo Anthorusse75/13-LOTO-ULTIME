@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import event, func, text
+from sqlalchemy import event, func
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     AsyncSession,

@@ -54,6 +54,7 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "N", "UP", "B", "SIM"]
+ignore = ["B008"]  # FastAPI Depends() in default args is intentional
 
 [tool.hatch.build.targets.wheel]
 packages = ["app"]

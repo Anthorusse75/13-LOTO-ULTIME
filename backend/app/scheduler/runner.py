@@ -42,7 +42,7 @@ async def execute_with_tracking(
         await session.commit()
         break
 
-    last_error: Exception | None = None
+    last_error: Exception | None = None  # noqa: F841 — reserved for future use
 
     for attempt in range(MAX_RETRIES):
         try:
@@ -55,7 +55,6 @@ async def execute_with_tracking(
             break
 
         except Exception as exc:
-            last_error = exc
             log.warning(
                 "job_attempt_failed",
                 attempt=attempt + 1,

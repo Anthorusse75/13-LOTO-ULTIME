@@ -140,7 +140,7 @@ export default function GraphTab() {
               (d as d3.SimulationNodeDatum).fx = null;
               (d as d3.SimulationNodeDatum).fy = null;
             },
-          ) as any,
+          ) as unknown as Parameters<typeof g.call>[0],
       );
 
     // Labels

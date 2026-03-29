@@ -167,14 +167,14 @@ async def get_current_user(
 
 def require_role(minimum_role: UserRole):
     """FastAPI dependency that checks the user has the minimum required role."""
-    ROLE_HIERARCHY = {
+    role_hierarchy = {
         UserRole.CONSULTATION: 1,
         UserRole.UTILISATEUR: 2,
         UserRole.ADMIN: 3,
     }
 
     async def role_checker(current_user: User = Depends(get_current_user)) -> User:
-        if ROLE_HIERARCHY.get(current_user.role, 0) < ROLE_HIERARCHY[minimum_role]:
+        if role_hierarchy.get(current_user.role, 0) < role_hierarchy[minimum_role]:
             raise AuthorizationError(f"Accès réservé au rôle {minimum_role.value} minimum")
         return current_user
 

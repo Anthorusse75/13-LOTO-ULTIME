@@ -65,7 +65,7 @@ async def trigger_job(
 
             structlog.get_logger("jobs").exception("trigger_job.background_error", job=job_name)
 
-    task = asyncio.create_task(_run_job())
+    asyncio.create_task(_run_job())  # fire-and-forget: event loop holds the reference
     # We don't await — return immediately with a PENDING status indicator
 
     # Return the latest execution record (will be RUNNING once the task starts)

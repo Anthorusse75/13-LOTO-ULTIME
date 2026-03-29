@@ -40,7 +40,7 @@ async def score_grid(
             custom_weights=request.weights,
         )
     except InsufficientDataError as exc:
-        raise HTTPException(status_code=422, detail=str(exc))
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     return GridScoreResponse(
         numbers=result.numbers,
@@ -72,7 +72,7 @@ async def generate_grids(
             custom_weights=body.weights,
         )
     except InsufficientDataError as exc:
-        raise HTTPException(status_code=422, detail=str(exc))
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     return GridGenerateResponse(
         grids=[

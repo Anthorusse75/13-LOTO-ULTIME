@@ -62,9 +62,9 @@ class MultiObjectiveOptimizer(BaseOptimizer):
     def _dominates(
         self, obj_a: tuple[float, float, float], obj_b: tuple[float, float, float]
     ) -> bool:
-        """Return True if a dominates b (at least as good on all, strictly better on at least one)."""
+        """Return True if obj_a dominates obj_b."""
         at_least_one_better = False
-        for a, b in zip(obj_a, obj_b):
+        for a, b in zip(obj_a, obj_b, strict=True):
             if a < b:
                 return False
             if a > b:
@@ -181,7 +181,7 @@ class MultiObjectiveOptimizer(BaseOptimizer):
                 else:
                     remaining = self.population_size - len(new_population)
                     crowding = self._crowding_distance(front_indices, objectives)
-                    paired = sorted(zip(front_indices, crowding), key=lambda x: -x[1])
+                    paired = sorted(zip(front_indices, crowding, strict=True), key=lambda x: -x[1])
                     new_population.extend(combined[idx] for idx, _ in paired[:remaining])
                     break
 

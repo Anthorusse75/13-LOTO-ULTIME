@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base, TimestampMixin
 
 
-class UserRole(str, enum.Enum):
+class UserRole(enum.StrEnum):
     ADMIN = "ADMIN"
     UTILISATEUR = "UTILISATEUR"
     CONSULTATION = "CONSULTATION"

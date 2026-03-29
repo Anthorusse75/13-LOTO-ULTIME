@@ -1,7 +1,7 @@
 """Grid service — scoring, generation, and persistence."""
 
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import structlog
 
@@ -214,7 +214,7 @@ class GridService:
         if grid is None:
             return None
         grid.is_played = not grid.is_played
-        grid.played_at = datetime.now(timezone.utc) if grid.is_played else None
+        grid.played_at = datetime.now(UTC) if grid.is_played else None
         await self._grid_repo.update(grid)
         return grid
 

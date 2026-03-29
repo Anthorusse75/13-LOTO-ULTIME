@@ -1,7 +1,7 @@
 """In-memory token blacklist for invalidated JWTs."""
 
-import time
 import threading
+import time
 
 
 class TokenBlacklist:

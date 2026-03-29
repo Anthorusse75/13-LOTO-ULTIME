@@ -7,9 +7,15 @@ application startup, extending :func:`~app.core.game_definitions.load_all_game_c
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import structlog
 
 from app.plugins.base import LotteryPlugin
+
+if TYPE_CHECKING:
+    from app.core.game_definitions import GameConfig
+    from app.scrapers.base import BaseScraper
 
 logger = structlog.get_logger(__name__)
 
@@ -68,7 +74,7 @@ class PluginRegistry:
 
     # ── Integration with game_definitions ────────────────────────────────────
 
-    def game_configs(self) -> dict[str, GameConfig]:  # type: ignore[name-defined]
+    def game_configs(self) -> dict[str, GameConfig]:
         """Return a ``{slug: GameConfig}`` dict for all registered plugins.
 
         This dict can be *merged* with the YAML-loaded configs so that
@@ -77,10 +83,8 @@ class PluginRegistry:
 
         return {slug: plugin.game_config for slug, plugin in self._plugins.items()}
 
-    def scraper_map(self) -> dict[str, type[BaseScraper]]:  # type: ignore[name-defined]
+    def scraper_map(self) -> dict[str, type[BaseScraper]]:
         """Return a ``{slug: ScraperClass}`` dict for plugins that provide a scraper."""
-        from app.scrapers.base import BaseScraper  # local import
-
         result: dict[str, type[BaseScraper]] = {}
         for slug, plugin in self._plugins.items():
             if plugin.scraper_class is not None:

@@ -32,10 +32,12 @@ class CircuitBreaker:
 
     @property
     def state(self) -> CircuitState:
-        if self._state == CircuitState.OPEN:
-            if time.monotonic() - self._last_failure_time >= self.reset_timeout:
-                self._state = CircuitState.HALF_OPEN
-                logger.info("circuit_breaker.half_open", name=self.name)
+        if (
+            self._state == CircuitState.OPEN
+            and time.monotonic() - self._last_failure_time >= self.reset_timeout
+        ):
+            self._state = CircuitState.HALF_OPEN
+            logger.info("circuit_breaker.half_open", name=self.name)
         return self._state
 
     def record_success(self) -> None:
@@ -58,9 +60,7 @@ class CircuitBreaker:
         current = self.state
         if current == CircuitState.CLOSED:
             return True
-        if current == CircuitState.HALF_OPEN:
-            return True
-        return False
+        return current == CircuitState.HALF_OPEN
 
 
 # Global registry of circuit breakers per service key
