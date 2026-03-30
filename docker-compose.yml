@@ -14,6 +14,9 @@ services:
       - APP_ENV=${APP_ENV:-production}
       - CORS_ORIGINS=${CORS_ORIGINS:-["http://localhost"]}
       - LOG_LEVEL=INFO
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@loto-ultime.local}
+      - ADMIN_INITIAL_PASSWORD=${ADMIN_INITIAL_PASSWORD:-ChangeMe123!}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-30}
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
