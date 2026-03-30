@@ -6,10 +6,18 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.dependencies import get_db
 from app.models.draw import Draw
 from app.models.game import GameDefinition
 from app.models.statistics import StatisticsSnapshot
 from tests.integration.api.conftest import override_auth
+
+
+def _override_db(test_session: AsyncSession):
+    async def _fake_get_db():
+        yield test_session
+
+    return _fake_get_db
 
 
 @pytest.fixture
@@ -146,7 +154,7 @@ async def game_with_snapshot(db_session: AsyncSession, game_with_draws):
 
 
 @pytest.fixture
-async def stats_client(engine, db_session, game_with_snapshot):
+async def stats_client(db_session, game_with_snapshot):
     """HTTP client with a game that has a statistics snapshot loaded."""
     import os
 
@@ -157,14 +165,7 @@ async def stats_client(engine, db_session, game_with_snapshot):
 
     test_app = create_app()
     override_auth(test_app)
-
-    # Manually init DB with the test engine
-    from app.models import base as base_module
-
-    base_module._engine = engine
-    from sqlalchemy.ext.asyncio import async_sessionmaker
-
-    base_module._session_factory = async_sessionmaker(engine, expire_on_commit=False)
+    test_app.dependency_overrides[get_db] = _override_db(db_session)
 
     transport = ASGITransport(app=test_app)
     game, snapshot = game_with_snapshot
@@ -252,7 +253,7 @@ class TestStatisticsEndpoints:
         assert "density" in data
 
     @pytest.mark.asyncio
-    async def test_no_statistics_returns_error(self, engine, db_session):
+    async def test_no_statistics_returns_error(self, db_session):
         """Game without snapshot returns appropriate error."""
         import os
 
@@ -275,14 +276,10 @@ class TestStatisticsEndpoints:
         await db_session.flush()
         await db_session.refresh(game)
 
-        from sqlalchemy.ext.asyncio import async_sessionmaker
-
         from app.main import create_app
-        from app.models import base as base_module
 
         test_app = create_app()
-        base_module._engine = engine
-        base_module._session_factory = async_sessionmaker(engine, expire_on_commit=False)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
 
         transport = ASGITransport(app=test_app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

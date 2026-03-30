@@ -6,9 +6,17 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.dependencies import get_db
 from app.models.game import GameDefinition
 from app.models.statistics import StatisticsSnapshot
 from tests.integration.api.conftest import override_auth
+
+
+def _override_db(test_session: AsyncSession):
+    async def _fake_get_db():
+        yield test_session
+
+    return _fake_get_db
 
 
 @pytest.fixture
@@ -88,80 +96,60 @@ class TestPortfoliosAPI:
     @pytest.mark.asyncio
     async def test_generate_portfolio(self, db_session, game_with_snapshot_for_portfolio):
         """POST /portfolios/generate returns an optimized portfolio."""
-        import app.models.base as base_module
-
         game, snapshot = game_with_snapshot_for_portfolio
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
-        try:
-            from app.main import create_app
+        from app.main import create_app
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/portfolios/generate",
-                    json={"grid_count": 3, "strategy": "balanced"},
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert data["strategy"] == "balanced"
-            assert data["grid_count"] == 3
-            assert len(data["grids"]) == 3
-            assert data["diversity_score"] >= 0
-            assert data["coverage_score"] >= 0
-            assert data["avg_grid_score"] > 0
-            assert data["computation_time_ms"] > 0
-            for g in data["grids"]:
-                assert "numbers" in g
-                assert "score" in g
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
+
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/portfolios/generate",
+                json={"grid_count": 3, "strategy": "balanced"},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["strategy"] == "balanced"
+        assert data["grid_count"] == 3
+        assert len(data["grids"]) == 3
+        assert data["diversity_score"] >= 0
+        assert data["coverage_score"] >= 0
+        assert data["avg_grid_score"] > 0
+        assert data["computation_time_ms"] > 0
+        for g in data["grids"]:
+            assert "numbers" in g
+            assert "score" in g
 
     @pytest.mark.asyncio
     async def test_generate_portfolio_max_diversity(
         self, db_session, game_with_snapshot_for_portfolio
     ):
         """POST /portfolios/generate with max_diversity strategy."""
-        import app.models.base as base_module
-
         game, snapshot = game_with_snapshot_for_portfolio
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
-        try:
-            from app.main import create_app
+        from app.main import create_app
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/portfolios/generate",
-                    json={"grid_count": 5, "strategy": "max_diversity"},
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert data["strategy"] == "max_diversity"
-            assert len(data["grids"]) == 5
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
+
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/portfolios/generate",
+                json={"grid_count": 5, "strategy": "max_diversity"},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["strategy"] == "max_diversity"
+        assert len(data["grids"]) == 5
 
     @pytest.mark.asyncio
     async def test_generate_portfolio_no_snapshot(self, db_session):
         """POST /portfolios/generate returns 422 when no statistics available."""
-        import app.models.base as base_module
-
         game = GameDefinition(
             name="Empty Portfolio",
             slug="empty-portfolio",
@@ -178,24 +166,16 @@ class TestPortfoliosAPI:
         await db_session.flush()
         await db_session.refresh(game)
 
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
+        from app.main import create_app
 
-        try:
-            from app.main import create_app
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/portfolios/generate",
-                    json={"grid_count": 5, "strategy": "balanced"},
-                )
-            assert resp.status_code == 422
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/portfolios/generate",
+                json={"grid_count": 5, "strategy": "balanced"},
+            )
+        assert resp.status_code == 422

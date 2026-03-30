@@ -6,10 +6,18 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.dependencies import get_db
 from app.models.draw import Draw
 from app.models.game import GameDefinition
 from app.models.statistics import StatisticsSnapshot
 from tests.integration.api.conftest import override_auth
+
+
+def _override_db(test_session: AsyncSession):
+    async def _fake_get_db():
+        yield test_session
+
+    return _fake_get_db
 
 
 @pytest.fixture
@@ -102,21 +110,13 @@ async def game_with_data_for_simulation(db_session: AsyncSession):
     return game, snapshot
 
 
-def _patch_base_module(db_session):
-    """Patch base_module to use the test session."""
-    import app.models.base as base_module
+def _create_test_app(db_session):
+    from app.main import create_app
 
-    engine = db_session.bind
-    original_engine = base_module._engine
-    original_factory = base_module._session_factory
-    base_module._engine = engine
-    base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
-    return base_module, original_engine, original_factory
-
-
-def _restore_base_module(base_module, original_engine, original_factory):
-    base_module._engine = original_engine
-    base_module._session_factory = original_factory
+    _app = create_app()
+    override_auth(_app)
+    _app.dependency_overrides[get_db] = _override_db(db_session)
+    return _app
 
 
 class TestSimulationAPI:
@@ -124,109 +124,81 @@ class TestSimulationAPI:
     async def test_monte_carlo_grid(self, db_session, game_with_data_for_simulation):
         """POST /simulation/monte-carlo simulates a single grid."""
         game, _ = game_with_data_for_simulation
-        base_module, orig_engine, orig_factory = _patch_base_module(db_session)
+        _app = _create_test_app(db_session)
 
-        try:
-            from app.main import create_app
-
-            _app = create_app()
-            override_auth(_app)
-            transport = ASGITransport(app=_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/simulation/monte-carlo",
-                    json={"numbers": [1, 5, 10, 25, 49], "n_simulations": 1000, "seed": 42},
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert data["grid"] == [1, 5, 10, 25, 49]
-            assert data["n_simulations"] == 1000
-            assert sum(data["match_distribution"].values()) == 1000
-            assert data["avg_matches"] > 0
-            assert data["computation_time_ms"] > 0
-        finally:
-            _restore_base_module(base_module, orig_engine, orig_factory)
+        transport = ASGITransport(app=_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/simulation/monte-carlo",
+                json={"numbers": [1, 5, 10, 25, 49], "n_simulations": 1000, "seed": 42},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["grid"] == [1, 5, 10, 25, 49]
+        assert data["n_simulations"] == 1000
+        assert sum(data["match_distribution"].values()) == 1000
+        assert data["avg_matches"] > 0
+        assert data["computation_time_ms"] > 0
 
     @pytest.mark.asyncio
     async def test_monte_carlo_portfolio(self, db_session, game_with_data_for_simulation):
         """POST /simulation/monte-carlo/portfolio simulates a portfolio."""
         game, _ = game_with_data_for_simulation
-        base_module, orig_engine, orig_factory = _patch_base_module(db_session)
+        _app = _create_test_app(db_session)
 
-        try:
-            from app.main import create_app
-
-            _app = create_app()
-            override_auth(_app)
-            transport = ASGITransport(app=_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/simulation/monte-carlo/portfolio",
-                    json={
-                        "grids": [[1, 5, 10, 25, 49], [2, 8, 15, 30, 44]],
-                        "n_simulations": 500,
-                        "min_matches": 2,
-                        "seed": 42,
-                    },
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert data["n_simulations"] == 500
-            assert 0.0 <= data["hit_rate"] <= 1.0
-            assert data["min_matches_threshold"] == 2
-            assert data["computation_time_ms"] > 0
-        finally:
-            _restore_base_module(base_module, orig_engine, orig_factory)
+        transport = ASGITransport(app=_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/simulation/monte-carlo/portfolio",
+                json={
+                    "grids": [[1, 5, 10, 25, 49], [2, 8, 15, 30, 44]],
+                    "n_simulations": 500,
+                    "min_matches": 2,
+                    "seed": 42,
+                },
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["n_simulations"] == 500
+        assert 0.0 <= data["hit_rate"] <= 1.0
+        assert data["min_matches_threshold"] == 2
+        assert data["computation_time_ms"] > 0
 
     @pytest.mark.asyncio
     async def test_stability_analysis(self, db_session, game_with_data_for_simulation):
         """POST /simulation/stability runs bootstrap analysis."""
         game, _ = game_with_data_for_simulation
-        base_module, orig_engine, orig_factory = _patch_base_module(db_session)
+        _app = _create_test_app(db_session)
 
-        try:
-            from app.main import create_app
-
-            _app = create_app()
-            override_auth(_app)
-            transport = ASGITransport(app=_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/simulation/stability",
-                    json={"numbers": [1, 5, 10, 25, 49], "n_bootstrap": 20, "seed": 42},
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert 0.0 <= data["stability"] <= 1.0
-            assert data["ci_95_low"] <= data["mean_score"] <= data["ci_95_high"]
-            assert data["computation_time_ms"] > 0
-        finally:
-            _restore_base_module(base_module, orig_engine, orig_factory)
+        transport = ASGITransport(app=_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/simulation/stability",
+                json={"numbers": [1, 5, 10, 25, 49], "n_bootstrap": 20, "seed": 42},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert 0.0 <= data["stability"] <= 1.0
+        assert data["ci_95_low"] <= data["mean_score"] <= data["ci_95_high"]
+        assert data["computation_time_ms"] > 0
 
     @pytest.mark.asyncio
     async def test_compare_random(self, db_session, game_with_data_for_simulation):
         """POST /simulation/compare-random compares grid vs random."""
         game, _ = game_with_data_for_simulation
-        base_module, orig_engine, orig_factory = _patch_base_module(db_session)
+        _app = _create_test_app(db_session)
 
-        try:
-            from app.main import create_app
-
-            _app = create_app()
-            override_auth(_app)
-            transport = ASGITransport(app=_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/simulation/compare-random",
-                    json={"numbers": [1, 5, 10, 25, 49], "n_random": 200, "seed": 42},
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert 0.0 <= data["percentile"] <= 100.0
-            assert "z_score" in data
-            assert data["computation_time_ms"] > 0
-        finally:
-            _restore_base_module(base_module, orig_engine, orig_factory)
+        transport = ASGITransport(app=_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/simulation/compare-random",
+                json={"numbers": [1, 5, 10, 25, 49], "n_random": 200, "seed": 42},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert 0.0 <= data["percentile"] <= 100.0
+        assert "z_score" in data
+        assert data["computation_time_ms"] > 0
 
     @pytest.mark.asyncio
     async def test_compare_random_no_snapshot(self, db_session):
@@ -247,19 +219,12 @@ class TestSimulationAPI:
         await db_session.flush()
         await db_session.refresh(game)
 
-        base_module, orig_engine, orig_factory = _patch_base_module(db_session)
+        _app = _create_test_app(db_session)
 
-        try:
-            from app.main import create_app
-
-            _app = create_app()
-            override_auth(_app)
-            transport = ASGITransport(app=_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/simulation/compare-random",
-                    json={"numbers": [1, 5, 10, 25, 49], "n_random": 100},
-                )
-            assert resp.status_code == 422
-        finally:
-            _restore_base_module(base_module, orig_engine, orig_factory)
+        transport = ASGITransport(app=_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/simulation/compare-random",
+                json={"numbers": [1, 5, 10, 25, 49], "n_random": 100},
+            )
+        assert resp.status_code == 422

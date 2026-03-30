@@ -6,10 +6,20 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.dependencies import get_db
 from app.models.game import GameDefinition
 from app.models.grid import ScoredGrid
 from app.models.statistics import StatisticsSnapshot
 from tests.integration.api.conftest import override_auth
+
+
+def _override_db(test_session: AsyncSession):
+    """Create a get_db override that yields the test session without committing."""
+
+    async def _fake_get_db():
+        yield test_session
+
+    return _fake_get_db
 
 
 @pytest.fixture
@@ -122,82 +132,58 @@ class TestGridsAPI:
     @pytest.mark.asyncio
     async def test_score_grid(self, db_session, game_with_snapshot_for_scoring):
         """POST /grids/score returns a valid score."""
-        import app.models.base as base_module
-
         game, snapshot = game_with_snapshot_for_scoring
-        _session_factory = type(db_session)
 
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
+        from app.main import create_app
 
-        engine = db_session.bind
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
 
-        try:
-            from app.main import create_app
-
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/grids/score",
-                    json={"numbers": [5, 12, 23, 34, 47]},
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert "total_score" in data
-            assert 0 <= data["total_score"] <= 1
-            assert "score_breakdown" in data
-            assert set(data["score_breakdown"].keys()) == {
-                "frequency",
-                "gap",
-                "cooccurrence",
-                "structure",
-                "balance",
-                "pattern_penalty",
-            }
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/grids/score",
+                json={"numbers": [5, 12, 23, 34, 47]},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "total_score" in data
+        assert 0 <= data["total_score"] <= 1
+        assert "score_breakdown" in data
+        assert set(data["score_breakdown"].keys()) == {
+            "frequency",
+            "gap",
+            "cooccurrence",
+            "structure",
+            "balance",
+            "pattern_penalty",
+        }
 
     @pytest.mark.asyncio
     async def test_score_grid_with_profile(self, db_session, game_with_snapshot_for_scoring):
         """POST /grids/score with profile parameter."""
-        import app.models.base as base_module
-
         game, snapshot = game_with_snapshot_for_scoring
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
-        try:
-            from app.main import create_app
+        from app.main import create_app
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/grids/score",
-                    json={"numbers": [5, 12, 23, 34, 47], "profile": "tendance"},
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert 0 <= data["total_score"] <= 1
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
+
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/grids/score",
+                json={"numbers": [5, 12, 23, 34, 47], "profile": "tendance"},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert 0 <= data["total_score"] <= 1
 
     @pytest.mark.asyncio
     async def test_score_grid_no_snapshot(self, db_session):
         """POST /grids/score returns 422 when no statistics available."""
-        import app.models.base as base_module
-
-        # Create a game without any statistics snapshot
         game = GameDefinition(
             name="Empty Game",
             slug="empty",
@@ -214,152 +200,106 @@ class TestGridsAPI:
         await db_session.flush()
         await db_session.refresh(game)
 
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
+        from app.main import create_app
 
-        try:
-            from app.main import create_app
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/grids/score",
-                    json={"numbers": [1, 2, 3, 4, 5]},
-                )
-            assert resp.status_code == 422
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/grids/score",
+                json={"numbers": [1, 2, 3, 4, 5]},
+            )
+        assert resp.status_code == 422
 
     @pytest.mark.asyncio
     async def test_get_top_grids(self, db_session, game_with_top_grids):
         """GET /grids/top returns scored grids."""
-        import app.models.base as base_module
-
         game, grids = game_with_top_grids
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
-        try:
-            from app.main import create_app
+        from app.main import create_app
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.get(f"/api/v1/games/{game.id}/grids/top?limit=10")
-            assert resp.status_code == 200
-            data = resp.json()
-            assert isinstance(data, list)
-            assert len(data) == 3
-            # Ordered by score desc
-            assert data[0]["total_score"] >= data[1]["total_score"]
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
+
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.get(f"/api/v1/games/{game.id}/grids/top?limit=10")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert isinstance(data, list)
+        assert len(data) == 3
+        # Ordered by score desc
+        assert data[0]["total_score"] >= data[1]["total_score"]
 
     @pytest.mark.asyncio
     async def test_get_grid_by_id(self, db_session, game_with_top_grids):
         """GET /grids/{grid_id} returns a single grid."""
-        import app.models.base as base_module
-
         game, grids = game_with_top_grids
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
-        try:
-            from app.main import create_app
+        from app.main import create_app
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.get(f"/api/v1/games/{game.id}/grids/{grids[0].id}")
-            assert resp.status_code == 200
-            data = resp.json()
-            assert data["numbers"] == grids[0].numbers
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
+
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.get(f"/api/v1/games/{game.id}/grids/{grids[0].id}")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["numbers"] == grids[0].numbers
 
     @pytest.mark.asyncio
     async def test_get_grid_not_found(self, db_session, game_with_snapshot_for_scoring):
         """GET /grids/{grid_id} returns 404 for non-existent grid."""
-        import app.models.base as base_module
-
         game, _ = game_with_snapshot_for_scoring
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
-        try:
-            from app.main import create_app
+        from app.main import create_app
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.get(f"/api/v1/games/{game.id}/grids/99999")
-            assert resp.status_code == 404
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
+
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.get(f"/api/v1/games/{game.id}/grids/99999")
+        assert resp.status_code == 404
 
     @pytest.mark.asyncio
     async def test_generate_grids(self, db_session, game_with_snapshot_for_scoring):
         """POST /grids/generate returns generated grids."""
-        import app.models.base as base_module
-
         game, snapshot = game_with_snapshot_for_scoring
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
 
-        try:
-            from app.main import create_app
+        from app.main import create_app
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/grids/generate",
-                    json={"count": 3, "method": "annealing"},
-                )
-            assert resp.status_code == 200
-            data = resp.json()
-            assert "grids" in data
-            assert len(data["grids"]) == 3
-            assert "method_used" in data
-            assert data["method_used"] == "annealing"
-            assert data["computation_time_ms"] > 0
-            for g in data["grids"]:
-                assert 0 <= g["total_score"] <= 1
-                assert len(g["numbers"]) == 5
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
+
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/grids/generate",
+                json={"count": 3, "method": "annealing"},
+            )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "grids" in data
+        assert len(data["grids"]) == 3
+        assert "method_used" in data
+        assert data["method_used"] == "annealing"
+        assert data["computation_time_ms"] > 0
+        for g in data["grids"]:
+            assert 0 <= g["total_score"] <= 1
+            assert len(g["numbers"]) == 5
 
     @pytest.mark.asyncio
     async def test_generate_grids_no_snapshot(self, db_session):
         """POST /grids/generate returns 422 when no statistics available."""
-        import app.models.base as base_module
-
         game = GameDefinition(
             name="Empty Game 2",
             slug="empty2",
@@ -376,24 +316,16 @@ class TestGridsAPI:
         await db_session.flush()
         await db_session.refresh(game)
 
-        engine = db_session.bind
-        original_engine = base_module._engine
-        original_factory = base_module._session_factory
-        base_module._engine = engine
-        base_module._session_factory = lambda: type(db_session)(bind=engine, expire_on_commit=False)
+        from app.main import create_app
 
-        try:
-            from app.main import create_app
+        test_app = create_app()
+        override_auth(test_app)
+        test_app.dependency_overrides[get_db] = _override_db(db_session)
 
-            test_app = create_app()
-            override_auth(test_app)
-            transport = ASGITransport(app=test_app)
-            async with AsyncClient(transport=transport, base_url="http://test") as client:
-                resp = await client.post(
-                    f"/api/v1/games/{game.id}/grids/generate",
-                    json={"count": 3},
-                )
-            assert resp.status_code == 422
-        finally:
-            base_module._engine = original_engine
-            base_module._session_factory = original_factory
+        transport = ASGITransport(app=test_app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                f"/api/v1/games/{game.id}/grids/generate",
+                json={"count": 3},
+            )
+        assert resp.status_code == 422
