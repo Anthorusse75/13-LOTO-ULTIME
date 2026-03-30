@@ -27,7 +27,7 @@ services:
     build: ./frontend
     container_name: loto-ultime-frontend
     ports:
-      - "${FRONTEND_PORT:-80}:80"
+      - "${FRONTEND_PORT:-3080}:80"
     depends_on:
       backend:
         condition: service_healthy
