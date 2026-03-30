@@ -3,7 +3,7 @@ import api from "./api";
 
 export const jobService = {
   getAll: async (limit = 50, offset = 0): Promise<JobExecution[]> => {
-    const { data } = await api.get("/jobs/", { params: { limit, offset } });
+    const { data } = await api.get("/jobs", { params: { limit, offset } });
     return data;
   },
 
