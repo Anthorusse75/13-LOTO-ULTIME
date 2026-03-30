@@ -1,5 +1,6 @@
 """Grid service — scoring, generation, and persistence."""
 
+import asyncio
 import time
 from datetime import UTC, datetime
 
@@ -141,7 +142,7 @@ class GridService:
         )
 
         start = time.perf_counter()
-        results = optimizer.optimize(n_grids=count)
+        results = await asyncio.to_thread(optimizer.optimize, n_grids=count)
         elapsed_ms = (time.perf_counter() - start) * 1000
 
         logger.info(
@@ -175,7 +176,9 @@ class GridService:
 
         start = time.perf_counter()
         portfolio_optimizer = PortfolioOptimizer(game)
-        result = portfolio_optimizer.optimize(candidates, grid_count, strategy)
+        result = await asyncio.to_thread(
+            portfolio_optimizer.optimize, candidates, grid_count, strategy
+        )
         portfolio_ms = (time.perf_counter() - start) * 1000
 
         total_ms = gen_ms + portfolio_ms

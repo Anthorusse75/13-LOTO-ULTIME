@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.pool import NullPool, StaticPool
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -30,10 +31,20 @@ def init_db(database_url: str) -> None:
     global _engine, _session_factory
 
     connect_args = {}
+    pool_class = None
     if database_url.startswith("sqlite"):
         connect_args["check_same_thread"] = False
+        if ":memory:" in database_url:
+            pool_class = StaticPool
+        else:
+            pool_class = NullPool
 
-    _engine = create_async_engine(database_url, echo=False, connect_args=connect_args)
+    _engine = create_async_engine(
+        database_url,
+        echo=False,
+        connect_args=connect_args,
+        poolclass=pool_class,
+    )
     _session_factory = async_sessionmaker(_engine, expire_on_commit=False)
 
     # Activate PRAGMA foreign_keys for SQLite connections

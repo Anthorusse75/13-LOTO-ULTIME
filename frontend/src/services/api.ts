@@ -171,11 +171,20 @@ api.interceptors.response.use(
     const message = extractErrorMessage(error);
     const method = error.config?.method?.toUpperCase() ?? "";
     const path = error.config?.url ?? "";
+    const status = error.response?.status;
 
-    toast.error(message, {
-      description: `${method} ${path}`,
-      duration: 6000,
-    });
+    // Don't show toast for expected "no data yet" responses
+    const isExpectedEmpty =
+      (status === 404 || status === 422) &&
+      method === "GET" &&
+      (path.includes("/draws/latest") || path.includes("/statistics"));
+
+    if (!isExpectedEmpty) {
+      toast.error(message, {
+        description: `${method} ${path}`,
+        duration: 6000,
+      });
+    }
 
     return Promise.reject(error);
   },

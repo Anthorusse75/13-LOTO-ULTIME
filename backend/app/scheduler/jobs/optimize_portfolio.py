@@ -34,25 +34,31 @@ async def _do_optimize_portfolio() -> dict:
     configs = load_all_game_configs()
     results = {}
 
+    # First, get the list of active games (short-lived session)
     async for session in get_session():
         game_repo = GameRepository(session)
-        stats_repo = StatisticsRepository(session)
-        grid_repo = GridRepository(session)
-        portfolio_repo = PortfolioRepository(session)
-        grid_service = GridService(stats_repo, grid_repo)
-
         active_games = await game_repo.get_active_games()
+        game_data = [(g.id, g.slug) for g in active_games]
+        break
 
-        for game in active_games:
-            config = configs.get(game.slug)
-            if config is None:
-                continue
+    # Process each game×strategy with its own session to avoid holding
+    # connections during long CPU-bound grid generation
+    for game_id, game_slug in game_data:
+        config = configs.get(game_slug)
+        if config is None:
+            continue
 
-            game_results = {}
-            for strategy in STRATEGIES:
-                try:
+        game_results = {}
+        for strategy in STRATEGIES:
+            try:
+                async for session in get_session():
+                    stats_repo = StatisticsRepository(session)
+                    grid_repo = GridRepository(session)
+                    portfolio_repo = PortfolioRepository(session)
+                    grid_service = GridService(stats_repo, grid_repo)
+
                     portfolio_result, method, elapsed = await grid_service.generate_portfolio(
-                        game_id=game.id,
+                        game_id=game_id,
                         game=config,
                         grid_count=PORTFOLIO_GRID_COUNT,
                         strategy=strategy,
@@ -63,8 +69,8 @@ async def _do_optimize_portfolio() -> dict:
                         for g in portfolio_result.grids
                     ]
                     portfolio = Portfolio(
-                        game_id=game.id,
-                        name=f"{game.slug}_{strategy}",
+                        game_id=game_id,
+                        name=f"{game_slug}_{strategy}",
                         strategy=strategy,
                         grid_count=len(grids_data),
                         grids=grids_data,
@@ -75,26 +81,25 @@ async def _do_optimize_portfolio() -> dict:
                         computed_at=datetime.now(UTC),
                     )
                     await portfolio_repo.create(portfolio)
+                    await session.commit()
+                    break
 
-                    game_results[strategy] = {
-                        "status": "success",
-                        "grid_count": len(portfolio_result.grids),
-                        "diversity": round(portfolio_result.diversity_score, 3),
-                        "coverage": round(portfolio_result.coverage_score, 3),
-                    }
+                game_results[strategy] = {
+                    "status": "success",
+                    "grid_count": len(portfolio_result.grids),
+                    "diversity": round(portfolio_result.diversity_score, 3),
+                    "coverage": round(portfolio_result.coverage_score, 3),
+                }
 
-                except Exception as exc:
-                    game_results[strategy] = {"status": "error", "error": str(exc)}
-                    logger.error(
-                        "optimize_portfolio.failed",
-                        slug=game.slug,
-                        strategy=strategy,
-                        error=str(exc),
-                    )
+            except Exception as exc:
+                game_results[strategy] = {"status": "error", "error": str(exc)}
+                logger.error(
+                    "optimize_portfolio.failed",
+                    slug=game_slug,
+                    strategy=strategy,
+                    error=str(exc),
+                )
 
-            results[game.slug] = game_results
-
-        await session.commit()
-        break
+        results[game_slug] = game_results
 
     return {"games_processed": len(results), "details": results}
