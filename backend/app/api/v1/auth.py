@@ -1,6 +1,11 @@
 """Auth endpoints — /api/v1/auth."""
 
+import math
+import time
+from collections import defaultdict
+
 from fastapi import APIRouter, Depends, Request
+from fastapi.responses import JSONResponse
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
@@ -19,6 +24,16 @@ router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
 audit_log = __import__("structlog").get_logger("audit")
 
+# ── Progressive login throttle (Apple-style) ──
+# Delays: 0, 1s, 5s, 15s, 30s, 60s, 120s, 300s, 600s
+_login_failures: dict[str, list] = defaultdict(lambda: [0, 0.0])  # {ip: [count, locked_until]}
+_DELAYS = [0, 1, 5, 15, 30, 60, 120, 300, 600]
+
+
+def _get_delay(failures: int) -> int:
+    idx = min(failures, len(_DELAYS) - 1)
+    return _DELAYS[idx]
+
 
 @router.post("/login", response_model=TokenResponse)
 @limiter.limit("20/minute")
@@ -28,8 +43,49 @@ async def login(
     auth_service: AuthService = Depends(get_auth_service),
 ):
     """Authenticate a user and return JWT tokens."""
-    access_token, refresh_token, _user = await auth_service.login(body.username, body.password)
-    return TokenResponse(access_token=access_token, refresh_token=refresh_token)
+    ip = get_remote_address(request)
+    state = _login_failures[ip]
+    now = time.monotonic()
+
+    # Check if still locked out
+    if state[1] > now:
+        remaining = math.ceil(state[1] - now)
+        return JSONResponse(
+            status_code=429,
+            content={
+                "detail": f"Trop de tentatives. Réessayez dans {remaining}s.",
+                "retry_after": remaining,
+            },
+            headers={"Retry-After": str(remaining)},
+        )
+
+    try:
+        access_token, refresh_token, _user = await auth_service.login(body.username, body.password)
+        # Success — reset failures for this IP
+        _login_failures.pop(ip, None)
+        return TokenResponse(access_token=access_token, refresh_token=refresh_token)
+    except AuthenticationError:
+        # Increment failure count and set lockout
+        state[0] += 1
+        delay = _get_delay(state[0])
+        state[1] = now + delay
+        remaining = delay
+
+        if delay > 0:
+            audit_log.warning(
+                "login.throttled", ip=ip, failures=state[0], delay=delay,
+            )
+            return JSONResponse(
+                status_code=429,
+                content={
+                    "detail": f"Identifiants incorrects. Réessayez dans {remaining}s.",
+                    "retry_after": remaining,
+                    "failures": state[0],
+                },
+                headers={"Retry-After": str(remaining)},
+            )
+
+        raise
 
 
 @router.post("/register", response_model=UserResponse)

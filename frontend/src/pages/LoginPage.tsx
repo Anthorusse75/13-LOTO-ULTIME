@@ -2,7 +2,7 @@ import { authService } from "@/services/authService";
 import { useAuthStore } from "@/stores/authStore";
 import { isAxiosError } from "axios";
 import { Loader2, Lock } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
@@ -13,9 +13,41 @@ export default function LoginPage() {
   const login = useAuthStore((s) => s.login);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startCountdown = useCallback((seconds: number) => {
+    setCountdown(seconds);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  const formatCountdown = (s: number) => {
+    if (s >= 60) {
+      const min = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${min}min ${sec.toString().padStart(2, "0")}s`;
+    }
+    return `${s}s`;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (countdown > 0) return;
     setError("");
     setDebugInfo("");
     setLoading(true);
@@ -31,15 +63,26 @@ export default function LoginPage() {
         const code = err.code ?? "?";
         const status = err.response?.status;
         const detail = err.response?.data?.detail ?? "";
+        const retryAfter = err.response?.data?.retry_after;
+
         if (!err.response) {
           setError("Serveur inaccessible — vérifiez que le backend est lancé.");
           setDebugInfo(`code=${code} message=${err.message}`);
-        } else if (status === 401 || status === 403) {
-          setError("Identifiants incorrects.");
-          setDebugInfo(`HTTP ${status} ${detail}`);
+        } else if (status === 429 && retryAfter) {
+          startCountdown(retryAfter);
+          const failures = err.response.data?.failures;
+          setError(
+            failures
+              ? `Tentative ${failures} échouée. Veuillez patienter.`
+              : "Trop de tentatives. Veuillez patienter."
+          );
+          setDebugInfo("");
         } else if (status === 429) {
           setError("Trop de tentatives. Veuillez patienter quelques instants.");
           setDebugInfo(`HTTP ${status}`);
+        } else if (status === 401 || status === 403) {
+          setError("Identifiants incorrects.");
+          setDebugInfo(`HTTP ${status} ${detail}`);
         } else {
           setError(`Erreur ${status} — réessayez.`);
           setDebugInfo(`HTTP ${status} ${detail} code=${code}`);
@@ -126,7 +169,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || countdown > 0}
               className="w-full py-2 bg-accent-blue text-white rounded-md text-sm font-medium hover:bg-accent-blue/90 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading && (
@@ -136,7 +179,9 @@ export default function LoginPage() {
                   aria-hidden="true"
                 />
               )}
-              Se connecter
+              {countdown > 0
+                ? `Patientez ${formatCountdown(countdown)}`
+                : "Se connecter"}
             </button>
           </form>
         </div>

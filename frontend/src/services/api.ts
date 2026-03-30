@@ -179,7 +179,11 @@ api.interceptors.response.use(
       method === "GET" &&
       (path.includes("/draws/latest") || path.includes("/statistics"));
 
-    if (!isExpectedEmpty) {
+    // Don't show toast for login throttle (LoginPage handles it)
+    const isLoginThrottle =
+      status === 429 && path.includes("/auth/login");
+
+    if (!isExpectedEmpty && !isLoginThrottle) {
       toast.error(message, {
         description: `${method} ${path}`,
         duration: 6000,
