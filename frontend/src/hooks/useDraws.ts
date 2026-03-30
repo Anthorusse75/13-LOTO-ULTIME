@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { drawService } from "@/services/drawService";
 import { useGameStore } from "@/stores/gameStore";
 
@@ -20,6 +21,11 @@ export function useLatestDraw() {
     queryKey: ["draws", gameId, "latest"],
     queryFn: () => drawService.getLatest(gameId!),
     enabled: !!gameId,
-    refetchInterval: 60 * 1000,
+    retry: (_count, error) => {
+      const status = (error as AxiosError)?.response?.status;
+      return status !== 404 && status !== 422;
+    },
+    refetchInterval: (query) => (query.state.data ? 60_000 : false),
+    staleTime: 5 * 60 * 1000,
   });
 }

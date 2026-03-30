@@ -83,6 +83,40 @@ async def _seed_admin() -> None:
         break
 
 
+async def _maybe_initial_fetch() -> None:
+    """If no draws exist yet, trigger the nightly pipeline in the background."""
+    import asyncio
+
+    from sqlalchemy import func, select
+
+    from app.models.base import get_session
+    from app.models.draw import Draw
+
+    logger = structlog.get_logger("seed")
+
+    async for session in get_session():
+        result = await session.execute(select(func.count(Draw.id)))
+        count = result.scalar()
+        break
+
+    if count and count > 0:
+        logger.info("initial_fetch.skipped", draw_count=count)
+        return
+
+    logger.info("initial_fetch.starting", reason="empty_draws_table")
+
+    async def _run_pipeline():
+        try:
+            from app.scheduler.jobs.nightly_pipeline import _do_nightly_pipeline
+
+            result = await _do_nightly_pipeline()
+            logger.info("initial_fetch.complete", result=result)
+        except Exception as exc:
+            logger.error("initial_fetch.failed", error=str(exc))
+
+    asyncio.create_task(_run_pipeline())
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup / shutdown logic."""
@@ -105,6 +139,9 @@ async def lifespan(app: FastAPI):
         scheduler = create_scheduler(settings)
         scheduler.start()
         logger.info("scheduler_started")
+
+    # On first deployment, trigger data fetch in the background
+    await _maybe_initial_fetch()
 
     yield
 

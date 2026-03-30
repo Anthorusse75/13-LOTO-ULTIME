@@ -25,7 +25,7 @@ import {
 } from "recharts";
 
 export default function DashboardPage() {
-  const { data: stats, isLoading: statsLoading } = useStatistics();
+  const { data: stats, isLoading: statsLoading, isError: statsError } = useStatistics();
   const { data: latest } = useLatestDraw();
   const { data: draws } = useDraws(0, 5);
   const { data: topGrids } = useTopGrids(5);
@@ -33,6 +33,8 @@ export default function DashboardPage() {
 
   if (statsLoading)
     return <LoadingSpinner message="Chargement du dashboard..." />;
+
+  const noData = statsError && !draws?.length;
 
   const topFreq = stats?.frequencies
     .slice()
@@ -42,6 +44,17 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard</h1>
+
+      {noData && (
+        <div className="bg-accent-blue/10 border border-accent-blue/30 rounded-lg p-4 text-sm">
+          <p className="font-semibold mb-1">Aucune donnée disponible</p>
+          <p className="text-text-secondary">
+            Le pipeline d'import se lance automatiquement au premier démarrage.
+            Les tirages et statistiques apparaîtront d'ici quelques minutes.
+            Vous pouvez aussi déclencher l'import manuellement depuis la page Administration.
+          </p>
+        </div>
+      )}
 
       <PageIntro
         storageKey="dashboard"

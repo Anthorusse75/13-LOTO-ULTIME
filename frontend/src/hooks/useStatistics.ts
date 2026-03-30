@@ -1,6 +1,7 @@
 import { statisticsService } from "@/services/statisticsService";
 import { useGameStore } from "@/stores/gameStore";
 import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
 export function useStatistics() {
   const gameId = useGameStore((s) => s.currentGameId);
@@ -8,6 +9,10 @@ export function useStatistics() {
     queryKey: ["statistics", gameId],
     queryFn: () => statisticsService.getAll(gameId!),
     enabled: !!gameId,
+    retry: (_count, error) => {
+      const status = (error as AxiosError)?.response?.status;
+      return status !== 404 && status !== 422;
+    },
     staleTime: 5 * 60 * 1000,
   });
 }
