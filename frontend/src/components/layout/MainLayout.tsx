@@ -19,7 +19,7 @@ export default function MainLayout() {
         <main
           id="main-content"
           tabIndex={-1}
-          className="flex-1 overflow-auto p-4 pt-14 md:p-6 md:pt-6"
+          className="flex-1 overflow-x-hidden overflow-y-auto p-4 pt-14 md:p-6 md:pt-6"
         >
           <ErrorBoundary>
             <Outlet />

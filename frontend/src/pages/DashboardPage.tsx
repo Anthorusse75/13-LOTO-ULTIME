@@ -6,6 +6,7 @@ import { useDraws, useLatestDraw } from "@/hooks/useDraws";
 import { useTopGrids } from "@/hooks/useGrids";
 import { useSchedulerStatus } from "@/hooks/useJobs";
 import { useStatistics } from "@/hooks/useStatistics";
+import { useAuthStore } from "@/stores/authStore";
 import { formatDate, formatScore } from "@/utils/formatters";
 import {
   Activity,
@@ -25,11 +26,12 @@ import {
 } from "recharts";
 
 export default function DashboardPage() {
+  const isAdmin = useAuthStore((s) => s.user?.role === "ADMIN");
   const { data: stats, isLoading: statsLoading, isError: statsError } = useStatistics();
   const { data: latest } = useLatestDraw();
   const { data: draws } = useDraws(0, 5);
   const { data: topGrids } = useTopGrids(5);
-  const { data: schedulerStatus } = useSchedulerStatus();
+  const { data: schedulerStatus } = useSchedulerStatus(isAdmin);
 
   if (statsLoading)
     return <LoadingSpinner message="Chargement du dashboard..." />;

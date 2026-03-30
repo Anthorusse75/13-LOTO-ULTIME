@@ -183,7 +183,10 @@ api.interceptors.response.use(
     const isLoginThrottle =
       status === 429 && path.includes("/auth/login");
 
-    if (!isExpectedEmpty && !isLoginThrottle) {
+    // Don't show toast for permission errors on data-fetching requests
+    const isForbiddenGet = status === 403 && method === "GET";
+
+    if (!isExpectedEmpty && !isLoginThrottle && !isForbiddenGet) {
       toast.error(message, {
         description: `${method} ${path}`,
         duration: 6000,

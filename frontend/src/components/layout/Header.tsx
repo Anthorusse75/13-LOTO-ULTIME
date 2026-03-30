@@ -28,7 +28,7 @@ export default function Header() {
   const currentGame = games?.find((g) => g.id === currentGameId);
 
   return (
-    <header className="flex items-center justify-between h-14 px-6 bg-surface border-b border-border">
+    <header className="sticky top-0 z-30 flex items-center justify-between h-14 px-6 bg-surface border-b border-border">
       <div className="flex items-center gap-4">
         <h1 className="text-sm font-medium text-text-secondary">
           {currentGame ? currentGame.name : "Chargement..."}

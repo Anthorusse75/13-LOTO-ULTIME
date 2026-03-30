@@ -11,12 +11,13 @@ export function useJobs(limit = 50) {
   });
 }
 
-export function useSchedulerStatus() {
+export function useSchedulerStatus(enabled = true) {
   return useQuery({
     queryKey: ["jobs", "status"],
     queryFn: () => jobService.getStatus(),
     staleTime: 15 * 1000,
-    refetchInterval: 15 * 1000,
+    refetchInterval: enabled ? 15 * 1000 : false,
+    enabled,
   });
 }
 
