@@ -14,3 +14,7 @@ backups/
 htmlcov/
 .mypy_cache/
 .ruff_cache/
+tests/
+.git/
+.github/
+*.md

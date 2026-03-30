@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -25,7 +26,7 @@ target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
-    url = config.get_main_option("sqlalchemy.url")
+    url = os.environ.get("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -44,7 +45,7 @@ def do_run_migrations(connection) -> None:
 
 async def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
-    url = config.get_main_option("sqlalchemy.url")
+    url = os.environ.get("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
 
     connect_args = {}
     if url and url.startswith("sqlite"):

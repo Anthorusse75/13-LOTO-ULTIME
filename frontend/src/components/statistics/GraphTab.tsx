@@ -140,7 +140,8 @@ export default function GraphTab() {
               (d as d3.SimulationNodeDatum).fx = null;
               (d as d3.SimulationNodeDatum).fy = null;
             },
-          ) as unknown as Parameters<typeof g.call>[0],
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ) as any,
       );
 
     // Labels

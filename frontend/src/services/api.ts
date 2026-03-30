@@ -106,7 +106,7 @@ api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       originalRequest &&
-      !(originalRequest as Record<string, unknown>)._retry
+      !(originalRequest as unknown as Record<string, unknown>)._retry
     ) {
       // Don't retry refresh or login requests
       const url = originalRequest.url ?? "";
@@ -128,7 +128,7 @@ api.interceptors.response.use(
         });
       }
 
-      (originalRequest as Record<string, unknown>)._retry = true;
+      (originalRequest as unknown as Record<string, unknown>)._retry = true;
       isRefreshing = true;
 
       try {

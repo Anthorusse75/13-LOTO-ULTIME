@@ -1,4 +1,5 @@
 services:
+  # ── Backend (FastAPI + SQLite) ─────────────────────────────
   backend:
     build: ./backend
     container_name: loto-ultime-backend
@@ -6,30 +7,33 @@ services:
       - "8000:8000"
     volumes:
       - sqlite-data:/app/data
-      - ./logs:/var/log/loto-ultime
     environment:
-      - DATABASE_URL=sqlite+aiosqlite:///data/loto_ultime.db
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/loto_ultime.db
       - SCHEDULER_ENABLED=true
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production-min-32-chars!!}
       - APP_ENV=${APP_ENV:-production}
+      - CORS_ORIGINS=["http://localhost","http://localhost:80"]
+      - LOG_LEVEL=INFO
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
+      start_period: 30s
 
+  # ── Frontend (Nginx + React SPA) ───────────────────────────
   frontend:
     build: ./frontend
     container_name: loto-ultime-frontend
     ports:
       - "80:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped
 
-  # ── Observability stack ──────────────────────────────────────
+  # ── Observability stack ────────────────────────────────────
   prometheus:
     image: prom/prometheus:v2.53.0
     container_name: loto-ultime-prometheus
@@ -46,6 +50,8 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+    profiles:
+      - monitoring
 
   grafana:
     image: grafana/grafana:11.1.0
@@ -65,6 +71,8 @@ services:
     depends_on:
       - prometheus
     restart: unless-stopped
+    profiles:
+      - monitoring
 
 volumes:
   sqlite-data:
