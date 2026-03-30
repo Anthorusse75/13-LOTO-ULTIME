@@ -3,8 +3,8 @@ services:
   backend:
     build: ./backend
     container_name: loto-ultime-backend
-    ports:
-      - "${BACKEND_PORT:-8000}:8000"
+    expose:
+      - "8000"
     volumes:
       - sqlite-data:/app/data
     environment:
@@ -12,7 +12,7 @@ services:
       - SCHEDULER_ENABLED=true
       - SECRET_KEY=${SECRET_KEY:-change-me-in-production-min-32-chars!!}
       - APP_ENV=${APP_ENV:-production}
-      - CORS_ORIGINS=["http://localhost","http://localhost:80"]
+      - CORS_ORIGINS=["https://${DOMAIN:-loto.local}","http://${DOMAIN:-loto.local}"]
       - LOG_LEVEL=INFO
     restart: unless-stopped
     healthcheck:
@@ -21,17 +21,28 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+    networks:
+      - internal
 
   # ── Frontend (Nginx + React SPA) ───────────────────────────
   frontend:
     build: ./frontend
     container_name: loto-ultime-frontend
-    ports:
-      - "${FRONTEND_PORT:-3080}:80"
+    expose:
+      - "80"
     depends_on:
       backend:
         condition: service_healthy
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.loto.rule=Host(`${DOMAIN:-loto.local}`)"
+      - "traefik.http.routers.loto.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}"
+      - "traefik.http.routers.loto.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}"
+      - "traefik.http.services.loto.loadbalancer.server.port=80"
+    networks:
+      - traefik
+      - internal
 
   # ── Observability stack ────────────────────────────────────
   prometheus:
@@ -52,6 +63,8 @@ services:
     restart: unless-stopped
     profiles:
       - monitoring
+    networks:
+      - internal
 
   grafana:
     image: grafana/grafana:11.1.0
@@ -73,6 +86,14 @@ services:
     restart: unless-stopped
     profiles:
       - monitoring
+    networks:
+      - internal
+
+networks:
+  traefik:
+    external: true
+  internal:
+    driver: bridge
 
 volumes:
   sqlite-data:
