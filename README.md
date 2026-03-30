@@ -122,42 +122,87 @@ Copier `.env.example` en `.env` et configurer :
 ```env
 SECRET_KEY=your-secret-key-min-32-chars
 DATABASE_URL=sqlite+aiosqlite:///./loto_ultime.db
+ADMIN_EMAIL=admin@loto-ultime.local
 ADMIN_INITIAL_PASSWORD=ChangeMe123!
 CORS_ORIGINS=["http://localhost:5173"]
+SCHEDULER_ENABLED=false
 ```
+
+Voir `.env.example` pour la liste complète des variables.
+
+---
+
+## Déploiement Docker
+
+```bash
+# Lancer l'application complète
+docker compose up -d --build
+
+# Avec monitoring (Prometheus + Grafana)
+docker compose --profile monitoring up -d --build
+
+# Arrêter
+docker compose down
+```
+
+### Services
+
+| Service    | URL                        | Description                    |
+| ---------- | -------------------------- | ------------------------------ |
+| Frontend   | `http://localhost:3080`    | Application React (Nginx)      |
+| API docs   | `http://localhost:3080/api/v1/docs` | Swagger UI                    |
+| Health     | `http://localhost:3080/health`      | État du système               |
+| Prometheus | `http://localhost:9090`    | Métriques (profil monitoring)  |
+| Grafana    | `http://localhost:3000`    | Dashboards (profil monitoring) |
+
+Le port frontend est configurable via `FRONTEND_PORT` dans `.env` (défaut : 3080).
+
+### Premier démarrage
+
+Au premier lancement, l'application :
+1. Crée les tables de la base de données
+2. Charge les configurations des 5 loteries (YAML)
+3. Crée l'utilisateur admin depuis `ADMIN_EMAIL` / `ADMIN_INITIAL_PASSWORD`
+4. Lance automatiquement l'import des tirages et le calcul des statistiques
+
+---
+
+## Documentation API
+
+L'API REST est documentée via OpenAPI/Swagger, accessible à `/api/v1/docs` (Swagger UI) ou `/api/v1/redoc` (ReDoc).
+
+Principaux endpoints :
+
+| Groupe         | Endpoints                        | Auth requise |
+| -------------- | -------------------------------- | ------------ |
+| Authentification | `POST /auth/login`, `/refresh`, `/register` | Non / Admin |
+| Jeux           | `GET /games`                     | Oui          |
+| Tirages        | `GET /draws`, `/draws/latest`    | Oui          |
+| Statistiques   | `GET /statistics/*` (9 endpoints) | Oui         |
+| Grilles        | `POST /grids/generate`, `GET /grids/top` | Utilisateur |
+| Portefeuille   | `POST /portfolios/generate`      | Utilisateur  |
+| Simulation     | `POST /simulation/*`             | Utilisateur  |
+| Jobs           | `GET /jobs`, `POST /jobs/{name}/trigger` | Admin |
 
 ---
 
 ## Développement
 
 ```bash
-# Tests backend
+# Tests backend (455 tests, couverture ~85%)
 cd backend
-pytest --cov=app --cov-report=html   # 395+ tests
+pytest --cov=app --cov-report=html
 
-# Tests frontend
+# Tests frontend (28 tests)
 cd frontend
-npm test                              # 28+ tests (Vitest)
+npm test
 
-# Linter
+# Linter backend
 cd backend && ruff check app/
 
-# Frontend build
-cd frontend
-npm run build
+# Build frontend
+cd frontend && npm run build
 ```
-
-### Docker
-
-```bash
-# Lancer l'application complète
-docker compose up --build
-
-# Backend uniquement
-docker compose up backend
-```
-
-Le frontend est servi via Nginx (port 80), le backend via Uvicorn (port 8000).
 
 ---
 
@@ -174,7 +219,9 @@ Le frontend est servi via Nginx (port 80), le backend via Uvicorn (port 8000).
 | 7     | Interface Frontend           | ✅ Complète |
 | 8     | Scheduler & Jobs             | ✅ Complète |
 | 9     | Sécurité & Auth              | ✅ Complète |
-| 10    | Polish & Déploiement         | 🔄 En cours |
+| 10    | Polish & Déploiement         | ✅ Complète |
+
+Voir [CHANGELOG.md](CHANGELOG.md) pour le détail des versions, et [CONTRIBUTING.md](CONTRIBUTING.md) pour contribuer.
 
 Voir [17_Roadmap](docs/architecture_initiale/17_Roadmap_Developpement.md) et [18_Checklist](docs/architecture_initiale/18_Checklist_Globale.md) pour le détail.
 
