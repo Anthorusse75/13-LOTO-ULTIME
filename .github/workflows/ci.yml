@@ -47,7 +47,7 @@ jobs:
           pytest --cov=app --cov-report=xml --cov-report=term-missing -q
         env:
           APP_ENV: test
-          SECRET_KEY: "ci-secret-key-for-testing-only"
+          SECRET_KEY: "ci-secret-key-for-testing-only!!!"
           DATABASE_URL: "sqlite+aiosqlite:///./test.db"
           SCHEDULER_ENABLED: "false"
 
