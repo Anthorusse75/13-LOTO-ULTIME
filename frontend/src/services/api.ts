@@ -180,8 +180,7 @@ api.interceptors.response.use(
       (path.includes("/draws/latest") || path.includes("/statistics"));
 
     // Don't show toast for login throttle (LoginPage handles it)
-    const isLoginThrottle =
-      status === 429 && path.includes("/auth/login");
+    const isLoginThrottle = status === 429 && path.includes("/auth/login");
 
     // Don't show toast for permission errors on data-fetching requests
     const isForbiddenGet = status === 403 && method === "GET";

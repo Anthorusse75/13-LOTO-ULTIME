@@ -27,7 +27,11 @@ import {
 
 export default function DashboardPage() {
   const isAdmin = useAuthStore((s) => s.user?.role === "ADMIN");
-  const { data: stats, isLoading: statsLoading, isError: statsError } = useStatistics();
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    isError: statsError,
+  } = useStatistics();
   const { data: latest } = useLatestDraw();
   const { data: draws } = useDraws(0, 5);
   const { data: topGrids } = useTopGrids(5);
@@ -53,7 +57,8 @@ export default function DashboardPage() {
           <p className="text-text-secondary">
             Le pipeline d'import se lance automatiquement au premier démarrage.
             Les tirages et statistiques apparaîtront d'ici quelques minutes.
-            Vous pouvez aussi déclencher l'import manuellement depuis la page Administration.
+            Vous pouvez aussi déclencher l'import manuellement depuis la page
+            Administration.
           </p>
         </div>
       )}
