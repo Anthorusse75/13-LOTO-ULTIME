@@ -4,7 +4,7 @@ services:
     build: ./backend
     container_name: loto-ultime-backend
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT:-8000}:8000"
     volumes:
       - sqlite-data:/app/data
     environment:
@@ -27,7 +27,7 @@ services:
     build: ./frontend
     container_name: loto-ultime-frontend
     ports:
-      - "80:80"
+      - "${FRONTEND_PORT:-3080}:80"
     depends_on:
       backend:
         condition: service_healthy
