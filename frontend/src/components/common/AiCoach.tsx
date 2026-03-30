@@ -196,35 +196,35 @@ export default function AiCoach() {
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-40 w-80 shadow-xl rounded-xl border border-border bg-card text-card-foreground"
+      className="fixed bottom-4 right-4 z-40 w-80 shadow-xl rounded-xl border border-border bg-surface text-text-primary"
       role="complementary"
       aria-label="Conseiller IA"
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-primary/10 rounded-t-xl border-b border-border">
+      <div className="flex items-center justify-between px-4 py-3 bg-accent-blue/10 rounded-t-xl border-b border-border">
         <button
           className="flex items-center gap-2 flex-1 text-left"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="ai-coach-body"
         >
-          <Bot className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+          <Bot className="w-4 h-4 text-accent-blue shrink-0" aria-hidden="true" />
           <span className="font-semibold text-sm">Coach — {context.title}</span>
           {open ? (
             <ChevronDown
-              className="w-4 h-4 ml-auto text-muted-foreground"
+              className="w-4 h-4 ml-auto text-text-secondary"
               aria-hidden="true"
             />
           ) : (
             <ChevronUp
-              className="w-4 h-4 ml-auto text-muted-foreground"
+              className="w-4 h-4 ml-auto text-text-secondary"
               aria-hidden="true"
             />
           )}
         </button>
         <button
           onClick={() => setDismissed(true)}
-          className="ml-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="ml-2 text-text-secondary hover:text-text-primary transition-colors"
           aria-label="Fermer le coach"
         >
           <X className="w-4 h-4" aria-hidden="true" />
@@ -246,13 +246,13 @@ export default function AiCoach() {
               >
                 {tip.icon}
               </span>
-              <span className="text-muted-foreground leading-snug">
+              <span className="text-text-secondary leading-snug">
                 {tip.text}
               </span>
             </div>
           ))}
           <div className="pt-1 border-t border-border">
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1 text-xs text-text-secondary">
               <Lightbulb className="w-3 h-3" aria-hidden="true" />
               Conseils basés sur la page active
             </span>

@@ -103,18 +103,18 @@ export default function CustomWeightsEditor({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sliders className="w-4 h-4 text-primary" aria-hidden="true" />
+          <Sliders className="w-4 h-4 text-accent-blue" aria-hidden="true" />
           <span className="font-semibold text-sm">Poids personnalisés</span>
           <InfoTooltip text="Remplacez le profil prédéfini par vos propres pondérations pour chaque critère de scoring." />
         </div>
         <label className="flex items-center gap-2 cursor-pointer select-none">
-          <span className="text-xs text-muted-foreground">Activer</span>
+          <span className="text-xs text-text-secondary">Activer</span>
           <button
             role="switch"
             aria-checked={enabled}
             onClick={() => handleToggle(!enabled)}
-            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
-              enabled ? "bg-primary" : "bg-muted"
+            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-blue ${
+              enabled ? "bg-accent-blue" : "bg-surface-hover"
             }`}
             aria-label="Activer les poids personnalisés"
           >
@@ -136,7 +136,7 @@ export default function CustomWeightsEditor({
                   {label}
                   <InfoTooltip text={description} />
                 </div>
-                <span className="text-sm tabular-nums text-muted-foreground">
+                <span className="text-sm tabular-nums text-text-secondary">
                   {(weights[key] * 100).toFixed(0)}%
                 </span>
               </div>
@@ -147,7 +147,7 @@ export default function CustomWeightsEditor({
                 step={0.01}
                 value={weights[key]}
                 onChange={(e) => handleChange(key, parseFloat(e.target.value))}
-                className="w-full accent-primary h-1.5"
+                className="w-full accent-accent-blue h-1.5"
                 aria-label={`Poids ${label}`}
                 aria-valuemin={0}
                 aria-valuemax={100}
@@ -176,7 +176,7 @@ export default function CustomWeightsEditor({
           {/* Reset */}
           <button
             onClick={handleReset}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-text-primary transition-colors"
             aria-label="Réinitialiser les poids par défaut"
           >
             <RotateCcw className="w-3 h-3" aria-hidden="true" />

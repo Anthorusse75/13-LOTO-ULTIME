@@ -109,11 +109,11 @@ export default function OnboardingTour() {
       aria-labelledby="onboarding-title"
       aria-describedby="onboarding-desc"
     >
-      <div className="relative w-full max-w-md mx-4 bg-card text-card-foreground rounded-2xl shadow-2xl border border-border p-6">
+      <div className="relative w-full max-w-md mx-4 bg-surface text-text-primary rounded-2xl shadow-2xl border border-border p-6">
         {/* Close */}
         <button
           onClick={handleDismiss}
-          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute top-4 right-4 text-text-secondary hover:text-text-primary transition-colors"
           aria-label="Fermer le tour de présentation"
         >
           <X className="w-5 h-5" aria-hidden="true" />
@@ -132,7 +132,7 @@ export default function OnboardingTour() {
               aria-selected={i === step}
               aria-label={`Étape ${i + 1}`}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
-                i <= step ? "bg-primary" : "bg-muted"
+                i <= step ? "bg-accent-blue" : "bg-surface-hover"
               }`}
             />
           ))}
@@ -150,7 +150,7 @@ export default function OnboardingTour() {
         </h2>
         <p
           id="onboarding-desc"
-          className="text-muted-foreground text-sm text-center leading-relaxed mb-6"
+          className="text-text-secondary text-sm text-center leading-relaxed mb-6"
         >
           {current.description}
         </p>
@@ -160,7 +160,7 @@ export default function OnboardingTour() {
           {current.action && (
             <button
               onClick={() => handleAction(current.action!.to)}
-              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
+              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-accent-blue text-white font-medium text-sm hover:bg-accent-blue/90 transition-colors"
             >
               {current.action.label}
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -168,7 +168,7 @@ export default function OnboardingTour() {
           )}
           <button
             onClick={handleNext}
-            className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
+            className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-border text-sm text-text-secondary hover:text-text-primary hover:border-accent-blue/50 transition-colors"
           >
             {isLast ? (
               <>
@@ -188,7 +188,7 @@ export default function OnboardingTour() {
         </div>
 
         {/* Counter */}
-        <p className="text-xs text-muted-foreground text-center mt-4">
+        <p className="text-xs text-text-secondary text-center mt-4">
           Étape {step + 1} / {STEPS.length}
         </p>
       </div>
