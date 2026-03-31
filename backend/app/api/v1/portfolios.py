@@ -35,6 +35,8 @@ async def generate_portfolio(
             game=game_config,
             grid_count=body.grid_count,
             strategy=body.strategy,
+            profile=body.profile,
+            custom_weights=body.weights,
         )
     except InsufficientDataError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

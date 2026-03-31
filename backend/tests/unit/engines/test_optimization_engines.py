@@ -605,7 +605,7 @@ class TestPortfolioOptimizer:
 
 
 class TestMethodSelector:
-    def test_auto_small_space(self):
+    def test_small_batch_returns_hill_climbing(self):
         game = GameConfig(
             name="Tiny",
             slug="tiny",
@@ -614,10 +614,10 @@ class TestMethodSelector:
             min_number=1,
             max_number=10,
         )
-        method = select_method(game, n_grids=3, time_budget=15)
-        assert method == "annealing"
+        method = select_method(game, n_grids=3)
+        assert method == "hill_climbing"
 
-    def test_auto_few_grids(self):
+    def test_medium_batch_moderate_space_returns_tabu(self):
         game = GameConfig(
             name="Loto",
             slug="loto",
@@ -626,10 +626,24 @@ class TestMethodSelector:
             min_number=1,
             max_number=49,
         )
-        method = select_method(game, n_grids=3, time_budget=10)
+        # comb(49, 5) ≈ 1.9M < 10M → tabu
+        method = select_method(game, n_grids=5)
+        assert method == "tabu"
+
+    def test_medium_batch_large_space_returns_annealing(self):
+        game = GameConfig(
+            name="Mega",
+            slug="mega",
+            numbers_pool=70,
+            numbers_drawn=5,
+            min_number=1,
+            max_number=70,
+        )
+        # comb(70, 5) ≈ 12.1M > 10M → annealing
+        method = select_method(game, n_grids=7)
         assert method == "annealing"
 
-    def test_auto_many_grids(self):
+    def test_large_batch_returns_genetic(self):
         game = GameConfig(
             name="Loto",
             slug="loto",
@@ -641,7 +655,7 @@ class TestMethodSelector:
         method = select_method(game, n_grids=25)
         assert method == "genetic"
 
-    def test_auto_default(self):
+    def test_boundary_ten_grids_returns_genetic(self):
         game = GameConfig(
             name="Loto",
             slug="loto",

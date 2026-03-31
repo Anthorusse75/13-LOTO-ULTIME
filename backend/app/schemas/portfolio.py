@@ -31,6 +31,11 @@ class PortfolioGenerateRequest(BaseModel):
         "balanced",
         pattern=r"^(max_diversity|max_coverage|balanced|min_correlation)$",
     )
+    profile: str = Field(
+        "equilibre",
+        pattern=r"^(equilibre|frequence|gaps|cooccurrence|balance)$",
+    )
+    weights: dict[str, float] | None = None
 
 
 class PortfolioGenerateResponse(BaseModel):

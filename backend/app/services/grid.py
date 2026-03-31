@@ -163,6 +163,8 @@ class GridService:
         grid_count: int = 10,
         strategy: str = "balanced",
         method: str = "auto",
+        profile: str = "equilibre",
+        custom_weights: dict[str, float] | None = None,
         seed: int | None = None,
     ) -> tuple[PortfolioResult, str, float]:
         """Generate an optimized portfolio. Returns (portfolio, method_used, elapsed_ms)."""
@@ -173,6 +175,8 @@ class GridService:
             game=game,
             count=candidate_count,
             method=method,
+            profile=profile,
+            custom_weights=custom_weights,
             seed=seed,
         )
 
