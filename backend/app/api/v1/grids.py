@@ -103,6 +103,24 @@ async def get_top_grids(
     return grids
 
 
+@router.get("/favorites", response_model=list[GridResponse])
+async def get_favorites(
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+) -> Any:
+    """Return all favorite grids for a game."""
+    return await service.get_favorites(game_id)
+
+
+@router.get("/played", response_model=list[GridResponse])
+async def get_played_grids(
+    game_id: int = Path(..., gt=0),
+    service: GridService = Depends(get_grid_service),
+) -> Any:
+    """Return all grids marked as played for a game."""
+    return await service.get_played_grids(game_id)
+
+
 @router.get("/{grid_id}", response_model=GridResponse)
 async def get_grid(
     grid_id: int = Path(..., gt=0),
@@ -152,21 +170,3 @@ async def toggle_played(
     if grid is None:
         raise HTTPException(status_code=404, detail="Grid not found")
     return grid
-
-
-@router.get("/favorites", response_model=list[GridResponse])
-async def get_favorites(
-    game_id: int = Path(..., gt=0),
-    service: GridService = Depends(get_grid_service),
-) -> Any:
-    """Return all favorite grids for a game."""
-    return await service.get_favorites(game_id)
-
-
-@router.get("/played", response_model=list[GridResponse])
-async def get_played_grids(
-    game_id: int = Path(..., gt=0),
-    service: GridService = Depends(get_grid_service),
-) -> Any:
-    """Return all grids marked as played for a game."""
-    return await service.get_played_grids(game_id)
