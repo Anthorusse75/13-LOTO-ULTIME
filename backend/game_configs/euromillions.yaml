@@ -7,6 +7,7 @@ max_number: 50
 stars_pool: 12
 stars_drawn: 2
 star_name: "étoile"
+grid_price: 2.50
 draw_frequency: "mar/ven"
 historical_source: "euromillions"
 description: "EuroMillions - Loterie européenne"

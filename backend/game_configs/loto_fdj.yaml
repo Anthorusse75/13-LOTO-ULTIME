@@ -7,6 +7,7 @@ max_number: 49
 stars_pool: 10
 stars_drawn: 1
 star_name: "numéro chance"
+grid_price: 2.20
 draw_frequency: "lun/mer/sam"
 historical_source: "fdj"
 description: "Loto Français - Française des Jeux"

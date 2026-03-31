@@ -17,6 +17,7 @@ class GameConfig:
     stars_pool: int | None = None
     stars_drawn: int | None = None
     star_name: str | None = None
+    grid_price: float = 2.20
     draw_frequency: str = ""
     historical_source: str = ""
     description: str = ""

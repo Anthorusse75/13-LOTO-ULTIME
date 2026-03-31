@@ -1,10 +1,10 @@
 import DrawBalls from "@/components/draws/DrawBalls";
-import type { ScoredGrid } from "@/types/grid";
+import type { GridResponse } from "@/types/grid";
 import { formatScore } from "@/utils/formatters";
 import { Award } from "lucide-react";
 
 interface DailyTopGridsCardProps {
-  grids: ScoredGrid[] | undefined;
+  grids: GridResponse[] | undefined;
   limit?: number;
 }
 

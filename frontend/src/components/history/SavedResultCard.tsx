@@ -56,7 +56,7 @@ function GridDetail({
           ))}
         </div>
       )}
-      {params.method && (
+      {(params.method as string) && (
         <p className="text-xs text-text-secondary">
           Méthode : {params.method as string} | Profil :{" "}
           {(params.profile as string) ?? "—"}
@@ -107,7 +107,7 @@ function PortfolioDetail({
             <span className="font-mono">{(coverage * 100).toFixed(1)}%</span>
           </div>
         )}
-        {params.strategy && (
+        {(params.strategy as string) && (
           <div>
             <span className="text-text-secondary">Stratégie </span>
             <span className="font-mono">{params.strategy as string}</span>

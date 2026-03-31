@@ -53,4 +53,3 @@ export interface GridGenerateResponse {
   method_used: string;
   explanation?: Explanation | null;
 }
-}

@@ -7,6 +7,7 @@ max_number: 69
 stars_pool: 26
 stars_drawn: 1
 star_name: "PowerBall"
+grid_price: 2.00
 draw_frequency: "lun/mer/sam"
 historical_source: "powerball"
 description: "PowerBall — Loterie américaine multi-états"

@@ -367,7 +367,7 @@ export default function PortfolioPage() {
               grids_summary: portfolio.grids.map((g) => ({
                 numbers: g.numbers,
                 stars: g.stars,
-                score: g.total_score,
+                score: g.score,
               })),
             })}
             dataKey={`${portfolio.computation_time_ms}-${portfolio.grid_count}`}
