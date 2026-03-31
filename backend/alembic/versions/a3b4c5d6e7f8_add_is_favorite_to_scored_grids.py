@@ -19,7 +19,7 @@ depends_on = None
 def upgrade() -> None:
     op.add_column(
         "scored_grids",
-        sa.Column("is_favorite", sa.Boolean(), nullable=False, server_default=sa.text("0")),
+        sa.Column("is_favorite", sa.Boolean(), nullable=False, server_default=sa.false()),
     )
     op.create_index("ix_scored_grids_is_favorite", "scored_grids", ["is_favorite"])
 
