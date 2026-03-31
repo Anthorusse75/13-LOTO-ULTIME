@@ -6,10 +6,12 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.cache import game_defs_cache
 from app.core.config import Settings, get_settings
 from app.core.exceptions import AuthenticationError, AuthorizationError
 from app.core.game_definitions import GameConfig, load_all_game_configs
 from app.core.security import decode_access_token
+from app.core.token_blacklist import TokenBlacklist
 from app.models.base import get_session
 from app.models.user import User, UserRole
 from app.repositories.draw_repository import DrawRepository
@@ -74,6 +76,13 @@ def get_job_repository(session: AsyncSession = Depends(get_db)) -> JobRepository
     return JobRepository(session)
 
 
+# ── Token Blacklist ──
+
+
+def get_token_blacklist(session: AsyncSession = Depends(get_db)) -> TokenBlacklist:
+    return TokenBlacklist(session)
+
+
 # ── Services ──
 
 
@@ -101,7 +110,16 @@ def get_simulation_service(
 
 # ── Game config resolution ──
 
-_game_configs_by_slug = load_all_game_configs()
+_GAME_DEFS_KEY = "all"
+
+
+def _get_game_configs() -> dict[str, GameConfig]:
+    """Return game configs, reloading from YAML/plugins every 24h."""
+    configs = game_defs_cache.get(_GAME_DEFS_KEY)
+    if configs is None:
+        configs = load_all_game_configs()
+        game_defs_cache[_GAME_DEFS_KEY] = configs
+    return configs
 
 
 async def get_game_config(
@@ -112,7 +130,7 @@ async def get_game_config(
     game = await game_repo.get(game_id)
     if game is None:
         raise HTTPException(status_code=404, detail="Game not found")
-    cfg = _game_configs_by_slug.get(game.slug)
+    cfg = _get_game_configs().get(game.slug)
     if cfg is not None:
         return cfg
     # Fallback: build GameConfig from DB record (e.g. for test games)

@@ -1,15 +1,17 @@
 """Grids API — scoring, generation, and grid management endpoints."""
 
+import math
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Query, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
+from app.core.rate_limit import limiter
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import GameConfig
-from app.dependencies import get_game_config, get_grid_service, require_role
+from app.dependencies import get_game_config, get_grid_repository, get_grid_service, require_role
 from app.models.user import UserRole
+from app.repositories.grid_repository import GridRepository
+from app.schemas.common import PaginatedResponse, PaginationParams
 from app.schemas.grid import (
     GridGenerateRequest,
     GridGenerateResponse,
@@ -20,7 +22,6 @@ from app.schemas.grid import (
 from app.services.grid import GridService
 
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
-limiter = Limiter(key_func=get_remote_address)
 
 
 @router.post("/score", response_model=GridScoreResponse)
@@ -89,6 +90,24 @@ async def generate_grids(
         ],
         computation_time_ms=round(elapsed_ms, 1),
         method_used=method_used,
+    )
+
+
+@router.get("", response_model=PaginatedResponse[GridResponse])
+async def list_grids(
+    game_id: int = Path(..., gt=0),
+    pagination: PaginationParams = Depends(),
+    grid_repo: GridRepository = Depends(get_grid_repository),
+) -> Any:
+    """List scored grids for a game, ordered by score descending."""
+    total = await grid_repo.count_by_game(game_id)
+    grids = await grid_repo.get_paginated(game_id, offset=pagination.offset, limit=pagination.limit)
+    return PaginatedResponse(
+        items=grids,
+        total=total,
+        page=pagination.page,
+        page_size=pagination.page_size,
+        pages=math.ceil(total / pagination.page_size) if total > 0 else 0,
     )
 
 

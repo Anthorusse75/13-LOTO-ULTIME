@@ -7,14 +7,13 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
-from slowapi import Limiter
-from slowapi.util import get_remote_address
+from app.core.rate_limit import limiter
 
 from app.core.config import Settings, get_settings
 from app.core.exceptions import AuthenticationError
 from app.core.security import decode_access_token
-from app.core.token_blacklist import get_token_blacklist
-from app.dependencies import get_auth_service, get_current_user, get_user_repository
+from app.core.token_blacklist import TokenBlacklist
+from app.dependencies import get_auth_service, get_current_user, get_token_blacklist, get_user_repository
 from app.models.user import User, UserRole
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import LoginRequest, LogoutRequest, RefreshRequest, TokenResponse
@@ -22,7 +21,6 @@ from app.schemas.user import UserCreate, UserResponse
 from app.services.auth import AuthService
 
 router = APIRouter()
-limiter = Limiter(key_func=get_remote_address)
 audit_log = __import__("structlog").get_logger("audit")
 
 # ── Progressive login throttle (Apple-style) ──
@@ -39,7 +37,7 @@ def _get_delay(failures: int | float) -> int:
 
 
 @router.post("/login", response_model=TokenResponse)
-@limiter.limit("20/minute")
+@limiter.limit("5/minute")
 async def login(
     request: Request,
     body: LoginRequest,
@@ -95,7 +93,7 @@ async def login(
 
 
 @router.post("/register", response_model=UserResponse)
-@limiter.limit("3/minute")
+@limiter.limit("5/minute")
 async def register(
     request: Request,
     body: UserCreate,
@@ -126,11 +124,10 @@ async def refresh_token(
     request: RefreshRequest,
     auth_service: AuthService = Depends(get_auth_service),
     settings: Settings = Depends(get_settings),
+    blacklist: TokenBlacklist = Depends(get_token_blacklist),
 ) -> TokenResponse:
     """Refresh tokens with rotation — old refresh token is revoked."""
     from jose import JWTError
-
-    blacklist = get_token_blacklist()
 
     try:
         payload = decode_access_token(
@@ -145,7 +142,7 @@ async def refresh_token(
             raise AuthenticationError("Token de type invalide")
 
         jti = payload.get("jti")
-        if jti and blacklist.is_revoked(jti):
+        if jti and await blacklist.is_revoked(jti):
             raise AuthenticationError("Refresh token révoqué")
 
         user_id = int(payload["sub"])
@@ -154,7 +151,7 @@ async def refresh_token(
 
     # Revoke old refresh token
     if jti and "exp" in payload:
-        blacklist.revoke(jti, float(payload["exp"]))
+        await blacklist.revoke(jti, float(payload["exp"]))
 
     access_token, refresh_token = await auth_service.refresh(user_id)
     return TokenResponse(access_token=access_token, refresh_token=refresh_token)
@@ -164,11 +161,10 @@ async def refresh_token(
 async def logout(
     body: LogoutRequest,
     settings: Settings = Depends(get_settings),
+    blacklist: TokenBlacklist = Depends(get_token_blacklist),
 ) -> None:
     """Revoke the refresh token on logout."""
     from jose import JWTError
-
-    blacklist = get_token_blacklist()
 
     try:
         payload = decode_access_token(
@@ -182,7 +178,7 @@ async def logout(
         jti = payload.get("jti")
         exp = payload.get("exp")
         if jti and exp:
-            blacklist.revoke(jti, float(exp))
+            await blacklist.revoke(jti, float(exp))
     except JWTError:
         pass  # Token already invalid, no action needed
 

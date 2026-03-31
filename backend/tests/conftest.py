@@ -9,6 +9,8 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
+from app.core.cache import game_defs_cache, stats_cache
+
 from app.models.base import Base
 from app.models.draw import Draw
 from app.models.game import GameDefinition
@@ -24,6 +26,16 @@ os.environ.setdefault("ADMIN_INITIAL_PASSWORD", "TestAdmin1!")
 
 # ── In-memory SQLite for tests ──
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+
+
+@pytest.fixture(autouse=True)
+def _clear_caches():
+    """Clear TTL caches before each test to prevent cross-test pollution."""
+    stats_cache.clear()
+    game_defs_cache.clear()
+    yield
+    stats_cache.clear()
+    game_defs_cache.clear()
 
 
 @pytest.fixture(scope="session")

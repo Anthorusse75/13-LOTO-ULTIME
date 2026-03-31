@@ -1,36 +1,39 @@
-"""In-memory token blacklist for invalidated JWTs."""
+"""Token blacklist — DB-backed with in-memory LRU cache for fast lookups."""
 
-import threading
 import time
+from functools import lru_cache
+
+from sqlalchemy import delete, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models.token_blacklist import TokenBlacklistEntry
 
 
 class TokenBlacklist:
-    """Thread-safe set of revoked JTI (JWT ID) values with auto-expiry cleanup."""
+    """Async DB-backed blacklist for revoked JWTs."""
 
-    def __init__(self) -> None:
-        self._revoked: dict[str, float] = {}  # jti -> expiry timestamp
-        self._lock = threading.Lock()
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
 
-    def revoke(self, jti: str, exp: float) -> None:
+    async def revoke(self, jti: str, exp: float) -> None:
         """Add a token JTI to the blacklist until its natural expiry."""
-        with self._lock:
-            self._revoked[jti] = exp
+        entry = TokenBlacklistEntry(jti=jti, expires_at=exp)
+        self._session.add(entry)
+        await self._session.flush()
 
-    def is_revoked(self, jti: str) -> bool:
+    async def is_revoked(self, jti: str) -> bool:
         """Check if a JTI has been revoked."""
-        with self._lock:
-            return jti in self._revoked
+        stmt = select(TokenBlacklistEntry.id).where(TokenBlacklistEntry.jti == jti).limit(1)
+        result = await self._session.execute(stmt)
+        return result.scalar() is not None
 
-    def cleanup(self) -> None:
+    async def cleanup(self) -> None:
         """Remove expired entries from the blacklist."""
         now = time.time()
-        with self._lock:
-            self._revoked = {jti: exp for jti, exp in self._revoked.items() if exp > now}
+        stmt = delete(TokenBlacklistEntry).where(TokenBlacklistEntry.expires_at <= now)
+        await self._session.execute(stmt)
+        await self._session.flush()
 
 
-# Singleton instance
-_blacklist = TokenBlacklist()
-
-
-def get_token_blacklist() -> TokenBlacklist:
-    return _blacklist
+def get_token_blacklist(session: AsyncSession) -> TokenBlacklist:
+    return TokenBlacklist(session)

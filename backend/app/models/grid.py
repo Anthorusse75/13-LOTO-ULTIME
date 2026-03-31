@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
@@ -9,6 +9,9 @@ from .base import Base
 
 class ScoredGrid(Base):
     __tablename__ = "scored_grids"
+    __table_args__ = (
+        Index("ix_scored_grids_game_score", "game_id", "total_score"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     game_id: Mapped[int] = mapped_column(ForeignKey("game_definitions.id"), index=True)

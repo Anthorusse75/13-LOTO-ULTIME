@@ -43,23 +43,23 @@
 
 | ID      | Tâche                                             | Doc    | Statut |
 | ------- | ------------------------------------------------- | ------ | ------ |
-| DB-01   | Créer table token_blacklist + migration           | 21, 19 | ⬜      |
-| B-07    | Implémenter TokenBlacklistService                 | 21     | ⬜      |
-| B-08    | Migrer blacklist mémoire → PostgreSQL             | 21     | ⬜      |
-| B-09    | Installer et configurer slowapi (rate limiting)   | 21, 18 | ⬜      |
-| B-10    | Appliquer rate limits par catégorie d'endpoint    | 21, 18 | ⬜      |
-| B-11    | Implémenter PaginationParams + PaginatedResponse  | 18     | ⬜      |
-| API-01  | Paginer GET /draws                                | 18     | ⬜      |
-| API-02  | Paginer GET /grids                                | 18     | ⬜      |
-| B-12    | Implémenter TTLCache pour statistiques            | 22     | ⬜      |
-| B-13    | Implémenter cache pour game_definitions           | 22     | ⬜      |
-| DB-02   | Créer index scored_grids(game_id, score)          | 19, 22 | ⬜      |
-| DB-03   | Créer index draws(game_id, draw_date)             | 19, 22 | ⬜      |
-| B-14    | Uniformiser préfixe /api/v1/ sur tous les routers | 18     | ⬜      |
-| TEST-05 | Tests rate limiting (2 tests)                     | 25     | ⬜      |
-| TEST-06 | Tests pagination (2 tests)                        | 25     | ⬜      |
-| TEST-07 | Tests cache (2 tests)                             | 25     | ⬜      |
-| TEST-08 | Tests blacklist (2 tests)                         | 25     | ⬜      |
+| DB-01   | Créer table token_blacklist + migration           | 21, 19 | ✅      |
+| B-07    | Implémenter TokenBlacklistService                 | 21     | ✅      |
+| B-08    | Migrer blacklist mémoire → PostgreSQL             | 21     | ✅      |
+| B-09    | Installer et configurer slowapi (rate limiting)   | 21, 18 | ✅      |
+| B-10    | Appliquer rate limits par catégorie d'endpoint    | 21, 18 | ✅      |
+| B-11    | Implémenter PaginationParams + PaginatedResponse  | 18     | ✅      |
+| API-01  | Paginer GET /draws                                | 18     | ✅      |
+| API-02  | Paginer GET /grids                                | 18     | ✅      |
+| B-12    | Implémenter TTLCache pour statistiques            | 22     | ✅      |
+| B-13    | Implémenter cache pour game_definitions           | 22     | ✅      |
+| DB-02   | Créer index scored_grids(game_id, score)          | 19, 22 | ✅      |
+| DB-03   | Créer index draws(game_id, draw_date)             | 19, 22 | ✅      |
+| B-14    | Uniformiser préfixe /api/v1/ sur tous les routers | 18     | ✅ (déjà OK) |
+| TEST-05 | Tests rate limiting (2 tests)                     | 25     | ✅      |
+| TEST-06 | Tests pagination (2 tests)                        | 25     | ✅      |
+| TEST-07 | Tests cache (2 tests)                             | 25     | ✅      |
+| TEST-08 | Tests blacklist (2 tests)                         | 25     | ✅ (479 pass) |
 
 ---
 

@@ -7,6 +7,7 @@ from typing import Any
 import numpy as np
 import structlog
 
+from app.core.cache import stats_cache
 from app.core.exceptions import EngineComputationError, InsufficientDataError
 from app.core.game_definitions import GameConfig
 from app.core.metrics import (
@@ -119,14 +120,22 @@ class StatisticsService:
         )
 
         created = await self._stats_repo.create(snapshot)
+        # Invalidate cache for this game
+        stats_cache.pop(game_id, None)
         # Update Prometheus gauge with snapshot timestamp
         last_statistics_snapshot_timestamp.labels(game=game.slug).set_to_current_time()
         log.info("statistics_pipeline_completed", snapshot_id=created.id)
         return created
 
     async def get_latest(self, game_id: int) -> StatisticsSnapshot | None:
-        """Return the most recent statistics snapshot."""
-        return await self._stats_repo.get_latest(game_id)
+        """Return the most recent statistics snapshot (cached for 1h)."""
+        cached = stats_cache.get(game_id)
+        if cached is not None:
+            return cached
+        snapshot = await self._stats_repo.get_latest(game_id)
+        if snapshot is not None:
+            stats_cache[game_id] = snapshot
+        return snapshot
 
     def compute_single(
         self, engine_name: str, draws: np.ndarray, game: GameConfig

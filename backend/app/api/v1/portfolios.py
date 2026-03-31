@@ -1,8 +1,7 @@
 """Portfolios API — optimized portfolio generation and management."""
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
+from app.core.rate_limit import limiter
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import GameConfig
@@ -15,7 +14,6 @@ from app.schemas.portfolio import (
 from app.services.grid import GridService
 
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
-limiter = Limiter(key_func=get_remote_address)
 
 
 @router.post("/generate", response_model=PortfolioGenerateResponse)

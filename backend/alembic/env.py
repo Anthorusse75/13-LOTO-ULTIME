@@ -15,6 +15,7 @@ from app.models.grid import ScoredGrid  # noqa: F401
 from app.models.job import JobExecution  # noqa: F401
 from app.models.portfolio import Portfolio  # noqa: F401
 from app.models.statistics import StatisticsSnapshot  # noqa: F401
+from app.models.token_blacklist import TokenBlacklistEntry  # noqa: F401
 from app.models.user import User  # noqa: F401
 
 config = context.config

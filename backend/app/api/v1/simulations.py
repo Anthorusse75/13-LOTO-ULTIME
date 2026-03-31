@@ -1,8 +1,7 @@
 """Simulation API — Monte Carlo and robustness analysis endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
+from app.core.rate_limit import limiter
 
 from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import GameConfig
@@ -21,7 +20,6 @@ from app.schemas.simulation import (
 from app.services.simulation import SimulationService
 
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
-limiter = Limiter(key_func=get_remote_address)
 
 
 @router.post("/monte-carlo", response_model=MonteCarloGridResponse)

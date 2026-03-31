@@ -1,8 +1,7 @@
 """Statistics endpoints — /api/v1/games/{game_id}/statistics."""
 
 from fastapi import APIRouter, Depends, Query, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
+from app.core.rate_limit import limiter
 
 from app.core.exceptions import GameNotFoundError, InsufficientDataError
 from app.core.game_definitions import GameConfig, load_all_game_configs
@@ -33,7 +32,6 @@ from app.schemas.statistics import (
 )
 from app.services.statistics import StatisticsService
 
-limiter = Limiter(key_func=get_remote_address)
 router = APIRouter()
 
 

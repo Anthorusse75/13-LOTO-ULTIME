@@ -1,7 +1,7 @@
 from datetime import date
 
 import numpy as np
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.draw import Draw
@@ -16,6 +16,24 @@ class DrawRepository(BaseRepository[Draw]):
     async def get_latest(self, game_id: int, limit: int = 1) -> list[Draw]:
         stmt = (
             select(Draw).where(Draw.game_id == game_id).order_by(Draw.draw_date.desc()).limit(limit)
+        )
+        result = await self._session.execute(stmt)
+        return list(result.scalars().all())
+
+    async def count_by_game(self, game_id: int) -> int:
+        stmt = select(func.count()).where(Draw.game_id == game_id)
+        result = await self._session.execute(stmt)
+        return result.scalar_one()
+
+    async def get_paginated(
+        self, game_id: int, offset: int = 0, limit: int = 50
+    ) -> list[Draw]:
+        stmt = (
+            select(Draw)
+            .where(Draw.game_id == game_id)
+            .order_by(Draw.draw_date.desc())
+            .offset(offset)
+            .limit(limit)
         )
         result = await self._session.execute(stmt)
         return list(result.scalars().all())

@@ -8,9 +8,7 @@ import structlog
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 
 from app.core.config import get_settings
 from app.core.exceptions import (
@@ -25,8 +23,6 @@ from app.core.logging import setup_logging
 from app.models.base import close_db, init_db
 
 settings = get_settings()
-
-limiter = Limiter(key_func=get_remote_address)
 
 
 async def _seed_games() -> None:
@@ -237,9 +233,15 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 async def _rate_limit_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+    retry_after = exc.detail.split(" ")[-1] if exc.detail else "60"
     return JSONResponse(
         status_code=429,
-        content={"detail": "Trop de requêtes — réessayez plus tard"},
+        content={
+            "code": "RATE_LIMIT_EXCEEDED",
+            "detail": "Trop de requêtes — réessayez plus tard",
+            "retry_after": retry_after,
+        },
+        headers={"Retry-After": retry_after},
     )
 
 
@@ -252,6 +254,8 @@ def create_app() -> FastAPI:
     )
 
     # ── Rate Limiting ──
+    from app.core.rate_limit import limiter
+
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_handler)  # type: ignore[arg-type]
 
