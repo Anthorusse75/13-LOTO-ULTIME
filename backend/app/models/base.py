@@ -2,7 +2,7 @@ from collections.abc import AsyncGenerator
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import event, func
+from sqlalchemy import DateTime, event, func
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     AsyncSession,
@@ -18,8 +18,10 @@ class Base(AsyncAttrs, DeclarativeBase):
 
 
 class TimestampMixin:
-    created_at: Mapped[datetime] = mapped_column(default=func.now())
-    updated_at: Mapped[datetime | None] = mapped_column(default=None, onupdate=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
+    updated_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), default=None, onupdate=func.now()
+    )
 
 
 # ── Engine & Session factory (configurés au démarrage) ──

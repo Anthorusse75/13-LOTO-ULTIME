@@ -12,7 +12,7 @@ class StatisticsSnapshot(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     game_id: Mapped[int] = mapped_column(ForeignKey("game_definitions.id"), index=True)
-    computed_at: Mapped[datetime] = mapped_column(DateTime, index=True)
+    computed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
     draw_count: Mapped[int] = mapped_column(Integer)
 
     # Données statistiques (JSON)

@@ -19,11 +19,11 @@ class ScoredGrid(Base):
     score_breakdown: Mapped[dict[str, Any]] = mapped_column(JSON)
     rank: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
     method: Mapped[str] = mapped_column(String(50))
-    computed_at: Mapped[datetime] = mapped_column(DateTime)
+    computed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     is_top: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     is_favorite: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     is_played: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-    played_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    played_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     simulation_stats: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
 
     def __repr__(self) -> str:

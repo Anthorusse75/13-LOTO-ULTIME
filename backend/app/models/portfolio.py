@@ -20,7 +20,7 @@ class Portfolio(Base):
     coverage_score: Mapped[float] = mapped_column(Float)
     avg_grid_score: Mapped[float] = mapped_column(Float)
     min_hamming_distance: Mapped[float | None] = mapped_column(Float, nullable=True)
-    computed_at: Mapped[datetime] = mapped_column(DateTime)
+    computed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
     def __repr__(self) -> str:
         return f"<Portfolio(name={self.name!r}, grids={self.grid_count})>"
