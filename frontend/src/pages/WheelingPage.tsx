@@ -211,9 +211,12 @@ export default function WheelingPage() {
         <div className="flex flex-col sm:flex-row items-start gap-4">
           {/* Main number grid — 10 columns like a real lottery ticket */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide mb-3" style={{
-              color: game.slug.includes("loto") ? "#3b82f6" : "#dc2626",
-            }}>
+            <h3
+              className="text-sm font-semibold uppercase tracking-wide mb-3"
+              style={{
+                color: game.slug.includes("loto") ? "#3b82f6" : "#dc2626",
+              }}
+            >
               Numéros
             </h3>
             <div className="inline-grid grid-cols-10 gap-1.5 p-3 rounded-xl bg-surface-hover/40 border border-white/10">
@@ -228,7 +231,9 @@ export default function WheelingPage() {
                       key={n}
                       onClick={() => toggleNumber(n)}
                       className="w-10 h-10 rounded-full text-xs font-bold transition-all duration-150 flex items-center justify-center relative overflow-hidden cursor-pointer"
-                      style={{ transform: isSelected ? "scale(1.12)" : "scale(1)" }}
+                      style={{
+                        transform: isSelected ? "scale(1.12)" : "scale(1)",
+                      }}
                     >
                       {/* Ball body — blue for Loto, red/dark-red for EuroMillions */}
                       <span
@@ -250,15 +255,19 @@ export default function WheelingPage() {
                         style={{
                           width: "58%",
                           height: "58%",
-                          background: "radial-gradient(circle at 45% 40%, #ffffff, #e2e2e2 80%)",
-                          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.15)",
+                          background:
+                            "radial-gradient(circle at 45% 40%, #ffffff, #e2e2e2 80%)",
+                          boxShadow:
+                            "inset 0 1px 2px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.15)",
                         }}
                       />
                       {/* Selection ring */}
                       {isSelected && (
                         <span
                           className="absolute inset-0 rounded-full"
-                          style={{ border: "2.5px solid rgba(255,255,255,0.7)" }}
+                          style={{
+                            border: "2.5px solid rgba(255,255,255,0.7)",
+                          }}
                         />
                       )}
                       <span className="relative z-10 text-gray-900">{n}</span>
@@ -286,14 +295,12 @@ export default function WheelingPage() {
               <div
                 className={`inline-grid gap-1.5 p-3 rounded-xl border ${game.stars_pool <= 10 ? "grid-cols-5" : "grid-cols-4"}`}
                 style={{
-                  backgroundColor:
-                    game.slug.includes("loto")
-                      ? "rgba(229,62,62,0.05)"
-                      : "rgba(214,158,46,0.05)",
-                  borderColor:
-                    game.slug.includes("loto")
-                      ? "rgba(229,62,62,0.2)"
-                      : "rgba(214,158,46,0.2)",
+                  backgroundColor: game.slug.includes("loto")
+                    ? "rgba(229,62,62,0.05)"
+                    : "rgba(214,158,46,0.05)",
+                  borderColor: game.slug.includes("loto")
+                    ? "rgba(229,62,62,0.2)"
+                    : "rgba(214,158,46,0.2)",
                 }}
               >
                 {Array.from({ length: game.stars_pool }, (_, i) => {
@@ -305,7 +312,9 @@ export default function WheelingPage() {
                       key={s}
                       onClick={() => toggleStar(s)}
                       className={`text-xs font-bold transition-all duration-150 flex items-center justify-center relative cursor-pointer ${isLoto ? "w-10 h-10 rounded-full overflow-hidden" : "w-11 h-11"}`}
-                      style={{ transform: isSelected ? "scale(1.12)" : "scale(1)" }}
+                      style={{
+                        transform: isSelected ? "scale(1.12)" : "scale(1)",
+                      }}
                     >
                       {isLoto ? (
                         <>
@@ -313,7 +322,8 @@ export default function WheelingPage() {
                           <span
                             className="absolute inset-0 rounded-full"
                             style={{
-                              background: "radial-gradient(circle at 35% 30%, #f07070, #d42020 55%, #a01515 80%, #6b0e0e)",
+                              background:
+                                "radial-gradient(circle at 35% 30%, #f07070, #d42020 55%, #a01515 80%, #6b0e0e)",
                               boxShadow: isSelected
                                 ? "0 0 12px 3px rgba(220,38,38,0.6), inset -2px -3px 5px rgba(0,0,0,0.35), inset 2px 2px 4px rgba(255,255,255,0.15)"
                                 : "inset -2px -3px 5px rgba(0,0,0,0.35), inset 2px 2px 4px rgba(255,255,255,0.15)",
@@ -325,27 +335,56 @@ export default function WheelingPage() {
                             style={{
                               width: "58%",
                               height: "58%",
-                              background: "radial-gradient(circle at 45% 40%, #ffffff, #e2e2e2 80%)",
-                              boxShadow: "inset 0 1px 2px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.15)",
+                              background:
+                                "radial-gradient(circle at 45% 40%, #ffffff, #e2e2e2 80%)",
+                              boxShadow:
+                                "inset 0 1px 2px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.15)",
                             }}
                           />
                           {isSelected && (
                             <span
                               className="absolute inset-0 rounded-full"
-                              style={{ border: "2.5px solid rgba(255,255,255,0.7)" }}
+                              style={{
+                                border: "2.5px solid rgba(255,255,255,0.7)",
+                              }}
                             />
                           )}
-                          <span className="relative z-10 text-gray-900">{s}</span>
+                          <span className="relative z-10 text-gray-900">
+                            {s}
+                          </span>
                         </>
                       ) : (
                         <>
                           {/* SVG Star for EuroMillions — like FDJ */}
-                          <svg viewBox="0 0 50 50" className="absolute inset-0 w-full h-full" style={{ filter: isSelected ? "drop-shadow(0 0 4px rgba(234,179,8,0.5))" : "none" }}>
+                          <svg
+                            viewBox="0 0 50 50"
+                            className="absolute inset-0 w-full h-full"
+                            style={{
+                              filter: isSelected
+                                ? "drop-shadow(0 0 4px rgba(234,179,8,0.5))"
+                                : "none",
+                            }}
+                          >
                             <defs>
-                              <linearGradient id={`starGrad${s}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor={isSelected ? "#fde047" : "#e8c84a"} />
-                                <stop offset="50%" stopColor={isSelected ? "#eab308" : "#c9a83a"} />
-                                <stop offset="100%" stopColor={isSelected ? "#b8860b" : "#a08630"} />
+                              <linearGradient
+                                id={`starGrad${s}`}
+                                x1="0%"
+                                y1="0%"
+                                x2="100%"
+                                y2="100%"
+                              >
+                                <stop
+                                  offset="0%"
+                                  stopColor={isSelected ? "#fde047" : "#e8c84a"}
+                                />
+                                <stop
+                                  offset="50%"
+                                  stopColor={isSelected ? "#eab308" : "#c9a83a"}
+                                />
+                                <stop
+                                  offset="100%"
+                                  stopColor={isSelected ? "#b8860b" : "#a08630"}
+                                />
                               </linearGradient>
                             </defs>
                             <polygon
@@ -357,7 +396,10 @@ export default function WheelingPage() {
                           </svg>
                           <span
                             className={`relative z-10 text-sm font-extrabold ${isSelected ? "text-gray-900" : "text-amber-900/70"}`}
-                            style={{ textShadow: "-0.5px -0.5px 0 rgba(255,255,255,0.5), 0.5px -0.5px 0 rgba(255,255,255,0.5), -0.5px 0.5px 0 rgba(255,255,255,0.5), 0.5px 0.5px 0 rgba(255,255,255,0.5)" }}
+                            style={{
+                              textShadow:
+                                "-0.5px -0.5px 0 rgba(255,255,255,0.5), 0.5px -0.5px 0 rgba(255,255,255,0.5), -0.5px 0.5px 0 rgba(255,255,255,0.5), 0.5px 0.5px 0 rgba(255,255,255,0.5)",
+                            }}
                           >
                             {s}
                           </span>
