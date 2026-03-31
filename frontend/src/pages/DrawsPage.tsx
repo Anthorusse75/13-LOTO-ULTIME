@@ -113,7 +113,9 @@ export default function DrawsPage() {
         >
           <ChevronLeft size={18} />
         </button>
-        <span className="text-sm text-text-secondary">Page {page} / {totalPages}</span>
+        <span className="text-sm text-text-secondary">
+          Page {page} / {totalPages}
+        </span>
         <button
           onClick={() => setPage((p) => p + 1)}
           disabled={page >= totalPages}
