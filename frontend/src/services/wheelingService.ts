@@ -35,9 +35,7 @@ export const wheelingService = {
     gameId: number,
     systemId: number,
   ): Promise<WheelingSystemResponse> => {
-    const { data } = await api.get(
-      `/games/${gameId}/wheeling/${systemId}`,
-    );
+    const { data } = await api.get(`/games/${gameId}/wheeling/${systemId}`);
     return data;
   },
 

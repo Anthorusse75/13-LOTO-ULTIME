@@ -12,7 +12,9 @@ export function useBudgetOptimize() {
       budgetService.optimize(gameId!, req),
     onSuccess: (data) => {
       const count = data.recommendations.length;
-      toast.success(`${count} stratégie${count > 1 ? "s" : ""} générée${count > 1 ? "s" : ""}`);
+      toast.success(
+        `${count} stratégie${count > 1 ? "s" : ""} générée${count > 1 ? "s" : ""}`,
+      );
       queryClient.invalidateQueries({ queryKey: ["budget", gameId] });
     },
   });

@@ -17,9 +17,21 @@ import { ChevronDown, ChevronUp, Trash2, Wallet } from "lucide-react";
 import { useState } from "react";
 
 const OBJECTIVES = [
-  { value: "balanced", label: "Équilibré", description: "Compromis qualité / couverture / diversité" },
-  { value: "quality", label: "Qualité", description: "Maximise le score moyen des grilles" },
-  { value: "coverage", label: "Couverture", description: "Maximise la couverture numérique" },
+  {
+    value: "balanced",
+    label: "Équilibré",
+    description: "Compromis qualité / couverture / diversité",
+  },
+  {
+    value: "quality",
+    label: "Qualité",
+    description: "Maximise le score moyen des grilles",
+  },
+  {
+    value: "coverage",
+    label: "Couverture",
+    description: "Maximise la couverture numérique",
+  },
 ] as const;
 
 const STRATEGY_LABELS: Record<string, string> = {
@@ -63,10 +75,16 @@ function RecommendationCard({ rec }: { rec: BudgetRecommendation }) {
           <MiniStat label="Score moyen" value={rec.avg_score.toFixed(2)} />
         )}
         {rec.diversity_score != null && (
-          <MiniStat label="Diversité" value={(rec.diversity_score * 100).toFixed(1) + "%"} />
+          <MiniStat
+            label="Diversité"
+            value={(rec.diversity_score * 100).toFixed(1) + "%"}
+          />
         )}
         {rec.coverage_rate != null && (
-          <MiniStat label="Couverture" value={(rec.coverage_rate * 100).toFixed(1) + "%"} />
+          <MiniStat
+            label="Couverture"
+            value={(rec.coverage_rate * 100).toFixed(1) + "%"}
+          />
         )}
       </div>
 
@@ -97,7 +115,11 @@ function RecommendationCard({ rec }: { rec: BudgetRecommendation }) {
         onClick={() => setExpanded(!expanded)}
         className="flex items-center gap-1 text-sm text-accent-blue hover:underline"
       >
-        {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+        {expanded ? (
+          <ChevronUp className="h-4 w-4" />
+        ) : (
+          <ChevronDown className="h-4 w-4" />
+        )}
         {expanded ? "Masquer" : "Voir"} les {rec.grid_count} grilles
       </button>
       {expanded && (
@@ -114,9 +136,7 @@ function RecommendationCard({ rec }: { rec: BudgetRecommendation }) {
               {rec.grids.map((g, i) => (
                 <tr key={i} className="border-t border-border-primary">
                   <td className="py-1 text-text-secondary">{i + 1}</td>
-                  <td className="py-1 font-mono">
-                    {g.numbers.join(" - ")}
-                  </td>
+                  <td className="py-1 font-mono">{g.numbers.join(" - ")}</td>
                   <td className="py-1 font-mono text-yellow-400">
                     {g.stars?.join(" - ") ?? "—"}
                   </td>
@@ -162,7 +182,9 @@ export default function BudgetPage() {
 
   const toggleNumber = (n: number) => {
     setSelectedNumbers((prev) =>
-      prev.includes(n) ? prev.filter((x) => x !== n) : [...prev, n].slice(0, 20),
+      prev.includes(n)
+        ? prev.filter((x) => x !== n)
+        : [...prev, n].slice(0, 20),
     );
   };
 
@@ -171,7 +193,10 @@ export default function BudgetPage() {
       {
         budget,
         objective,
-        numbers: useNumbers && selectedNumbers.length > 0 ? selectedNumbers : undefined,
+        numbers:
+          useNumbers && selectedNumbers.length > 0
+            ? selectedNumbers
+            : undefined,
       },
       { onSuccess: (data) => setResult(data) },
     );
@@ -199,9 +224,21 @@ export default function BudgetPage() {
         description="Définissez votre budget et votre objectif pour recevoir des recommandations personnalisées. Le système compare automatiquement plusieurs stratégies (top grilles, portefeuille diversifié, système réduit) et vous indique laquelle maximise votre objectif."
         tip="Commencez avec un budget modeste pour explorer les différentes stratégies, puis ajustez selon vos préférences."
         terms={[
-          { term: "Top Grilles", definition: "Sélectionne les grilles avec les meilleurs scores individuels." },
-          { term: "Portefeuille", definition: "Ensemble diversifié de grilles minimisant le chevauchement." },
-          { term: "Système réduit", definition: "Couverture combinatoire garantissant un gain si vos numéros sont tirés (nécessite de sélectionner des numéros)." },
+          {
+            term: "Top Grilles",
+            definition:
+              "Sélectionne les grilles avec les meilleurs scores individuels.",
+          },
+          {
+            term: "Portefeuille",
+            definition:
+              "Ensemble diversifié de grilles minimisant le chevauchement.",
+          },
+          {
+            term: "Système réduit",
+            definition:
+              "Couverture combinatoire garantissant un gain si vos numéros sont tirés (nécessite de sélectionner des numéros).",
+          },
         ]}
       />
 
@@ -266,25 +303,27 @@ export default function BudgetPage() {
         {useNumbers && game && (
           <div>
             <p className="text-xs text-text-secondary mb-2">
-              Sélectionnez au moins {game.numbers_drawn + 1} numéros (max 20)
-              — {selectedNumbers.length} sélectionné{selectedNumbers.length > 1 ? "s" : ""}
+              Sélectionnez au moins {game.numbers_drawn + 1} numéros (max 20) —{" "}
+              {selectedNumbers.length} sélectionné
+              {selectedNumbers.length > 1 ? "s" : ""}
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {Array.from({ length: game.max_number - game.min_number + 1 }, (_, i) => game.min_number + i).map(
-                (n) => (
-                  <button
-                    key={n}
-                    onClick={() => toggleNumber(n)}
-                    className={`h-9 w-9 rounded-full text-sm font-semibold transition-colors ${
-                      selectedNumbers.includes(n)
-                        ? "bg-accent-blue text-white shadow"
-                        : "bg-bg-tertiary text-text-secondary hover:bg-bg-primary"
-                    }`}
-                  >
-                    {n}
-                  </button>
-                ),
-              )}
+              {Array.from(
+                { length: game.max_number - game.min_number + 1 },
+                (_, i) => game.min_number + i,
+              ).map((n) => (
+                <button
+                  key={n}
+                  onClick={() => toggleNumber(n)}
+                  className={`h-9 w-9 rounded-full text-sm font-semibold transition-colors ${
+                    selectedNumbers.includes(n)
+                      ? "bg-accent-blue text-white shadow"
+                      : "bg-bg-tertiary text-text-secondary hover:bg-bg-primary"
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
             </div>
           </div>
         )}
@@ -303,11 +342,13 @@ export default function BudgetPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">
-              Recommandations — {result.recommendations.length} stratégie{result.recommendations.length > 1 ? "s" : ""}
+              Recommandations — {result.recommendations.length} stratégie
+              {result.recommendations.length > 1 ? "s" : ""}
             </h2>
             {result.max_grids > 0 && (
               <span className="text-sm text-text-secondary">
-                Budget : {result.budget.toFixed(2)} € — max {result.max_grids} grilles
+                Budget : {result.budget.toFixed(2)} € — max {result.max_grids}{" "}
+                grilles
               </span>
             )}
           </div>
@@ -324,7 +365,11 @@ export default function BudgetPage() {
             onClick={() => setShowHistory(!showHistory)}
             className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary"
           >
-            {showHistory ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {showHistory ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
             Historique ({history.length})
           </button>
           {showHistory && (
@@ -342,7 +387,8 @@ export default function BudgetPage() {
                       {plan.budget.toFixed(2)} € — {plan.objective}
                     </div>
                     <div className="text-xs text-text-secondary">
-                      {new Date(plan.created_at).toLocaleString("fr-FR")} — {plan.recommendations.length} stratégies
+                      {new Date(plan.created_at).toLocaleString("fr-FR")} —{" "}
+                      {plan.recommendations.length} stratégies
                     </div>
                   </button>
                   <button

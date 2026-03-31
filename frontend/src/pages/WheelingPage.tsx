@@ -1,27 +1,35 @@
-import { useState, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Layers, Trash2, Download, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Download, Layers, Trash2 } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 
 import AiAnalysisPanel from "@/components/common/AiAnalysisPanel";
 import PageIntro from "@/components/common/PageIntro";
-import { gameService } from "@/services/gameService";
-import { useGameStore } from "@/stores/gameStore";
 import {
-  useWheelingPreview,
+  useDeleteWheelingSystem,
   useWheelingGenerate,
   useWheelingHistory,
-  useDeleteWheelingSystem,
+  useWheelingPreview,
 } from "@/hooks/useWheeling";
+import { gameService } from "@/services/gameService";
+import { useGameStore } from "@/stores/gameStore";
 import type {
+  GainScenario,
   WheelingGenerateResponse,
   WheelingSystemResponse,
-  GainScenario,
 } from "@/types/wheeling";
 
 const GUARANTEE_PRESETS = [
-  { value: 2, label: "Économique (t=2)", desc: "Couverture minimale, peu de grilles" },
+  {
+    value: 2,
+    label: "Économique (t=2)",
+    desc: "Couverture minimale, peu de grilles",
+  },
   { value: 3, label: "Équilibré (t=3)", desc: "Bon compromis coût/couverture" },
-  { value: 4, label: "Maximal (t=4)", desc: "Couverture étendue, plus de grilles" },
+  {
+    value: 4,
+    label: "Maximal (t=4)",
+    desc: "Couverture étendue, plus de grilles",
+  },
 ] as const;
 
 export default function WheelingPage() {
@@ -52,27 +60,32 @@ export default function WheelingPage() {
   const starLabel = game?.star_name ?? "étoile";
 
   // Number grid
-  const toggleNumber = useCallback(
-    (n: number) => {
-      setSelectedNumbers((prev) =>
-        prev.includes(n) ? prev.filter((x) => x !== n) : prev.length < 20 ? [...prev, n] : prev,
-      );
-      setResult(null);
-    },
-    [],
-  );
+  const toggleNumber = useCallback((n: number) => {
+    setSelectedNumbers((prev) =>
+      prev.includes(n)
+        ? prev.filter((x) => x !== n)
+        : prev.length < 20
+          ? [...prev, n]
+          : prev,
+    );
+    setResult(null);
+  }, []);
 
-  const toggleStar = useCallback(
-    (s: number) => {
-      setSelectedStars((prev) =>
-        prev.includes(s) ? prev.filter((x) => x !== s) : prev.length < 6 ? [...prev, s] : prev,
-      );
-      setResult(null);
-    },
-    [],
-  );
+  const toggleStar = useCallback((s: number) => {
+    setSelectedStars((prev) =>
+      prev.includes(s)
+        ? prev.filter((x) => x !== s)
+        : prev.length < 6
+          ? [...prev, s]
+          : prev,
+    );
+    setResult(null);
+  }, []);
 
-  const canPreview = selectedNumbers.length >= k + 1 && guarantee >= 2 && guarantee <= maxGuarantee;
+  const canPreview =
+    selectedNumbers.length >= k + 1 &&
+    guarantee >= 2 &&
+    guarantee <= maxGuarantee;
 
   const handlePreview = () => {
     if (!canPreview) return;
@@ -162,10 +175,25 @@ export default function WheelingPage() {
         description="Sélectionnez vos numéros favoris et générez un système réduit optimisé qui garantit une couverture combinatoire maximale avec un minimum de grilles. Le système utilise un algorithme de covering design C(n,k,t)."
         tip="Plus vous sélectionnez de numéros, plus le système nécessitera de grilles. Commencez avec 8-10 numéros pour une première exploration."
         terms={[
-          { term: "Covering design C(n,k,t)", definition: "Ensemble minimal de grilles de k numéros couvrant toutes les t-combinaisons parmi n numéros sélectionnés." },
-          { term: "Garantie t", definition: "Niveau de sous-combinaison garanti : si t numéros parmi vos sélectionnés sont tirés, au moins une grille les contient." },
-          { term: "Full wheel", definition: "Toutes les combinaisons C(n,k) — exhaustif mais très coûteux." },
-          { term: "Taux de réduction", definition: "Pourcentage d'économie par rapport au full wheel." },
+          {
+            term: "Covering design C(n,k,t)",
+            definition:
+              "Ensemble minimal de grilles de k numéros couvrant toutes les t-combinaisons parmi n numéros sélectionnés.",
+          },
+          {
+            term: "Garantie t",
+            definition:
+              "Niveau de sous-combinaison garanti : si t numéros parmi vos sélectionnés sont tirés, au moins une grille les contient.",
+          },
+          {
+            term: "Full wheel",
+            definition:
+              "Toutes les combinaisons C(n,k) — exhaustif mais très coûteux.",
+          },
+          {
+            term: "Taux de réduction",
+            definition: "Pourcentage d'économie par rapport au full wheel.",
+          },
         ]}
       />
 
@@ -174,7 +202,8 @@ export default function WheelingPage() {
         <h2 className="text-lg font-semibold">
           1. Sélection des numéros
           <span className="ml-2 text-sm font-normal text-text-secondary">
-            ({selectedNumbers.length}/{game.max_number} sélectionnés, min {k + 1})
+            ({selectedNumbers.length}/{game.max_number} sélectionnés, min{" "}
+            {k + 1})
           </span>
         </h2>
 
@@ -186,44 +215,60 @@ export default function WheelingPage() {
               Numéros
             </h3>
             <div className="inline-grid grid-cols-10 gap-1.5 p-3 rounded-xl bg-surface-hover/40 border border-white/10">
-              {Array.from({ length: game.max_number - game.min_number + 1 }, (_, i) => {
-                const n = game.min_number + i;
-                const isSelected = selectedNumbers.includes(n);
-                return (
-                  <button
-                    key={n}
-                    onClick={() => toggleNumber(n)}
-                    className={`
+              {Array.from(
+                { length: game.max_number - game.min_number + 1 },
+                (_, i) => {
+                  const n = game.min_number + i;
+                  const isSelected = selectedNumbers.includes(n);
+                  return (
+                    <button
+                      key={n}
+                      onClick={() => toggleNumber(n)}
+                      className={`
                       w-9 h-9 rounded-full text-xs font-bold transition-all duration-150
                       flex items-center justify-center
-                      ${isSelected
-                        ? "bg-accent-blue text-white shadow-lg shadow-accent-blue/40 scale-110 ring-2 ring-accent-blue/50"
-                        : "bg-white/10 text-text-primary hover:bg-accent-blue/20 hover:scale-105"
+                      ${
+                        isSelected
+                          ? "bg-accent-blue text-white shadow-lg shadow-accent-blue/40 scale-110 ring-2 ring-accent-blue/50"
+                          : "bg-white/10 text-text-primary hover:bg-accent-blue/20 hover:scale-105"
                       }
                     `}
-                  >
-                    {n}
-                  </button>
-                );
-              })}
+                    >
+                      {n}
+                    </button>
+                  );
+                },
+              )}
             </div>
           </div>
 
           {/* Stars / Numéro Chance — side panel */}
           {game.stars_pool && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide mb-3" style={{
-                color: game.slug === "loto" ? "#e53e3e" : "#d69e2e",
-              }}>
+              <h3
+                className="text-sm font-semibold uppercase tracking-wide mb-3"
+                style={{
+                  color: game.slug === "loto" ? "#e53e3e" : "#d69e2e",
+                }}
+              >
                 {starLabel}s
                 <span className="ml-1 font-normal normal-case text-text-secondary">
                   ({selectedStars.length} sel.)
                 </span>
               </h3>
-              <div className={`inline-grid gap-1.5 p-3 rounded-xl border ${game.stars_pool <= 10 ? "grid-cols-5" : "grid-cols-4"}`} style={{
-                backgroundColor: game.slug === "loto" ? "rgba(229,62,62,0.05)" : "rgba(214,158,46,0.05)",
-                borderColor: game.slug === "loto" ? "rgba(229,62,62,0.2)" : "rgba(214,158,46,0.2)",
-              }}>
+              <div
+                className={`inline-grid gap-1.5 p-3 rounded-xl border ${game.stars_pool <= 10 ? "grid-cols-5" : "grid-cols-4"}`}
+                style={{
+                  backgroundColor:
+                    game.slug === "loto"
+                      ? "rgba(229,62,62,0.05)"
+                      : "rgba(214,158,46,0.05)",
+                  borderColor:
+                    game.slug === "loto"
+                      ? "rgba(229,62,62,0.2)"
+                      : "rgba(214,158,46,0.2)",
+                }}
+              >
                 {Array.from({ length: game.stars_pool }, (_, i) => {
                   const s = i + 1;
                   const isSelected = selectedStars.includes(s);
@@ -235,13 +280,14 @@ export default function WheelingPage() {
                       className={`
                         w-9 h-9 rounded-full text-xs font-bold transition-all duration-150
                         flex items-center justify-center
-                        ${isSelected
-                          ? isLoto
-                            ? "bg-red-500 text-white shadow-lg shadow-red-500/40 scale-110 ring-2 ring-red-500/50"
-                            : "bg-yellow-500 text-white shadow-lg shadow-yellow-500/40 scale-110 ring-2 ring-yellow-500/50"
-                          : isLoto
-                            ? "bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:scale-105"
-                            : "bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 hover:scale-105"
+                        ${
+                          isSelected
+                            ? isLoto
+                              ? "bg-red-500 text-white shadow-lg shadow-red-500/40 scale-110 ring-2 ring-red-500/50"
+                              : "bg-yellow-500 text-white shadow-lg shadow-yellow-500/40 scale-110 ring-2 ring-yellow-500/50"
+                            : isLoto
+                              ? "bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:scale-105"
+                              : "bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 hover:scale-105"
                         }
                       `}
                     >
@@ -258,7 +304,11 @@ export default function WheelingPage() {
           <div className="text-sm text-text-secondary">
             Numéros : {[...selectedNumbers].sort((a, b) => a - b).join(", ")}
             {selectedStars.length > 0 && (
-              <> — {starLabel}s : {[...selectedStars].sort((a, b) => a - b).join(", ")}</>
+              <>
+                {" "}
+                — {starLabel}s :{" "}
+                {[...selectedStars].sort((a, b) => a - b).join(", ")}
+              </>
             )}
           </div>
         )}
@@ -269,22 +319,28 @@ export default function WheelingPage() {
         <h2 className="text-lg font-semibold">2. Configuration</h2>
 
         <div className="flex flex-wrap gap-3">
-          {GUARANTEE_PRESETS.filter((p) => p.value <= maxGuarantee).map((preset) => (
-            <button
-              key={preset.value}
-              onClick={() => { setGuarantee(preset.value); setResult(null); }}
-              className={`
+          {GUARANTEE_PRESETS.filter((p) => p.value <= maxGuarantee).map(
+            (preset) => (
+              <button
+                key={preset.value}
+                onClick={() => {
+                  setGuarantee(preset.value);
+                  setResult(null);
+                }}
+                className={`
                 px-4 py-2 rounded-lg text-sm transition-all
-                ${guarantee === preset.value
-                  ? "bg-accent-blue text-white"
-                  : "bg-surface-hover text-text-primary hover:bg-accent-blue/20"
+                ${
+                  guarantee === preset.value
+                    ? "bg-accent-blue text-white"
+                    : "bg-surface-hover text-text-primary hover:bg-accent-blue/20"
                 }
               `}
-            >
-              <div className="font-medium">{preset.label}</div>
-              <div className="text-xs opacity-75">{preset.desc}</div>
-            </button>
-          ))}
+              >
+                <div className="font-medium">{preset.label}</div>
+                <div className="text-xs opacity-75">{preset.desc}</div>
+              </button>
+            ),
+          )}
         </div>
 
         <div className="flex gap-3">
@@ -300,16 +356,27 @@ export default function WheelingPage() {
             disabled={!canPreview || generateMutation.isPending}
             className="px-4 py-2 rounded-lg bg-accent-blue text-white hover:bg-accent-blue/80 disabled:opacity-50 text-sm font-medium"
           >
-            {generateMutation.isPending ? "Génération..." : "Générer le système"}
+            {generateMutation.isPending
+              ? "Génération..."
+              : "Générer le système"}
           </button>
         </div>
 
         {/* Preview results */}
         {previewMutation.data && !result && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
-            <StatCard label="Grilles estimées" value={previewMutation.data.estimated_grid_count} />
-            <StatCard label="Coût estimé" value={`${previewMutation.data.estimated_cost.toFixed(2)} €`} />
-            <StatCard label="Combinaisons t" value={previewMutation.data.total_t_combinations} />
+            <StatCard
+              label="Grilles estimées"
+              value={previewMutation.data.estimated_grid_count}
+            />
+            <StatCard
+              label="Coût estimé"
+              value={`${previewMutation.data.estimated_cost.toFixed(2)} €`}
+            />
+            <StatCard
+              label="Combinaisons t"
+              value={previewMutation.data.total_t_combinations}
+            />
             <StatCard
               label="Réduction vs full"
               value={`${previewMutation.data.reduction_rate_estimate.toFixed(1)}%`}
@@ -334,13 +401,19 @@ export default function WheelingPage() {
           {/* Metrics */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <StatCard label="Grilles" value={result.grid_count} />
-            <StatCard label="Coût total" value={`${result.total_cost.toFixed(2)} €`} />
+            <StatCard
+              label="Coût total"
+              value={`${result.total_cost.toFixed(2)} €`}
+            />
             <StatCard
               label="Couverture"
               value={`${(result.coverage_rate * 100).toFixed(1)}%`}
               highlight={result.coverage_rate === 1}
             />
-            <StatCard label="Réduction" value={`${result.reduction_rate.toFixed(1)}%`} />
+            <StatCard
+              label="Réduction"
+              value={`${result.reduction_rate.toFixed(1)}%`}
+            />
           </div>
 
           {result.computation_time_ms > 0 && (
@@ -356,12 +429,17 @@ export default function WheelingPage() {
                 <tr className="border-b border-border text-left text-text-secondary">
                   <th className="py-2 px-3 w-16">#</th>
                   <th className="py-2 px-3">Numéros</th>
-                  {game?.stars_pool && <th className="py-2 px-3">{starLabel}s</th>}
+                  {game?.stars_pool && (
+                    <th className="py-2 px-3">{starLabel}s</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
                 {result.grids.map((g, i) => (
-                  <tr key={i} className="border-b border-border/50 hover:bg-surface-hover">
+                  <tr
+                    key={i}
+                    className="border-b border-border/50 hover:bg-surface-hover"
+                  >
                     <td className="py-1.5 px-3 text-text-secondary">{i + 1}</td>
                     <td className="py-1.5 px-3 font-mono">
                       {g.numbers.join(" - ")}
@@ -378,31 +456,40 @@ export default function WheelingPage() {
           </div>
 
           {/* Coverage Matrix (heatmap) */}
-          {result.number_distribution && Object.keys(result.number_distribution).length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold mb-2">Distribution des numéros</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {[...selectedNumbers].sort((a, b) => a - b).map((n) => {
-                  const count = result.number_distribution[n] ?? 0;
-                  const maxCount = Math.max(...Object.values(result.number_distribution));
-                  const intensity = maxCount > 0 ? count / maxCount : 0;
-                  return (
-                    <div
-                      key={n}
-                      className="w-10 h-10 rounded-lg flex flex-col items-center justify-center text-xs"
-                      style={{
-                        backgroundColor: `rgba(59, 130, 246, ${0.1 + intensity * 0.7})`,
-                        color: intensity > 0.5 ? "white" : "inherit",
-                      }}
-                    >
-                      <span className="font-medium">{n}</span>
-                      <span className="text-[10px] opacity-75">×{count}</span>
-                    </div>
-                  );
-                })}
+          {result.number_distribution &&
+            Object.keys(result.number_distribution).length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold mb-2">
+                  Distribution des numéros
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {[...selectedNumbers]
+                    .sort((a, b) => a - b)
+                    .map((n) => {
+                      const count = result.number_distribution[n] ?? 0;
+                      const maxCount = Math.max(
+                        ...Object.values(result.number_distribution),
+                      );
+                      const intensity = maxCount > 0 ? count / maxCount : 0;
+                      return (
+                        <div
+                          key={n}
+                          className="w-10 h-10 rounded-lg flex flex-col items-center justify-center text-xs"
+                          style={{
+                            backgroundColor: `rgba(59, 130, 246, ${0.1 + intensity * 0.7})`,
+                            color: intensity > 0.5 ? "white" : "inherit",
+                          }}
+                        >
+                          <span className="font-medium">{n}</span>
+                          <span className="text-[10px] opacity-75">
+                            ×{count}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Gain Scenarios */}
           {result.gain_scenarios.length > 0 && (
@@ -418,7 +505,11 @@ export default function WheelingPage() {
           className="flex items-center gap-2 text-lg font-semibold w-full text-left"
         >
           Historique des systèmes
-          {showHistory ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+          {showHistory ? (
+            <ChevronUp className="h-5 w-5" />
+          ) : (
+            <ChevronDown className="h-5 w-5" />
+          )}
           {history && (
             <span className="text-sm font-normal text-text-secondary">
               ({history.length})
@@ -429,7 +520,9 @@ export default function WheelingPage() {
         {showHistory && history && (
           <div className="space-y-2">
             {history.length === 0 && (
-              <p className="text-sm text-text-secondary">Aucun système sauvegardé.</p>
+              <p className="text-sm text-text-secondary">
+                Aucun système sauvegardé.
+              </p>
             )}
             {history.map((sys) => (
               <div
@@ -441,7 +534,8 @@ export default function WheelingPage() {
                   onClick={() => handleLoadSystem(sys)}
                 >
                   <div className="text-sm font-medium">
-                    t={sys.guarantee_level} — {sys.grid_count} grilles — {sys.total_cost.toFixed(2)} €
+                    t={sys.guarantee_level} — {sys.grid_count} grilles —{" "}
+                    {sys.total_cost.toFixed(2)} €
                   </div>
                   <div className="text-xs text-text-secondary">
                     Numéros : {sys.selected_numbers.join(", ")} —{" "}
@@ -485,7 +579,9 @@ function StatCard({
   return (
     <div
       className={`rounded-lg p-3 ${
-        highlight ? "bg-green-500/10 border border-green-500/30" : "bg-surface-hover"
+        highlight
+          ? "bg-green-500/10 border border-green-500/30"
+          : "bg-surface-hover"
       }`}
     >
       <div className="text-xs text-text-secondary">{label}</div>
@@ -517,17 +613,23 @@ function GainScenariosTable({ scenarios }: { scenarios: GainScenario[] }) {
               <tr key={s.rank} className="border-b border-border/50">
                 <td className="py-1.5 px-2 font-medium">{s.name}</td>
                 <td className="py-1.5 px-2 text-text-secondary">
-                  {s.match_numbers}n{s.match_stars > 0 ? `+${s.match_stars}★` : ""}
+                  {s.match_numbers}n
+                  {s.match_stars > 0 ? `+${s.match_stars}★` : ""}
                 </td>
-                <td className="py-1.5 px-2">{s.avg_prize.toLocaleString("fr-FR")} €</td>
+                <td className="py-1.5 px-2">
+                  {s.avg_prize.toLocaleString("fr-FR")} €
+                </td>
                 <td className="py-1.5 px-2 text-green-400">
-                  {s.matching_grids_best}g → {s.potential_gain_best.toLocaleString("fr-FR")} €
+                  {s.matching_grids_best}g →{" "}
+                  {s.potential_gain_best.toLocaleString("fr-FR")} €
                 </td>
                 <td className="py-1.5 px-2 text-yellow-400">
-                  {s.matching_grids_avg.toFixed(1)}g → {s.potential_gain_avg.toLocaleString("fr-FR")} €
+                  {s.matching_grids_avg.toFixed(1)}g →{" "}
+                  {s.potential_gain_avg.toLocaleString("fr-FR")} €
                 </td>
                 <td className="py-1.5 px-2 text-red-400">
-                  {s.matching_grids_worst}g → {s.potential_gain_worst.toLocaleString("fr-FR")} €
+                  {s.matching_grids_worst}g →{" "}
+                  {s.potential_gain_worst.toLocaleString("fr-FR")} €
                 </td>
               </tr>
             ))}

@@ -44,8 +44,7 @@ export function useDeleteWheelingSystem() {
   const gameId = useGameStore((s) => s.currentGameId);
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (systemId: number) =>
-      wheelingService.delete(gameId!, systemId),
+    mutationFn: (systemId: number) => wheelingService.delete(gameId!, systemId),
     onSuccess: () => {
       toast.success("Système supprimé");
       queryClient.invalidateQueries({ queryKey: ["wheeling", gameId] });
