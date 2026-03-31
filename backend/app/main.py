@@ -119,6 +119,85 @@ async def _maybe_initial_fetch() -> None:
     asyncio.create_task(_run_pipeline())
 
 
+async def _maybe_initial_compute() -> None:
+    """If compute jobs have never run successfully, trigger them in the background.
+
+    Checks each computation step independently so that only the missing ones
+    are executed (e.g. draws already fetched but stats never computed).
+    """
+    import asyncio
+
+    from sqlalchemy import select
+
+    from app.models.base import get_session
+    from app.models.job import JobExecution, JobStatus
+
+    logger = structlog.get_logger("seed")
+
+    # Jobs to check, in execution order (each depends on the previous)
+    compute_jobs = [
+        "compute_stats",
+        "compute_scoring",
+        "compute_top_grids",
+        "optimize_portfolio",
+    ]
+
+    never_ran: list[str] = []
+    async for session in get_session():
+        for job_name in compute_jobs:
+            stmt = (
+                select(JobExecution.id)
+                .where(
+                    JobExecution.job_name == job_name,
+                    JobExecution.status == JobStatus.SUCCESS,
+                )
+                .limit(1)
+            )
+            result = await session.execute(stmt)
+            if result.scalar() is None:
+                never_ran.append(job_name)
+        break
+
+    if not never_ran:
+        logger.info("initial_compute.skipped", reason="all_jobs_already_ran")
+        return
+
+    # If an early step never ran, all subsequent steps must also run
+    first_missing_idx = compute_jobs.index(never_ran[0])
+    jobs_to_run = compute_jobs[first_missing_idx:]
+    logger.info("initial_compute.starting", jobs=jobs_to_run)
+
+    async def _run_compute() -> None:
+        from app.scheduler.jobs.compute_scoring import _do_compute_scoring
+        from app.scheduler.jobs.compute_statistics import _do_compute_stats
+        from app.scheduler.jobs.compute_top_grids import _do_compute_top_grids
+        from app.scheduler.jobs.optimize_portfolio import _do_optimize_portfolio
+        from app.scheduler.runner import execute_with_tracking
+
+        job_funcs: dict[str, Any] = {
+            "compute_stats": _do_compute_stats,
+            "compute_scoring": _do_compute_scoring,
+            "compute_top_grids": _do_compute_top_grids,
+            "optimize_portfolio": _do_optimize_portfolio,
+        }
+
+        for job_name in jobs_to_run:
+            try:
+                await execute_with_tracking(
+                    job_name=job_name,
+                    func=job_funcs[job_name],
+                    triggered_by="startup",
+                )
+                logger.info("initial_compute.step_done", job=job_name)
+            except Exception as exc:
+                logger.error(
+                    "initial_compute.step_failed", job=job_name, error=str(exc)
+                )
+                # Continue to next step even if one fails
+
+    asyncio.create_task(_run_compute())
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup / shutdown logic."""
@@ -144,6 +223,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     # On first deployment, trigger data fetch in the background
     await _maybe_initial_fetch()
+
+    # If draws exist but compute jobs never ran, trigger them
+    await _maybe_initial_compute()
 
     yield
 
