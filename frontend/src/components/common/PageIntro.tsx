@@ -1,6 +1,7 @@
 /**
- * PageIntro — collapsible help accordion shown at the top of each main page.
- * Defaults to collapsed. State persisted in localStorage per storageKey.
+ * PageIntro — contextual tip always visible + collapsible terms/description.
+ * Tip is always shown as a banner to guide the user.
+ * Description and terms are hidden in a collapsible section.
  */
 import { ChevronDown, ChevronUp, HelpCircle, Lightbulb } from "lucide-react";
 import { useState } from "react";
@@ -54,75 +55,79 @@ export default function PageIntro({
   }
 
   return (
-    <div className="border border-accent-blue/20 rounded-lg overflow-hidden">
-      {/* Header — always visible */}
-      <button
-        onClick={toggle}
-        className="w-full flex items-center justify-between px-4 py-2.5 bg-accent-blue/5 hover:bg-accent-blue/10 transition-colors text-left"
-        aria-expanded={open}
-      >
-        <span className="flex items-center gap-2 text-sm font-medium text-accent-blue">
-          <HelpCircle size={14} />À propos de cette page
-        </span>
-        {open ? (
-          <ChevronUp size={14} className="text-accent-blue shrink-0" />
-        ) : (
-          <ChevronDown size={14} className="text-text-secondary shrink-0" />
-        )}
-      </button>
-
-      {/* Expandable content */}
-      {open && (
-        <div className="px-4 py-4 space-y-4 bg-accent-blue/5 border-t border-accent-blue/15">
-          {/* Description */}
-          <p className="text-sm text-text-primary leading-relaxed">
-            {description}
-          </p>
-
-          {/* Terms */}
-          {terms && terms.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-2">
-                Termes clés
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {terms.map((t) => (
-                  <div
-                    key={t.term}
-                    className="bg-surface rounded-md border border-border px-3 py-2 space-y-0.5"
-                  >
-                    <p className="text-xs font-semibold text-text-primary">
-                      {t.term}
-                    </p>
-                    <p className="text-xs text-text-secondary">
-                      {t.definition}
-                    </p>
-                    {t.strength && (
-                      <p className="text-xs text-accent-green">
-                        ✓ {t.strength}
-                      </p>
-                    )}
-                    {t.limit && (
-                      <p className="text-xs text-accent-yellow">⚠ {t.limit}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Tip */}
-          {tip && (
-            <div className="flex items-start gap-2 bg-accent-yellow/10 border border-accent-yellow/20 rounded-md px-3 py-2">
-              <Lightbulb
-                size={13}
-                className="text-accent-yellow mt-0.5 shrink-0"
-              />
-              <p className="text-xs text-text-primary">{tip}</p>
-            </div>
-          )}
+    <div className="space-y-2">
+      {/* Tip — ALWAYS visible */}
+      {tip && (
+        <div className="flex items-start gap-2.5 bg-accent-yellow/10 border border-accent-yellow/25 rounded-lg px-4 py-3">
+          <Lightbulb
+            size={15}
+            className="text-accent-yellow mt-0.5 shrink-0"
+          />
+          <p className="text-sm text-text-primary leading-relaxed">{tip}</p>
         </div>
       )}
+
+      {/* Collapsible section for description + terms */}
+      <div className="border border-border/50 rounded-lg overflow-hidden">
+        <button
+          onClick={toggle}
+          className="w-full flex items-center justify-between px-4 py-2 bg-surface-hover/50 hover:bg-surface-hover transition-colors text-left"
+          aria-expanded={open}
+        >
+          <span className="flex items-center gap-2 text-xs text-text-secondary">
+            <HelpCircle size={13} />
+            Explications et termes clés
+          </span>
+          {open ? (
+            <ChevronUp size={13} className="text-text-secondary shrink-0" />
+          ) : (
+            <ChevronDown size={13} className="text-text-secondary shrink-0" />
+          )}
+        </button>
+
+        {open && (
+          <div className="px-4 py-4 space-y-4 border-t border-border/50">
+            {/* Description */}
+            <p className="text-sm text-text-secondary leading-relaxed">
+              {description}
+            </p>
+
+            {/* Terms */}
+            {terms && terms.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-2">
+                  Termes clés
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {terms.map((t) => (
+                    <div
+                      key={t.term}
+                      className="bg-surface rounded-md border border-border px-3 py-2 space-y-0.5"
+                    >
+                      <p className="text-xs font-semibold text-text-primary">
+                        {t.term}
+                      </p>
+                      <p className="text-xs text-text-secondary">
+                        {t.definition}
+                      </p>
+                      {t.strength && (
+                        <p className="text-xs text-accent-green">
+                          ✓ {t.strength}
+                        </p>
+                      )}
+                      {t.limit && (
+                        <p className="text-xs text-accent-yellow">
+                          ⚠ {t.limit}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

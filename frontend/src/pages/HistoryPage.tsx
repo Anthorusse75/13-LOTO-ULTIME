@@ -1,17 +1,21 @@
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
+import EmptyState from "@/components/common/EmptyState";
 import DrawBalls from "@/components/draws/DrawBalls";
+import HistoryFilters from "@/components/history/HistoryFilters";
+import SavedResultCard from "@/components/history/SavedResultCard";
 import {
   useFavoriteGrids,
   usePlayedGrids,
   useTogglePlayed,
 } from "@/hooks/useGrids";
+import { useSavedResults } from "@/hooks/useHistory";
 import { drawService } from "@/services/drawService";
 import { useGameStore } from "@/stores/gameStore";
 import type { Draw } from "@/types/draw";
 import type { GridResponse } from "@/types/grid";
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2, TrendingUp, Trophy } from "lucide-react";
+import { Archive, CheckCircle2, TrendingUp, Trophy } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   CartesianGrid,
@@ -23,7 +27,7 @@ import {
   YAxis,
 } from "recharts";
 
-type HistoryTab = "played" | "favorites";
+type HistoryTab = "played" | "favorites" | "saved";
 
 function matchCount(gridNumbers: number[], drawNumbers: number[]): number {
   const s = new Set(drawNumbers);
@@ -61,12 +65,22 @@ interface ComparedGrid extends GridResponse {
 
 export default function HistoryPage() {
   const [tab, setTab] = useState<HistoryTab>("played");
+  const [savedPage, setSavedPage] = useState(1);
+  const [savedTypeFilter, setSavedTypeFilter] = useState("");
+  const [savedFavOnly, setSavedFavOnly] = useState(false);
 
   const gameId = useGameStore((s) => s.currentGameId);
   const { data: playedGrids = [], isLoading: loadingPlayed } = usePlayedGrids();
   const { data: favoriteGrids = [], isLoading: loadingFavorites } =
     useFavoriteGrids();
   const togglePlayed = useTogglePlayed();
+
+  const { data: savedResults, isLoading: loadingSaved } = useSavedResults(
+    savedPage,
+    20,
+    savedTypeFilter || undefined,
+    savedFavOnly || undefined,
+  );
 
   const { data: recentDrawsResponse } = useQuery({
     queryKey: ["draws", gameId, "recent"],
@@ -77,7 +91,12 @@ export default function HistoryPage() {
   const recentDraws = recentDrawsResponse?.items ?? [];
 
   const gridsToShow = tab === "played" ? playedGrids : favoriteGrids;
-  const isLoading = tab === "played" ? loadingPlayed : loadingFavorites;
+  const isLoading =
+    tab === "played"
+      ? loadingPlayed
+      : tab === "favorites"
+        ? loadingFavorites
+        : loadingSaved;
 
   // Enrich played grids with best draw comparison
   const enrichedGrids: ComparedGrid[] = useMemo(() => {
@@ -181,6 +200,11 @@ export default function HistoryPage() {
               key: "favorites" as HistoryTab,
               label: "Favoris",
               count: favoriteGrids.length,
+            },
+            {
+              key: "saved" as HistoryTab,
+              label: "Résultats sauvegardés",
+              count: savedResults?.total ?? 0,
             },
           ] as const
         ).map((t) => (
@@ -363,6 +387,69 @@ export default function HistoryPage() {
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Saved results tab */}
+      {tab === "saved" && (
+        <div className="space-y-4">
+          <HistoryFilters
+            resultType={savedTypeFilter}
+            onResultTypeChange={(v) => {
+              setSavedTypeFilter(v);
+              setSavedPage(1);
+            }}
+            favoritesOnly={savedFavOnly}
+            onFavoritesOnlyChange={(v) => {
+              setSavedFavOnly(v);
+              setSavedPage(1);
+            }}
+          />
+
+          {loadingSaved && <LoadingSpinner message="Chargement..." />}
+
+          {!loadingSaved && (!savedResults || savedResults.items.length === 0) && (
+            <EmptyState
+              icon={<Archive size={40} strokeWidth={1.5} />}
+              title="Aucun résultat sauvegardé"
+              message="Utilisez le bouton « Sauvegarder » depuis les pages Grilles, Portfolio ou Simulation pour conserver vos résultats ici."
+            />
+          )}
+
+          {savedResults && savedResults.items.length > 0 && (
+            <>
+              <div className="space-y-3">
+                {savedResults.items.map((r) => (
+                  <SavedResultCard key={r.id} result={r} />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {savedResults.pages > 1 && (
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => setSavedPage((p) => Math.max(1, p - 1))}
+                    disabled={savedPage <= 1}
+                    className="px-3 py-1 text-xs border border-border rounded disabled:opacity-40"
+                  >
+                    Précédent
+                  </button>
+                  <span className="text-xs text-text-secondary">
+                    Page {savedPage}/{savedResults.pages}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setSavedPage((p) => Math.min(savedResults.pages, p + 1))
+                    }
+                    disabled={savedPage >= savedResults.pages}
+                    className="px-3 py-1 text-xs border border-border rounded disabled:opacity-40"
+                  >
+                    Suivant
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
     </div>

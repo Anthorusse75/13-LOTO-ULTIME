@@ -30,5 +30,10 @@ class StatisticsSnapshot(Base):
     )
     star_gaps: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True, default=None)
 
+    # Pre-computed hot/cold summary for dashboard
+    hot_cold_summary: Mapped[dict[str, Any] | None] = mapped_column(
+        JSON, nullable=True, default=None
+    )
+
     def __repr__(self) -> str:
         return f"<StatisticsSnapshot(game_id={self.game_id}, at={self.computed_at})>"

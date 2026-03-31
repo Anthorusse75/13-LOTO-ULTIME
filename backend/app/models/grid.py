@@ -15,6 +15,9 @@ class ScoredGrid(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     game_id: Mapped[int] = mapped_column(ForeignKey("game_definitions.id"), index=True)
+    user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     numbers: Mapped[list[int]] = mapped_column(JSON)
     stars: Mapped[list[int] | None] = mapped_column(JSON, nullable=True)
 

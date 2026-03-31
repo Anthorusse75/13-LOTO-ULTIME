@@ -24,8 +24,10 @@ async def _do_nightly_pipeline() -> dict[str, Any]:
     from app.scheduler.jobs.compute_scoring import _do_compute_scoring
     from app.scheduler.jobs.compute_statistics import _do_compute_stats
     from app.scheduler.jobs.compute_top_grids import _do_compute_top_grids
+    from app.scheduler.jobs.compute_hot_cold import _do_compute_hot_cold
     from app.scheduler.jobs.fetch_draws import _do_fetch
     from app.scheduler.jobs.optimize_portfolio import _do_optimize_portfolio
+    from app.scheduler.jobs.pre_generate_daily_content import _do_pre_generate
 
     results: dict[str, Any] = {}
     steps: list[tuple[str, Callable[..., Coroutine[Any, Any, dict[str, Any]]]]] = [
@@ -36,6 +38,8 @@ async def _do_nightly_pipeline() -> dict[str, Any]:
         ("compute_scoring", _do_compute_scoring),
         ("compute_top_grids", _do_compute_top_grids),
         ("optimize_portfolio", _do_optimize_portfolio),
+        ("compute_hot_cold", _do_compute_hot_cold),
+        ("pre_generate_daily_content", _do_pre_generate),
     ]
 
     for step_name, step_func in steps:

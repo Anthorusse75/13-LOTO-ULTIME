@@ -3,14 +3,18 @@ import { useGameStore } from "@/stores/gameStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import type { GameDefinition } from "@/types/game";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, Moon, Sun } from "lucide-react";
-import { useEffect } from "react";
+import { BookOpen, ChevronDown, HelpCircle, Info, Moon, Sun } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const theme = useSettingsStore((s) => s.theme);
   const toggleTheme = useSettingsStore((s) => s.toggleTheme);
   const currentGameId = useGameStore((s) => s.currentGameId);
   const setGame = useGameStore((s) => s.setGame);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const infoRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const { data: games } = useQuery<GameDefinition[]>({
     queryKey: ["games"],
@@ -24,6 +28,18 @@ export default function Header() {
       setGame(games[0].id, games[0].slug);
     }
   }, [currentGameId, games, setGame]);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    if (!infoOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (infoRef.current && !infoRef.current.contains(e.target as Node)) {
+        setInfoOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [infoOpen]);
 
   const currentGame = games?.find((g) => g.id === currentGameId);
 
@@ -64,6 +80,42 @@ export default function Header() {
             />
           </div>
         )}
+
+        {/* Info dropdown */}
+        <div className="relative" ref={infoRef}>
+          <button
+            onClick={() => setInfoOpen(!infoOpen)}
+            className="p-2 rounded-md hover:bg-surface-hover text-text-secondary"
+            aria-label="Informations et aide"
+            aria-expanded={infoOpen}
+          >
+            <Info size={18} aria-hidden="true" />
+          </button>
+          {infoOpen && (
+            <div className="absolute right-0 top-full mt-1 w-56 bg-surface border border-border rounded-lg shadow-lg py-1 z-50">
+              <button
+                onClick={() => {
+                  navigate("/how-it-works");
+                  setInfoOpen(false);
+                }}
+                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors text-left"
+              >
+                <HelpCircle size={16} />
+                Comment ça marche
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/glossary");
+                  setInfoOpen(false);
+                }}
+                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors text-left"
+              >
+                <BookOpen size={16} />
+                Glossaire
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Theme toggle */}
         <button

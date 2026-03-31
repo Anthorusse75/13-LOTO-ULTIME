@@ -3,6 +3,14 @@ from datetime import datetime
 from pydantic import BaseModel, Field, field_validator
 
 
+class ExplanationSchema(BaseModel):
+    summary: str
+    interpretation: str
+    technical: str
+    highlights: list[str] = []
+    warnings: list[str] = []
+
+
 class ScoreBreakdown(BaseModel):
     frequency: float
     gap: float
@@ -47,6 +55,7 @@ class GridScoreResponse(BaseModel):
     total_score: float
     score_breakdown: ScoreBreakdown
     star_score: float | None = None
+    explanation: ExplanationSchema | None = None
 
 
 class GridResponse(BaseModel):
@@ -76,3 +85,4 @@ class GridGenerateResponse(BaseModel):
     grids: list["GridScoreResponse"]
     computation_time_ms: float
     method_used: str
+    explanation: ExplanationSchema | None = None

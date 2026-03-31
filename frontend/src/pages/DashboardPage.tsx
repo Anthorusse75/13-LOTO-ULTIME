@@ -1,6 +1,8 @@
 import Disclaimer from "@/components/common/Disclaimer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
+import StatOfTheDay from "@/components/dashboard/StatOfTheDay";
+import type { StatHighlight } from "@/components/dashboard/StatOfTheDay";
 import DrawBalls from "@/components/draws/DrawBalls";
 import { useDraws, useLatestDraw } from "@/hooks/useDraws";
 import { useTopGrids } from "@/hooks/useGrids";
@@ -12,7 +14,11 @@ import {
   Activity,
   Award,
   Calendar,
+  Flame,
   Hash,
+  Hourglass,
+  Percent,
+  Snowflake,
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
@@ -47,6 +53,53 @@ export default function DashboardPage() {
     .slice()
     .sort((a, b) => b.relative - a.relative)
     .slice(0, 10);
+
+  // Derive stat highlights
+  const mostOverdue = stats?.gaps
+    ?.slice()
+    .sort((a, b) => b.current_gap - a.current_gap)[0];
+
+  const leastFreq = stats?.frequencies
+    ?.slice()
+    .sort((a, b) => a.relative - b.relative)[0];
+
+  const statHighlights: StatHighlight[] = [];
+  if (topFreq?.[0]) {
+    statHighlights.push({
+      icon: <Flame size={16} className="text-accent-red" />,
+      label: "le plus fréquent",
+      value: `N°${topFreq[0].number}`,
+      detail: `${(topFreq[0].relative * 100).toFixed(1)}% des tirages (${topFreq[0].count} apparitions)`,
+      color: "text-accent-red",
+    });
+  }
+  if (mostOverdue) {
+    statHighlights.push({
+      icon: <Hourglass size={16} className="text-accent-amber" />,
+      label: "le plus en retard",
+      value: `N°${mostOverdue.number}`,
+      detail: `Absent depuis ${mostOverdue.current_gap} tirages (max historique : ${mostOverdue.max_gap})`,
+      color: "text-accent-amber",
+    });
+  }
+  if (leastFreq) {
+    statHighlights.push({
+      icon: <Snowflake size={16} className="text-accent-blue" />,
+      label: "le plus rare",
+      value: `N°${leastFreq.number}`,
+      detail: `${(leastFreq.relative * 100).toFixed(1)}% des tirages seulement`,
+      color: "text-accent-blue",
+    });
+  }
+  if (stats) {
+    statHighlights.push({
+      icon: <Percent size={16} className="text-accent-green" />,
+      label: "uniformité",
+      value: `${(stats.uniformity_score * 100).toFixed(0)}%`,
+      detail: `Entropie ${stats.distribution_entropy.toFixed(2)} — ${stats.uniformity_score > 0.9 ? "distribution très uniforme" : stats.uniformity_score > 0.7 ? "distribution équilibrée" : "distribution déséquilibrée"}`,
+      color: "text-accent-green",
+    });
+  }
 
   return (
     <div className="space-y-6">
@@ -168,7 +221,10 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Stat of the day */}
+        <StatOfTheDay items={statHighlights} />
+
         {/* Frequency chart */}
         <div className="bg-surface rounded-lg border border-border p-4">
           <h2 className="text-sm font-semibold mb-4">Top 10 Fréquences</h2>

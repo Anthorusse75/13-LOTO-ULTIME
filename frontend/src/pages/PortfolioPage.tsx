@@ -1,6 +1,8 @@
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
+import ExplanationPanel from "@/components/common/ExplanationPanel";
+import SaveButton from "@/components/history/SaveButton";
 import DrawBalls from "@/components/draws/DrawBalls";
 import NumberHeatmap from "@/components/statistics/NumberHeatmap";
 import { useGeneratePortfolio } from "@/hooks/usePortfolios";
@@ -9,12 +11,13 @@ import { useGameStore } from "@/stores/gameStore";
 import { PORTFOLIO_STRATEGIES } from "@/utils/constants";
 import { formatScore } from "@/utils/formatters";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Loader2, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export default function PortfolioPage() {
   const [gridCount, setGridCount] = useState(7);
   const [strategy, setStrategy] = useState("balanced");
+  const abortRef = useRef<AbortController | null>(null);
 
   const slug = useGameStore((s) => s.currentGameSlug);
   const { data: game } = useQuery({
@@ -26,7 +29,16 @@ export default function PortfolioPage() {
   const generateMutation = useGeneratePortfolio();
 
   const handleGenerate = () => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
     generateMutation.mutate({ grid_count: gridCount, strategy });
+  };
+
+  const handleCancel = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    generateMutation.reset();
   };
 
   const portfolio = generateMutation.data;
@@ -101,13 +113,13 @@ export default function PortfolioPage() {
             <input
               type="number"
               min={2}
-              max={50}
+              max={200}
               value={gridCount}
               onChange={(e) => setGridCount(Number(e.target.value))}
               className="w-full bg-surface-hover border border-border rounded-md px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 focus:ring-accent-blue"
             />
             <p className="text-xs text-text-secondary mt-1">
-              💡 Entre 5 et 10 grilles pour un bon rapport couverture/budget.
+              💡 Entre 5 et 10 pour un bon rapport couverture/budget. Jusqu'à 200 pour une couverture maximale.
             </p>
           </div>
           <div>
@@ -132,16 +144,27 @@ export default function PortfolioPage() {
             </p>
           </div>
         </div>
-        <button
-          onClick={handleGenerate}
-          disabled={generateMutation.isPending}
-          className="px-6 py-2 bg-accent-blue text-white rounded-md text-sm font-medium hover:bg-accent-blue/90 disabled:opacity-50 flex items-center gap-2"
-        >
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleGenerate}
+            disabled={generateMutation.isPending}
+            className="px-6 py-2 bg-accent-blue text-white rounded-md text-sm font-medium hover:bg-accent-blue/90 disabled:opacity-50 flex items-center gap-2"
+          >
+            {generateMutation.isPending && (
+              <Loader2 size={16} className="animate-spin" />
+            )}
+            Générer portefeuille
+          </button>
           {generateMutation.isPending && (
-            <Loader2 size={16} className="animate-spin" />
+            <button
+              onClick={handleCancel}
+              className="px-4 py-2 bg-accent-red/10 text-accent-red border border-accent-red/30 rounded-md text-sm font-medium hover:bg-accent-red/20 flex items-center gap-2 transition-colors"
+            >
+              <X size={16} />
+              Annuler
+            </button>
           )}
-          Générer portefeuille
-        </button>
+        </div>
       </div>
 
       {generateMutation.isPending && (
@@ -322,6 +345,24 @@ export default function PortfolioPage() {
             — Méthode: {portfolio.method_used} — Temps:{" "}
             {portfolio.computation_time_ms.toFixed(0)}ms
           </p>
+
+          {/* Explainability */}
+          {portfolio.explanation && (
+            <ExplanationPanel explanation={portfolio.explanation} />
+          )}
+
+          {/* Save to history */}
+          <SaveButton
+            resultType="portfolio"
+            parameters={{ grid_count: gridCount, strategy }}
+            resultData={{
+              grids: portfolio.grids,
+              diversity_score: portfolio.diversity_score,
+              coverage_score: portfolio.coverage_score,
+              avg_grid_score: portfolio.avg_grid_score,
+            }}
+            name={`Portfolio ${portfolio.grid_count} grilles`}
+          />
         </>
       )}
     </div>

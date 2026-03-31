@@ -17,6 +17,8 @@ from app.models.game import GameDefinition
 from app.models.grid import ScoredGrid  # noqa: F401
 from app.models.job import JobExecution  # noqa: F401
 from app.models.portfolio import Portfolio  # noqa: F401
+from app.models.prize_tier import GamePrizeTier  # noqa: F401
+from app.models.saved_result import UserSavedResult  # noqa: F401
 from app.models.statistics import StatisticsSnapshot  # noqa: F401
 from app.models.user import User  # noqa: F401
 

@@ -7,11 +7,13 @@ from app.core.exceptions import InsufficientDataError
 from app.core.game_definitions import GameConfig
 from app.dependencies import get_game_config, get_grid_service, require_role
 from app.models.user import UserRole
+from app.schemas.grid import ExplanationSchema
 from app.schemas.portfolio import (
     PortfolioGenerateRequest,
     PortfolioGenerateResponse,
 )
 from app.services.grid import GridService
+from app.engines.explainability.portfolio_explainer import explain_portfolio
 
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
 
@@ -39,6 +41,17 @@ async def generate_portfolio(
     except InsufficientDataError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
+    explanation = explain_portfolio(
+        strategy=result.strategy,
+        grid_count=len(result.grids),
+        diversity_score=result.diversity_score,
+        coverage_score=result.coverage_score,
+        avg_grid_score=result.avg_grid_score,
+        min_hamming_distance=result.min_hamming_distance,
+        method=method_used,
+        computation_time_ms=round(elapsed_ms, 1),
+    )
+
     return PortfolioGenerateResponse(
         strategy=result.strategy,
         grid_count=len(result.grids),
@@ -51,6 +64,7 @@ async def generate_portfolio(
         min_hamming_distance=result.min_hamming_distance,
         computation_time_ms=round(elapsed_ms, 1),
         method_used=method_used,
+        explanation=ExplanationSchema(**explanation.__dict__),
     )
 
 

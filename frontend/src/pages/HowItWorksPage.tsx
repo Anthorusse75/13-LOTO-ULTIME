@@ -1,11 +1,14 @@
 import {
   BookOpen,
   Brain,
+  ChevronDown,
+  ChevronRight,
   Dices,
   FlaskConical,
   LineChart,
   Target,
 } from "lucide-react";
+import { useState } from "react";
 
 const steps = [
   {
@@ -46,38 +49,160 @@ const steps = [
   },
 ];
 
+interface LearnSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+function LearnSection({ title, children }: LearnSectionProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-border rounded-lg overflow-hidden">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center gap-2 px-4 py-3 bg-surface hover:bg-surface-hover transition-colors text-left"
+        aria-expanded={open}
+      >
+        {open ? (
+          <ChevronDown size={14} className="text-text-secondary shrink-0" />
+        ) : (
+          <ChevronRight size={14} className="text-text-secondary shrink-0" />
+        )}
+        <span className="text-sm font-semibold">{title}</span>
+      </button>
+      {open && (
+        <div className="px-4 pb-4 pt-2 text-sm text-text-secondary leading-relaxed space-y-2">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function HowItWorksPage() {
   return (
-    <div className="max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold text-text-primary mb-2">
-        Comment ça marche ?
-      </h1>
-      <p className="text-text-secondary mb-8">
-        Loto Ultime utilise des techniques avancées d'analyse statistique et
-        d'optimisation pour vous aider à choisir vos combinaisons. Voici les
-        étapes du processus.
-      </p>
+    <div className="max-w-3xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-2xl font-bold text-text-primary mb-2">
+          Comment ça marche ?
+        </h1>
+        <p className="text-text-secondary mb-8">
+          Loto Ultime utilise des techniques avancées d'analyse statistique et
+          d'optimisation pour vous aider à choisir vos combinaisons. Voici les
+          étapes du processus.
+        </p>
 
-      <div className="space-y-6">
-        {steps.map(({ icon: Icon, title, description }) => (
-          <div
-            key={title}
-            className="flex gap-4 p-4 bg-surface rounded-lg border border-border"
-          >
-            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-blue/10 flex items-center justify-center">
-              <Icon size={20} className="text-accent-blue" />
+        <div className="space-y-6">
+          {steps.map(({ icon: Icon, title, description }) => (
+            <div
+              key={title}
+              className="flex gap-4 p-4 bg-surface rounded-lg border border-border"
+            >
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-blue/10 flex items-center justify-center">
+                <Icon size={20} className="text-accent-blue" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-text-primary mb-1">{title}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  {description}
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-text-primary mb-1">{title}</h3>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                {description}
-              </p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      <div className="mt-8 p-4 bg-accent-amber/10 border border-accent-amber/30 rounded-lg">
+      {/* Pedagogy — Learn Sections */}
+      <div>
+        <h2 className="text-lg font-bold mb-4">Comprendre les concepts</h2>
+        <div className="space-y-2">
+          <LearnSection title="Les probabilités et le hasard">
+            <p>
+              La loterie est un jeu <strong>purement aléatoire</strong>. Chaque
+              tirage est indépendant du précédent — les boules n'ont pas de
+              mémoire. Statistiquement, toutes les combinaisons ont exactement
+              la même probabilité d'être tirées.
+            </p>
+            <p>
+              Alors pourquoi analyser ? Parce que le scoring mesure la
+              <strong> qualité statistique</strong> d'une grille (équilibre,
+              diversité), pas sa probabilité de gain. C'est comme choisir un
+              bon cheval aux courses : on n'est pas sûr qu'il gagne, mais on
+              peut évaluer ses chances objectivement.
+            </p>
+          </LearnSection>
+
+          <LearnSection title="Le scoring multicritère">
+            <p>
+              Chaque grille est notée sur 6 critères indépendants pondérés. La
+              note finale (0-10) est une moyenne pondérée. Les critères sont :
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>Fréquence</strong> — les numéros sont-ils souvent sortis ?</li>
+              <li><strong>Écart (gap)</strong> — quand sont-ils sortis pour la dernière fois ?</li>
+              <li><strong>Co-occurrence</strong> — ces numéros sortent-ils souvent ensemble ?</li>
+              <li><strong>Structure</strong> — répartition par dizaines, terminaisons, somme.</li>
+              <li><strong>Équilibre</strong> — mix pair/impair, haut/bas.</li>
+              <li><strong>Pénalité pattern</strong> — malus pour les suites trop régulières.</li>
+            </ul>
+          </LearnSection>
+
+          <LearnSection title="Les algorithmes d'optimisation">
+            <p>
+              Pour trouver les meilleures grilles parmi des millions de
+              possibilités, on utilise des <strong>méta-heuristiques</strong> :
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>Algorithme génétique</strong> — s'inspire de l'évolution darwinienne (sélection, croisement, mutation).</li>
+              <li><strong>Recuit simulé</strong> — imite le refroidissement des métaux pour éviter les minimums locaux.</li>
+              <li><strong>Recherche tabou</strong> — explore intelligemment en mémorisant les zones déjà visitées.</li>
+              <li><strong>Hill climbing</strong> — amélioration itérative simple et rapide.</li>
+            </ul>
+          </LearnSection>
+
+          <LearnSection title="La simulation Monte Carlo">
+            <p>
+              On simule des milliers (voire des centaines de milliers) de tirages
+              aléatoires fictifs et on regarde combien de fois vos numéros
+              seraient sortis. Le résultat converge vers l'<strong>espérance
+              mathématique</strong> (loi hypergéométrique).
+            </p>
+            <p>
+              C'est utile pour vérifier que votre grille se comporte
+              « normalement » et pour estimer la distribution de vos gains
+              potentiels.
+            </p>
+          </LearnSection>
+
+          <LearnSection title="Le portefeuille et la diversification">
+            <p>
+              Comme en finance, ne mettez pas tous vos œufs dans le même panier.
+              Un <strong>portefeuille</strong> est un ensemble de grilles
+              complémentaires qui maximisent la couverture numérique tout en
+              gardant des scores individuels élevés.
+            </p>
+            <p>
+              La <strong>distance de Hamming</strong> entre deux grilles compte
+              le nombre de numéros différents. Plus cette distance est élevée,
+              plus les grilles sont complémentaires.
+            </p>
+          </LearnSection>
+
+          <LearnSection title="Jeu responsable">
+            <p>
+              La loterie reste un jeu de hasard. <strong>Aucun outil ne
+              garantit un gain</strong>. Loto Ultime vous aide à faire des choix
+              plus informés, pas à prédire l'avenir. Fixez-vous un budget
+              mensuel et ne le dépassez jamais. Si le jeu n'est plus un
+              plaisir, consultez <a href="https://www.joueurs-info-service.fr/"
+              target="_blank" rel="noopener noreferrer"
+              className="text-accent-blue underline">Joueurs Info Service</a>.
+            </p>
+          </LearnSection>
+        </div>
+      </div>
+
+      <div className="p-4 bg-accent-amber/10 border border-accent-amber/30 rounded-lg">
         <p className="text-sm text-text-secondary">
           <strong className="text-accent-amber">⚠ Rappel :</strong> Aucun
           système ne peut prédire les résultats d'un tirage aléatoire. Loto

@@ -12,6 +12,9 @@ class Portfolio(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     game_id: Mapped[int] = mapped_column(ForeignKey("game_definitions.id"), index=True)
+    user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     name: Mapped[str] = mapped_column(String(100))
     strategy: Mapped[str] = mapped_column(String(50))
     grid_count: Mapped[int] = mapped_column(Integer)

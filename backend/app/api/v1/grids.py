@@ -13,6 +13,7 @@ from app.models.user import UserRole
 from app.repositories.grid_repository import GridRepository
 from app.schemas.common import PaginatedResponse, PaginationParams
 from app.schemas.grid import (
+    ExplanationSchema,
     GridGenerateRequest,
     GridGenerateResponse,
     GridResponse,
@@ -20,6 +21,7 @@ from app.schemas.grid import (
     GridScoreResponse,
 )
 from app.services.grid import GridService
+from app.engines.explainability.grid_explainer import explain_grid
 
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
 
@@ -51,6 +53,16 @@ async def score_grid(
         total_score=result.total_score,
         score_breakdown=result.score_breakdown,
         star_score=result.star_score,
+        explanation=ExplanationSchema(
+            **explain_grid(
+                score=result.total_score,
+                breakdown=result.score_breakdown.__dict__ if hasattr(result.score_breakdown, '__dict__') else dict(result.score_breakdown),
+                method="score",
+                profile=request.profile,
+                numbers=result.numbers,
+                stars=result.stars,
+            ).__dict__
+        ),
     )
 
 
@@ -85,6 +97,16 @@ async def generate_grids(
                 total_score=r.total_score,
                 score_breakdown=r.score_breakdown,
                 star_score=r.star_score,
+                explanation=ExplanationSchema(
+                    **explain_grid(
+                        score=r.total_score,
+                        breakdown=r.score_breakdown.__dict__ if hasattr(r.score_breakdown, '__dict__') else dict(r.score_breakdown),
+                        method=method_used,
+                        profile=body.profile,
+                        numbers=r.numbers,
+                        stars=r.stars,
+                    ).__dict__
+                ),
             )
             for r in results
         ],

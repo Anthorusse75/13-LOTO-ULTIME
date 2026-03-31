@@ -1,3 +1,5 @@
+import type { Explanation } from "./explanation";
+
 export interface MonteCarloGridRequest {
   numbers: number[];
   stars?: number[] | null;
@@ -35,6 +37,7 @@ export interface MonteCarloGridResponse {
   avg_matches: number;
   expected_matches: number;
   computation_time_ms: number;
+  explanation?: Explanation | null;
 }
 
 export interface MonteCarloPortfolioResponse {
@@ -65,4 +68,5 @@ export interface ComparisonResponse {
   percentile: number;
   z_score: number;
   computation_time_ms: number;
+  explanation?: Explanation | null;
 }

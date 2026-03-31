@@ -68,6 +68,38 @@ async def _seed_games() -> None:
         break
 
 
+async def _seed_prize_tiers() -> None:
+    """Seed prize tier data for all games if not already present."""
+    from sqlalchemy import func, select
+
+    from app.core.prize_tier_data import PRIZE_TIERS_BY_SLUG
+    from app.models.base import get_session
+    from app.models.prize_tier import GamePrizeTier
+    from app.repositories.game_repository import GameRepository
+
+    logger = structlog.get_logger("seed")
+
+    async for session in get_session():
+        repo = GameRepository(session)
+        existing_count = await session.execute(select(func.count(GamePrizeTier.id)))
+        if (existing_count.scalar() or 0) > 0:
+            logger.info("seed_prize_tiers.already_present")
+            break
+
+        added = 0
+        for slug, tiers in PRIZE_TIERS_BY_SLUG.items():
+            game = await repo.get_by_slug(slug)
+            if game is None:
+                continue
+            for tier_data in tiers:
+                session.add(GamePrizeTier(game_id=game.id, **tier_data))
+                added += 1
+
+        await session.commit()
+        logger.info("seed_prize_tiers.done", count=added)
+        break
+
+
 async def _seed_admin() -> None:
     """Seed the initial admin user if no users exist."""
     from app.models.base import get_session
@@ -234,6 +266,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     # Seed games from YAML if table is empty
     await _seed_games()
+
+    # Seed prize tiers if not present
+    await _seed_prize_tiers()
 
     # Seed initial admin user if no users exist
     await _seed_admin()

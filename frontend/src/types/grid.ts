@@ -1,3 +1,5 @@
+import type { Explanation } from "./explanation";
+
 export interface ScoreBreakdown {
   frequency: number;
   gap: number;
@@ -20,6 +22,7 @@ export interface GridScoreResponse {
   total_score: number;
   score_breakdown: ScoreBreakdown;
   star_score: number | null;
+  explanation?: Explanation | null;
 }
 
 export interface GridResponse {
@@ -48,4 +51,6 @@ export interface GridGenerateResponse {
   grids: GridScoreResponse[];
   computation_time_ms: number;
   method_used: string;
+  explanation?: Explanation | null;
+}
 }

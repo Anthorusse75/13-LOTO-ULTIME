@@ -1,3 +1,5 @@
+import type { Explanation } from "./explanation";
+
 export interface PortfolioGridItem {
   numbers: number[];
   stars: number[] | null;
@@ -33,4 +35,5 @@ export interface PortfolioGenerateResponse {
   min_hamming_distance: number | null;
   computation_time_ms: number;
   method_used: string;
+  explanation?: Explanation | null;
 }

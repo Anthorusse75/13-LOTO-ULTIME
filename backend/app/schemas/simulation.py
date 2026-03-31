@@ -2,6 +2,8 @@
 
 from pydantic import BaseModel, Field
 
+from app.schemas.grid import ExplanationSchema
+
 # ── Requests ──
 
 
@@ -55,6 +57,7 @@ class MonteCarloGridResponse(BaseModel):
     avg_matches: float
     expected_matches: float
     computation_time_ms: float
+    explanation: ExplanationSchema | None = None
 
 
 class MonteCarloPortfolioResponse(BaseModel):
@@ -91,3 +94,4 @@ class ComparisonResponse(BaseModel):
     percentile: float
     z_score: float
     computation_time_ms: float
+    explanation: ExplanationSchema | None = None

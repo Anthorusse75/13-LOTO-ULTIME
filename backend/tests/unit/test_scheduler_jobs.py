@@ -952,11 +952,21 @@ class TestNightlyPipelineJob:
                 new_callable=AsyncMock,
                 return_value={"games_processed": 1},
             ),
+            patch(
+                "app.scheduler.jobs.compute_hot_cold._do_compute_hot_cold",
+                new_callable=AsyncMock,
+                return_value={"games_processed": 1},
+            ),
+            patch(
+                "app.scheduler.jobs.pre_generate_daily_content._do_pre_generate",
+                new_callable=AsyncMock,
+                return_value={"grids_generated": 1},
+            ),
         ):
             from app.scheduler.jobs.nightly_pipeline import _do_nightly_pipeline
 
             result = await _do_nightly_pipeline()
-            assert result["steps"] == 7
+            assert result["steps"] == 9
             for step in result["details"].values():
                 assert step["status"] == "success"
 
@@ -985,6 +995,16 @@ class TestNightlyPipelineJob:
             ),
             patch(
                 "app.scheduler.jobs.optimize_portfolio._do_optimize_portfolio",
+                new_callable=AsyncMock,
+                return_value={},
+            ),
+            patch(
+                "app.scheduler.jobs.compute_hot_cold._do_compute_hot_cold",
+                new_callable=AsyncMock,
+                return_value={},
+            ),
+            patch(
+                "app.scheduler.jobs.pre_generate_daily_content._do_pre_generate",
                 new_callable=AsyncMock,
                 return_value={},
             ),

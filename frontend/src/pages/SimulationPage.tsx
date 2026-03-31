@@ -1,6 +1,8 @@
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
+import ExplanationPanel from "@/components/common/ExplanationPanel";
+import SaveButton from "@/components/history/SaveButton";
 import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
 import { useGenerateGrids } from "@/hooks/useGrids";
@@ -353,6 +355,23 @@ export default function SimulationPage() {
               <p className="text-xs text-text-secondary">
                 Temps: {mc.computation_time_ms.toFixed(0)}ms
               </p>
+
+              {/* Explainability */}
+              {mc.explanation && (
+                <ExplanationPanel explanation={mc.explanation} />
+              )}
+
+              {/* Save to history */}
+              <SaveButton
+                resultType="simulation"
+                parameters={{ numbers: parseNumbers(), n_simulations: nSim }}
+                resultData={{
+                  avg_matches: mc.avg_matches,
+                  expected_matches: mc.expected_matches,
+                  match_distribution: mc.match_distribution,
+                }}
+                name={`MC ${mc.n_simulations.toLocaleString()} sims`}
+              />
             </>
           )}
         </div>
@@ -584,6 +603,24 @@ export default function SimulationPage() {
                 <p className="text-xs text-text-secondary mt-2">
                   Temps: {comp.computation_time_ms.toFixed(0)}ms
                 </p>
+
+                {/* Explainability */}
+                {comp.explanation && (
+                  <ExplanationPanel explanation={comp.explanation} />
+                )}
+
+                {/* Save to history */}
+                <SaveButton
+                  resultType="comparison"
+                  parameters={{ numbers: parseNumbers(), n_random: nSim }}
+                  resultData={{
+                    grid_score: comp.grid_score,
+                    percentile: comp.percentile,
+                    z_score: comp.z_score,
+                    random_mean: comp.random_mean,
+                  }}
+                  name={`Comparaison P${comp.percentile.toFixed(0)}%`}
+                />
               </>
             )}
           </div>

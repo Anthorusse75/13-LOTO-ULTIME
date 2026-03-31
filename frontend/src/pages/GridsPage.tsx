@@ -1,6 +1,8 @@
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
+import ExplanationPanel from "@/components/common/ExplanationPanel";
+import SaveButton from "@/components/history/SaveButton";
 import DrawBalls from "@/components/draws/DrawBalls";
 import CustomWeightsEditor from "@/components/grids/CustomWeightsEditor";
 import ScoreBar from "@/components/grids/ScoreBar";
@@ -17,8 +19,10 @@ import {
 } from "@/utils/constants";
 import { formatScore } from "@/utils/formatters";
 import { exportGridPDF, exportReportPDF } from "@/utils/pdfExport";
-import { Download, FileText, Heart, Loader2 } from "lucide-react";
+import { Download, FileText, Heart, Loader2, Save } from "lucide-react";
 import { useState } from "react";
+import { useSaveResult } from "@/hooks/useHistory";
+import { useGameStore } from "@/stores/gameStore";
 
 export default function GridsPage() {
   const [count, setCount] = useState(10);
@@ -36,6 +40,8 @@ export default function GridsPage() {
   const { data: topGrids, isLoading: topLoading } = useTopGrids(10);
   const generateMutation = useGenerateGrids();
   const toggleFavoriteMutation = useToggleFavorite();
+  const saveMutation = useSaveResult();
+  const gameId = useGameStore((s) => s.currentGameId);
 
   const handleGenerate = () => {
     generateMutation.mutate({
@@ -233,6 +239,29 @@ export default function GridsPage() {
                 <span className="ml-auto font-mono text-accent-green">
                   {formatScore(g.total_score)}
                 </span>
+                <button
+                  title="Sauvegarder cette grille"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!gameId) return;
+                    saveMutation.mutate({
+                      result_type: "grid",
+                      parameters: { profile, method },
+                      result_data: {
+                        numbers: g.numbers,
+                        stars: g.stars,
+                        total_score: g.total_score,
+                        score_breakdown: g.score_breakdown,
+                      },
+                      game_id: gameId,
+                      name: `Grille ${formatScore(g.total_score)}`,
+                      tags: [],
+                    });
+                  }}
+                  className="p-1.5 rounded-md hover:bg-accent-blue/10 text-text-secondary hover:text-accent-blue transition-colors"
+                >
+                  <Save size={14} />
+                </button>
               </div>
             ))}
           </div>
@@ -304,6 +333,28 @@ export default function GridsPage() {
               <InfoTooltip text="Score spécifique aux étoiles (EuroMillions). Évalue si vos étoiles sont bien choisies selon les mêmes critères que les numéros principaux." />
             </p>
           )}
+
+          {/* Explainability */}
+          {selectedGrid.explanation && (
+            <div className="mt-4">
+              <ExplanationPanel explanation={selectedGrid.explanation} />
+            </div>
+          )}
+
+          {/* Save to history */}
+          <div className="mt-4">
+            <SaveButton
+              resultType="grid"
+              parameters={{ profile, method, weights: customWeights }}
+              resultData={{
+                numbers: selectedGrid.numbers,
+                stars: selectedGrid.stars,
+                total_score: selectedGrid.total_score,
+                score_breakdown: selectedGrid.score_breakdown,
+              }}
+              name={`Grille ${formatScore(selectedGrid.total_score)}`}
+            />
+          </div>
         </div>
       )}
 

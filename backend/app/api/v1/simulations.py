@@ -18,6 +18,9 @@ from app.schemas.simulation import (
     StabilityResponse,
 )
 from app.services.simulation import SimulationService
+from app.schemas.grid import ExplanationSchema
+from app.engines.explainability.simulation_explainer import explain_simulation
+from app.engines.explainability.comparison_explainer import explain_comparison
 
 router = APIRouter(dependencies=[Depends(require_role(UserRole.UTILISATEUR))])
 
@@ -42,6 +45,14 @@ async def simulate_grid(
         seed=body.seed,
     )
 
+    sim_explanation = explain_simulation(
+        n_simulations=result.n_simulations,
+        avg_matches=result.avg_matches,
+        expected_matches=result.expected_matches,
+        match_distribution=result.match_distribution,
+        computation_time_ms=round(elapsed_ms, 1),
+    )
+
     return MonteCarloGridResponse(
         grid=result.grid,
         stars=result.stars,
@@ -51,6 +62,7 @@ async def simulate_grid(
         avg_matches=result.avg_matches,
         expected_matches=result.expected_matches,
         computation_time_ms=round(elapsed_ms, 1),
+        explanation=ExplanationSchema(**sim_explanation.__dict__),
     )
 
 
@@ -143,6 +155,15 @@ async def compare_with_random(
     except InsufficientDataError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
+    cmp_explanation = explain_comparison(
+        score=result.grid_score,
+        rank=int(result.percentile * body.n_random),
+        n_random=body.n_random,
+        percentile=result.percentile,
+        mean_random=result.random_mean,
+        std_random=result.random_std,
+    )
+
     return ComparisonResponse(
         grid_score=result.grid_score,
         random_mean=result.random_mean,
@@ -150,4 +171,5 @@ async def compare_with_random(
         percentile=result.percentile,
         z_score=result.z_score,
         computation_time_ms=round(elapsed_ms, 1),
+        explanation=ExplanationSchema(**cmp_explanation.__dict__),
     )

@@ -28,8 +28,6 @@ const navItems = [
   { to: "/history", icon: History, label: "Historique" },
   { to: "/portfolio", icon: Briefcase, label: "Portefeuille" },
   { to: "/simulation", icon: FlaskConical, label: "Simulation" },
-  { to: "/how-it-works", icon: HelpCircle, label: "Comment ça marche" },
-  { to: "/glossary", icon: BookOpen, label: "Glossaire" },
   { to: "/admin", icon: Settings, label: "Admin", adminOnly: true },
 ];
 

@@ -2,6 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
+from app.schemas.grid import ExplanationSchema
+
 
 class PortfolioGridItem(BaseModel):
     numbers: list[int]
@@ -26,7 +28,7 @@ class PortfolioResponse(BaseModel):
 
 
 class PortfolioGenerateRequest(BaseModel):
-    grid_count: int = Field(10, ge=2, le=50)
+    grid_count: int = Field(10, ge=2, le=200)
     strategy: str = Field(
         "balanced",
         pattern=r"^(max_diversity|max_coverage|balanced|min_correlation)$",
@@ -48,3 +50,4 @@ class PortfolioGenerateResponse(BaseModel):
     min_hamming_distance: float | None
     computation_time_ms: float
     method_used: str
+    explanation: ExplanationSchema | None = None
