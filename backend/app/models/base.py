@@ -36,10 +36,7 @@ def init_db(database_url: str) -> None:
 
     if is_sqlite:
         connect_args["check_same_thread"] = False
-        if ":memory:" in database_url:
-            pool_class = StaticPool
-        else:
-            pool_class = NullPool
+        pool_class = StaticPool if ":memory:" in database_url else NullPool
 
     engine_kwargs: dict = {
         "echo": False,

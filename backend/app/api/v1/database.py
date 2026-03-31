@@ -179,9 +179,9 @@ async def switch_database(
                 status_code=500,
                 detail=f"Migration failed: {result.stderr[:200]}",
             )
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as exc:
         init_db(settings.DATABASE_URL)
-        raise HTTPException(status_code=500, detail="Migration timed out")
+        raise HTTPException(status_code=500, detail="Migration timed out") from exc
 
     # 4. Update settings in memory
     settings.DATABASE_URL = new_url
