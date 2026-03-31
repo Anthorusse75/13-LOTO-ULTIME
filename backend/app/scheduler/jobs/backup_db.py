@@ -96,10 +96,14 @@ async def _backup_postgresql(db_url: str) -> dict:
 
     cmd = [
         "pg_dump",
-        "-h", parsed.hostname or "localhost",
-        "-p", str(parsed.port or 5432),
-        "-U", parsed.username or "loto",
-        "-d", dbname,
+        "-h",
+        parsed.hostname or "localhost",
+        "-p",
+        str(parsed.port or 5432),
+        "-U",
+        parsed.username or "loto",
+        "-d",
+        dbname,
         "--no-owner",
         "--no-privileges",
     ]

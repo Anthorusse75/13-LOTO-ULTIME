@@ -73,7 +73,10 @@ async def login(
 
         if delay > 0:
             audit_log.warning(
-                "login.throttled", ip=ip, failures=state[0], delay=delay,
+                "login.throttled",
+                ip=ip,
+                failures=state[0],
+                delay=delay,
             )
             return JSONResponse(
                 status_code=429,
