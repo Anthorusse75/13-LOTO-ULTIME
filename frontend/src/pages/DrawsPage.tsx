@@ -10,8 +10,10 @@ import { useState } from "react";
 const PAGE_SIZE = 50;
 
 export default function DrawsPage() {
-  const [page, setPage] = useState(0);
-  const { data: draws, isLoading } = useDraws(page * PAGE_SIZE, PAGE_SIZE);
+  const [page, setPage] = useState(1);
+  const { data: drawsResponse, isLoading } = useDraws(page, PAGE_SIZE);
+  const draws = drawsResponse?.items;
+  const totalPages = drawsResponse?.pages ?? 0;
 
   if (isLoading) return <LoadingSpinner message="Chargement des tirages..." />;
 
@@ -105,16 +107,16 @@ export default function DrawsPage() {
       {/* Pagination */}
       <div className="flex items-center justify-center gap-4">
         <button
-          onClick={() => setPage((p) => Math.max(0, p - 1))}
-          disabled={page === 0}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page <= 1}
           className="p-2 rounded-md hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed text-text-secondary"
         >
           <ChevronLeft size={18} />
         </button>
-        <span className="text-sm text-text-secondary">Page {page + 1}</span>
+        <span className="text-sm text-text-secondary">Page {page} / {totalPages}</span>
         <button
           onClick={() => setPage((p) => p + 1)}
-          disabled={!draws || draws.length < PAGE_SIZE}
+          disabled={page >= totalPages}
           className="p-2 rounded-md hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed text-text-secondary"
         >
           <ChevronRight size={18} />

@@ -68,12 +68,13 @@ export default function HistoryPage() {
     useFavoriteGrids();
   const togglePlayed = useTogglePlayed();
 
-  const { data: recentDraws = [] } = useQuery({
+  const { data: recentDrawsResponse } = useQuery({
     queryKey: ["draws", gameId, "recent"],
-    queryFn: () => drawService.getDraws(gameId!, 0, 100),
+    queryFn: () => drawService.getDraws(gameId!, 1, 100),
     enabled: !!gameId,
     staleTime: 5 * 60 * 1000,
   });
+  const recentDraws = recentDrawsResponse?.items ?? [];
 
   const gridsToShow = tab === "played" ? playedGrids : favoriteGrids;
   const isLoading = tab === "played" ? loadingPlayed : loadingFavorites;

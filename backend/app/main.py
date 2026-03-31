@@ -141,11 +141,12 @@ async def _maybe_initial_compute() -> None:
     never_ran: list[str] = []
     async for session in get_session():
         for job_name in compute_jobs:
+            # Skip if already succeeded OR currently running
             stmt = (
                 select(JobExecution.id)
                 .where(
                     JobExecution.job_name == job_name,
-                    JobExecution.status == JobStatus.SUCCESS,
+                    JobExecution.status.in_([JobStatus.SUCCESS, JobStatus.RUNNING]),
                 )
                 .limit(1)
             )
@@ -192,6 +193,34 @@ async def _maybe_initial_compute() -> None:
     asyncio.create_task(_run_compute())
 
 
+async def _cleanup_stale_jobs() -> None:
+    """Mark any RUNNING jobs from a previous process as FAILED on startup."""
+    from datetime import UTC, datetime
+
+    from sqlalchemy import update
+
+    from app.models.base import get_session
+    from app.models.job import JobExecution, JobStatus
+
+    logger = structlog.get_logger("seed")
+
+    async for session in get_session():
+        stmt = (
+            update(JobExecution)
+            .where(JobExecution.status == JobStatus.RUNNING)
+            .values(
+                status=JobStatus.FAILED,
+                error_message="Marked stale: server restarted while job was running",
+                finished_at=datetime.now(UTC),
+            )
+        )
+        result = await session.execute(stmt)
+        await session.commit()
+        if result.rowcount:  # type: ignore[union-attr]
+            logger.warning("stale_jobs_cleaned", count=result.rowcount)
+        break
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup / shutdown logic."""
@@ -199,6 +228,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     init_db(settings.DATABASE_URL)
     logger = structlog.get_logger("app")
     logger.info("application_started", version=settings.APP_VERSION)
+
+    # Clean up stale RUNNING jobs from previous crashes
+    await _cleanup_stale_jobs()
 
     # Seed games from YAML if table is empty
     await _seed_games()

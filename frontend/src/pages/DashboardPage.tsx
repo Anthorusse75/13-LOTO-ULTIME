@@ -33,13 +33,14 @@ export default function DashboardPage() {
     isError: statsError,
   } = useStatistics();
   const { data: latest } = useLatestDraw();
-  const { data: draws } = useDraws(0, 5);
+  const { data: drawsResponse } = useDraws(1, 5);
   const { data: topGrids } = useTopGrids(5);
   const { data: schedulerStatus } = useSchedulerStatus(isAdmin);
 
   if (statsLoading)
     return <LoadingSpinner message="Chargement du dashboard..." />;
 
+  const draws = drawsResponse?.items;
   const noData = statsError && !draws?.length;
 
   const topFreq = stats?.frequencies

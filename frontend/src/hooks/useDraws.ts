@@ -3,12 +3,12 @@ import { AxiosError } from "axios";
 import { drawService } from "@/services/drawService";
 import { useGameStore } from "@/stores/gameStore";
 
-export function useDraws(skip = 0, limit = 50) {
+export function useDraws(page = 1, pageSize = 50) {
   const gameId = useGameStore((s) => s.currentGameId);
 
   return useQuery({
-    queryKey: ["draws", gameId, skip, limit],
-    queryFn: () => drawService.getDraws(gameId!, skip, limit),
+    queryKey: ["draws", gameId, page, pageSize],
+    queryFn: () => drawService.getDraws(gameId!, page, pageSize),
     enabled: !!gameId,
     staleTime: 5 * 60 * 1000,
   });

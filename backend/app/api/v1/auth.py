@@ -8,6 +8,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from app.core.rate_limit import limiter
+from slowapi.util import get_remote_address
 
 from app.core.config import Settings, get_settings
 from app.core.exceptions import AuthenticationError
