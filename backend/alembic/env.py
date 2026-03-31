@@ -19,6 +19,8 @@ from app.models.saved_result import UserSavedResult  # noqa: F401
 from app.models.statistics import StatisticsSnapshot  # noqa: F401
 from app.models.token_blacklist import TokenBlacklistEntry  # noqa: F401
 from app.models.user import User  # noqa: F401
+from app.models.wheeling import WheelingSystem  # noqa: F401
+from app.models.budget import BudgetPlan  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:

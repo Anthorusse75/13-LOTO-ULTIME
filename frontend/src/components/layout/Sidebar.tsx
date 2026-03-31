@@ -7,11 +7,13 @@ import {
   FlaskConical,
   Heart,
   History,
+  Layers,
   LayoutDashboard,
   LogOut,
   Menu,
   Settings,
   Target,
+  Wallet,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -26,6 +28,8 @@ const navItems = [
   { to: "/history", icon: History, label: "Historique" },
   { to: "/portfolio", icon: Briefcase, label: "Portefeuille" },
   { to: "/simulation", icon: FlaskConical, label: "Simulation" },
+  { to: "/wheeling", icon: Layers, label: "Système réduit" },
+  { to: "/budget", icon: Wallet, label: "Budget" },
   { to: "/admin", icon: Settings, label: "Admin", adminOnly: true },
 ];
 

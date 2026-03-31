@@ -18,6 +18,8 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const PortfolioPage = lazy(() => import("@/pages/PortfolioPage"));
 const SimulationPage = lazy(() => import("@/pages/SimulationPage"));
 const StatisticsPage = lazy(() => import("@/pages/StatisticsPage"));
+const WheelingPage = lazy(() => import("@/pages/WheelingPage"));
+const BudgetPage = lazy(() => import("@/pages/BudgetPage"));
 
 export default function App() {
   return (
@@ -37,6 +39,8 @@ export default function App() {
           <Route path="grids" element={<GridsPage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
           <Route path="simulation" element={<SimulationPage />} />
+          <Route path="wheeling" element={<WheelingPage />} />
+          <Route path="budget" element={<BudgetPage />} />
           <Route path="history" element={<HistoryPage />} />
           <Route path="favorites" element={<FavoritesPage />} />
           <Route path="how-it-works" element={<HowItWorksPage />} />

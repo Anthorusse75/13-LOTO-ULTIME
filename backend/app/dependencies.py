@@ -25,6 +25,10 @@ from app.services.auth import AuthService
 from app.services.grid import GridService
 from app.services.simulation import SimulationService
 from app.services.statistics import StatisticsService
+from app.repositories.wheeling_repository import WheelingRepository
+from app.services.wheeling import WheelingService
+from app.repositories.budget_repository import BudgetRepository
+from app.services.budget import BudgetService
 
 # ── Database session ──
 
@@ -106,6 +110,33 @@ def get_simulation_service(
     stats_repo: StatisticsRepository = Depends(get_statistics_repository),
 ) -> SimulationService:
     return SimulationService(draw_repo, stats_repo)
+
+
+def get_wheeling_repository(
+    session: AsyncSession = Depends(get_db),
+) -> WheelingRepository:
+    return WheelingRepository(session)
+
+
+def get_wheeling_service(
+    repo: WheelingRepository = Depends(get_wheeling_repository),
+    session: AsyncSession = Depends(get_db),
+) -> WheelingService:
+    return WheelingService(repo, session)
+
+
+def get_budget_repository(
+    session: AsyncSession = Depends(get_db),
+) -> BudgetRepository:
+    return BudgetRepository(session)
+
+
+def get_budget_service(
+    repo: BudgetRepository = Depends(get_budget_repository),
+    grid_service: GridService = Depends(get_grid_service),
+    session: AsyncSession = Depends(get_db),
+) -> BudgetService:
+    return BudgetService(repo, grid_service, session)
 
 
 # ── Game config resolution ──

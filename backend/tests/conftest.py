@@ -21,6 +21,8 @@ from app.models.prize_tier import GamePrizeTier  # noqa: F401
 from app.models.saved_result import UserSavedResult  # noqa: F401
 from app.models.statistics import StatisticsSnapshot  # noqa: F401
 from app.models.user import User  # noqa: F401
+from app.models.wheeling import WheelingSystem  # noqa: F401
+from app.models.budget import BudgetPlan  # noqa: F401
 
 # ── Env vars required by Settings (no hardcoded defaults) ──
 os.environ.setdefault("SECRET_KEY", "test-secret-key-for-testing-min-32-chars!!")

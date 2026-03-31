@@ -12,6 +12,8 @@ from .jobs import router as jobs_router
 from .portfolios import router as portfolios_router
 from .simulations import router as simulations_router
 from .statistics import router as statistics_router
+from .wheeling import router as wheeling_router
+from .budget import router as budget_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
 api_v1_router.include_router(auth_router, prefix="/auth", tags=["Auth"])
@@ -45,4 +47,14 @@ api_v1_router.include_router(
     simulations_router,
     prefix="/games/{game_id}/simulation",
     tags=["Simulation"],
+)
+api_v1_router.include_router(
+    wheeling_router,
+    prefix="/games/{game_id}/wheeling",
+    tags=["Wheeling"],
+)
+api_v1_router.include_router(
+    budget_router,
+    prefix="/games/{game_id}/budget",
+    tags=["Budget"],
 )
