@@ -211,7 +211,9 @@ export default function WheelingPage() {
         <div className="flex flex-col sm:flex-row items-start gap-4">
           {/* Main number grid — 10 columns like a real lottery ticket */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-accent-blue mb-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wide mb-3" style={{
+              color: game.slug.includes("loto") ? "#3b82f6" : "#dc2626",
+            }}>
               Numéros
             </h3>
             <div className="inline-grid grid-cols-10 gap-1.5 p-3 rounded-xl bg-surface-hover/40 border border-white/10">
@@ -220,21 +222,46 @@ export default function WheelingPage() {
                 (_, i) => {
                   const n = game.min_number + i;
                   const isSelected = selectedNumbers.includes(n);
+                  const isLoto = game.slug.includes("loto");
                   return (
                     <button
                       key={n}
                       onClick={() => toggleNumber(n)}
-                      className={`
-                      w-9 h-9 rounded-full text-xs font-bold transition-all duration-150
-                      flex items-center justify-center
-                      ${
-                        isSelected
-                          ? "bg-accent-blue text-white shadow-lg shadow-accent-blue/40 scale-110 ring-2 ring-accent-blue/50"
-                          : "bg-white/10 text-text-primary hover:bg-accent-blue/20 hover:scale-105"
-                      }
-                    `}
+                      className="w-10 h-10 rounded-full text-xs font-bold transition-all duration-150 flex items-center justify-center relative overflow-hidden cursor-pointer"
+                      style={{ transform: isSelected ? "scale(1.12)" : "scale(1)" }}
                     >
-                      {n}
+                      {/* Ball body — blue for Loto, red/dark-red for EuroMillions */}
+                      <span
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                          background: isLoto
+                            ? "radial-gradient(circle at 35% 30%, #5ba3f5, #1a6dd4 55%, #0c4a9e 80%, #082f6a)"
+                            : "radial-gradient(circle at 35% 30%, #f07070, #c62828 55%, #8e1a1a 80%, #5c1010)",
+                          boxShadow: isSelected
+                            ? isLoto
+                              ? "0 0 12px 3px rgba(59,130,246,0.6), inset -2px -3px 5px rgba(0,0,0,0.35), inset 2px 2px 4px rgba(255,255,255,0.15)"
+                              : "0 0 12px 3px rgba(220,38,38,0.6), inset -2px -3px 5px rgba(0,0,0,0.35), inset 2px 2px 4px rgba(255,255,255,0.15)"
+                            : "inset -2px -3px 5px rgba(0,0,0,0.35), inset 2px 2px 4px rgba(255,255,255,0.15)",
+                        }}
+                      />
+                      {/* White center circle */}
+                      <span
+                        className="absolute rounded-full"
+                        style={{
+                          width: "58%",
+                          height: "58%",
+                          background: "radial-gradient(circle at 45% 40%, #ffffff, #e2e2e2 80%)",
+                          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.15)",
+                        }}
+                      />
+                      {/* Selection ring */}
+                      {isSelected && (
+                        <span
+                          className="absolute inset-0 rounded-full"
+                          style={{ border: "2.5px solid rgba(255,255,255,0.7)" }}
+                        />
+                      )}
+                      <span className="relative z-10 text-gray-900">{n}</span>
                     </button>
                   );
                 },
@@ -248,7 +275,7 @@ export default function WheelingPage() {
               <h3
                 className="text-sm font-semibold uppercase tracking-wide mb-3"
                 style={{
-                  color: game.slug === "loto" ? "#e53e3e" : "#d69e2e",
+                  color: game.slug.includes("loto") ? "#e53e3e" : "#d69e2e",
                 }}
               >
                 {starLabel}s
@@ -260,11 +287,11 @@ export default function WheelingPage() {
                 className={`inline-grid gap-1.5 p-3 rounded-xl border ${game.stars_pool <= 10 ? "grid-cols-5" : "grid-cols-4"}`}
                 style={{
                   backgroundColor:
-                    game.slug === "loto"
+                    game.slug.includes("loto")
                       ? "rgba(229,62,62,0.05)"
                       : "rgba(214,158,46,0.05)",
                   borderColor:
-                    game.slug === "loto"
+                    game.slug.includes("loto")
                       ? "rgba(229,62,62,0.2)"
                       : "rgba(214,158,46,0.2)",
                 }}
@@ -272,26 +299,70 @@ export default function WheelingPage() {
                 {Array.from({ length: game.stars_pool }, (_, i) => {
                   const s = i + 1;
                   const isSelected = selectedStars.includes(s);
-                  const isLoto = game.slug === "loto";
+                  const isLoto = game.slug.includes("loto");
                   return (
                     <button
                       key={s}
                       onClick={() => toggleStar(s)}
-                      className={`
-                        w-9 h-9 rounded-full text-xs font-bold transition-all duration-150
-                        flex items-center justify-center
-                        ${
-                          isSelected
-                            ? isLoto
-                              ? "bg-red-500 text-white shadow-lg shadow-red-500/40 scale-110 ring-2 ring-red-500/50"
-                              : "bg-yellow-500 text-white shadow-lg shadow-yellow-500/40 scale-110 ring-2 ring-yellow-500/50"
-                            : isLoto
-                              ? "bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:scale-105"
-                              : "bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 hover:scale-105"
-                        }
-                      `}
+                      className={`text-xs font-bold transition-all duration-150 flex items-center justify-center relative cursor-pointer ${isLoto ? "w-10 h-10 rounded-full overflow-hidden" : "w-11 h-11"}`}
+                      style={{ transform: isSelected ? "scale(1.12)" : "scale(1)" }}
                     >
-                      {s}
+                      {isLoto ? (
+                        <>
+                          {/* Red ball for Numéro Chance */}
+                          <span
+                            className="absolute inset-0 rounded-full"
+                            style={{
+                              background: "radial-gradient(circle at 35% 30%, #f07070, #d42020 55%, #a01515 80%, #6b0e0e)",
+                              boxShadow: isSelected
+                                ? "0 0 12px 3px rgba(220,38,38,0.6), inset -2px -3px 5px rgba(0,0,0,0.35), inset 2px 2px 4px rgba(255,255,255,0.15)"
+                                : "inset -2px -3px 5px rgba(0,0,0,0.35), inset 2px 2px 4px rgba(255,255,255,0.15)",
+                            }}
+                          />
+                          {/* White center circle */}
+                          <span
+                            className="absolute rounded-full"
+                            style={{
+                              width: "58%",
+                              height: "58%",
+                              background: "radial-gradient(circle at 45% 40%, #ffffff, #e2e2e2 80%)",
+                              boxShadow: "inset 0 1px 2px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.15)",
+                            }}
+                          />
+                          {isSelected && (
+                            <span
+                              className="absolute inset-0 rounded-full"
+                              style={{ border: "2.5px solid rgba(255,255,255,0.7)" }}
+                            />
+                          )}
+                          <span className="relative z-10 text-gray-900">{s}</span>
+                        </>
+                      ) : (
+                        <>
+                          {/* SVG Star for EuroMillions — like FDJ */}
+                          <svg viewBox="0 0 50 50" className="absolute inset-0 w-full h-full" style={{ filter: isSelected ? "drop-shadow(0 0 4px rgba(234,179,8,0.5))" : "none" }}>
+                            <defs>
+                              <linearGradient id={`starGrad${s}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor={isSelected ? "#fde047" : "#e8c84a"} />
+                                <stop offset="50%" stopColor={isSelected ? "#eab308" : "#c9a83a"} />
+                                <stop offset="100%" stopColor={isSelected ? "#b8860b" : "#a08630"} />
+                              </linearGradient>
+                            </defs>
+                            <polygon
+                              points="25,2 31,18 49,18 35,29 40,46 25,36 10,46 15,29 1,18 19,18"
+                              fill={`url(#starGrad${s})`}
+                              stroke={isSelected ? "#8B6914" : "#a0863080"}
+                              strokeWidth={isSelected ? "1.5" : "1"}
+                            />
+                          </svg>
+                          <span
+                            className={`relative z-10 text-sm font-extrabold ${isSelected ? "text-gray-900" : "text-amber-900/70"}`}
+                            style={{ textShadow: "-0.5px -0.5px 0 rgba(255,255,255,0.5), 0.5px -0.5px 0 rgba(255,255,255,0.5), -0.5px 0.5px 0 rgba(255,255,255,0.5), 0.5px 0.5px 0 rgba(255,255,255,0.5)" }}
+                          >
+                            {s}
+                          </span>
+                        </>
+                      )}
                     </button>
                   );
                 })}
