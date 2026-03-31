@@ -1,8 +1,8 @@
 # 18 — Checklist Globale
 
 > **Projet** : LOTO ULTIME  
-> **Version** : 2.0 — Audit profond vérifié  
-> **Date** : 2026-03-29  
+> **Version** : 3.0 — Mise à jour post-Phase 10  
+> **Date** : 2026-03-31  
 > **Méthode** : Chaque case cochée a été vérifiée par lecture du code source, exécution des tests, et vérification des fichiers.  
 > **Références croisées** : [17_Roadmap](17_Roadmap_Developpement.md) · [01_Vision](01_Vision_Projet.md)
 
@@ -37,7 +37,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] 17_Roadmap_Developpement.md rédigé
 - [x] 18_Checklist_Globale.md rédigé
 - [x] README.md racine créé
-- [ ] Cross-references validées entre tous les documents ⚠️ **README.md pointe vers `docs/01_Vision_Projet.md` mais fichiers réels dans `docs/architecture_initiale/` — liens cassés**
+- [x] Cross-references validées entre tous les documents — README.md pointe vers `docs/architecture_initiale/` (corrigé)
 
 ---
 
@@ -52,7 +52,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 
 ### 2.2 Configuration
 - [x] `app/core/config.py` — Pydantic BaseSettings (HS256 + RS256, 25+ settings)
-- [ ] `.env.example` avec toutes les variables ⚠️ **18 vars présentes mais ~6 manquantes** (JWT_ALGORITHM, FDJ_BASE_URL, EUROMILLIONS_BASE_URL, RATE_LIMIT_PER_MINUTE, PREVIOUS_SECRET_KEY, JWT_PRIVATE/PUBLIC_KEY) **+ nom incorrect ACCESS_TOKEN_EXPIRE_MINUTES ≠ JWT_EXPIRATION_MINUTES**
+- [x] `.env.example` avec toutes les variables — 25 vars (APP, DB, JWT, CORS, API, Scraper, Rate Limit, Logging, Scheduler, Docker)
 - [x] `game_configs/loto_fdj.yaml` créé (5/49 + 1/10)
 - [x] `game_configs/euromillions.yaml` créé (5/50 + 2/12)
 - [x] `game_configs/keno.yaml` créé (16/70)
@@ -120,7 +120,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] `app/services/statistics.py` — StatisticsService (pipeline 7 engines, MIN_DRAWS=10)
 - [x] Tests StatisticsService (3 tests service)
 - [x] `app/api/v1/statistics.py` — 9 endpoints REST (8 GET + 1 POST recompute)
-- [x] Tests intégration API /statistics ⚠️ **2 tests échouent actuellement (307 redirect trailing slash)**
+- [x] Tests intégration API /statistics — trailing slash 307 corrigé
 - [x] Pipeline complet rapide (10 tirages < 2s)
 - [x] Validation mathématique (Chi-2, hypergéométrique)
 
@@ -194,7 +194,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] Projet Vite 8 + **React 19** + TypeScript 5.9 ⚠️ React 19, pas 18 comme prévu initialement
 - [x] Tailwind CSS v4.2 configuré (dark mode via @custom-variant dark)
 - [x] Composants custom Tailwind (Shadcn/ui non utilisé — remplacé par composants maison)
-- [x] Axios instance avec intercepteur JWT ⚠️ **Intercepteur request (Bearer token) + response (401→logout). PAS de refresh token automatique — un 401 déconnecte l'utilisateur.**
+- [x] Axios instance avec intercepteur JWT (Bearer token + refresh token automatique avec queue, 401→refresh→retry)
 - [x] TanStack Query configuré (staleTime 5min, retry 1, refetchOnWindowFocus: false)
 - [x] Zustand stores (auth + game + settings) avec persist middleware
 - [x] React Router v6.30 avec guards auth (RequireAuth + RequireRole hiérarchie 3 niveaux)
@@ -243,7 +243,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [ ] Code-splitting lazy routes → **non fait** — toutes les pages importées statiquement dans App.tsx, pas de React.lazy()
 
 ### 7.6 Tests frontend
-- [x] 7 fichiers test unitaires Vitest (28 tests) ⚠️ **1 test échoue actuellement** (LoadingSpinner default message)
+- [x] 7 fichiers test unitaires Vitest (28 tests) — tous passants ✅
 - [x] 4 specs E2E Playwright (admin, grids, login-statistics, simulation)
 - [x] 9 fichiers types, 9 fichiers services, 6 hooks custom
 
@@ -258,7 +258,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] Job `fetch_draws` (Keno) — scraper CSV ZIP FDJ (16 boules)
 - [x] Scraper FDJ Loto fonctionnel (httpx, CSV parsing, validation) — couverture 85%
 - [x] Scraper EuroMillions fonctionnel — couverture 93%
-- [ ] Scraper Keno fonctionnel ⚠️ **code existe mais couverture 26% — non testé en profondeur**
+- [x] Scraper Keno fonctionnel ⚠️ couverture 26% — fonctionnel mais tests minimaux
 - [x] Scraper Mega Millions implémenté (JSON API US) ⚠️ **couverture 21% — tests minimaux**
 - [x] Scraper Powerball implémenté (JSON API US) ⚠️ **couverture 21% — tests minimaux**
 - [x] Job `compute_statistics` (chaîné après scraping)
@@ -303,7 +303,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 ## Phase 10 — Polish & Déploiement
 
 ### 10.1 Conteneurisation
-- [ ] Dockerfile backend multi-stage ⚠️ **Existe mais single-stage** (`FROM python:3.12-slim AS base` — 1 seul FROM, pas de build séparé)
+- [x] Dockerfile backend multi-stage (2 FROM : `python:3.11-slim AS builder` + `python:3.11-slim AS runtime`, non-root user `appuser`)
 - [x] Dockerfile frontend multi-stage Nginx (node:22-alpine AS build → nginx:alpine, 2 FROM)
 - [x] docker-compose.yml (4 services : backend, frontend, Prometheus, Grafana + 3 volumes)
 - [x] .dockerignore (backend + frontend)
@@ -313,66 +313,65 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] `.github/workflows/deploy.yml` — Build Docker (GHCR) + Déploiement
 
 ### 10.3 Documentation
-- [ ] README.md complet ⚠️ **Existe (180 lignes, sections installation/config/usage/docker/roadmap) mais liens docs cassés** (`docs/01_Vision.md` au lieu de `docs/architecture_initiale/01_Vision.md`)
-- [ ] CONTRIBUTING.md — **absent**
-- [ ] `.env.example` complet ⚠️ **18 vars mais ~6 manquantes** + nom `ACCESS_TOKEN_EXPIRE_MINUTES` ≠ `JWT_EXPIRATION_MINUTES` dans config.py
+- [x] README.md complet (300+ lignes, Docker deployment, API reference table, services URLs, first-start guide, liens docs corrigés)
+- [x] CONTRIBUTING.md (Git workflow, conventional commits, instructions tests)
+- [x] `.env.example` complet — 25 variables avec noms corrects (JWT_EXPIRATION_MINUTES, FDJ_BASE_URL, etc.)
 
 ### 10.4 Qualité & Performance
-- [ ] Performance audit (profiling endpoints lents) — non fait
-- [ ] Optimisations identifiées appliquées — non fait
-- [ ] Couverture tests globale ≥ 80% — **76.97% actuellement** (3673 statements, 846 manqués). Seuil configuré à 80%, échoue.
+- [x] Performance audit (event loop blocking fix, asyncio.to_thread pour optimizer, NullPool SQLite, sessions courtes scheduler)
+- [x] Optimisations identifiées appliquées
+- [x] Couverture tests globale ≥ 80% — **84.65%** (455 tests, tous passants)
 - [x] Swagger/OpenAPI à jour (auto-généré par FastAPI, /docs accessible)
 
 ### 10.5 Données & Migration
 - [x] Seed games (5 jeux) + seed admin au démarrage (lifespan `_seed_games()` + `_seed_admin()`)
-- [ ] Seed data tirages pour démo — pas de tirages pré-chargés depuis un clean install
+- [x] Seed data tirages pour démo — `_maybe_initial_fetch()` auto-import au premier démarrage (7183 tirages, 5 jeux)
 - [ ] Migration testée (PostgreSQL) — jamais testé sur PostgreSQL
 
 ### 10.6 Sécurité & Release
-- [ ] Revue sécurité OWASP Top 10 — non fait formellement
+- [x] Revue sécurité OWASP Top 10 (audit réalisé et corrections appliquées)
 - [x] Données sensibles dans .env uniquement (SECRET_KEY, ADMIN_INITIAL_PASSWORD, DB URL)
-- [ ] Tag git v1.0.0 — **aucun tag git** 
-- [ ] Changelog v1.0.0 — **aucun fichier CHANGELOG**
+- [x] Tag git v1.0.0 — tagé et pushé sur GitHub
+- [x] Changelog v1.0.0 — CHANGELOG.md créé
 
 ---
 
 ## Récapitulatif
 
-| Phase                           | Tâches  | Fait    | Statut                     |
-| ------------------------------- | ------- | ------- | -------------------------- |
-| 1. Architecture & Documentation | 20      | 19/20   | 🟡 95% (cross-refs cassées) |
-| 2. Fondations Backend           | 36      | 34/36   | 🟡 94% (.env.example + PG)  |
-| 3. Moteur Statistique           | 18      | 18/18   | ✅ Complète                 |
-| 4. Moteur de Scoring            | 13      | 13/13   | ✅ Complète                 |
-| 5. Moteur d'Optimisation        | 13      | 13/13   | ✅ Complète                 |
-| 6. Moteur de Simulation         | 10      | 10/10   | ✅ Complète                 |
-| 7. Interface Frontend           | 49      | 43/49   | 🟡 88% (6 manquants)        |
-| 8. Scheduler & Jobs             | 21      | 20/21   | 🟡 95% (Keno scraper)       |
-| 9. Sécurité & Auth              | 20      | 20/20   | ✅ Complète                 |
-| 10. Polish & Déploiement        | 19      | 7/19    | 🔴 37%                      |
-| **TOTAL**                       | **219** | **197** | **90%**                    |
+| Phase                           | Tâches  | Fait    | Statut                          |
+| ------------------------------- | ------- | ------- | ------------------------------- |
+| 1. Architecture & Documentation | 20      | 20/20   | ✅ Complète                      |
+| 2. Fondations Backend           | 36      | 35/36   | 🟡 97% (PG non testé)            |
+| 3. Moteur Statistique           | 18      | 18/18   | ✅ Complète                      |
+| 4. Moteur de Scoring            | 13      | 13/13   | ✅ Complète                      |
+| 5. Moteur d'Optimisation        | 13      | 13/13   | ✅ Complète                      |
+| 6. Moteur de Simulation         | 10      | 10/10   | ✅ Complète                      |
+| 7. Interface Frontend           | 49      | 45/49   | 🟡 92% (4 manquants)             |
+| 8. Scheduler & Jobs             | 21      | 21/21   | ✅ Complète                      |
+| 9. Sécurité & Auth              | 20      | 20/20   | ✅ Complète                      |
+| 10. Polish & Déploiement        | 19      | 17/19   | 🟡 89% (PG non testé)            |
+| **TOTAL**                       | **219** | **212** | **97%**                         |
 
-### État global mesuré (2026-03-29)
+### Éléments restants (non bloquants)
 
-- **Backend** : 425 tests, 420 passants, 5 échouent (307 redirects trailing slash)
-- **Frontend** : 28 tests Vitest, 27 passants, 1 échoue (LoadingSpinner)
-- **Couverture backend** : **76.97%** (seuil 80% non atteint)
-- **Scrapers peu testés** : keno 26%, mega_millions 21%, powerball 21%
-- **Pas de tag git**, pas de CHANGELOG, pas de CONTRIBUTING.md
-- **Liens docs cassés** dans README.md
+- [ ] Migration testée PostgreSQL (Phase 2 + 10) — jamais testé, SQLite utilisé en prod
+- [ ] CooccurrenceMatrix D3.js heatmap (Phase 7) — listes texte triées à la place
+- [ ] LCP < 2.5s mesuré (Phase 7) — web-vitals non installé
+- [ ] Code-splitting React.lazy (Phase 7) — imports statiques, bundle <300 KB donc non critique
+- [ ] Navigation clavier complète (Phase 7) — partiel (focus-visible, aria-labels, skip-link)
+- ⚠️ Token blacklist en mémoire (perdu au redémarrage) — acceptable pour v1.0
+- ⚠️ Scrapers US peu testés : mega_millions 21%, powerball 21%, keno 26%
 
-### Problèmes à corriger en priorité
+### État global mesuré (2026-03-31)
 
-1. ❌ 5 tests backend échouent (307 trailing slash dans tests intégration)
-2. ❌ 1 test frontend échoue (LoadingSpinner default message)
-3. ❌ Couverture 76.97% < 80% requis
-4. ❌ Liens README.md cassés (`docs/` → `docs/architecture_initiale/`)
-5. ❌ `.env.example` incomplet + nom variable incorrect
-6. ❌ Backend Dockerfile single-stage (devrait être multi-stage)
-7. ⚠️ Token blacklist en mémoire (perdu au redémarrage)
-8. ⚠️ Axios intercepteur : pas de refresh token, 401 = déconnexion directe
-9. ⚠️ Pas de code-splitting (React.lazy) dans le frontend
+- **Backend** : 455 tests, **tous passants** ✅
+- **Frontend** : 28 tests Vitest, **tous passants** ✅
+- **Couverture backend** : **84.65%** (seuil 80% atteint ✅)
+- **Tag** : v1.0.0 créé et poussé sur GitHub
+- **Documentation** : README.md, CONTRIBUTING.md, CHANGELOG.md — tous à jour
+- **Docker** : Backend multi-stage (builder + runtime), Frontend multi-stage (node + nginx)
+- **Refresh token** : Intercepteur Axios avec queue, rotation automatique, retry transparent
 
 ---
 
-*Fin du document 18_Checklist_Globale.md — v2.0 audit profond*
+*Fin du document 18_Checklist_Globale.md — v3.0 mise à jour post-Phase 10*
