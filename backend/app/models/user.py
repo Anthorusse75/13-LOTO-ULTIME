@@ -22,7 +22,7 @@ class User(Base, TimestampMixin):
     hashed_password: Mapped[str] = mapped_column(String(255))
     role: Mapped[UserRole] = mapped_column(Enum(UserRole), default=UserRole.CONSULTATION)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    last_login: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     def __repr__(self) -> str:
         return f"<User(username={self.username!r}, role={self.role})>"
