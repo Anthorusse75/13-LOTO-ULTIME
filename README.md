@@ -37,7 +37,9 @@ L'architecture est **game-agnostic** : toute loterie peut être ajoutée via con
 - Recharts, D3.js, Zustand 5, TanStack Query v5
 
 ### Base de données
-- SQLite (développement) / PostgreSQL 15+ (production)
+- SQLite (développement local) / PostgreSQL 16 (Docker / production)
+- Switch SQLite ↔ PostgreSQL depuis le panneau admin
+- Réseau Docker partagé `shared-db` pour réutiliser PostgreSQL entre projets
 
 ---
 
@@ -123,9 +125,16 @@ Copier `.env.example` en `.env` et configurer :
 SECRET_KEY=your-secret-key-min-32-chars
 DATABASE_URL=sqlite+aiosqlite:///./loto_ultime.db
 ADMIN_EMAIL=admin@loto-ultime.local
-ADMIN_INITIAL_PASSWORD=ChangeMe123!
+ADMIN_INITIAL_PASSWORD=<CHANGEZ-MOI>
 CORS_ORIGINS=["http://localhost:5173"]
 SCHEDULER_ENABLED=false
+
+# PostgreSQL (Docker / production)
+POSTGRES_DB=loto_ultime
+POSTGRES_USER=loto
+POSTGRES_PASSWORD=<CHANGEZ-MOI>
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
 ```
 
 Voir `.env.example` pour la liste complète des variables.
@@ -152,6 +161,7 @@ docker compose down
 | Frontend   | `http://localhost:3080`    | Application React (Nginx)      |
 | API docs   | `http://localhost:3080/api/v1/docs` | Swagger UI                    |
 | Health     | `http://localhost:3080/health`      | État du système               |
+| PostgreSQL | `localhost:5432`           | Base de données (réseau `shared-db`) |
 | Prometheus | `http://localhost:9090`    | Métriques (profil monitoring)  |
 | Grafana    | `http://localhost:3000`    | Dashboards (profil monitoring) |
 
@@ -160,10 +170,30 @@ Le port frontend est configurable via `FRONTEND_PORT` dans `.env` (défaut : 308
 ### Premier démarrage
 
 Au premier lancement, l'application :
-1. Crée les tables de la base de données
-2. Charge les configurations des 5 loteries (YAML)
-3. Crée l'utilisateur admin depuis `ADMIN_EMAIL` / `ADMIN_INITIAL_PASSWORD`
-4. Lance automatiquement l'import des tirages et le calcul des statistiques
+1. Attend que PostgreSQL soit prêt (healthcheck)
+2. Exécute les migrations Alembic (`alembic upgrade head`)
+3. Charge les configurations des 5 loteries (YAML)
+4. Crée l'utilisateur admin depuis `ADMIN_EMAIL` / `ADMIN_INITIAL_PASSWORD`
+5. Lance automatiquement l'import des tirages et le calcul des statistiques
+
+### Réseau partagé
+
+PostgreSQL est connecté au réseau Docker `shared-db`, ce qui permet à d'autres projets Docker de réutiliser la même instance :
+
+```yaml
+# Dans le docker-compose.yml d'un autre projet
+services:
+  mon-service:
+    networks:
+      - shared-db
+
+networks:
+  shared-db:
+    external: true
+    name: shared-db
+```
+
+L'hôte PostgreSQL sera alors `loto-ultime-postgres` sur le port `5432`.
 
 ---
 
@@ -183,6 +213,7 @@ Principaux endpoints :
 | Portefeuille   | `POST /portfolios/generate`      | Utilisateur  |
 | Simulation     | `POST /simulation/*`             | Utilisateur  |
 | Jobs           | `GET /jobs`, `POST /jobs/{name}/trigger` | Admin |
+| Database Admin | `GET /admin/database`, `POST /admin/database/switch` | Admin |
 
 ---
 

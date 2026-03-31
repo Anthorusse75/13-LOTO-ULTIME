@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from collections.abc import AsyncGenerator
 from datetime import date
 from pathlib import Path
@@ -16,6 +17,10 @@ from app.models.job import JobExecution  # noqa: F401
 from app.models.portfolio import Portfolio  # noqa: F401
 from app.models.statistics import StatisticsSnapshot  # noqa: F401
 from app.models.user import User  # noqa: F401
+
+# ── Env vars required by Settings (no hardcoded defaults) ──
+os.environ.setdefault("SECRET_KEY", "test-secret-key-for-testing-min-32-chars!!")
+os.environ.setdefault("ADMIN_INITIAL_PASSWORD", "TestAdmin1!")
 
 # ── In-memory SQLite for tests ──
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
@@ -128,7 +133,6 @@ async def app_client() -> AsyncGenerator[AsyncClient, None]:
     """HTTP client for integration tests against the FastAPI app."""
     import os
 
-    os.environ["SECRET_KEY"] = "test-secret-key-for-testing-min-32-chars!!"
     os.environ["DATABASE_URL"] = TEST_DATABASE_URL
 
     from app.main import create_app

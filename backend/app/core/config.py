@@ -33,7 +33,7 @@ class Settings(BaseSettings):
 
     # Admin initial
     ADMIN_EMAIL: str = "admin@loto-ultime.local"
-    ADMIN_INITIAL_PASSWORD: str = "ChangeMe123!"
+    ADMIN_INITIAL_PASSWORD: str = Field(..., min_length=8)
 
     # Scheduler
     SCHEDULER_ENABLED: bool = False

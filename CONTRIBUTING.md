@@ -26,6 +26,10 @@ cd frontend
 npm install
 ```
 
+> **Note** : en local, le backend utilise SQLite par défaut.  
+> En Docker, PostgreSQL 16 est utilisé automatiquement (voir `docker-compose.yml`).  
+> Vous pouvez basculer entre les deux depuis le panneau admin.
+
 ---
 
 ## Workflow Git
@@ -144,5 +148,8 @@ Ne pas appeler un repository directement depuis un router — toujours passer pa
 | -------- | -------- |
 | `ModuleNotFoundError` | Vérifier que le venv est activé et `pip install -e ".[dev]"` |
 | Tests DB échouent | Vérifier que `alembic upgrade head` a été exécuté |
+| `ValidationError: ADMIN_INITIAL_PASSWORD` | Définir `ADMIN_INITIAL_PASSWORD` dans `.env` (min 8 caractères) |
+| `ValidationError: SECRET_KEY` | Définir `SECRET_KEY` dans `.env` (min 32 caractères) |
 | Frontend erreurs CORS | Vérifier `CORS_ORIGINS` dans `.env` |
 | Docker build échoue | Vérifier les `.dockerignore` et le contenu des `Dockerfile` |
+| `POSTGRES_PASSWORD must be set` | Définir les mots de passe dans `.env` avant `docker compose up` |

@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-loto_ultime}
       POSTGRES_USER: ${POSTGRES_USER:-loto}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-loto_secret}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
@@ -29,14 +29,14 @@ services:
     expose:
       - "8000"
     environment:
-      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-loto}:${POSTGRES_PASSWORD:-loto_secret}@postgres:5432/${POSTGRES_DB:-loto_ultime}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-loto}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}@postgres:5432/${POSTGRES_DB:-loto_ultime}
       - SCHEDULER_ENABLED=true
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production-min-32-chars!!}
+      - SECRET_KEY=${SECRET_KEY:?SECRET_KEY must be set in .env}
       - APP_ENV=${APP_ENV:-production}
       - CORS_ORIGINS=${CORS_ORIGINS:-["http://localhost"]}
       - LOG_LEVEL=INFO
       - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@loto-ultime.local}
-      - ADMIN_INITIAL_PASSWORD=${ADMIN_INITIAL_PASSWORD:-ChangeMe123!}
+      - ADMIN_INITIAL_PASSWORD=${ADMIN_INITIAL_PASSWORD:?ADMIN_INITIAL_PASSWORD must be set in .env}
       - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-30}
     depends_on:
       postgres:
@@ -101,7 +101,7 @@ services:
       - ./deploy/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:?GRAFANA_PASSWORD must be set in .env}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true

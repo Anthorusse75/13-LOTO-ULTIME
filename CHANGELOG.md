@@ -5,6 +5,28 @@ Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
 ---
 
+## [1.1.0] — 2026-03-31
+
+### Ajouté
+- **PostgreSQL 16** comme base de données par défaut en Docker (remplace SQLite en production)
+- **Service PostgreSQL** dans docker-compose avec healthcheck, volume persistant `postgres-data`
+- **Réseau Docker partagé `shared-db`** pour réutiliser PostgreSQL entre projets Docker
+- **API admin base de données** :
+  - `GET /admin/database` — informations moteur, version, statistiques, 3 modes de connexion
+  - `POST /admin/database/switch` — switch SQLite ↔ PostgreSQL à chaud depuis l'interface admin
+- **Panneau admin DB** dans le frontend : carte dynamique avec infos moteur, bouton switch, modes de connexion (interne, shared-db, externe LAN)
+- **Backup PostgreSQL** via `pg_dump` + gzip (en plus du backup SQLite existant)
+- Support `asyncpg` en dépendance principale (plus optionnelle)
+
+### Modifié
+- `init_db()` : pool configuration adaptée par moteur (NullPool pour SQLite, QueuePool pool_size=10 pour PostgreSQL)
+- Alembic `env.py` : `connect_args` conditionnel (SQLite uniquement)
+- Dockerfile backend : ajout `postgresql-client` pour pg_dump
+- `.env.example` : ajout variables `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, `POSTGRES_PORT`
+- Health endpoint : espace disque générique (plus de dépendance au chemin SQLite)
+
+---
+
 ## [1.0.0] — 2026-03-30
 
 ### Ajouté

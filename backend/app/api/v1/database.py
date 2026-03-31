@@ -39,6 +39,7 @@ def _parse_db_info(database_url: str) -> dict:
     db = (parsed.path or "/").lstrip("/")
     user = parsed.username or "loto"
     password = parsed.password or ""
+    masked_password = "***" if password else ""
 
     # External host comes from env or defaults to the Docker host IP
     ext_host = os.environ.get("SERVER_IP", "192.168.0.94")
@@ -51,26 +52,26 @@ def _parse_db_info(database_url: str) -> dict:
         "port": port,
         "database": db,
         "user": user,
-        "password": password,
+        "password": masked_password,
         "connections": {
             "internal": {
                 "label": "Même docker-compose",
                 "host": host,
                 "port": port,
-                "url": f"postgresql://{user}:{password}@{host}:{port}/{db}",
+                "url": f"postgresql://{user}:****@{host}:{port}/{db}",
             },
             "docker_network": {
                 "label": "Autre Docker (réseau shared-db)",
                 "host": "loto-ultime-postgres",
                 "port": 5432,
-                "url": f"postgresql://{user}:{password}@loto-ultime-postgres:5432/{db}",
+                "url": f"postgresql://{user}:****@loto-ultime-postgres:5432/{db}",
                 "network": "shared-db",
             },
             "external": {
                 "label": "Externe (réseau local)",
                 "host": ext_host,
                 "port": int(ext_port),
-                "url": f"postgresql://{user}:{password}@{ext_host}:{ext_port}/{db}",
+                "url": f"postgresql://{user}:****@{ext_host}:{ext_port}/{db}",
             },
         },
     }
@@ -136,7 +137,9 @@ async def switch_database(
         import os
 
         pg_user = os.environ.get("POSTGRES_USER", "loto")
-        pg_pass = os.environ.get("POSTGRES_PASSWORD", "loto_secret")
+        pg_pass = os.environ.get("POSTGRES_PASSWORD", "")
+        if not pg_pass:
+            raise HTTPException(status_code=400, detail="POSTGRES_PASSWORD env var is not set")
         pg_host = os.environ.get("POSTGRES_HOST", "postgres")
         pg_port = os.environ.get("POSTGRES_PORT", "5432")
         pg_db = os.environ.get("POSTGRES_DB", "loto_ultime")
