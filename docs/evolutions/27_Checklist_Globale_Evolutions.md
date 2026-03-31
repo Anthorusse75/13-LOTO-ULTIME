@@ -24,17 +24,18 @@
 
 | ID      | Tâche                                                          | Doc    | Statut |
 | ------- | -------------------------------------------------------------- | ------ | ------ |
-| B-01    | Fix BUG-01 : propager game_id dans tous les services           | 03, 16 | ⬜      |
-| B-02    | Fix BUG-01 : propager game_id dans tous les engines/statistics | 03, 16 | ⬜      |
-| B-03    | Fix BUG-01 : propager game_id dans engines/scoring             | 03, 16 | ⬜      |
-| B-04    | Fix BUG-01 : propager game_id dans engines/optimization        | 03, 16 | ⬜      |
-| B-05    | Fix BUG-02 : corriger logique method_selector                  | 03, 16 | ⬜      |
-| B-06    | Fix BUG-03 : vérifier endpoint grids/generate accepte profile  | 03, 16 | ⬜      |
-| F-01    | Fix BUG-03 : envoyer profile depuis GridsPage au API           | 03, 17 | ⬜      |
+| B-01    | Fix BUG-01 : propager game_id dans tous les services           | 03, 16 | ✅ (déjà OK) |
+| B-02    | Fix BUG-01 : propager game_id dans tous les engines/statistics | 03, 16 | ✅ (déjà OK) |
+| B-03    | Fix BUG-01 : propager game_id dans engines/scoring             | 03, 16 | ✅ (déjà OK) |
+| B-04    | Fix BUG-01 : propager game_id dans engines/optimization        | 03, 16 | ✅ (déjà OK) |
+| B-05    | Fix BUG-02 : corriger logique method_selector                  | 03, 16 | ✅      |
+| B-06    | Fix BUG-03 : vérifier endpoint grids/generate accepte profile  | 03, 16 | ✅ (déjà OK) |
+| B-06b   | Fix : propager profile+weights dans portfolio generate         | 03, 16 | ✅      |
+| F-01    | Fix BUG-03 : envoyer profile depuis GridsPage au API           | 03, 17 | ✅ (déjà OK) |
 | TEST-01 | Capturer snapshots SNAP-01 à SNAP-04 (avant fix)               | 24     | ⬜      |
 | TEST-02 | Vérifier snapshots après fix BUG-01                            | 24     | ⬜      |
 | TEST-03 | Vérifier snapshots après fix BUG-02                            | 24     | ⬜      |
-| TEST-04 | S'assurer 337 tests existants passent                          | 24     | ⬜      |
+| TEST-04 | S'assurer 337 tests existants passent                          | 24     | ✅ (456 pass) |
 
 ---
 
@@ -316,10 +317,10 @@
 
 | Phase     | Tâches     | Faites | %      |
 | --------- | ---------- | ------ | ------ |
-| P0        | 11         | 0      | 0%     |
+| P0        | 12         | 8      | 67%    |
 | A         | 17         | 0      | 0%     |
 | B         | 40         | 0      | 0%     |
 | C         | 39         | 0      | 0%     |
 | D         | 34         | 0      | 0%     |
 | E         | 26 + 7 obs | 0      | 0%     |
-| **Total** | **~174**   | **0**  | **0%** |
+| **Total** | **~175**   | **8**  | **5%** |
