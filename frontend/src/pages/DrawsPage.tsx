@@ -21,23 +21,28 @@ export default function DrawsPage() {
 
       <PageIntro
         storageKey="draws"
-        description="Cette page affiche l'ensemble des tirages officiels importés depuis le site de la FDJ. C'est la source de données brute qui alimente tous les calculs statistiques."
-        tip="Plus vous avez de tirages historiques, plus les statistiques sont fiables. Utilisez Administration > Importer pour récupérer les derniers tirages."
+        description="Cette page affiche l'ensemble des tirages officiels récupérés auprès de la FDJ (Française des Jeux). Ce sont les résultats réels qui alimentent tous les calculs du site. C'est comme un carnet de tous les tirages passés. Plus il y en a, plus nos analyses sont précises."
+        tip="Le système récupère automatiquement les nouveaux tirages chaque nuit à 22h. Si vous venez de vous inscrire, les tirages sont en cours d'importation — revenez dans quelques minutes. Vous pouvez aussi déclencher l'import manuellement depuis la page Administration."
         terms={[
           {
             term: "Numéro de tirage",
             definition:
-              "Identifiant officiel du tirage attribué par la FDJ. Permet de retrouver le tirage sur le site officiel.",
+              "Identifiant officiel attribué par la FDJ. Par exemple, « #2024-087 » correspond au 87ème tirage de 2024. Vous pouvez le retrouver sur le site officiel fdj.fr.",
           },
           {
-            term: "Étoiles",
+            term: "Numéros principaux",
             definition:
-              "Pour EuroMillions uniquement : 2 numéros supplémentaires tirés dans un pool de 1 à 12.",
+              "Les boules bleues : ce sont les numéros principaux tirés. Au Loto, il y en a 5 (parmi 49). À l'EuroMillions, il y en a 5 (parmi 50).",
           },
           {
-            term: "Numéro chance",
+            term: "Étoiles (EuroMillions)",
             definition:
-              "Pour le Loto FDJ : 1 numéro complémentaire tiré dans un pool de 1 à 10.",
+              "Les boules jaunes à droite des numéros principaux. 2 étoiles tirées parmi 12. Pour gagner le jackpot, il faut les 5 numéros ET les 2 étoiles.",
+          },
+          {
+            term: "Numéro chance (Loto)",
+            definition:
+              "La boule colorée supplémentaire au Loto FDJ. Tirée parmi 1 à 10. Permet de remporter des gains supplémentaires même sans avoir les 5 bons numéros.",
           },
         ]}
       />

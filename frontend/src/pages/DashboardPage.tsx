@@ -65,31 +65,36 @@ export default function DashboardPage() {
 
       <PageIntro
         storageKey="dashboard"
-        description="Le Dashboard est votre point d'entrée. Il résume en un coup d'œil l'état de votre activité : les derniers tirages officiels, vos meilleures grilles calculées et la santé du pipeline de calcul automatique."
-        tip="Commencez par importer des tirages depuis la page Administration, puis lancez le calcul des statistiques pour alimenter toutes les analyses."
+        description="Bienvenue ! Le Dashboard est votre tableau de bord principal. Il résume en un coup d'œil tout ce qui se passe : les derniers tirages officiels récupérés, vos meilleures grilles calculées par nos algorithmes, et l'état du système automatique qui met tout à jour chaque nuit."
+        tip="Si c'est votre première visite, tout se met en place automatiquement — les tirages sont importés et les statistiques calculées en arrière-plan. Revenez dans quelques minutes si certaines données n'apparaissent pas encore. Ensuite, explorez les pages Statistiques et Grilles pour découvrir les analyses."
         terms={[
           {
             term: "Tirage",
             definition:
-              "Résultat officiel de la loterie : les numéros gagnants d'une date donnée.",
+              "Résultat officiel de la loterie : les numéros gagnants tirés à une date donnée. Par exemple, pour le Loto du 29 mars : 5 - 12 - 23 - 34 - 45 + N°Chance 7.",
           },
           {
             term: "Score d'une grille",
             definition:
-              "Note de 0 à 10 calculée par nos algorithmes. Plus il est élevé, plus la grille est statistiquement intéressante.",
-            strength: "Permet de comparer objectivement des grilles",
-            limit: "Ne prédit pas le résultat — la loterie reste aléatoire",
+              "Note de 0 à 10 calculée par nos algorithmes à partir de 6 critères statistiques (fréquence, écart, cooccurrence, structure, équilibre, originalité). Ce n'est pas une prédiction — c'est une mesure de qualité statistique.",
+            strength: "Permet de comparer objectivement des grilles entre elles",
+            limit: "La loterie reste un jeu de hasard — un bon score n'augmente pas vos chances de gagner",
           },
           {
-            term: "Pipeline",
+            term: "Hot numbers (numéros chauds)",
             definition:
-              "Enchaînement automatique des étapes : import des tirages → calcul des statistiques → génération de grilles.",
-            strength: "Se relance chaque nuit à 22h automatiquement",
+              "Les numéros qui sont sortis le plus souvent dans l'historique récent. Par exemple, si le 7 est sorti 8 fois sur les 50 derniers tirages, il est « chaud ».",
           },
           {
-            term: "Fréquence",
+            term: "Cold numbers (numéros froids)",
             definition:
-              "Nombre de fois qu'un numéro est apparu dans l'historique des tirages.",
+              "Les numéros qui sortent rarement ou qui ne sont pas sortis depuis longtemps. Certains joueurs pensent qu'ils sont « dus » et vont bientôt sortir.",
+          },
+          {
+            term: "Pipeline nocturne",
+            definition:
+              "Chaque nuit à 22h, le système récupère automatiquement les nouveaux tirages, recalcule toutes les statistiques et régénère les meilleures grilles. Tout est automatique.",
+            strength: "Vous avez toujours des données à jour sans rien faire",
           },
         ]}
       />
@@ -191,7 +196,9 @@ export default function DashboardPage() {
                 </BarChart>
               </ResponsiveContainer>
               <p className="text-xs text-text-secondary mt-2">
-                Fréquences relatives des 10 numéros les plus tirés.
+                Les 10 numéros les plus fréquemment tirés. Plus la barre est
+                haute, plus le numéro sort souvent. La hauteur représente la
+                fréquence relative (proportionnelle au nombre de tirages).
               </p>
             </>
           ) : (

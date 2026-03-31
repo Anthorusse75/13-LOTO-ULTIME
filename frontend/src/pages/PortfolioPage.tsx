@@ -1,3 +1,4 @@
+import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
@@ -49,30 +50,37 @@ export default function PortfolioPage() {
 
       <PageIntro
         storageKey="portfolio"
-        description="Le Portefeuille génère un ensemble de grilles complémentaires pour un tirage donné. L'objectif est de maximiser la couverture de l'espace des numéros tout en gardant de bons scores individuels."
-        tip="Une stratégie 'équilibrée' avec 7 grilles est un bon point de départ. Consultez la heatmap en bas pour visualiser votre couverture des numéros."
+        description="Le Portefeuille, c'est comme jouer plusieurs grilles complémentaires en même temps. Au lieu de miser tout sur une seule combinaison, vous répartissez vos chances sur plusieurs grilles qui se complètent intelligemment. L'objectif : couvrir un maximum de numéros possibles tout en gardant des grilles de bonne qualité."
+        tip="Pour un premier essai, utilisez la stratégie « Équilibré » avec 7 grilles — c'est le meilleur compromis. Ensuite, regardez la carte de chaleur en bas : si un numéro est en rouge, c'est qu'il apparaît dans beaucoup de vos grilles. L'idéal est d'avoir un bon dégradé (pas tout rouge ou tout bleu)."
         terms={[
           {
             term: "Couverture",
             definition:
-              "Pourcentage de numéros du pool couverts par au moins une grille du portefeuille.",
-            strength: "Réduit le risque de manquer un numéro gagnant",
+              "Pourcentage de numéros du jeu présents dans au moins une de vos grilles. Exemple : au Loto (49 numéros), si vos 7 grilles contiennent 35 numéros différents, la couverture est de 71%.",
+            strength: "Plus c'est haut, moins vous risquez de « rater » un numéro gagnant",
           },
           {
             term: "Diversité",
             definition:
-              "Mesure à quel point les grilles du portefeuille sont différentes les unes des autres.",
-            strength: "Évite de jouer les mêmes combinaisons en double",
+              "Mesure à quel point vos grilles sont différentes les unes des autres. Si deux grilles partagent 4 numéros sur 5, la diversité est faible.",
+            strength: "Évite de jouer presque la même grille en double (gaspillage d'argent)",
           },
           {
-            term: "Stratégie équilibrée",
+            term: "Distance de Hamming",
             definition:
-              "Compromis entre score individuel des grilles et diversité de l'ensemble.",
+              "Nombre de numéros qui diffèrent entre deux grilles. Par exemple, si la grille A = [1,2,3,4,5] et la grille B = [1,2,3,6,7], la distance est 2 (seuls 4 et 5 changent). Plus cette valeur est élevée, plus les grilles sont différentes.",
+            strength: "Un minimum élevé garantit qu'aucune paire de grilles ne se ressemble trop",
           },
           {
-            term: "Heatmap",
+            term: "Score moyen",
             definition:
-              "Carte de chaleur montrant combien de grilles du portefeuille contiennent chaque numéro. Rouge = numéro très présent, bleu = peu présent.",
+              "Moyenne des scores individuels de chaque grille (sur 10). Un portefeuille idéal a à la fois un bon score moyen ET une bonne diversité.",
+          },
+          {
+            term: "Carte de chaleur (heatmap)",
+            definition:
+              "Grille visuelle montrant combien de fois chaque numéro apparaît dans votre portefeuille. Vert foncé = très présent (dans beaucoup de grilles), rouge = peu ou pas présent.",
+            strength: "Permet de repérer en un coup d'œil les « trous » dans votre couverture",
           },
         ]}
       />
@@ -84,6 +92,7 @@ export default function PortfolioPage() {
           <div>
             <label className="text-xs text-text-secondary block mb-1">
               Nombre de grilles
+              <InfoTooltip text="Combien de grilles différentes voulez-vous jouer ? Plus vous en jouez, meilleure est la couverture, mais plus ça coûte. 7 grilles est un bon compromis." />
             </label>
             <input
               type="number"
@@ -93,10 +102,14 @@ export default function PortfolioPage() {
               onChange={(e) => setGridCount(Number(e.target.value))}
               className="w-full bg-surface-hover border border-border rounded-md px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 focus:ring-accent-blue"
             />
+            <p className="text-xs text-text-secondary mt-1">
+              💡 Entre 5 et 10 grilles pour un bon rapport couverture/budget.
+            </p>
           </div>
           <div>
             <label className="text-xs text-text-secondary block mb-1">
               Stratégie
+              <InfoTooltip text="La stratégie détermine comment l'algorithme sélectionne les grilles. Chaque stratégie privilégie un aspect différent." />
             </label>
             <select
               value={strategy}
@@ -109,6 +122,10 @@ export default function PortfolioPage() {
                 </option>
               ))}
             </select>
+            <p className="text-xs text-text-secondary mt-1">
+              {PORTFOLIO_STRATEGIES.find((s) => s.value === strategy)
+                ?.description ?? ""}
+            </p>
           </div>
         </div>
         <button
@@ -157,38 +174,82 @@ export default function PortfolioPage() {
           {/* KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-surface rounded-lg border border-border p-4">
-              <p className="text-xs text-text-secondary">Score moyen</p>
+              <p className="text-xs text-text-secondary flex items-center">
+                Score moyen
+                <InfoTooltip text="Note moyenne de vos grilles sur 10. Plus c'est haut, plus vos grilles sont statistiquement intéressantes individuellement." />
+              </p>
               <p className="font-mono text-lg text-accent-green">
                 {formatScore(portfolio.avg_grid_score)}
+                <span className="text-xs text-text-secondary font-sans"> /10</span>
+              </p>
+              <p className="text-xs text-text-secondary mt-0.5">
+                {Number(portfolio.avg_grid_score) >= 0.7
+                  ? "Excellent — vos grilles sont de très bonne qualité"
+                  : Number(portfolio.avg_grid_score) >= 0.5
+                    ? "Bon — qualité correcte"
+                    : "Moyen — essayez une autre stratégie"}
               </p>
             </div>
             <div className="bg-surface rounded-lg border border-border p-4">
-              <p className="text-xs text-text-secondary">Diversité</p>
+              <p className="text-xs text-text-secondary flex items-center">
+                Diversité
+                <InfoTooltip text="Mesure à quel point vos grilles sont différentes les unes des autres. 100% = toutes les grilles sont complètement différentes. 0% = toutes les grilles sont identiques." />
+              </p>
               <p className="font-mono text-lg">
                 {(portfolio.diversity_score * 100).toFixed(1)}%
               </p>
+              <p className="text-xs text-text-secondary mt-0.5">
+                {portfolio.diversity_score >= 0.8
+                  ? "Très diversifié — peu de numéros en commun"
+                  : portfolio.diversity_score >= 0.5
+                    ? "Diversité correcte"
+                    : "Faible — vos grilles se ressemblent beaucoup"}
+              </p>
             </div>
             <div className="bg-surface rounded-lg border border-border p-4">
-              <p className="text-xs text-text-secondary">Couverture</p>
+              <p className="text-xs text-text-secondary flex items-center">
+                Couverture
+                <InfoTooltip text="Pourcentage de numéros du jeu présents dans au moins une de vos grilles. 100% = chaque numéro du jeu est dans au moins une grille." />
+              </p>
               <p className="font-mono text-lg">
                 {(portfolio.coverage_score * 100).toFixed(1)}%
               </p>
+              <p className="text-xs text-text-secondary mt-0.5">
+                {portfolio.coverage_score >= 0.8
+                  ? "Excellente couverture de l'espace de jeu"
+                  : portfolio.coverage_score >= 0.5
+                    ? "Couverture correcte — quelques trous"
+                    : "Faible — ajoutez des grilles pour mieux couvrir"}
+              </p>
             </div>
             <div className="bg-surface rounded-lg border border-border p-4">
-              <p className="text-xs text-text-secondary">
-                Distance Hamming min
+              <p className="text-xs text-text-secondary flex items-center">
+                Distance min.
+                <InfoTooltip text="Nombre minimum de numéros qui diffèrent entre deux grilles de votre portefeuille. Si c'est 3, cela signifie que même vos deux grilles les plus proches ont au moins 3 numéros différents." />
               </p>
               <p className="font-mono text-lg">
                 {portfolio.min_hamming_distance?.toFixed(1) ?? "—"}
+              </p>
+              <p className="text-xs text-text-secondary mt-0.5">
+                {(portfolio.min_hamming_distance ?? 0) >= 3
+                  ? "Bon écart entre les grilles"
+                  : "Certaines grilles sont assez proches"}
               </p>
             </div>
           </div>
 
           {/* Grids list */}
           <div className="bg-surface rounded-lg border border-border p-4">
-            <h2 className="text-sm font-semibold mb-4">
+            <h2 className="text-sm font-semibold mb-1">
               Grilles du portefeuille
             </h2>
+            <p className="text-xs text-text-secondary mb-4">
+              Voici vos {portfolio.grids.length} grilles optimisées. Chaque
+              ligne affiche les numéros à jouer et le score de la grille sur 10.
+              {game?.star_name
+                ? ` Les boules colorées à droite sont les ${game.star_name}s.`
+                : ""}
+            </p>
             <div className="space-y-2">
               {portfolio.grids.map((g, i) => (
                 <div
@@ -210,9 +271,34 @@ export default function PortfolioPage() {
           {/* Coverage heatmap */}
           {game && (
             <div className="bg-surface rounded-lg border border-border p-4">
-              <h2 className="text-sm font-semibold mb-3">
-                Couverture numérique
+              <h2 className="text-sm font-semibold mb-1 flex items-center gap-2">
+                Carte de couverture numérique
+                <InfoTooltip text="Chaque case représente un numéro du jeu. La couleur indique dans combien de grilles ce numéro apparaît. Vert foncé = présent dans beaucoup de grilles. Rouge = absent ou dans très peu de grilles. L'idéal est qu'aucun numéro ne soit oublié." />
               </h2>
+              <p className="text-xs text-text-secondary mb-3">
+                Chaque numéro est coloré selon sa présence dans vos grilles.
+                Plus un numéro est vert, plus il revient souvent dans votre
+                portefeuille. Les numéros rouges sont peu ou pas couverts —
+                c'est normal de ne pas tout couvrir, mais gardez un œil sur les
+                « trous ».
+              </p>
+
+              {/* Legend */}
+              <div className="flex items-center gap-4 mb-3 text-xs text-text-secondary">
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-sm bg-accent-red/80 inline-block" />
+                  Peu présent (0-1 grille)
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-sm bg-accent-amber/80 inline-block" />
+                  Moyennement (2-3 grilles)
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-sm bg-accent-green/80 inline-block" />
+                  Très présent (4+ grilles)
+                </span>
+              </div>
+
               <NumberHeatmap
                 data={coverageMap}
                 minNumber={game.min_number}
@@ -223,8 +309,8 @@ export default function PortfolioPage() {
           )}
 
           <p className="text-xs text-text-secondary">
-            Stratégie: {portfolio.strategy} — Méthode: {portfolio.method_used} —
-            Temps: {portfolio.computation_time_ms.toFixed(0)}ms
+            Stratégie: {PORTFOLIO_STRATEGIES.find((s) => s.value === portfolio.strategy)?.label ?? portfolio.strategy} —
+            Méthode: {portfolio.method_used} — Temps: {portfolio.computation_time_ms.toFixed(0)}ms
           </p>
         </>
       )}

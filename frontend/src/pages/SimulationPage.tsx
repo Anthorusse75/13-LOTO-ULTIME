@@ -125,53 +125,57 @@ export default function SimulationPage() {
 
       <PageIntro
         storageKey="simulation"
-        description="La page Simulation vous offre trois outils pour évaluer une grille ou comparer des stratégies. Elle ne prédit pas le futur, mais vous aide à comprendre la 'qualité statistique' d'une combinaison."
-        tip="Commencez par saisir une grille dans le champ numéros, puis explorez chaque onglet pour obtenir une analyse complète."
+        description="Cette page est votre laboratoire d'expérimentation ! Vous pouvez tester n'importe quelle grille et voir comment elle se comporte. C'est comme avoir un simulateur de vol pour vos grilles de loto : aucun risque, que de l'information. Attention : ces outils ne prédisent pas le prochain tirage (personne ne le peut !), mais ils vous aident à comprendre si votre grille est « bien construite » statistiquement."
+        tip="Commencez par entrer vos numéros dans le champ ci-dessous, puis essayez chaque onglet. Monte Carlo vous dit la probabilité de vos numéros, Stabilité vérifie que votre grille est fiable, Comparaison la mesure face au hasard."
         terms={[
           {
             term: "Monte Carlo",
             definition:
-              "Simule des milliers de tirages aléatoires et compte combien de fois votre grille y apparaît.",
+              "Imaginez qu'on fasse 10 000 tirages fictifs dans une urne. On compte combien de fois vos numéros sortent. Par exemple, si vous avez en moyenne 1.2 correspondances sur 5, c'est normal (c'est la loi des probabilités). Si vous obtenez 2.5, votre grille contient des numéros qui sortent plus souvent que la moyenne.",
             strength:
-              "Donne une idée de la fréquence de correspondance théorique",
-            limit: "Résultat proche de l'espérance théorique — c'est normal",
+              "Donne une estimation très fiable des probabilités de correspondance",
+            limit: "Le résultat converge toujours vers l'espérance théorique — c'est rassurant mais pas surprenant !",
           },
           {
             term: "Stabilité (bootstrap)",
             definition:
-              "Ré-échantillonne l'historique des tirages des centaines de fois et calcule le score à chaque fois. Mesure si le score de votre grille est robuste ou fragile.",
-            strength: "Un CV faible (< 5%) = grille fiable",
-            limit: "Limité à 1 000 itérations",
+              "On prend l'historique réel des tirages, on le « mélange » 1000 fois au hasard, et on recalcule le score de votre grille à chaque fois. Si le score ne bouge presque pas (CV < 5%), ça veut dire que votre grille est robuste : elle n'est pas bonne « par chance » mais grâce à ses caractéristiques.",
+            strength: "Un CV (coefficient de variation) < 5% = grille très fiable",
+            limit: "Limité à 1 000 itérations côté serveur",
           },
           {
             term: "Comparaison au hasard",
             definition:
-              "Compare le score de votre grille à N grilles générées aléatoirement.",
+              "On génère des milliers de grilles complètement au hasard et on compare leur score au vôtre. Le percentile vous dit : « votre grille est meilleure que X% des grilles aléatoires ». Par exemple, un percentile de 85% signifie que vous faites mieux que 85 grilles aléatoires sur 100.",
             strength:
-              "Le percentile indique si votre grille est meilleure que X% des grilles aléatoires",
+              "Si votre percentile est > 80%, votre grille est probablement bien optimisée",
           },
           {
             term: "Z-score",
             definition:
-              "Écart à la moyenne en unités d'écart-type. Z > 2 = votre grille est nettement au-dessus de la moyenne aléatoire.",
+              "C'est comme une note comparée à la classe. Z = 0 = vous êtes dans la moyenne. Z = +2 = vous êtes 2 « étages » au-dessus de la moyenne (top ~2%). Z = -1 = légèrement en dessous. En résumé : Z > 1 c'est bien, Z > 2 c'est excellent.",
           },
           {
             term: "Comparaison de stratégies",
             definition:
-              "Lance deux algorithmes d'optimisation et compare leurs scores moyens sur un même lot de grilles.",
-            strength: "Permet de choisir la meilleure stratégie pour votre jeu",
+              "Met en duel deux algorithmes (par ex. Génétique vs Bayésien) sur un même lot de grilles. Comme un match : chaque algorithme génère N grilles, on compare les scores moyens, max et min. Le gagnant est celui qui produit les meilleurs scores en moyenne.",
+            strength: "Permet de choisir la meilleure stratégie pour votre jeu avant de générer vos vraies grilles",
           },
         ]}
       />
 
       {/* Input section */}
       <div className="bg-surface rounded-lg border border-border p-6">
-        <h2 className="text-sm font-semibold mb-4">Grille à simuler</h2>
+        <h2 className="text-sm font-semibold mb-2">Grille à simuler</h2>
+        <p className="text-xs text-text-secondary mb-4">
+          Entrez les numéros de la grille que vous souhaitez tester. Vous pouvez entrer une grille que vous avez en tête, ou recopier une grille depuis la page Grilles.
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="text-xs text-text-secondary block mb-1">
               Numéros ({game?.numbers_drawn ?? "?"} attendus, séparés par
               virgule)
+              <InfoTooltip text={`Tapez vos ${game?.numbers_drawn ?? "N"} numéros séparés par des virgules. Par exemple : 3, 12, 25, 34, 49`} />
             </label>
             <input
               type="text"
@@ -190,6 +194,7 @@ export default function SimulationPage() {
           <div>
             <label className="text-xs text-text-secondary block mb-1">
               Nombre de simulations
+              <InfoTooltip text="Plus il y a de simulations, plus le résultat est précis. 10 000 est un bon choix. 100 000 est plus précis mais plus lent." />
             </label>
             <input
               type="number"
@@ -330,8 +335,8 @@ export default function SimulationPage() {
                   </BarChart>
                 </ResponsiveContainer>
                 <p className="text-xs text-text-secondary mt-2">
-                  Distribution des correspondances observées lors de la
-                  simulation Monte Carlo.
+                  Ce graphique montre la répartition des résultats : par exemple, la barre « 2 » indique combien de tirages simulés ont donné exactement 2 numéros en commun avec votre grille.
+                  Les barres les plus hautes représentent les résultats les plus fréquents.
                 </p>
               </div>
 
@@ -388,7 +393,7 @@ export default function SimulationPage() {
                 <div className="bg-surface rounded-lg border border-border p-4">
                   <p className="text-xs text-text-secondary flex items-center">
                     Score moyen
-                    <InfoTooltip text="Score moyen obtenu par bootstrap (ré-échantillonnage répété de l'historique)." />
+                    <InfoTooltip text="Score moyen obtenu en recalculant sur 1000 échantillons différents de l'historique. Plus il est élevé, mieux c'est." />
                   </p>
                   <p className="font-mono text-lg text-accent-green">
                     {stab.mean_score.toFixed(2)}
@@ -397,7 +402,7 @@ export default function SimulationPage() {
                 <div className="bg-surface rounded-lg border border-border p-4">
                   <p className="text-xs text-text-secondary flex items-center">
                     Écart-type
-                    <InfoTooltip text="Mesure de dispersion du score : un écart-type faible indique une grille stable." />
+                    <InfoTooltip text="Mesure la « dispersion » du score. Un écart-type de 0.02 signifie que le score ne bouge presque pas d'un échantillon à l'autre — votre grille est stable." />
                   </p>
                   <p className="font-mono text-lg">
                     {stab.std_score.toFixed(3)}
@@ -406,10 +411,17 @@ export default function SimulationPage() {
                 <div className="bg-surface rounded-lg border border-border p-4">
                   <p className="text-xs text-text-secondary flex items-center">
                     CV
-                    <InfoTooltip text="Coefficient de variation = écart-type / moyenne. Plus il est bas, plus la grille est stable." />
+                    <InfoTooltip text="Coefficient de Variation = écart-type ÷ moyenne × 100. Moins de 5% = très stable, 5-10% = stable, plus de 10% = fragile." />
                   </p>
-                  <p className="font-mono text-lg">
+                  <p className={`font-mono text-lg ${stab.cv * 100 < 5 ? "text-accent-green" : stab.cv * 100 < 10 ? "text-accent-yellow" : "text-accent-red"}`}>
                     {(stab.cv * 100).toFixed(1)}%
+                  </p>
+                  <p className="text-xs text-text-secondary mt-1">
+                    {stab.cv * 100 < 5
+                      ? "Très stable ✅"
+                      : stab.cv * 100 < 10
+                        ? "Correcte 👍"
+                        : "Fragile ⚠️"}
                   </p>
                 </div>
                 <div className="bg-surface rounded-lg border border-border p-4">
@@ -419,9 +431,12 @@ export default function SimulationPage() {
               </div>
 
               <div className="bg-surface rounded-lg border border-border p-4">
-                <h3 className="text-sm font-semibold mb-3">
+                <h3 className="text-sm font-semibold mb-1">
                   Intervalle de confiance (95%)
                 </h3>
+                <p className="text-xs text-text-secondary mb-3">
+                  Dans 95% des cas, le score de votre grille se situe entre les deux bornes ci-dessous. Plus l'intervalle est étroit, plus la grille est fiable.
+                </p>
                 <div className="flex items-center gap-4">
                   <p className="font-mono text-accent-red">
                     {stab.ci_95_low.toFixed(3)}
@@ -474,8 +489,7 @@ export default function SimulationPage() {
 
             {!comp && !compMutation.isPending && (
               <p className="text-text-secondary text-sm mt-3">
-                Comparez le score de votre grille à celui de grilles générées
-                aléatoirement pour évaluer sa qualité relative.
+                Entrez votre grille ci-dessus, puis cliquez sur « Comparer au hasard ». On va générer des milliers de grilles aléatoires et voir où la vôtre se situe. C'est comme comparer votre devoir à celui de toute la classe !
               </p>
             )}
 
@@ -489,27 +503,41 @@ export default function SimulationPage() {
               <>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                   <div className="bg-surface-hover rounded-md border border-border p-3">
-                    <p className="text-xs text-text-secondary">
+                    <p className="text-xs text-text-secondary flex items-center">
                       Score de la grille
+                      <InfoTooltip text="Le score de qualité de votre grille, calculé selon les mêmes critères que sur la page Grilles." />
                     </p>
                     <p className="font-mono text-lg text-accent-green">
                       {comp.grid_score.toFixed(3)}
                     </p>
                   </div>
                   <div className="bg-surface-hover rounded-md border border-border p-3">
-                    <p className="text-xs text-text-secondary">
+                    <p className="text-xs text-text-secondary flex items-center">
                       Moyenne aléatoire
+                      <InfoTooltip text="Le score moyen des grilles tirées au hasard. Plus votre score est au-dessus de cette moyenne, mieux c'est." />
                     </p>
                     <p className="font-mono text-lg">
                       {comp.random_mean.toFixed(3)}
                     </p>
                   </div>
                   <div className="bg-surface-hover rounded-md border border-border p-3">
-                    <p className="text-xs text-text-secondary">Percentile</p>
+                    <p className="text-xs text-text-secondary flex items-center">
+                      Percentile
+                      <InfoTooltip text="Votre grille fait mieux que ce pourcentage de grilles aléatoires. 90% = vous battez 9 grilles sur 10." />
+                    </p>
                     <p
                       className={`font-mono text-lg ${comp.percentile >= 80 ? "text-accent-green" : comp.percentile >= 50 ? "text-accent-yellow" : "text-accent-red"}`}
                     >
                       {comp.percentile.toFixed(1)}%
+                    </p>
+                    <p className="text-xs text-text-secondary mt-1">
+                      {comp.percentile >= 90
+                        ? "Excellent ! Top 10% 🏆"
+                        : comp.percentile >= 80
+                          ? "Très bien, top 20% ⭐"
+                          : comp.percentile >= 50
+                            ? "Correct, au-dessus de la moyenne 👍"
+                            : "En dessous de la moyenne — essayez une grille optimisée"}
                     </p>
                   </div>
                 </div>
@@ -545,14 +573,18 @@ export default function SimulationPage() {
 
           {/* Strategy A vs B section */}
           <div className="bg-surface rounded-lg border border-border p-4">
-            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
+            <h2 className="text-sm font-semibold mb-2 flex items-center gap-2">
               <BarChart3 size={14} />
               Comparer deux stratégies d'optimisation
             </h2>
+            <p className="text-xs text-text-secondary mb-3">
+              Mettez en duel deux algorithmes : chacun génère le même nombre de grilles, et on compare les scores. Comme un match de boxe entre deux méthodes !
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
                 <label className="text-xs text-text-secondary block mb-1">
                   Stratégie A
+                  <InfoTooltip text="Le premier algorithme à tester. Par exemple, essayez Génétique vs Bayésien pour voir lequel est le plus performant sur votre jeu." />
                 </label>
                 <select
                   value={stratA}

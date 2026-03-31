@@ -22,19 +22,24 @@ export default function FavoritesPage() {
 
         <PageIntro
           storageKey="favorites"
-          description="Vos favoris sont les grilles que vous avez marquées d'un cœur depuis la page Grilles. Retrouvez-les ici pour les consulter, les comparer ou les exporter en PDF."
-          tip="Ajoutez en favori les grilles avec les meilleurs scores avant chaque tirage, puis utilisez l'Historique pour suivre leurs performances dans le temps."
+          description="Voici vos grilles coup de cœur ! Chaque fois que vous cliquez sur le ❤️ d'une grille depuis la page Grilles, elle atterrit ici. C'est votre sélection personnelle — comme une « wishlist » de grilles à surveiller ou à jouer."
+          tip="Astuce : mettez en favori vos meilleures grilles avant chaque tirage, puis allez sur la page Historique pour voir combien de numéros correspondaient. C'est la meilleure façon de suivre vos progrès !"
           terms={[
             {
-              term: "Score",
+              term: "Score (0 à 10)",
               definition:
-                "Note de 0 à 10 résumant la qualité statistique de la grille selon 6 critères.",
-              strength: "Plus c'est haut, mieux c'est",
+                "La note globale de la grille, calculée à partir de 6 critères statistiques. Par exemple, 7.2/10 signifie que la grille respecte bien les tendances des tirages passés. Plus c'est proche de 10, mieux c'est.",
+              strength: "Permet de comparer rapidement vos grilles favorites entre elles",
             },
             {
-              term: "Critères du score",
+              term: "Détail des critères",
               definition:
-                "Fréquence + Écart + Cooccurrence + Structure + Équilibre - Pénalité de pattern.",
+                "En cliquant sur une grille, vous voyez le détail de chaque critère sous forme de barres : fréquence (les numéros sortent-ils souvent ?), retard (sont-ils « en retard » ?), co-occurrence (apparaissent-ils ensemble ?), etc. C'est comme le bulletin de notes de la grille.",
+            },
+            {
+              term: "Score étoiles",
+              definition:
+                "Pour l'EuroMillions uniquement : un score séparé qui évalue la qualité de vos 2 étoiles, selon les mêmes critères que les numéros principaux.",
             },
           ]}
         />
@@ -49,14 +54,14 @@ export default function FavoritesPage() {
             className="mx-auto mb-3 text-text-secondary opacity-40"
           />
           <p className="text-text-secondary text-sm">
-            Aucune grille en favori.
+            Vous n'avez pas encore de favoris.
           </p>
           <p className="text-text-secondary text-xs mt-1">
-            Ajoutez des grilles depuis la page{" "}
+            Allez sur la page{" "}
             <a href="/grids" className="text-accent-blue hover:underline">
               Grilles
             </a>
-            .
+            , générez des grilles, puis cliquez sur le ❤️ de celles qui vous plaisent. Elles apparaîtront ici.
           </p>
         </div>
       )}

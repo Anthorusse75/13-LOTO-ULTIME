@@ -139,24 +139,29 @@ export default function HistoryPage() {
 
       <PageIntro
         storageKey="history"
-        description="La page Historique vous permet de suivre vos grilles jouées et de les comparer aux tirages réels. C'est votre tableau de bord personnel pour suivre vos performances dans le temps."
-        tip="Marquez vos grilles comme 'jouées' depuis la page Grilles, puis revenez ici après le tirage pour voir combien de numéros correspondaient."
+        description="Bienvenue dans votre journal de bord ! Cette page compare vos grilles (jouées ou favorites) aux vrais tirages de la FDJ. Après chaque tirage, revenez ici pour voir combien de numéros vous aviez trouvés. Par exemple, si vous avez joué la grille [3, 12, 27, 35, 41] et que le tirage était [3, 10, 27, 35, 44], vous aurez 3 numéros sur 5 — un résultat « ✅ Bon »."
+        tip="Marquez vos grilles comme « jouées » depuis la page Grilles (bouton ✓), puis revenez ici après le tirage officiel. Le système compare automatiquement vos grilles aux 100 derniers tirages."
         terms={[
           {
             term: "Grille jouée",
             definition:
-              "Une grille que vous avez marquée comme ayant été jouée à un tirage réel.",
+              "Une grille que vous avez marquée comme ayant été effectivement jouée (achetée en bureau de tabac ou en ligne). Ça permet de la distinguer des grilles que vous « surveillez » sans les jouer.",
           },
           {
             term: "Meilleure correspondance",
             definition:
-              "Nombre maximum de numéros communs entre votre grille et un tirage réel récent.",
+              "Le meilleur résultat obtenu en comparant votre grille à tous les tirages récents. Par exemple, « 3/5 numéros + 1 étoile » signifie que, parmi les 100 derniers tirages, le meilleur était un tirage où 3 de vos numéros et 1 de vos étoiles étaient sortis.",
           },
           {
-            term: "Performance cumulée",
+            term: "Performance cumulée (graphique)",
             definition:
-              "Évolution de votre score moyen au fil du temps. Permet de voir si vos sélections de grilles s'améliorent.",
-            strength: "Identifie les tendances sur le long terme",
+              "Le graphique montre l'évolution de vos résultats au fil du temps. La courbe bleue = le score de qualité de la grille (/100), la courbe verte = le % de numéros correspondants avec le meilleur tirage. Si la courbe verte monte, vos choix s'améliorent !",
+            strength: "Identifie si vos stratégies de sélection progressent au fil du temps",
+          },
+          {
+            term: "Résultat (🏆⭐✅👍❌)",
+            definition:
+              "Un indicateur rapide de votre résultat : 🏆 Jackpot = tous les numéros, ⭐ Excellent = 80%+, ✅ Bon = 60%+, 👍 Moyen = 40%+, ❌ Raté = moins de 40%. Par exemple au Loto (5 numéros) : 4/5 = ⭐ Excellent, 3/5 = ✅ Bon, 2/5 = 👍 Moyen.",
           },
         ]}
       />
@@ -200,8 +205,8 @@ export default function HistoryPage() {
         <div className="bg-surface rounded-lg border border-border p-8 text-center">
           <p className="text-text-secondary text-sm">
             {tab === "played"
-              ? "Aucune grille jouée. Marquez vos grilles comme jouées depuis la page Grilles."
-              : "Aucun favori. Ajoutez des grilles aux favoris depuis la page Grilles."}
+              ? "Vous n'avez encore marqué aucune grille comme jouée. Allez sur la page Grilles, choisissez une grille, puis cliquez sur le bouton ✓ pour la marquer comme « jouée ». Elle apparaîtra ici avec ses résultats."
+              : "Aucun favori pour l'instant. Depuis la page Grilles, cliquez sur l'étoile ⭐ pour ajouter une grille à vos favoris. Vous pourrez la suivre ici sans forcément la jouer."}
           </p>
         </div>
       )}
@@ -258,8 +263,10 @@ export default function HistoryPage() {
             </LineChart>
           </ResponsiveContainer>
           <p className="text-xs text-text-secondary mt-2 text-center">
-            Bleu : score (/100) · Vert : meilleure correspondance avec les
-            tirages réels
+            📘 Courbe bleue : score de qualité de la grille (/100) · 📗 Courbe verte : % de numéros trouvés dans le meilleur tirage
+          </p>
+          <p className="text-xs text-text-secondary mt-1 text-center italic">
+            Si la courbe verte monte avec le temps, c'est que vos sélections s'améliorent !
           </p>
         </div>
       )}
@@ -340,7 +347,13 @@ export default function HistoryPage() {
                   <p className="text-xs text-text-secondary">
                     {grid.bestMatch}/{grid.numbersDrawn} numéros correspondants
                     {grid.bestStarMatch > 0 &&
-                      ` + ${grid.bestStarMatch} étoiles`}
+                      ` + ${grid.bestStarMatch} étoile${grid.bestStarMatch > 1 ? "s" : ""}`}
+                    {" — "}
+                    {grid.bestMatch === 0
+                      ? "aucun numéro en commun avec ce tirage"
+                      : grid.bestMatch === grid.numbersDrawn
+                        ? "tous vos numéros étaient dans ce tirage !"
+                        : `${grid.bestMatch} de vos numéros étaient dans ce tirage`}
                   </p>
                 </div>
               )}

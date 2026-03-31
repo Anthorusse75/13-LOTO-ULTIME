@@ -155,47 +155,52 @@ export default function StatisticsPage() {
 
       <PageIntro
         storageKey="statistics"
-        description="La page Statistiques analyse l'historique complet des tirages selon 7 angles différents. Ces analyses identifient des patterns dans les données pour guider la génération de grilles."
-        tip="Les onglets Fréquences et Écarts sont les plus utiles pour un débutant. Les onglets Bayésien et Graphe offrent des analyses plus avancées."
+        description="La page Statistiques analyse l'historique complet des tirages selon 7 angles différents. Chaque onglet apporte un éclairage différent pour comprendre le comportement des numéros. Ces analyses alimentent ensuite le score de vos grilles — c'est le cerveau du système."
+        tip="Si vous débutez, commencez par l'onglet Fréquences (quels numéros sortent le plus ?) puis Écarts (lesquels sont en retard ?). Les onglets Bayésien et Graphe utilisent des mathématiques plus avancées mais leurs résultats sont résumés simplement. Le sélecteur « Période » en haut à droite permet de ne regarder que les 50 ou 100 derniers tirages — utile pour repérer les tendances récentes."
         terms={[
           {
             term: "Fréquence",
             definition:
-              "Nombre de fois qu'un numéro est apparu dans l'historique.",
-            strength: "Facile à interpréter",
-            limit: "Un numéro fréquent ne l'est pas forcément dans le futur",
+              "Combien de fois un numéro est sorti dans l'historique. Exemple : si le 7 est sorti 85 fois sur 1000 tirages, sa fréquence est de 8.5%. La moyenne théorique pour le Loto (5 numéros parmi 49) est d'environ 10.2% par numéro.",
+            strength: "Facile à comprendre — un bon point de départ",
+            limit: "Un numéro « chaud » peut refroidir du jour au lendemain — chaque tirage est indépendant",
           },
           {
             term: "Écart (retard)",
             definition:
-              "Nombre de tirages écoulés depuis la dernière apparition d'un numéro.",
-            strength: "Identifie les numéros 'en retard'",
+              "Le nombre de tirages qui se sont passés depuis la dernière fois qu'un numéro est sorti. Exemple : si le 23 n'est sorti à aucun des 40 derniers tirages, son écart est de 40. Si en moyenne il sort tous les 10 tirages, il est « en retard ».",
+            strength: "Permet de repérer les numéros qui sont absents depuis longtemps",
             limit:
-              "Chaque tirage est indépendant : le retard ne crée pas d'obligation",
+              "Attention au « biais du joueur » : le retard ne crée aucune obligation de sortie — la loterie n'a pas de mémoire",
           },
           {
             term: "Cooccurrence",
             definition:
-              "Paires de numéros qui apparaissent souvent dans le même tirage.",
-            strength: "Utile pour construire des combinaisons cohérentes",
+              "Les paires de numéros qui sortent souvent ensemble dans le même tirage. Exemple : si le 7 et le 12 sont sortis ensemble 15 fois alors que la moyenne est de 5, c'est une paire forte. Utile pour construire des grilles avec des associations « historiquement gagnantes ».",
+            strength: "Aide à construire des grilles cohérentes (numéros qui « vont ensemble »)",
           },
           {
             term: "Tendance temporelle",
             definition:
-              "Analyse de l'évolution des fréquences sur des fenêtres de temps récentes.",
-            strength: "Détecte les numéros en montée ou en descente",
-            limit: "Significatif seulement si R² > 0.5",
+              "Analyse comment la fréquence d'un numéro évolue dans le temps récent. Un numéro peut être peu fréquent globalement mais en forte hausse sur les 50 derniers tirages — c'est la tendance qui le détecte.",
+            strength: "Détecte les numéros « en montée » ou « en descente »",
+            limit: "Fiable surtout quand la tendance est nette (indicateur R² > 0.5)",
+          },
+          {
+            term: "Distribution",
+            definition:
+              "Vérifie si les tirages passés sont répartis uniformément ou s'il y a des déséquilibres. Par exemple, est-ce que les numéros 1-10 sortent autant que les 40-49 ? L'entropie de Shannon mesure cette uniformité.",
           },
           {
             term: "Bayésien",
             definition:
-              "Éstimation probabiliste enrichie par les données historiques. Retourne la probabilité que chaque numéro sorte.",
-            strength: "Plus robuste que la simple fréquence",
+              "Estimation « intelligente » de la probabilité de chaque numéro, qui combine la théorie (chaque numéro a la même chance) avec les données réelles. Plus robuste que la simple fréquence car elle ne « sur-réagit » pas aux anomalies récentes.",
+            strength: "Plus fiable que la fréquence brute, surtout avec peu de données",
           },
           {
             term: "Graphe",
             definition:
-              "Représentation réseau des co-occurrences. Les numéros centraux sont ceux qui 'jouent bien ensemble' avec beaucoup d'autres.",
+              "Réseau visuel où chaque numéro est un point, et les liens représentent les co-occurrences. Les numéros au centre du réseau (forte centralité) sont ceux qui « jouent bien » avec le plus d'autres numéros.",
           },
         ]}
       />

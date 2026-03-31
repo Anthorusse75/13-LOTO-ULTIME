@@ -1,3 +1,4 @@
+import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
@@ -53,45 +54,45 @@ export default function GridsPage() {
 
       <PageIntro
         storageKey="grids"
-        description="La page Grilles vous permet de générer des combinaisons de numéros optimisées par nos algorithmes, et de consulter le détail du score de chaque grille."
-        tip="Essayez différentes stratégies (Génétique, Bayésien, Recuit simulé) et comparez leurs scores moyens dans l'onglet Simulation > Comparaison."
+        description="C'est ici que la magie opère ! Cette page vous permet de générer des grilles optimisées grâce à nos algorithmes, inspirés de la recherche en mathématiques et en intelligence artificielle. Chaque grille reçoit un score de 0 à 10 basé sur l'analyse de milliers de tirages passés. Par exemple, une grille avec un score de 7.5/10 signifie qu'elle respecte bien les tendances historiques (numéros fréquents, bonne répartition, etc.)."
+        tip="Commencez avec la méthode « Auto » qui choisit le meilleur algorithme pour vous. Essayez ensuite différentes méthodes et comparez les scores. Cliquez sur une grille pour voir le détail de chaque critère."
         terms={[
           {
-            term: "Score total",
+            term: "Score total (0 à 10)",
             definition:
-              "Note globale de 0 à 10 synthétisant tous les critères : fréquence, retard, co-occurrence, structure, équilibre, pénalité.",
-            strength: "Une seule valeur pour comparer rapidement",
-            limit: "Dépend de l'historique disponible",
+              "La note globale de la grille. C'est une moyenne pondérée de 6 critères (fréquence, retard, co-occurrence, structure, équilibre, pénalité). Par exemple, une grille à 8/10 a de bons scores sur la majorité des critères. C'est comme une note à un examen avec plusieurs matières.",
+            strength: "Permet de comparer rapidement les grilles entre elles",
+            limit: "Dépend de la quantité de tirages historiques disponibles — plus il y a de tirages, plus le score est fiable",
           },
           {
-            term: "Algorithme génétique",
+            term: "Méthode : Algorithme génétique",
             definition:
-              "S'inspire de l'évolution biologique : croisements successifs de grilles pour faire émerger les meilleures combinaisons.",
-            strength: "Explore un vaste espace de solutions",
-            limit: "Calcul plus long",
+              "Imagine 100 grilles tirées au hasard. L'algorithme prend les meilleures, les « croise » entre elles (comme des parents), ajoute de petites mutations, et recommence sur plusieurs générations. Au bout de 50 générations, les grilles survivantes sont les plus optimisées.",
+            strength: "Explore un très grand nombre de combinaisons",
+            limit: "Calcul un peu plus long (quelques secondes)",
           },
           {
-            term: "Recuit simulé",
+            term: "Méthode : Recuit simulé",
             definition:
-              "Optimisation par refroidissement progressif : accepte de mauvaises solutions au début pour éviter les optima locaux.",
-            strength: "Bon équilibre vitesse/qualité",
+              "Comme le refroidissement du métal en forge : au début, l'algorithme accepte des modifications même si elles sont mauvaises (pour explorer). Puis il devient de plus en plus strict, ne gardant que les améliorations. Résultat : il ne reste « piégé » dans aucune solution médiocre.",
+            strength: "Bon équilibre entre rapidité et qualité du résultat",
           },
           {
-            term: "Bayésien",
+            term: "Méthode : Bayésien",
             definition:
-              "Utilise les probabilités a posteriori pour guider la génération. Met à jour ses estimations au fil des tirages.",
-            strength: "S'adapte aux tendances récentes",
+              "Cet algorithme « apprend » des tirages récents. Si le numéro 7 sort souvent ces derniers mois, il lui donne plus de chances d'être sélectionné. C'est comme un joueur qui surveille les tendances avant de remplir sa grille.",
+            strength: "S'adapte rapidement aux tendances récentes du jeu",
           },
           {
-            term: "Profil d'optimisation",
+            term: "Profil de scoring",
             definition:
-              "Équilibré = pondération égale des critères. Audacieux = favorise les numéros rares. Prudent = favorise les numéros fréquents.",
+              "Vous permet de choisir votre style : « Équilibré » = tous les critères comptent pareil. « Audacieux » = favorise les numéros rares (plus risqué, mais gains potentiellement plus élevés). « Prudent » = favorise les numéros fréquents (plus « sûr » statistiquement).",
           },
           {
             term: "Pénalité de pattern",
             definition:
-              "Malus appliqué si la grille présente des patterns suspects (tous pairs, séquence arithmétique, etc.).",
-            limit: "Ne garantit pas la diversité",
+              "Un malus appliqué aux grilles qui semblent « trop régulières ». Par exemple, la grille [2, 4, 6, 8, 10] (tous les pairs qui se suivent) est très improbable en pratique. La pénalité réduit le score de ces grilles suspectes.",
+            limit: "Ne garantit pas la diversité entre les grilles générées",
           },
         ]}
       />
@@ -103,6 +104,7 @@ export default function GridsPage() {
           <div>
             <label className="text-xs text-text-secondary block mb-1">
               Nombre de grilles
+              <InfoTooltip text="Combien de grilles voulez-vous générer ? Entre 5 et 10 pour commencer, c'est un bon compromis qualité/budget." />
             </label>
             <input
               type="number"
@@ -116,6 +118,7 @@ export default function GridsPage() {
           <div>
             <label className="text-xs text-text-secondary block mb-1">
               Méthode d'optimisation
+              <InfoTooltip text="L'algorithme utilisé pour trouver les meilleures combinaisons. « Auto » choisit la méthode la plus adaptée pour vous." />
             </label>
             <select
               value={method}
@@ -128,10 +131,16 @@ export default function GridsPage() {
                 </option>
               ))}
             </select>
+            {OPTIMIZATION_METHODS.find((m) => m.value === method)?.description && (
+              <p className="text-xs text-text-secondary mt-1 italic">
+                {OPTIMIZATION_METHODS.find((m) => m.value === method)?.description}
+              </p>
+            )}
           </div>
           <div>
             <label className="text-xs text-text-secondary block mb-1">
               Profil de scoring
+              <InfoTooltip text="Votre style de jeu : prudent (numéros fréquents), audacieux (numéros rares), ou équilibré (un peu des deux)." />
             </label>
             <div className="flex gap-2 flex-wrap">
               {SCORING_PROFILES.map((p) => (
@@ -149,6 +158,11 @@ export default function GridsPage() {
                 </button>
               ))}
             </div>
+            {SCORING_PROFILES.find((p) => p.value === profile)?.description && (
+              <p className="text-xs text-text-secondary mt-1 italic">
+                {SCORING_PROFILES.find((p) => p.value === profile)?.description}
+              </p>
+            )}
           </div>
         </div>
 
@@ -226,6 +240,7 @@ export default function GridsPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold">
               Détail — Score: {formatScore(selectedGrid.total_score)}/10
+              <InfoTooltip text="Le score détaillé ci-dessous montre la contribution de chaque critère. Chaque barre représente une « matière » de la note globale." />
             </h2>
             <button
               onClick={() =>
@@ -241,6 +256,15 @@ export default function GridsPage() {
               Exporter PDF
             </button>
           </div>
+          <p className="text-xs text-text-secondary mb-3">
+            {selectedGrid.total_score >= 8
+              ? "🏆 Excellente grille ! Elle coche presque tous les critères."
+              : selectedGrid.total_score >= 6
+                ? "✅ Bonne grille avec un profil équilibré."
+                : selectedGrid.total_score >= 4
+                  ? "👍 Grille correcte, mais certains critères pourraient être améliorés."
+                  : "⚠️ Grille faible — essayez une autre méthode ou un autre profil."}
+          </p>
           <div className="mb-4">
             <DrawBalls
               numbers={selectedGrid.numbers}
@@ -248,6 +272,9 @@ export default function GridsPage() {
               size="lg"
             />
           </div>
+          <p className="text-xs text-text-secondary mb-2">
+            Chaque barre ci-dessous représente un critère. Passez la souris sur le « ? » pour comprendre ce que chaque critère mesure :
+          </p>
           <div className="space-y-2">
             {SCORE_CRITERIA.map((c) => (
               <ScoreBar
@@ -268,6 +295,7 @@ export default function GridsPage() {
               <span className="font-mono text-accent-purple">
                 {(selectedGrid.star_score * 10).toFixed(2)}
               </span>
+              <InfoTooltip text="Score spécifique aux étoiles (EuroMillions). Évalue si vos étoiles sont bien choisies selon les mêmes critères que les numéros principaux." />
             </p>
           )}
         </div>
@@ -275,8 +303,11 @@ export default function GridsPage() {
 
       {/* Top grids from DB */}
       <div className="bg-surface rounded-lg border border-border p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold">Top 10 — Meilleures grilles</h2>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-sm font-semibold">
+            Top 10 — Meilleures grilles
+            <InfoTooltip text="Ces grilles sont calculées automatiquement chaque nuit. Ce sont les 10 meilleures combinaisons trouvées par nos algorithmes, classées par score décroissant." />
+          </h2>
           <select
             value={topMethodFilter}
             onChange={(e) => setTopMethodFilter(e.target.value)}
@@ -290,6 +321,9 @@ export default function GridsPage() {
             ))}
           </select>
         </div>
+        <p className="text-xs text-text-secondary mb-3">
+          Cliquez sur le cœur ❤️ pour ajouter une grille à vos favoris et la retrouver facilement dans l'onglet Historique.
+        </p>
         {topLoading ? (
           <LoadingSpinner />
         ) : topGrids && topGrids.length > 0 ? (
