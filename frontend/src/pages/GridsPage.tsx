@@ -3,8 +3,8 @@ import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
-import GridAiAnalysis from "@/components/grids/GridAiAnalysis";
 import CustomWeightsEditor from "@/components/grids/CustomWeightsEditor";
+import GridAiAnalysis from "@/components/grids/GridAiAnalysis";
 import ScoreBar from "@/components/grids/ScoreBar";
 import SaveButton from "@/components/history/SaveButton";
 import {
@@ -23,9 +23,9 @@ import {
 } from "@/utils/constants";
 import { formatScore } from "@/utils/formatters";
 import { exportGridPDF, exportReportPDF } from "@/utils/pdfExport";
+import { useQuery } from "@tanstack/react-query";
 import { Download, FileText, Heart, Loader2, Save } from "lucide-react";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 
 export default function GridsPage() {
   const [count, setCount] = useState(10);
@@ -241,7 +241,8 @@ export default function GridsPage() {
         <div className="bg-surface rounded-lg border border-border p-4">
           <h2 className="text-sm font-semibold mb-1">Grilles générées</h2>
           <p className="text-xs text-text-secondary mb-4">
-            👆 Cliquez sur une grille pour voir le détail des scores et l'analyse IA experte.
+            👆 Cliquez sur une grille pour voir le détail des scores et
+            l'analyse IA experte.
           </p>
           <div className="space-y-2">
             {grids.map((g, i) => (
@@ -352,7 +353,9 @@ export default function GridsPage() {
               <span className="font-mono text-accent-purple">
                 {(selectedGrid.star_score * 10).toFixed(2)}
               </span>
-              <InfoTooltip text={`Score spécifique ${starLabel === "étoile" ? "aux étoiles" : `au ${starLabel}`}. Évalue si ${starLabel === "étoile" ? "vos étoiles sont bien choisies" : `votre ${starLabel} est bien choisi`} selon les mêmes critères que les numéros principaux.`} />
+              <InfoTooltip
+                text={`Score spécifique ${starLabel === "étoile" ? "aux étoiles" : `au ${starLabel}`}. Évalue si ${starLabel === "étoile" ? "vos étoiles sont bien choisies" : `votre ${starLabel} est bien choisi`} selon les mêmes critères que les numéros principaux.`}
+              />
             </p>
           )}
 

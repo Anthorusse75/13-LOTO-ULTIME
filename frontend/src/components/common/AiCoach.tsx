@@ -1,11 +1,5 @@
 import { useSettingsStore } from "@/stores/settingsStore";
-import {
-  Bot,
-  ChevronDown,
-  ChevronUp,
-  Lightbulb,
-  X,
-} from "lucide-react";
+import { Bot, ChevronDown, ChevronUp, Lightbulb, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -220,7 +214,10 @@ export default function AiCoach() {
           aria-expanded={open}
           aria-controls="ai-coach-body"
         >
-          <Bot className="w-4 h-4 text-accent-blue shrink-0" aria-hidden="true" />
+          <Bot
+            className="w-4 h-4 text-accent-blue shrink-0"
+            aria-hidden="true"
+          />
           <span className="font-semibold text-sm">Coach — {context.title}</span>
           {open ? (
             <ChevronDown

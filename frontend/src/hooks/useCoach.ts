@@ -1,4 +1,8 @@
-import { getAnalysis, getCoachAdvice, getGridAnalysis } from "@/services/coachService";
+import {
+  getAnalysis,
+  getCoachAdvice,
+  getGridAnalysis,
+} from "@/services/coachService";
 import { useMutation } from "@tanstack/react-query";
 
 export function useCoachAdvice() {

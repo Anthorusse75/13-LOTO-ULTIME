@@ -243,7 +243,10 @@ export default function StatisticsPage() {
               ?.slice()
               .sort((a, b) => b.relative - a.relative)
               .slice(0, 10)
-              .map((f) => ({ number: f.number, pct: (f.relative * 100).toFixed(1) })),
+              .map((f) => ({
+                number: f.number,
+                pct: (f.relative * 100).toFixed(1),
+              })),
             top_gaps: stats.gaps
               ?.slice()
               .sort((a, b) => b.current_gap - a.current_gap)

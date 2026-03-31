@@ -326,7 +326,11 @@ export default function DashboardPage() {
           buildContext={() => ({
             draw_count: stats.draw_count,
             latest_draw: latest
-              ? { numbers: latest.numbers, stars: latest.stars, date: latest.draw_date }
+              ? {
+                  numbers: latest.numbers,
+                  stars: latest.stars,
+                  date: latest.draw_date,
+                }
               : null,
             top_frequencies: topFreq?.map((f) => ({
               number: f.number,
