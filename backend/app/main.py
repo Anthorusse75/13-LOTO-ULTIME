@@ -190,9 +190,7 @@ async def _maybe_initial_compute() -> None:
                 )
                 logger.info("initial_compute.step_done", job=job_name)
             except Exception as exc:
-                logger.error(
-                    "initial_compute.step_failed", job=job_name, error=str(exc)
-                )
+                logger.error("initial_compute.step_failed", job=job_name, error=str(exc))
                 # Continue to next step even if one fails
 
     asyncio.create_task(_run_compute())
