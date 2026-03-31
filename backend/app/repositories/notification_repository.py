@@ -19,17 +19,10 @@ class NotificationRepository(BaseRepository[UserNotification]):
         offset: int = 0,
         unread_only: bool = False,
     ) -> list[UserNotification]:
-        stmt = (
-            select(UserNotification)
-            .where(UserNotification.user_id == user_id)
-        )
+        stmt = select(UserNotification).where(UserNotification.user_id == user_id)
         if unread_only:
             stmt = stmt.where(UserNotification.is_read == False)  # noqa: E712
-        stmt = (
-            stmt.order_by(UserNotification.created_at.desc())
-            .limit(limit)
-            .offset(offset)
-        )
+        stmt = stmt.order_by(UserNotification.created_at.desc()).limit(limit).offset(offset)
         result = await self._session.execute(stmt)
         return list(result.scalars().all())
 
@@ -86,12 +79,9 @@ class NotificationRepository(BaseRepository[UserNotification]):
 
         from sqlalchemy import delete as sa_delete
 
-        del_stmt = (
-            sa_delete(UserNotification)
-            .where(
-                UserNotification.user_id == user_id,
-                UserNotification.id <= threshold_id,
-            )
+        del_stmt = sa_delete(UserNotification).where(
+            UserNotification.user_id == user_id,
+            UserNotification.id <= threshold_id,
         )
         result = await self._session.execute(del_stmt)
         return result.rowcount

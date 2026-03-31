@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 
 from .auth import router as auth_router
+from .budget import router as budget_router
 from .coach import router as coach_router
+from .comparison import router as comparison_router
 from .database import router as database_router
 from .draws import router as draws_router
 from .games import router as games_router
@@ -9,14 +11,12 @@ from .grids import router as grids_router
 from .health import router as health_router
 from .history import router as history_router
 from .jobs import router as jobs_router
+from .notifications import router as notifications_router
 from .portfolios import router as portfolios_router
 from .simulations import router as simulations_router
 from .statistics import router as statistics_router
-from .wheeling import router as wheeling_router
-from .budget import router as budget_router
-from .comparison import router as comparison_router
 from .suggestions import router as suggestions_router
-from .notifications import router as notifications_router
+from .wheeling import router as wheeling_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
 api_v1_router.include_router(auth_router, prefix="/auth", tags=["Auth"])

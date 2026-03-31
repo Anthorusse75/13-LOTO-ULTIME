@@ -1,14 +1,14 @@
 """Comparison API — compare multiple strategies."""
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Request
-from app.core.rate_limit import limiter
+from fastapi import APIRouter, Depends, Path, Request
 
 from app.core.game_definitions import GameConfig
+from app.core.rate_limit import limiter
 from app.dependencies import (
     get_comparison_service,
+    get_current_user,
     get_game_config,
     require_role,
-    get_current_user,
 )
 from app.models.user import User, UserRole
 from app.schemas.comparison import (

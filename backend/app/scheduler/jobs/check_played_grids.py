@@ -51,8 +51,6 @@ async def _do_check_played_grids() -> dict[str, Any]:
             )
         except Exception as exc:
             results[game_slug] = {"status": "error", "error": str(exc)}
-            logger.error(
-                "check_played_grids.failed", slug=game_slug, error=str(exc)
-            )
+            logger.error("check_played_grids.failed", slug=game_slug, error=str(exc))
 
     return {"games_processed": len(results), "details": results}

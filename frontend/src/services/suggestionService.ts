@@ -6,10 +6,9 @@ export const suggestionService = {
     gameId: number,
     count = 3,
   ): Promise<DailySuggestionResponse> => {
-    const { data } = await api.get(
-      `/games/${gameId}/suggestions/daily`,
-      { params: { count } },
-    );
+    const { data } = await api.get(`/games/${gameId}/suggestions/daily`, {
+      params: { count },
+    });
     return data;
   },
 };

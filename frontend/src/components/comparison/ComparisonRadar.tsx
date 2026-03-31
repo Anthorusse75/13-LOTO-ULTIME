@@ -1,13 +1,13 @@
 import type { StrategyMetrics } from "@/types/comparison";
 import { useMemo } from "react";
 import {
+  Legend,
   PolarAngleAxis,
   PolarGrid,
   PolarRadiusAxis,
   Radar,
   RadarChart,
   ResponsiveContainer,
-  Legend,
   Tooltip,
 } from "recharts";
 
@@ -80,7 +80,10 @@ export default function ComparisonRadar({ strategies }: Props) {
             }}
           />
           <Legend
-            wrapperStyle={{ fontSize: 12, color: "var(--color-text-secondary)" }}
+            wrapperStyle={{
+              fontSize: 12,
+              color: "var(--color-text-secondary)",
+            }}
           />
         </RadarChart>
       </ResponsiveContainer>

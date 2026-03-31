@@ -80,13 +80,17 @@ class ComparisonService:
                     error=str(result),
                 )
                 # Add empty result for failed strategies
-                results.append(StrategyResult(
-                    type=strat.get("type", "unknown"),
-                    label=STRATEGY_LABELS.get(strat.get("type", ""), strat.get("type", "unknown")),
-                    grids=[],
-                    grid_count=0,
-                    cost=0.0,
-                ))
+                results.append(
+                    StrategyResult(
+                        type=strat.get("type", "unknown"),
+                        label=STRATEGY_LABELS.get(
+                            strat.get("type", ""), strat.get("type", "unknown")
+                        ),
+                        grids=[],
+                        grid_count=0,
+                        cost=0.0,
+                    )
+                )
             else:
                 results.append(result)
 
@@ -101,12 +105,16 @@ class ComparisonService:
                     "grid_count": r.grid_count,
                     "grids": r.grids[:10],  # limit to 10 grids in response
                     "avg_score": round(r.avg_score, 4) if r.avg_score is not None else None,
-                    "score_variance": round(r.score_variance, 4) if r.score_variance is not None else None,
+                    "score_variance": round(r.score_variance, 4)
+                    if r.score_variance is not None
+                    else None,
                     "diversity": round(r.diversity, 4) if r.diversity is not None else None,
                     "coverage": round(r.coverage, 4) if r.coverage is not None else None,
                     "cost": round(r.cost, 2),
                     "robustness": round(r.robustness, 4) if r.robustness is not None else None,
-                    "expected_gain": round(r.expected_gain, 2) if r.expected_gain is not None else None,
+                    "expected_gain": round(r.expected_gain, 2)
+                    if r.expected_gain is not None
+                    else None,
                 }
                 for r in results
             ],
@@ -142,15 +150,11 @@ class ComparisonService:
                 game_id, game, count, strategy.get("profile", "equilibre")
             )
         elif stype == "method":
-            return await self._run_method(
-                game_id, game, count, strategy.get("method", "annealing")
-            )
+            return await self._run_method(game_id, game, count, strategy.get("method", "annealing"))
         else:
             raise ValueError(f"Unknown strategy type: {stype}")
 
-    async def _run_top(
-        self, game_id: int, game: GameConfig, count: int
-    ) -> StrategyResult:
+    async def _run_top(self, game_id: int, game: GameConfig, count: int) -> StrategyResult:
         """Top scoring grids."""
         grids, method_used, _ = await self._grid_service.generate_grids(
             game_id=game_id, game=game, count=count
@@ -159,9 +163,7 @@ class ComparisonService:
         scores = [g.total_score for g in grids]
         return self._build_result("top", grid_dicts, scores, game)
 
-    async def _run_portfolio(
-        self, game_id: int, game: GameConfig, count: int
-    ) -> StrategyResult:
+    async def _run_portfolio(self, game_id: int, game: GameConfig, count: int) -> StrategyResult:
         """Diversified portfolio."""
         portfolio, _, _ = await self._grid_service.generate_portfolio(
             game_id=game_id, game=game, grid_count=count
@@ -194,9 +196,7 @@ class ComparisonService:
     ) -> StrategyResult:
         """Wheeling system."""
         if len(numbers) < game.numbers_drawn:
-            raise ValueError(
-                f"Need at least {game.numbers_drawn} numbers for wheeling"
-            )
+            raise ValueError(f"Need at least {game.numbers_drawn} numbers for wheeling")
         engine = WheelingEngine(game)
         result = engine.generate(numbers, stars, guarantee)
         grid_dicts = [{"numbers": g.numbers, "stars": g.stars} for g in result.grids]

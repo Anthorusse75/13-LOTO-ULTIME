@@ -1,6 +1,6 @@
 import { useGameStore } from "@/stores/gameStore";
-import { Clock, Trophy, Minus } from "lucide-react";
 import type { GridDrawResult } from "@/types/automation";
+import { Clock, Minus, Trophy } from "lucide-react";
 
 interface Props {
   results: GridDrawResult[];

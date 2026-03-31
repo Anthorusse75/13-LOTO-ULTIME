@@ -41,15 +41,18 @@ export default function ComparatorPage() {
         terms={[
           {
             term: "Score moyen",
-            definition: "Qualité moyenne des grilles selon les critères statistiques",
+            definition:
+              "Qualité moyenne des grilles selon les critères statistiques",
           },
           {
             term: "Diversité",
-            definition: "Distance moyenne entre les grilles (0 = identiques, 1 = très différentes)",
+            definition:
+              "Distance moyenne entre les grilles (0 = identiques, 1 = très différentes)",
           },
           {
             term: "Couverture",
-            definition: "Pourcentage de combinaisons couvertes par l'ensemble des grilles",
+            definition:
+              "Pourcentage de combinaisons couvertes par l'ensemble des grilles",
           },
         ]}
       />

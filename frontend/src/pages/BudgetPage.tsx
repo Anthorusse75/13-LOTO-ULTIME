@@ -260,16 +260,13 @@ export default function BudgetPage() {
   const [result, setResult] = useState<BudgetOptimizeResponse | null>(null);
   const [showHistory, setShowHistory] = useState(false);
 
-  const toggleNumber = useCallback(
-    (n: number) => {
-      setSelectedNumbers((prev) =>
-        prev.includes(n)
-          ? prev.filter((x) => x !== n)
-          : [...prev, n].slice(0, 20),
-      );
-    },
-    [],
-  );
+  const toggleNumber = useCallback((n: number) => {
+    setSelectedNumbers((prev) =>
+      prev.includes(n)
+        ? prev.filter((x) => x !== n)
+        : [...prev, n].slice(0, 20),
+    );
+  }, []);
 
   const handleOptimize = () => {
     optimizeMutation.mutate(

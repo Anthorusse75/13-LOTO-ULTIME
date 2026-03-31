@@ -49,10 +49,7 @@ def determine_prize_rank(
     Returns (rank, estimated_prize) or (None, 0.0) if no match.
     """
     for tier in sorted(prize_tiers, key=lambda t: t["rank"]):
-        if (
-            match_count >= tier["match_numbers"]
-            and star_match_count >= tier["match_stars"]
-        ):
+        if match_count >= tier["match_numbers"] and star_match_count >= tier["match_stars"]:
             # Find best matching rank (most specific)
             pass
 
@@ -61,10 +58,7 @@ def determine_prize_rank(
     best_prize = 0.0
 
     for tier in sorted(prize_tiers, key=lambda t: t["rank"]):
-        if (
-            match_count == tier["match_numbers"]
-            and star_match_count == tier["match_stars"]
-        ):
+        if match_count == tier["match_numbers"] and star_match_count == tier["match_stars"]:
             best_rank = tier["rank"]
             best_prize = tier["avg_prize"]
             break
@@ -82,24 +76,16 @@ class AutomationService:
     async def check_played_grids(self, game_id: int) -> list[GridDrawResult]:
         """Check all played grids for a game against the latest draw."""
         # Get latest draw
-        stmt = (
-            select(Draw)
-            .where(Draw.game_id == game_id)
-            .order_by(Draw.draw_date.desc())
-            .limit(1)
-        )
+        stmt = select(Draw).where(Draw.game_id == game_id).order_by(Draw.draw_date.desc()).limit(1)
         result = await self._session.execute(stmt)
         latest_draw = result.scalar_one_or_none()
         if latest_draw is None:
             return []
 
         # Get all played grids for this game
-        stmt = (
-            select(ScoredGrid)
-            .where(
-                ScoredGrid.game_id == game_id,
-                ScoredGrid.is_played == True,  # noqa: E712
-            )
+        stmt = select(ScoredGrid).where(
+            ScoredGrid.game_id == game_id,
+            ScoredGrid.is_played == True,  # noqa: E712
         )
         result = await self._session.execute(stmt)
         played_grids = list(result.scalars().all())
@@ -128,11 +114,11 @@ class AutomationService:
             if already_checked:
                 continue
 
-            matched_numbers, matched_stars, match_count, star_match_count = (
-                compare_grid_to_draw(
-                    grid.numbers, grid.stars,
-                    latest_draw.numbers, latest_draw.stars,
-                )
+            matched_numbers, matched_stars, match_count, star_match_count = compare_grid_to_draw(
+                grid.numbers,
+                grid.stars,
+                latest_draw.numbers,
+                latest_draw.stars,
             )
 
             prize_rank, estimated_prize = determine_prize_rank(
@@ -169,13 +155,10 @@ class AutomationService:
     ) -> list[GridDrawResult]:
         """Get recent grid draw results for a user."""
         # Get user's played grid IDs for this game
-        stmt = (
-            select(ScoredGrid.id)
-            .where(
-                ScoredGrid.game_id == game_id,
-                ScoredGrid.user_id == user_id,
-                ScoredGrid.is_played == True,  # noqa: E712
-            )
+        stmt = select(ScoredGrid.id).where(
+            ScoredGrid.game_id == game_id,
+            ScoredGrid.user_id == user_id,
+            ScoredGrid.is_played == True,  # noqa: E712
         )
         result = await self._session.execute(stmt)
         grid_ids = list(result.scalars().all())

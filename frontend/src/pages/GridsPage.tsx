@@ -8,12 +8,12 @@ import CustomWeightsEditor from "@/components/grids/CustomWeightsEditor";
 import GridAiAnalysis from "@/components/grids/GridAiAnalysis";
 import ScoreBar from "@/components/grids/ScoreBar";
 import SaveButton from "@/components/history/SaveButton";
+import { useDisplayMode } from "@/hooks/useDisplayMode";
 import {
   useGenerateGrids,
   useToggleFavorite,
   useTopGrids,
 } from "@/hooks/useGrids";
-import { useDisplayMode } from "@/hooks/useDisplayMode";
 import { useSaveResult } from "@/hooks/useHistory";
 import { gameService } from "@/services/gameService";
 import { useGameStore } from "@/stores/gameStore";
@@ -343,7 +343,9 @@ export default function GridsPage() {
           </p>
           <div className="space-y-2">
             {SCORE_CRITERIA.filter(
-              (c) => isExpert || !["pattern_penalty", "cooccurrence"].includes(c.key),
+              (c) =>
+                isExpert ||
+                !["pattern_penalty", "cooccurrence"].includes(c.key),
             ).map((c) => (
               <ScoreBar
                 key={c.key}

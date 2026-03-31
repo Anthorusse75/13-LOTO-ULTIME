@@ -3,9 +3,9 @@
 from fastapi import APIRouter, Depends, Path, Query
 
 from app.dependencies import (
+    get_current_user,
     get_suggestion_service,
     require_role,
-    get_current_user,
 )
 from app.models.user import User, UserRole
 from app.schemas.suggestion import DailySuggestionResponse

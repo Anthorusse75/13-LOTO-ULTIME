@@ -1,6 +1,6 @@
 import { useUnreadCount } from "@/hooks/useNotifications";
 import { Bell } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import NotificationDropdown from "./NotificationDropdown";
 
 export default function NotificationBell() {
@@ -18,7 +18,8 @@ export default function NotificationBell() {
     }
     if (open) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [open]);
 

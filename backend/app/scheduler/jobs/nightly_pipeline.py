@@ -21,16 +21,16 @@ async def nightly_pipeline_job(triggered_by: str = "scheduler") -> None:
 
 async def _do_nightly_pipeline() -> dict[str, Any]:
     """Core logic — chain fetch → stats → scoring → top grids → portfolio."""
+    from app.scheduler.jobs.check_played_grids import _do_check_played_grids
+    from app.scheduler.jobs.cleanup_notifications import _do_cleanup_notifications
+    from app.scheduler.jobs.compute_hot_cold import _do_compute_hot_cold
     from app.scheduler.jobs.compute_scoring import _do_compute_scoring
     from app.scheduler.jobs.compute_statistics import _do_compute_stats
     from app.scheduler.jobs.compute_top_grids import _do_compute_top_grids
-    from app.scheduler.jobs.compute_hot_cold import _do_compute_hot_cold
+    from app.scheduler.jobs.create_notifications import _do_create_grid_result_notifications
     from app.scheduler.jobs.fetch_draws import _do_fetch
     from app.scheduler.jobs.optimize_portfolio import _do_optimize_portfolio
     from app.scheduler.jobs.pre_generate_daily_content import _do_pre_generate
-    from app.scheduler.jobs.check_played_grids import _do_check_played_grids
-    from app.scheduler.jobs.create_notifications import _do_create_grid_result_notifications
-    from app.scheduler.jobs.cleanup_notifications import _do_cleanup_notifications
 
     results: dict[str, Any] = {}
     steps: list[tuple[str, Callable[..., Coroutine[Any, Any, dict[str, Any]]]]] = [

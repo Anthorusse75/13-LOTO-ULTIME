@@ -2,6 +2,7 @@ import type { StrategyMetrics } from "@/types/comparison";
 import { useMemo } from "react";
 import {
   CartesianGrid,
+  Cell,
   ResponsiveContainer,
   Scatter,
   ScatterChart,
@@ -9,7 +10,6 @@ import {
   XAxis,
   YAxis,
   ZAxis,
-  Cell,
 } from "recharts";
 
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
@@ -40,7 +40,10 @@ export default function ComparisonScatter({ strategies }: Props) {
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-primary)" />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="var(--color-border-primary)"
+          />
           <XAxis
             dataKey="cost"
             name="Coût (€)"
@@ -90,17 +93,17 @@ export default function ComparisonScatter({ strategies }: Props) {
           />
           <Scatter data={data}>
             {data.map((entry) => (
-              <Cell
-                key={entry.name}
-                fill={COLORS[entry.idx % COLORS.length]}
-              />
+              <Cell key={entry.name} fill={COLORS[entry.idx % COLORS.length]} />
             ))}
           </Scatter>
         </ScatterChart>
       </ResponsiveContainer>
       <div className="flex flex-wrap gap-3 mt-2 justify-center">
         {data.map((entry) => (
-          <div key={entry.name} className="flex items-center gap-1.5 text-xs text-text-secondary">
+          <div
+            key={entry.name}
+            className="flex items-center gap-1.5 text-xs text-text-secondary"
+          >
             <div
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: COLORS[entry.idx % COLORS.length] }}

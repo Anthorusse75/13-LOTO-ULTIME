@@ -127,16 +127,10 @@ export default function ComparisonTable({ strategies }: Props) {
                             {formatValue(key, val)}
                           </span>
                           {isBest && (
-                            <ArrowUp
-                              size={12}
-                              className="text-emerald-400"
-                            />
+                            <ArrowUp size={12} className="text-emerald-400" />
                           )}
                           {isWorst && (
-                            <ArrowDown
-                              size={12}
-                              className="text-red-400/70"
-                            />
+                            <ArrowDown size={12} className="text-red-400/70" />
                           )}
                           {!isBest && !isWorst && val != null && (
                             <Minus

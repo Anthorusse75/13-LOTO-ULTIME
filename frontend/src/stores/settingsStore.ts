@@ -32,7 +32,9 @@ export const useSettingsStore = create<SettingsState>()(
       toggleCoach: () => set({ coachEnabled: !get().coachEnabled }),
       setOnboardingDone: (done) => set({ onboardingDone: done }),
       toggleDisplayMode: () =>
-        set({ displayMode: get().displayMode === "simple" ? "expert" : "simple" }),
+        set({
+          displayMode: get().displayMode === "simple" ? "expert" : "simple",
+        }),
     }),
     {
       name: "settings-storage",

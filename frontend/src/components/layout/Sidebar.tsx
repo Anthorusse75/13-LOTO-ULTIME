@@ -1,3 +1,4 @@
+import NotificationBell from "@/components/notifications/NotificationBell";
 import { useAuthStore } from "@/stores/authStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import {
@@ -19,7 +20,6 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import NotificationBell from "@/components/notifications/NotificationBell";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },

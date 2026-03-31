@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { Timer } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface Props {
   nextDrawDate: string | null;

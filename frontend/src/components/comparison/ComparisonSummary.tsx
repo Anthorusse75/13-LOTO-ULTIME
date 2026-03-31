@@ -19,16 +19,32 @@ export default function ComparisonSummary({ summary }: Props) {
           </p>
           <div className="flex flex-wrap gap-3 mt-2">
             {summary.best_score && (
-              <Badge label="Meilleur score" value={summary.best_score} color="blue" />
+              <Badge
+                label="Meilleur score"
+                value={summary.best_score}
+                color="blue"
+              />
             )}
             {summary.best_diversity && (
-              <Badge label="Meilleure diversité" value={summary.best_diversity} color="green" />
+              <Badge
+                label="Meilleure diversité"
+                value={summary.best_diversity}
+                color="green"
+              />
             )}
             {summary.best_coverage && (
-              <Badge label="Meilleure couverture" value={summary.best_coverage} color="amber" />
+              <Badge
+                label="Meilleure couverture"
+                value={summary.best_coverage}
+                color="amber"
+              />
             )}
             {summary.best_cost && (
-              <Badge label="Plus économique" value={summary.best_cost} color="purple" />
+              <Badge
+                label="Plus économique"
+                value={summary.best_cost}
+                color="purple"
+              />
             )}
           </div>
         </div>

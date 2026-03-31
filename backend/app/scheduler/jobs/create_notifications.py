@@ -30,7 +30,6 @@ async def create_grid_result_notifications_job(
 async def _do_create_grid_result_notifications() -> dict[str, Any]:
     """Core logic — create notifications for recent grid results."""
     from sqlalchemy import select
-    from sqlalchemy.orm import joinedload
 
     notified = 0
     errors = 0

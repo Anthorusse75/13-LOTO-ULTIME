@@ -1,6 +1,6 @@
 import { useSuggestions } from "@/hooks/useSuggestions";
 import { useGameStore } from "@/stores/gameStore";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 
 export default function DailySuggestionCard() {
   const gameSlug = useGameStore((s) => s.currentGameSlug);
@@ -12,7 +12,9 @@ export default function DailySuggestionCard() {
     return (
       <div className="rounded-xl border border-surface-border bg-surface-card p-6 flex items-center justify-center gap-2">
         <Loader2 size={18} className="animate-spin text-accent-blue" />
-        <span className="text-sm text-text-secondary">Chargement des suggestions…</span>
+        <span className="text-sm text-text-secondary">
+          Chargement des suggestions…
+        </span>
       </div>
     );
   }
@@ -39,7 +41,9 @@ export default function DailySuggestionCard() {
             key={i}
             className="flex items-center gap-3 p-3 rounded-lg bg-surface-overlay/50"
           >
-            <span className="text-xs font-bold text-text-tertiary w-6">#{i + 1}</span>
+            <span className="text-xs font-bold text-text-tertiary w-6">
+              #{i + 1}
+            </span>
             <div className="flex flex-wrap gap-1.5">
               {grid.numbers.map((n) => (
                 <span

@@ -1,7 +1,14 @@
 /** Comparison types for strategy comparison. */
 
 export interface StrategyConfig {
-  type: "top" | "portfolio" | "random" | "wheeling" | "budget" | "profile" | "method";
+  type:
+    | "top"
+    | "portfolio"
+    | "random"
+    | "wheeling"
+    | "budget"
+    | "profile"
+    | "method";
   count?: number;
   numbers?: number[];
   stars?: number[];

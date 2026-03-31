@@ -10,9 +10,7 @@ from .base import Base
 
 class UserNotification(Base):
     __tablename__ = "user_notifications"
-    __table_args__ = (
-        Index("ix_notifications_user_read", "user_id", "is_read"),
-    )
+    __table_args__ = (Index("ix_notifications_user_read", "user_id", "is_read"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(
@@ -25,9 +23,7 @@ class UserNotification(Base):
     message: Mapped[str] = mapped_column(String(1000), nullable=False)
     data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     is_read: Mapped[bool] = mapped_column(Boolean, default=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self) -> str:
         return f"<UserNotification(user={self.user_id}, type={self.type}, read={self.is_read})>"

@@ -19,18 +19,14 @@ class GridDrawResult(Base):
     scored_grid_id: Mapped[int] = mapped_column(
         ForeignKey("scored_grids.id", ondelete="CASCADE"), nullable=False
     )
-    draw_id: Mapped[int] = mapped_column(
-        ForeignKey("draws.id", ondelete="CASCADE"), nullable=False
-    )
+    draw_id: Mapped[int] = mapped_column(ForeignKey("draws.id", ondelete="CASCADE"), nullable=False)
     matched_numbers: Mapped[list[int]] = mapped_column(JSON, default=list)
     matched_stars: Mapped[list[int] | None] = mapped_column(JSON, nullable=True)
     match_count: Mapped[int] = mapped_column(Integer, default=0)
     star_match_count: Mapped[int] = mapped_column(Integer, default=0)
     prize_rank: Mapped[int | None] = mapped_column(Integer, nullable=True)
     estimated_prize: Mapped[float] = mapped_column(Float, default=0.0)
-    checked_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    checked_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self) -> str:
         return (
