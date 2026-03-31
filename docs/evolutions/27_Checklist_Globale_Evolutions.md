@@ -32,10 +32,10 @@
 | B-06    | Fix BUG-03 : vérifier endpoint grids/generate accepte profile  | 03, 16 | ✅ (déjà OK)  |
 | B-06b   | Fix : propager profile+weights dans portfolio generate         | 03, 16 | ✅            |
 | F-01    | Fix BUG-03 : envoyer profile depuis GridsPage au API           | 03, 17 | ✅ (déjà OK)  |
-| TEST-01 | Capturer snapshots SNAP-01 à SNAP-04 (avant fix)               | 24     | ⬜            |
-| TEST-02 | Vérifier snapshots après fix BUG-01                            | 24     | ⬜            |
-| TEST-03 | Vérifier snapshots après fix BUG-02                            | 24     | ⬜            |
-| TEST-04 | S'assurer 337 tests existants passent                          | 24     | ✅ (456 pass) |
+| TEST-01 | Capturer snapshots SNAP-01 à SNAP-04 (avant fix)               | 24     | ✅ (13 tests) |
+| TEST-02 | Vérifier snapshots après fix BUG-01                            | 24     | ✅ (déjà OK)  |
+| TEST-03 | Vérifier snapshots après fix BUG-02                            | 24     | ✅            |
+| TEST-04 | S'assurer 337 tests existants passent                          | 24     | ✅ (469 pass) |
 
 ---
 
@@ -315,12 +315,12 @@
 
 ## Compteurs de progression
 
-| Phase     | Tâches     | Faites | %      |
-| --------- | ---------- | ------ | ------ |
-| P0        | 12         | 8      | 67%    |
-| A         | 17         | 0      | 0%     |
-| B         | 40         | 0      | 0%     |
-| C         | 39         | 0      | 0%     |
-| D         | 34         | 0      | 0%     |
-| E         | 26 + 7 obs | 0      | 0%     |
-| **Total** | **~175**   | **8**  | **5%** |
+| Phase     | Tâches     | Faites | %       |
+| --------- | ---------- | ------ | ------- |
+| P0        | 12         | 12     | **100%** |
+| A         | 17         | 0      | 0%      |
+| B         | 40         | 0      | 0%      |
+| C         | 39         | 0      | 0%      |
+| D         | 34         | 0      | 0%      |
+| E         | 26 + 7 obs | 0      | 0%      |
+| **Total** | **~175**   | **12** | **7%**  |
