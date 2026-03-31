@@ -24,17 +24,17 @@ Faire vivre le produit au-delà de la session utilisateur : alertes post-tirage,
 
 ### Scheduler existant (9 jobs)
 
-| Job | Fréquence | Détail |
-|-----|-----------|--------|
-| `fetch_draws` | Quotidien 23:00 | Scraping résultats FDJ |
-| `compute_statistics` | Après fetch | StatisticsSnapshot |
-| `compute_scoring` | Après stats | Scoring toutes grilles |
-| `compute_top_grids` | Après scoring | Top N persistées |
-| `optimize_portfolio` | Après top | Portfolio optimisé |
-| `health_check` | 5 min | Santé système |
-| `backup_db` | Quotidien 02:00 | Backup PostgreSQL |
-| `cleanup` | Quotidien 03:00 | Purge données anciennes |
-| `nightly_pipeline` | Quotidien orchestrateur | Chaîne fetch → portfolio |
+| Job                  | Fréquence               | Détail                   |
+| -------------------- | ----------------------- | ------------------------ |
+| `fetch_draws`        | Quotidien 23:00         | Scraping résultats FDJ   |
+| `compute_statistics` | Après fetch             | StatisticsSnapshot       |
+| `compute_scoring`    | Après stats             | Scoring toutes grilles   |
+| `compute_top_grids`  | Après scoring           | Top N persistées         |
+| `optimize_portfolio` | Après top               | Portfolio optimisé       |
+| `health_check`       | 5 min                   | Santé système            |
+| `backup_db`          | Quotidien 02:00         | Backup PostgreSQL        |
+| `cleanup`            | Quotidien 03:00         | Purge données anciennes  |
+| `nightly_pipeline`   | Quotidien orchestrateur | Chaîne fetch → portfolio |
 
 ### Manques identifiés
 
@@ -51,15 +51,15 @@ Faire vivre le produit au-delà de la session utilisateur : alertes post-tirage,
 
 **Contenu du Dashboard enrichi** :
 
-| Bloc | Source | Calcul |
-|------|--------|--------|
-| Dernier tirage | Draw la plus récente | Affichage direct |
-| Prochaine date de tirage | GameDefinition.draw_schedule | Calcul jour suivant |
-| Résultat grilles jouées | ScoredGrid (is_played=true) × Draw récent | Comparaison numéros |
-| Top 3 grilles du jour | ScoredGrid triées par score | Top 3 |
-| Score moyen du portefeuille | Portfolio.expected_score | Direct |
-| Statistique du jour | StatisticsSnapshot dernier | Numéro le plus chaud / le plus en retard |
-| Suggestion du jour | Calcul algorithmique | Grille suggérée avec explication |
+| Bloc                        | Source                                    | Calcul                                   |
+| --------------------------- | ----------------------------------------- | ---------------------------------------- |
+| Dernier tirage              | Draw la plus récente                      | Affichage direct                         |
+| Prochaine date de tirage    | GameDefinition.draw_schedule              | Calcul jour suivant                      |
+| Résultat grilles jouées     | ScoredGrid (is_played=true) × Draw récent | Comparaison numéros                      |
+| Top 3 grilles du jour       | ScoredGrid triées par score               | Top 3                                    |
+| Score moyen du portefeuille | Portfolio.expected_score                  | Direct                                   |
+| Statistique du jour         | StatisticsSnapshot dernier                | Numéro le plus chaud / le plus en retard |
+| Suggestion du jour          | Calcul algorithmique                      | Grille suggérée avec explication         |
 
 **Composants** :
 
@@ -105,12 +105,12 @@ class GridDrawResult(Base):
 
 **Principe** : à chaque nuit, le pipeline calcule et persiste des résultats prêts à consulter.
 
-| Pré-calcul | Stockage | Usage |
-|------------|----------|-------|
-| Top 10 grilles par jeu | ScoredGrid (tag: daily_top) | DashboardPage |
-| Portefeuille optimal par jeu | Portfolio (tag: daily_optimal) | DashboardPage |
-| Statistiques résumées | StatisticsSnapshot | StatOfTheDay |
-| Numéros chauds / froids (top 5 + bottom 5) | JSON dans StatisticsSnapshot | DashboardPage |
+| Pré-calcul                                 | Stockage                       | Usage         |
+| ------------------------------------------ | ------------------------------ | ------------- |
+| Top 10 grilles par jeu                     | ScoredGrid (tag: daily_top)    | DashboardPage |
+| Portefeuille optimal par jeu               | Portfolio (tag: daily_optimal) | DashboardPage |
+| Statistiques résumées                      | StatisticsSnapshot             | StatOfTheDay  |
+| Numéros chauds / froids (top 5 + bottom 5) | JSON dans StatisticsSnapshot   | DashboardPage |
 
 **Extension nightly_pipeline** :
 
@@ -145,12 +145,12 @@ class SuggestionService:
 
 **Phase 1 — In-app uniquement** (pas de push/email) :
 
-| Alerte | Déclencheur | Affichage |
-|--------|-------------|-----------|
-| Nouveau tirage disponible | fetch_draws complété | Banner en haut de page |
-| Résultat vos grilles | check_played_grids | Badge sur DashboardPage |
-| Nouvelle suggestion dispo | pre_generate | Point sur menu Suggestion |
-| Stats recalculées | compute_statistics | Indicateur discret |
+| Alerte                    | Déclencheur          | Affichage                 |
+| ------------------------- | -------------------- | ------------------------- |
+| Nouveau tirage disponible | fetch_draws complété | Banner en haut de page    |
+| Résultat vos grilles      | check_played_grids   | Badge sur DashboardPage   |
+| Nouvelle suggestion dispo | pre_generate         | Point sur menu Suggestion |
+| Stats recalculées         | compute_statistics   | Indicateur discret        |
 
 **Modèle** :
 
@@ -170,12 +170,12 @@ class UserNotification(Base):
 
 **Endpoints** :
 
-| Méthode | Route | Détail |
-|---------|-------|--------|
-| GET | `/api/v1/notifications` | Liste notifications (paginated) |
-| PATCH | `/api/v1/notifications/{id}/read` | Marquer comme lue |
-| POST | `/api/v1/notifications/read-all` | Tout marquer comme lu |
-| GET | `/api/v1/notifications/unread-count` | Nombre non lues (badge) |
+| Méthode | Route                                | Détail                          |
+| ------- | ------------------------------------ | ------------------------------- |
+| GET     | `/api/v1/notifications`              | Liste notifications (paginated) |
+| PATCH   | `/api/v1/notifications/{id}/read`    | Marquer comme lue               |
+| POST    | `/api/v1/notifications/read-all`     | Tout marquer comme lu           |
+| GET     | `/api/v1/notifications/unread-count` | Nombre non lues (badge)         |
 
 **Composants frontend** :
 
@@ -190,48 +190,48 @@ Header
 
 ## 4. Phasage
 
-| Phase | Contenu | Effort | Dépendances |
-|-------|---------|--------|-------------|
-| B.9 | AUTO-01 Dashboard enrichi (sans vérification grilles) | 2 jours | — |
-| B.10 | AUTO-02 Vérification auto grilles jouées | 2 jours | GamePrizeTier (doc 08) |
-| B.11 | AUTO-03 Pré-génération quotidienne | 1 jour | Pipeline existant |
-| D.2 | AUTO-04 Suggestions récurrentes | 1.5 jour | AUTO-03 + Explicabilité |
-| D.3 | AUTO-05 Notifications in-app | 2 jours | AUTH existant |
+| Phase | Contenu                                               | Effort   | Dépendances             |
+| ----- | ----------------------------------------------------- | -------- | ----------------------- |
+| B.9   | AUTO-01 Dashboard enrichi (sans vérification grilles) | 2 jours  | —                       |
+| B.10  | AUTO-02 Vérification auto grilles jouées              | 2 jours  | GamePrizeTier (doc 08)  |
+| B.11  | AUTO-03 Pré-génération quotidienne                    | 1 jour   | Pipeline existant       |
+| D.2   | AUTO-04 Suggestions récurrentes                       | 1.5 jour | AUTO-03 + Explicabilité |
+| D.3   | AUTO-05 Notifications in-app                          | 2 jours  | AUTH existant           |
 
 ---
 
 ## 5. Impacts
 
-| Axe | Impact |
-|-----|--------|
-| Backend | +2 modèles (GridDrawResult, UserNotification), +1 service (SuggestionService), +1 job (check_played_grids) |
-| Frontend | Dashboard redesigné (7 blocs), +NotificationBell/Dropdown |
-| API | +4 endpoints notifications, +1 GET suggestion |
-| Base | +2 tables, extension nightly_pipeline |
-| Scheduler | +1 job check_played_grids, extension pré-génération |
-| Performance | Vérification grilles : O(grilles_jouées × 1) par tirage — négligeable |
+| Axe         | Impact                                                                                                     |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| Backend     | +2 modèles (GridDrawResult, UserNotification), +1 service (SuggestionService), +1 job (check_played_grids) |
+| Frontend    | Dashboard redesigné (7 blocs), +NotificationBell/Dropdown                                                  |
+| API         | +4 endpoints notifications, +1 GET suggestion                                                              |
+| Base        | +2 tables, extension nightly_pipeline                                                                      |
+| Scheduler   | +1 job check_played_grids, extension pré-génération                                                        |
+| Performance | Vérification grilles : O(grilles_jouées × 1) par tirage — négligeable                                      |
 
 ---
 
 ## 6. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Dashboard trop chargé | Moyenne | Moyen | Layout responsive, collapsible, mode simplifié |
-| Notifications spam | Faible | Moyen | Limiter à 4 types, pas de push externe |
-| Suggestion perçue comme prédiction | Moyenne | Critique | Accompagner systématiquement d'un disclaimer + explication |
+| Risque                             | Probabilité | Impact   | Mitigation                                                 |
+| ---------------------------------- | ----------- | -------- | ---------------------------------------------------------- |
+| Dashboard trop chargé              | Moyenne     | Moyen    | Layout responsive, collapsible, mode simplifié             |
+| Notifications spam                 | Faible      | Moyen    | Limiter à 4 types, pas de push externe                     |
+| Suggestion perçue comme prédiction | Moyenne     | Critique | Accompagner systématiquement d'un disclaimer + explication |
 
 ---
 
 ## 7. Critères d'acceptation
 
-| Critère | Test |
-|---------|------|
-| Dashboard affiche 7 blocs dynamiques | Test visuel |
+| Critère                                                       | Test                       |
+| ------------------------------------------------------------- | -------------------------- |
+| Dashboard affiche 7 blocs dynamiques                          | Test visuel                |
 | Grilles jouées vérifiées automatiquement après nouveau tirage | Test intégration scheduler |
-| Pré-génération produit des données consultables au login | Test pipeline |
-| Notifications créées et affichables | Test API + frontend |
-| Suggestion accompagnée d'explication L1 et disclaimer | Vérification contenu |
+| Pré-génération produit des données consultables au login      | Test pipeline              |
+| Notifications créées et affichables                           | Test API + frontend        |
+| Suggestion accompagnée d'explication L1 et disclaimer         | Vérification contenu       |
 
 ---
 

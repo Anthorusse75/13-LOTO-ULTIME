@@ -17,24 +17,24 @@
 
 ### Métriques
 
-| Métrique | Valeur |
-|----------|--------|
-| Tests total | 337 |
-| Couverture | ~75% |
-| Durée totale | ~45s |
-| Framework | pytest + pytest-asyncio |
-| DB de test | aiosqlite (in-memory) |
-| CI | GitHub Actions |
+| Métrique     | Valeur                  |
+| ------------ | ----------------------- |
+| Tests total  | 337                     |
+| Couverture   | ~75%                    |
+| Durée totale | ~45s                    |
+| Framework    | pytest + pytest-asyncio |
+| DB de test   | aiosqlite (in-memory)   |
+| CI           | GitHub Actions          |
 
 ### Répartition
 
-| Catégorie | Nombre | Note |
-|-----------|--------|------|
-| Unit tests engines/ | ~180 | Bien couverts |
-| Unit tests services/ | ~60 | Correct |
-| Tests API (routers/) | ~70 | FastAPI TestClient |
-| Tests scrapers | ~15 | Mocks HTTP |
-| Tests scheduler | ~12 | Basiques |
+| Catégorie            | Nombre | Note               |
+| -------------------- | ------ | ------------------ |
+| Unit tests engines/  | ~180   | Bien couverts      |
+| Unit tests services/ | ~60    | Correct            |
+| Tests API (routers/) | ~70    | FastAPI TestClient |
+| Tests scrapers       | ~15    | Mocks HTTP         |
+| Tests scheduler      | ~12    | Basiques           |
 
 ---
 
@@ -42,14 +42,14 @@
 
 ### Qu'est-ce qui ne doit PAS changer ?
 
-| Invariant | Mesure |
-|-----------|--------|
-| Le scoring d'une grille donnée est identique avant/après | Snapshot test |
-| Les statistiques pour un jeu de données fixe sont identiques | Snapshot test |
-| Le portfolio optimisé est reproductible (seed fixe) | Snapshot test |
-| Les endpoints existants retournent les mêmes structures | Contract test |
-| Les temps de réponse ne dégradent pas de > 20% | Benchmark test |
-| Les 337 tests existants passent | CI gate |
+| Invariant                                                    | Mesure         |
+| ------------------------------------------------------------ | -------------- |
+| Le scoring d'une grille donnée est identique avant/après     | Snapshot test  |
+| Les statistiques pour un jeu de données fixe sont identiques | Snapshot test  |
+| Le portfolio optimisé est reproductible (seed fixe)          | Snapshot test  |
+| Les endpoints existants retournent les mêmes structures      | Contract test  |
+| Les temps de réponse ne dégradent pas de > 20%               | Benchmark test |
+| Les 337 tests existants passent                              | CI gate        |
 
 ---
 
@@ -150,13 +150,13 @@ async def test_statistics_contract(client):
 
 ### Endpoints à couvrir
 
-| Endpoint | Champs critiques |
-|----------|-----------------|
-| GET /draws | draw_date, main_numbers, star_numbers |
-| GET /statistics/* | frequencies, gaps, cooccurrence_matrix |
-| POST /grids/generate | grids[].main_numbers, .score, .scoring_details |
-| POST /simulations/monte-carlo | results, mean_score, std_score |
-| POST /portfolios/optimize | grids, expected_score, diversity_score |
+| Endpoint                      | Champs critiques                               |
+| ----------------------------- | ---------------------------------------------- |
+| GET /draws                    | draw_date, main_numbers, star_numbers          |
+| GET /statistics/*             | frequencies, gaps, cooccurrence_matrix         |
+| POST /grids/generate          | grids[].main_numbers, .score, .scoring_details |
+| POST /simulations/monte-carlo | results, mean_score, std_score                 |
+| POST /portfolios/optimize     | grids, expected_score, diversity_score         |
 
 ---
 
@@ -189,13 +189,13 @@ async def test_portfolio_perf():
 
 ### Métriques de référence à capter
 
-| Opération | Référence actuelle | Seuil max |
-|-----------|-------------------|-----------|
-| Generate 10 grids | ~500ms | 2s |
-| Compute statistics | ~80ms | 1s |
-| Optimize portfolio | ~3s | 10s |
-| Monte Carlo 1000 iter | ~2s | 8s |
-| GET /draws | ~50ms | 200ms |
+| Opération             | Référence actuelle | Seuil max |
+| --------------------- | ------------------ | --------- |
+| Generate 10 grids     | ~500ms             | 2s        |
+| Compute statistics    | ~80ms              | 1s        |
+| Optimize portfolio    | ~3s                | 10s       |
+| Monte Carlo 1000 iter | ~2s                | 8s        |
+| GET /draws            | ~50ms              | 200ms     |
 
 ---
 

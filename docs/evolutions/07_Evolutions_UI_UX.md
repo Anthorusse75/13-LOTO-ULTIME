@@ -37,15 +37,15 @@ Définir les **évolutions d'interface et d'expérience** pour rendre LOTO ULTIM
 
 ### 2.2 — Faiblesses identifiées
 
-| Faiblesse | Impact | Réf. |
-|-----------|--------|------|
-| Interface unique (pas de mode simplifié/expert) | Novices dépassés, experts sous-informés | DUX-02 |
-| Density d'information inégale | Certaines pages denses, d'autres vides | — |
-| Feedback des calculs longs (spinner seul) | Anxiété utilisateur | DUX-04 |
-| Tableaux basiques (pas de tri, filtre, search) | Difficile de naviguer dans 50+ grilles | — |
-| Pas de design tokens formalisés | Couleurs/spacings ad hoc | — |
-| Responsive limité | Sidebar collapse, tableaux overflow sur mobile | — |
-| Pas de skeleton loading cohérent | Skeleton existe mais peu utilisé | — |
+| Faiblesse                                       | Impact                                         | Réf.   |
+| ----------------------------------------------- | ---------------------------------------------- | ------ |
+| Interface unique (pas de mode simplifié/expert) | Novices dépassés, experts sous-informés        | DUX-02 |
+| Density d'information inégale                   | Certaines pages denses, d'autres vides         | —      |
+| Feedback des calculs longs (spinner seul)       | Anxiété utilisateur                            | DUX-04 |
+| Tableaux basiques (pas de tri, filtre, search)  | Difficile de naviguer dans 50+ grilles         | —      |
+| Pas de design tokens formalisés                 | Couleurs/spacings ad hoc                       | —      |
+| Responsive limité                               | Sidebar collapse, tableaux overflow sur mobile | —      |
+| Pas de skeleton loading cohérent                | Skeleton existe mais peu utilisé               | —      |
 
 ---
 
@@ -57,14 +57,14 @@ Définir les **évolutions d'interface et d'expérience** pour rendre LOTO ULTIM
 
 **Comportement par mode** :
 
-| Élément | Mode simplifié | Mode expert |
-|---------|----------------|-------------|
-| Score détaillé (6 critères) | Score global seul | Breakdown complet |
-| Paramètres d'optimisation | Sélection pré-configurée | Tous les paramètres |
-| Graphes statistiques | 3 tabs essentiels | 9 tabs complets |
-| Wheeling config | Présets (débutant, intermédiaire) | Paramètres fins (n, t) |
-| Simulation | Résultat synthétique | Tous les indicateurs |
-| Tooltips | Affichés par défaut | Masqués (accessible au hover) |
+| Élément                     | Mode simplifié                    | Mode expert                   |
+| --------------------------- | --------------------------------- | ----------------------------- |
+| Score détaillé (6 critères) | Score global seul                 | Breakdown complet             |
+| Paramètres d'optimisation   | Sélection pré-configurée          | Tous les paramètres           |
+| Graphes statistiques        | 3 tabs essentiels                 | 9 tabs complets               |
+| Wheeling config             | Présets (débutant, intermédiaire) | Paramètres fins (n, t)        |
+| Simulation                  | Résultat synthétique              | Tous les indicateurs          |
+| Tooltips                    | Affichés par défaut               | Masqués (accessible au hover) |
 
 **Implémentation** :
 - Ajouter `displayMode: 'simple' | 'expert'` dans `settingsStore.ts`
@@ -257,50 +257,50 @@ interface DataTableProps<T> {
 
 ## 4. Synthèse par phase
 
-| Phase | Évolutions UX |
-|-------|---------------|
-| A | UX-02 (design tokens) |
-| B | UX-01 (mode simplifié/expert), UX-03 (composants), UX-04 (navigation) |
-| C | UX-05 (feedback progressif), UX-06 (responsive), UX-08 (onboarding) |
-| D | UX-07 (thème clair) |
+| Phase | Évolutions UX                                                         |
+| ----- | --------------------------------------------------------------------- |
+| A     | UX-02 (design tokens)                                                 |
+| B     | UX-01 (mode simplifié/expert), UX-03 (composants), UX-04 (navigation) |
+| C     | UX-05 (feedback progressif), UX-06 (responsive), UX-08 (onboarding)   |
+| D     | UX-07 (thème clair)                                                   |
 
 ---
 
 ## 5. Impacts
 
-| UX | Frontend | Backend | API | Perf |
-|----|----------|---------|-----|------|
-| 01 (modes) | ●●● | ○ | ○ | ○ |
-| 02 (tokens) | ●● | ○ | ○ | ○ |
-| 03 (composants) | ●●● | ○ | ○ | ○ |
-| 04 (navigation) | ●●● | ○ | ○ | ○ |
-| 05 (feedback) | ●● | ●● | ●● | ● |
-| 06 (responsive) | ●●● | ○ | ○ | ○ |
-| 07 (thème clair) | ●● | ○ | ○ | ○ |
-| 08 (onboarding) | ●● | ○ | ○ | ○ |
+| UX               | Frontend | Backend | API | Perf |
+| ---------------- | -------- | ------- | --- | ---- |
+| 01 (modes)       | ●●●      | ○       | ○   | ○    |
+| 02 (tokens)      | ●●       | ○       | ○   | ○    |
+| 03 (composants)  | ●●●      | ○       | ○   | ○    |
+| 04 (navigation)  | ●●●      | ○       | ○   | ○    |
+| 05 (feedback)    | ●●       | ●●      | ●●  | ●    |
+| 06 (responsive)  | ●●●      | ○       | ○   | ○    |
+| 07 (thème clair) | ●●       | ○       | ○   | ○    |
+| 08 (onboarding)  | ●●       | ○       | ○   | ○    |
 
 ---
 
 ## 6. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Mode simplifié trop simpliste | Moyenne | Moyen | Tests utilisateur, itérations |
-| Incohérence visuelle mode clair | Haute | Moyen | Audit systématique de chaque composant |
-| SSE complexe pour feedback progressif | Moyenne | Mineur | Fallback timer estimation côté front |
-| Responsive casse layout existant | Moyenne | Moyen | Tests visuels sur breakpoints |
+| Risque                                | Probabilité | Impact | Mitigation                             |
+| ------------------------------------- | ----------- | ------ | -------------------------------------- |
+| Mode simplifié trop simpliste         | Moyenne     | Moyen  | Tests utilisateur, itérations          |
+| Incohérence visuelle mode clair       | Haute       | Moyen  | Audit systématique de chaque composant |
+| SSE complexe pour feedback progressif | Moyenne     | Mineur | Fallback timer estimation côté front   |
+| Responsive casse layout existant      | Moyenne     | Moyen  | Tests visuels sur breakpoints          |
 
 ---
 
 ## 7. Critères d'acceptation
 
-| Critère | Mesure |
-|---------|--------|
+| Critère                                 | Mesure                                      |
+| --------------------------------------- | ------------------------------------------- |
 | Mode simplifié/expert toggle fonctionne | Chaque page rend différemment selon le mode |
-| Tokens de couleur utilisés partout | Audit CSS — pas de couleurs codées en dur |
-| DataTable tri + filtre + pagination | Démo avec 100 lignes |
-| Sidebar restructurée | Navigation testable |
-| Mobile responsive | Test sur 375px, 768px, 1024px |
+| Tokens de couleur utilisés partout      | Audit CSS — pas de couleurs codées en dur   |
+| DataTable tri + filtre + pagination     | Démo avec 100 lignes                        |
+| Sidebar restructurée                    | Navigation testable                         |
+| Mobile responsive                       | Test sur 375px, 768px, 1024px               |
 
 ---
 

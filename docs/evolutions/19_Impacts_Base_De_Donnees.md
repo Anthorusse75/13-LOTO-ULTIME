@@ -287,72 +287,72 @@ CREATE INDEX IF NOT EXISTS idx_grids_played ON scored_grids(is_played) WHERE is_
 
 ### Ordre des migrations
 
-| Migration | Contenu | Phase | Dépendance |
-|-----------|---------|-------|------------|
-| `001_add_game_prize_tiers` | Table game_prize_tiers + seed data | B | — |
-| `002_add_user_id_columns` | user_id sur scored_grids, portfolios | B | — |
-| `003_add_wheeling_systems` | Table wheeling_systems | C | 001 |
-| `004_add_budget_plans` | Table budget_plans | C | — |
-| `005_add_user_saved_results` | Table user_saved_results | B | — |
-| `006_add_grid_draw_results` | Table grid_draw_results | B | — |
-| `007_add_user_notifications` | Table user_notifications | D | — |
-| `008_add_hot_cold_summary` | Colonne sur statistics_snapshots | B | — |
-| `009_add_indexes` | Tous les index secondaires | B | 001–008 |
+| Migration                    | Contenu                              | Phase | Dépendance |
+| ---------------------------- | ------------------------------------ | ----- | ---------- |
+| `001_add_game_prize_tiers`   | Table game_prize_tiers + seed data   | B     | —          |
+| `002_add_user_id_columns`    | user_id sur scored_grids, portfolios | B     | —          |
+| `003_add_wheeling_systems`   | Table wheeling_systems               | C     | 001        |
+| `004_add_budget_plans`       | Table budget_plans                   | C     | —          |
+| `005_add_user_saved_results` | Table user_saved_results             | B     | —          |
+| `006_add_grid_draw_results`  | Table grid_draw_results              | B     | —          |
+| `007_add_user_notifications` | Table user_notifications             | D     | —          |
+| `008_add_hot_cold_summary`   | Colonne sur statistics_snapshots     | B     | —          |
+| `009_add_indexes`            | Tous les index secondaires           | B     | 001–008    |
 
 ### Seed data game_prize_tiers
 
 **Loto FDJ** (9 rangs) :
 
-| Rang | Nom | Numéros | Chance | Gain moyen |
-|------|-----|---------|--------|------------|
-| 1 | 5 + Chance | 5 | 1 | 2 000 000 € |
-| 2 | 5 + 0 | 5 | 0 | 100 000 € |
-| 3 | 4 + Chance | 4 | 1 | 1 000 € |
-| 4 | 4 + 0 | 4 | 0 | 500 € |
-| 5 | 3 + Chance | 3 | 1 | 50 € |
-| 6 | 3 + 0 | 3 | 0 | 20 € |
-| 7 | 2 + Chance | 2 | 1 | 10 € |
-| 8 | 2 + 0 | 2 | 0 | 5 € |
-| 9 | 1 + Chance | 1 | 1 | 2.20 € |
+| Rang | Nom        | Numéros | Chance | Gain moyen  |
+| ---- | ---------- | ------- | ------ | ----------- |
+| 1    | 5 + Chance | 5       | 1      | 2 000 000 € |
+| 2    | 5 + 0      | 5       | 0      | 100 000 €   |
+| 3    | 4 + Chance | 4       | 1      | 1 000 €     |
+| 4    | 4 + 0      | 4       | 0      | 500 €       |
+| 5    | 3 + Chance | 3       | 1      | 50 €        |
+| 6    | 3 + 0      | 3       | 0      | 20 €        |
+| 7    | 2 + Chance | 2       | 1      | 10 €        |
+| 8    | 2 + 0      | 2       | 0      | 5 €         |
+| 9    | 1 + Chance | 1       | 1      | 2.20 €      |
 
 **EuroMillions** (13 rangs) :
 
-| Rang | Nom | Numéros | Étoiles | Gain moyen |
-|------|-----|---------|---------|------------|
-| 1 | 5 + 2 | 5 | 2 | 50 000 000 € |
-| 2 | 5 + 1 | 5 | 1 | 300 000 € |
-| 3 | 5 + 0 | 5 | 0 | 30 000 € |
-| 4 | 4 + 2 | 4 | 2 | 3 000 € |
-| 5 | 4 + 1 | 4 | 1 | 200 € |
-| 6 | 3 + 2 | 3 | 2 | 100 € |
-| 7 | 4 + 0 | 4 | 0 | 50 € |
-| 8 | 2 + 2 | 2 | 2 | 20 € |
-| 9 | 3 + 1 | 3 | 1 | 15 € |
-| 10 | 3 + 0 | 3 | 0 | 13 € |
-| 11 | 1 + 2 | 1 | 2 | 10 € |
-| 12 | 2 + 1 | 2 | 1 | 8 € |
-| 13 | 2 + 0 | 2 | 0 | 4 € |
+| Rang | Nom   | Numéros | Étoiles | Gain moyen   |
+| ---- | ----- | ------- | ------- | ------------ |
+| 1    | 5 + 2 | 5       | 2       | 50 000 000 € |
+| 2    | 5 + 1 | 5       | 1       | 300 000 €    |
+| 3    | 5 + 0 | 5       | 0       | 30 000 €     |
+| 4    | 4 + 2 | 4       | 2       | 3 000 €      |
+| 5    | 4 + 1 | 4       | 1       | 200 €        |
+| 6    | 3 + 2 | 3       | 2       | 100 €        |
+| 7    | 4 + 0 | 4       | 0       | 50 €         |
+| 8    | 2 + 2 | 2       | 2       | 20 €         |
+| 9    | 3 + 1 | 3       | 1       | 15 €         |
+| 10   | 3 + 0 | 3       | 0       | 13 €         |
+| 11   | 1 + 2 | 1       | 2       | 10 €         |
+| 12   | 2 + 1 | 2       | 1       | 8 €          |
+| 13   | 2 + 0 | 2       | 0       | 4 €          |
 
 ---
 
 ## 6. Volume et croissance estimés
 
-| Table | Volume initial | Croissance |
-|-------|---------------|------------|
-| game_prize_tiers | ~50 lignes (5 jeux × ~10 rangs) | Quasi-statique |
-| wheeling_systems | 0 | ~10/jour (si multi-users) |
-| budget_plans | 0 | ~10/jour |
-| user_saved_results | 0 | ~50/jour |
-| grid_draw_results | 0 | ~100/tirage (grilles jouées × tirages) |
-| user_notifications | 0 | ~20/jour |
+| Table              | Volume initial                  | Croissance                             |
+| ------------------ | ------------------------------- | -------------------------------------- |
+| game_prize_tiers   | ~50 lignes (5 jeux × ~10 rangs) | Quasi-statique                         |
+| wheeling_systems   | 0                               | ~10/jour (si multi-users)              |
+| budget_plans       | 0                               | ~10/jour                               |
+| user_saved_results | 0                               | ~50/jour                               |
+| grid_draw_results  | 0                               | ~100/tirage (grilles jouées × tirages) |
+| user_notifications | 0                               | ~20/jour                               |
 
 ### Purge automatique
 
-| Table | Politique | Job |
-|-------|-----------|-----|
-| user_notifications | Supprimer > 30 jours si lues | cleanup_notifications |
-| grid_draw_results | Conserver 1 an | cleanup_old_results |
-| wheeling_systems (anonyme) | Supprimer > 7 jours si user_id IS NULL | cleanup_anonymous |
+| Table                      | Politique                              | Job                   |
+| -------------------------- | -------------------------------------- | --------------------- |
+| user_notifications         | Supprimer > 30 jours si lues           | cleanup_notifications |
+| grid_draw_results          | Conserver 1 an                         | cleanup_old_results   |
+| wheeling_systems (anonyme) | Supprimer > 7 jours si user_id IS NULL | cleanup_anonymous     |
 
 ---
 
@@ -387,12 +387,12 @@ ALTER TABLE game_prize_tiers ADD CONSTRAINT chk_probability CHECK (probability >
 
 ## 8. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| Migration en production casse le service | Critique | Toutes migrations non-breaking (ADD COLUMN nullable, CREATE TABLE) |
-| JSON columns sans schéma → données corrompues | Moyen | Validation Pydantic côté application |
-| Volume grid_draw_results si beaucoup de grilles jouées | Faible | Purge auto + index |
-| Seed data prize_tiers incorrecte | Moyen | Vérifier sur sources FDJ/EuroMillions officielles |
+| Risque                                                 | Impact   | Mitigation                                                         |
+| ------------------------------------------------------ | -------- | ------------------------------------------------------------------ |
+| Migration en production casse le service               | Critique | Toutes migrations non-breaking (ADD COLUMN nullable, CREATE TABLE) |
+| JSON columns sans schéma → données corrompues          | Moyen    | Validation Pydantic côté application                               |
+| Volume grid_draw_results si beaucoup de grilles jouées | Faible   | Purge auto + index                                                 |
+| Seed data prize_tiers incorrecte                       | Moyen    | Vérifier sur sources FDJ/EuroMillions officielles                  |
 
 ---
 

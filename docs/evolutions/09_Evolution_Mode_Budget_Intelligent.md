@@ -26,12 +26,12 @@ Permettre à l'utilisateur de saisir un **budget en euros** et d'obtenir une rec
 
 ### 2.1 — Entrées utilisateur
 
-| Paramètre | Type | Exemple | Obligatoire |
-|-----------|------|---------|-------------|
-| Budget (€) | Float | 20.00 | Oui |
-| Jeu | Slug | loto-fdj | Oui |
-| Objectif | Enum | `couverture` / `qualite` / `equilibre` | Oui |
-| Numéros présélectionnés | list[int] (optionnel) | [7, 14, 23, 31, 45] | Non |
+| Paramètre               | Type                  | Exemple                                | Obligatoire |
+| ----------------------- | --------------------- | -------------------------------------- | ----------- |
+| Budget (€)              | Float                 | 20.00                                  | Oui         |
+| Jeu                     | Slug                  | loto-fdj                               | Oui         |
+| Objectif                | Enum                  | `couverture` / `qualite` / `equilibre` | Oui         |
+| Numéros présélectionnés | list[int] (optionnel) | [7, 14, 23, 31, 45]                    | Non         |
 
 ### 2.2 — Calculs internes
 
@@ -86,9 +86,9 @@ Permettre à l'utilisateur de saisir un **budget en euros** et d'obtenir une rec
 
 ## 3. Intérêt utilisateur
 
-| Persona | Bénéfice |
-|---------|----------|
-| Joueur régulier | « Je mets 10 € et le système me dit exactement quoi jouer » |
+| Persona           | Bénéfice                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------ |
+| Joueur régulier   | « Je mets 10 € et le système me dit exactement quoi jouer »                          |
 | Joueur analytique | « Je compare les stratégies dans mon budget et je choisis en connaissance de cause » |
 
 ---
@@ -167,13 +167,13 @@ DELETE /budget/{id}         → 204
 
 #### Nouveaux composants
 
-| Composant | Rôle |
-|-----------|------|
-| `BudgetInput` | Saisie budget (€) + slider |
-| `ObjectiveSelector` | 3 boutons radio illustrés |
-| `BudgetRecommendationCard` | Carte comparative d'une stratégie |
-| `BudgetResults` | Conteneur des 2–3 cartes + mise en avant |
-| `GainScenarioBar` | Barre visuelle optimiste/moyen/pessimiste |
+| Composant                  | Rôle                                      |
+| -------------------------- | ----------------------------------------- |
+| `BudgetInput`              | Saisie budget (€) + slider                |
+| `ObjectiveSelector`        | 3 boutons radio illustrés                 |
+| `BudgetRecommendationCard` | Carte comparative d'une stratégie         |
+| `BudgetResults`            | Conteneur des 2–3 cartes + mise en avant  |
+| `GainScenarioBar`          | Barre visuelle optimiste/moyen/pessimiste |
 
 #### Nouvelle page : `BudgetPage.tsx`
 
@@ -185,47 +185,47 @@ Sidebar : icône `Wallet` (lucide-react), groupe « GÉNÉRATION ».
 
 ## 7. Phasage
 
-| Phase | Contenu | Effort |
-|-------|---------|--------|
-| C.4 | Backend : modèle, service, endpoints (requiert wheeling terminé) | 2–3 jours |
-| C.5 | Frontend : composants, page, intégration | 2–3 jours |
-| C.6 | Enrichissement : scénarios de gains, recommandation intelligente | 1–2 jours |
+| Phase | Contenu                                                          | Effort    |
+| ----- | ---------------------------------------------------------------- | --------- |
+| C.4   | Backend : modèle, service, endpoints (requiert wheeling terminé) | 2–3 jours |
+| C.5   | Frontend : composants, page, intégration                         | 2–3 jours |
+| C.6   | Enrichissement : scénarios de gains, recommandation intelligente | 1–2 jours |
 
 ---
 
 ## 8. Dépendances
 
-| Dépendance | Raison | Obligatoire ? |
-|------------|--------|---------------|
-| FUNC-05 (grid_price) | Calcul max_grids | Oui |
-| 08 Wheeling (greedy_cover) | Stratégie wheeling | Non (optionnel dans budget) |
-| FUNC-04 (prize_tiers) | Scénarios de gains | Non (estimations sans) |
-| Top 50 existant | Stratégie top | Oui (déjà en prod) |
-| Portfolio existant | Stratégie portfolio | Oui (déjà en prod) |
+| Dépendance                 | Raison              | Obligatoire ?               |
+| -------------------------- | ------------------- | --------------------------- |
+| FUNC-05 (grid_price)       | Calcul max_grids    | Oui                         |
+| 08 Wheeling (greedy_cover) | Stratégie wheeling  | Non (optionnel dans budget) |
+| FUNC-04 (prize_tiers)      | Scénarios de gains  | Non (estimations sans)      |
+| Top 50 existant            | Stratégie top       | Oui (déjà en prod)          |
+| Portfolio existant         | Stratégie portfolio | Oui (déjà en prod)          |
 
 ---
 
 ## 9. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Temps de calcul long (3 stratégies à générer) | Moyenne | Moyen | Paralléliser les 3 stratégies, timeout 30s |
-| Scénarios de gains trompeurs | Haute | Critique | Vocabulaire strict + disclaimer + « conditionnel » |
-| Budget insuffisant (< 1 grille) | Basse | Mineur | Validation 422 + message UX |
-| Stratégie wheeling non disponible (pas de numéros) | Fréquente | Mineur | Afficher 2 stratégies au lieu de 3 |
+| Risque                                             | Probabilité | Impact   | Mitigation                                         |
+| -------------------------------------------------- | ----------- | -------- | -------------------------------------------------- |
+| Temps de calcul long (3 stratégies à générer)      | Moyenne     | Moyen    | Paralléliser les 3 stratégies, timeout 30s         |
+| Scénarios de gains trompeurs                       | Haute       | Critique | Vocabulaire strict + disclaimer + « conditionnel » |
+| Budget insuffisant (< 1 grille)                    | Basse       | Mineur   | Validation 422 + message UX                        |
+| Stratégie wheeling non disponible (pas de numéros) | Fréquente   | Mineur   | Afficher 2 stratégies au lieu de 3                 |
 
 ---
 
 ## 10. Critères d'acceptation
 
-| Critère | Test |
-|---------|------|
-| Budget 20€, Loto → 9 grilles max proposées | Test unitaire |
-| 2–3 stratégies comparées avec métriques | Test intégration |
-| Scénarios de gains cohérents | Test calcul |
-| Sauvegarde / historique fonctionnel | Test E2E |
-| Budget < prix grille → erreur claire | Test validation |
-| Temps de réponse < 15s | Test perf |
+| Critère                                    | Test             |
+| ------------------------------------------ | ---------------- |
+| Budget 20€, Loto → 9 grilles max proposées | Test unitaire    |
+| 2–3 stratégies comparées avec métriques    | Test intégration |
+| Scénarios de gains cohérents               | Test calcul      |
+| Sauvegarde / historique fonctionnel        | Test E2E         |
+| Budget < prix grille → erreur claire       | Test validation  |
+| Temps de réponse < 15s                     | Test perf        |
 
 ---
 

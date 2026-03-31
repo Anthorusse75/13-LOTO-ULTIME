@@ -106,34 +106,34 @@ Ce document couvre les fonctionnalités partagées par plusieurs chantiers ou qu
 - Frontend : tableau affiché dans info jeu + utilisé dans wheeling/budget
 
 **Données Loto FDJ** :
-| Rang | Condition | Gain moyen |
-|------|-----------|-----------|
-| 1 | 5+chance | ~2 000 000 € |
-| 2 | 5 | ~100 000 € |
-| 3 | 4+chance | ~1 000 € |
-| 4 | 4 | ~500 € |
-| 5 | 3+chance | ~50 € |
-| 6 | 3 | ~20 € |
-| 7 | 2+chance | ~10 € |
-| 8 | 2 | ~5 € |
-| 9 | 1+chance | ~2.20 € |
+| Rang | Condition | Gain moyen   |
+| ---- | --------- | ------------ |
+| 1    | 5+chance  | ~2 000 000 € |
+| 2    | 5         | ~100 000 €   |
+| 3    | 4+chance  | ~1 000 €     |
+| 4    | 4         | ~500 €       |
+| 5    | 3+chance  | ~50 €        |
+| 6    | 3         | ~20 €        |
+| 7    | 2+chance  | ~10 €        |
+| 8    | 2         | ~5 €         |
+| 9    | 1+chance  | ~2.20 €      |
 
 **Données EuroMillions** :
-| Rang | Condition | Gain moyen |
-|------|-----------|-----------|
-| 1 | 5+2★ | ~50 000 000 € |
-| 2 | 5+1★ | ~300 000 € |
-| 3 | 5 | ~50 000 € |
-| 4 | 4+2★ | ~5 000 € |
-| 5 | 4+1★ | ~200 € |
-| 6 | 4 | ~100 € |
-| 7 | 3+2★ | ~75 € |
-| 8 | 2+2★ | ~20 € |
-| 9 | 3+1★ | ~15 € |
-| 10 | 3 | ~13 € |
-| 11 | 1+2★ | ~10 € |
-| 12 | 2+1★ | ~8 € |
-| 13 | 2 | ~4 € |
+| Rang | Condition | Gain moyen    |
+| ---- | --------- | ------------- |
+| 1    | 5+2★      | ~50 000 000 € |
+| 2    | 5+1★      | ~300 000 €    |
+| 3    | 5         | ~50 000 €     |
+| 4    | 4+2★      | ~5 000 €      |
+| 5    | 4+1★      | ~200 €        |
+| 6    | 4         | ~100 €        |
+| 7    | 3+2★      | ~75 €         |
+| 8    | 2+2★      | ~20 €         |
+| 9    | 3+1★      | ~15 €         |
+| 10   | 3         | ~13 €         |
+| 11   | 1+2★      | ~10 €         |
+| 12   | 2+1★      | ~8 €          |
+| 13   | 2         | ~4 €          |
 
 **Dépendances** : Migration Alembic.
 
@@ -188,37 +188,37 @@ Ce document couvre les fonctionnalités partagées par plusieurs chantiers ou qu
 
 ## 4. Synthèse par phase
 
-| Phase | Fonctionnalités |
-|-------|-----------------|
-| A | FUNC-03 (multi-loterie effective), FUNC-05 (prix grille) |
-| B | FUNC-01 (persistance), FUNC-02 (exports), FUNC-04 (tableaux de gains) |
-| C | FUNC-06 (scoring étoiles) |
-| D | FUNC-07 (partage) |
+| Phase | Fonctionnalités                                                       |
+| ----- | --------------------------------------------------------------------- |
+| A     | FUNC-03 (multi-loterie effective), FUNC-05 (prix grille)              |
+| B     | FUNC-01 (persistance), FUNC-02 (exports), FUNC-04 (tableaux de gains) |
+| C     | FUNC-06 (scoring étoiles)                                             |
+| D     | FUNC-07 (partage)                                                     |
 
 ---
 
 ## 5. Impacts techniques
 
-| FUNC | Backend | Frontend | API | DB | Scheduler | Sécurité |
-|------|---------|----------|-----|----|-----------| ---------|
-| 01 | ●●● | ●● | ●●● | ●●● | ○ | ●● |
-| 02 | ○ | ●● | ○ | ○ | ○ | ○ |
-| 03 | ● | ● | ● | ○ | ○ | ○ |
-| 04 | ●● | ●● | ●● | ●●● | ○ | ○ |
-| 05 | ● | ● | ● | ● | ○ | ○ |
-| 06 | ●● | ● | ● | ●● | ● | ○ |
-| 07 | ●● | ●● | ●● | ● | ○ | ● |
+| FUNC | Backend | Frontend | API | DB  | Scheduler | Sécurité |
+| ---- | ------- | -------- | --- | --- | --------- | -------- |
+| 01   | ●●●     | ●●       | ●●● | ●●● | ○         | ●●       |
+| 02   | ○       | ●●       | ○   | ○   | ○         | ○        |
+| 03   | ●       | ●        | ●   | ○   | ○         | ○        |
+| 04   | ●●      | ●●       | ●●  | ●●● | ○         | ○        |
+| 05   | ●       | ●        | ●   | ●   | ○         | ○        |
+| 06   | ●●      | ●        | ●   | ●●  | ●         | ○        |
+| 07   | ●●      | ●●       | ●●  | ●   | ○         | ●        |
 
 ---
 
 ## 6. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Prolifération de modèles de persistance | Moyenne | Moyen | Modèle générique `UserSavedItem` si possible |
-| Tableaux de gains qui changent | Faible | Moyen | Versionner par date, mettre à jour via admin |
-| Export PDF volumineux (wheeling 100+ grilles) | Moyenne | Mineur | Pagination dans PDF, limite |
-| Lien de partage exposant des données sensibles | Faible | Moyen | Données publiques uniquement, pas d'info utilisateur |
+| Risque                                         | Probabilité | Impact | Mitigation                                           |
+| ---------------------------------------------- | ----------- | ------ | ---------------------------------------------------- |
+| Prolifération de modèles de persistance        | Moyenne     | Moyen  | Modèle générique `UserSavedItem` si possible         |
+| Tableaux de gains qui changent                 | Faible      | Moyen  | Versionner par date, mettre à jour via admin         |
+| Export PDF volumineux (wheeling 100+ grilles)  | Moyenne     | Mineur | Pagination dans PDF, limite                          |
+| Lien de partage exposant des données sensibles | Faible      | Moyen  | Données publiques uniquement, pas d'info utilisateur |
 
 ---
 

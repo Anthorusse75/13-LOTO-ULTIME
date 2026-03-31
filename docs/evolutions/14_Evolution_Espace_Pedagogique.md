@@ -128,13 +128,13 @@ Enrichir les pages existantes (`HowItWorksPage`, `GlossaryPage`) et créer de no
 
 ### 4.2 — Composants
 
-| Composant | Rôle |
-|-----------|------|
-| `LearnSection` | Section pédagogique avec titre, contenu, exemples |
-| `LearnTOC` | Table of contents cliquable (ancres) |
-| `InteractiveExample` | Exemple interactif (ex: mini-scoring en direct) |
-| `ComparisonTable` | Tableau comparatif réutilisable |
-| `MathFormula` | Rendu LaTeX (optionnel, KaTeX si besoin) |
+| Composant            | Rôle                                              |
+| -------------------- | ------------------------------------------------- |
+| `LearnSection`       | Section pédagogique avec titre, contenu, exemples |
+| `LearnTOC`           | Table of contents cliquable (ancres)              |
+| `InteractiveExample` | Exemple interactif (ex: mini-scoring en direct)   |
+| `ComparisonTable`    | Tableau comparatif réutilisable                   |
+| `MathFormula`        | Rendu LaTeX (optionnel, KaTeX si besoin)          |
 
 ### 4.3 — Enrichissement GlossaryPage
 
@@ -147,34 +147,34 @@ Ajouter pour chaque terme :
 
 ## 5. Phasage
 
-| Phase | Contenu | Effort |
-|-------|---------|--------|
-| B.6 | PED-01 (scores) + PED-02 (simulations) | 1–2 jours |
-| B.7 | PED-03 (stratégies) + PED-05 (Loto vs EM) + PED-06 (limites) | 1–2 jours |
-| C.x | PED-04 (systèmes réduits) + PED-07 (coûts) — après wheeling | 1 jour |
-| B.8 | Enrichir GlossaryPage + LearnTOC | 0.5 jour |
+| Phase | Contenu                                                      | Effort    |
+| ----- | ------------------------------------------------------------ | --------- |
+| B.6   | PED-01 (scores) + PED-02 (simulations)                       | 1–2 jours |
+| B.7   | PED-03 (stratégies) + PED-05 (Loto vs EM) + PED-06 (limites) | 1–2 jours |
+| C.x   | PED-04 (systèmes réduits) + PED-07 (coûts) — après wheeling  | 1 jour    |
+| B.8   | Enrichir GlossaryPage + LearnTOC                             | 0.5 jour  |
 
 ---
 
 ## 6. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Contenu trop long, personne ne lit | Moyenne | Moyen | Résumés en haut, accordéons, exemples visuels |
-| Contenu obsolète si fonctionnalités changent | Moyenne | Mineur | Centraliser, versionner avec les features |
-| Formulations trompeuses (même dans la pédagogie) | Faible | Critique | Relecture vocabulaire contraint |
+| Risque                                           | Probabilité | Impact   | Mitigation                                    |
+| ------------------------------------------------ | ----------- | -------- | --------------------------------------------- |
+| Contenu trop long, personne ne lit               | Moyenne     | Moyen    | Résumés en haut, accordéons, exemples visuels |
+| Contenu obsolète si fonctionnalités changent     | Moyenne     | Mineur   | Centraliser, versionner avec les features     |
+| Formulations trompeuses (même dans la pédagogie) | Faible      | Critique | Relecture vocabulaire contraint               |
 
 ---
 
 ## 7. Critères d'acceptation
 
-| Critère | Test |
-|---------|------|
-| 7 sections pédagogiques présentes | Navigation vérifiable |
-| Chaque section a un résumé + détail + exemple | Audit contenu |
-| PED-06 (limites) est clairement visible | Vérifié |
-| GlossaryPage enrichie avec liens | Vérification liens |
-| Aucune formulation trompeuse | Audit vocabulaire |
+| Critère                                       | Test                  |
+| --------------------------------------------- | --------------------- |
+| 7 sections pédagogiques présentes             | Navigation vérifiable |
+| Chaque section a un résumé + détail + exemple | Audit contenu         |
+| PED-06 (limites) est clairement visible       | Vérifié               |
+| GlossaryPage enrichie avec liens              | Vérification liens    |
+| Aucune formulation trompeuse                  | Audit vocabulaire     |
 
 ---
 

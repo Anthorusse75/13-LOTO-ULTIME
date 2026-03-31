@@ -19,14 +19,14 @@
 
 ### Temps de réponse mesurés (approx.)
 
-| Endpoint | Temps moyen | P95 |
-|----------|-------------|-----|
-| GET /draws | ~50ms | ~100ms |
-| GET /statistics | ~80ms | ~150ms |
-| POST /grids/generate (10 grilles) | ~500ms | ~1.5s |
-| POST /simulations/monte-carlo (1000 iter) | ~2s | ~5s |
-| POST /portfolios/optimize (genetic) | ~3s | ~8s |
-| Nightly pipeline complet | ~3 min | ~5 min |
+| Endpoint                                  | Temps moyen | P95    |
+| ----------------------------------------- | ----------- | ------ |
+| GET /draws                                | ~50ms       | ~100ms |
+| GET /statistics                           | ~80ms       | ~150ms |
+| POST /grids/generate (10 grilles)         | ~500ms      | ~1.5s  |
+| POST /simulations/monte-carlo (1000 iter) | ~2s         | ~5s    |
+| POST /portfolios/optimize (genetic)       | ~3s         | ~8s    |
+| Nightly pipeline complet                  | ~3 min      | ~5 min |
 
 ### Infrastructure
 
@@ -41,36 +41,36 @@
 
 ### Wheeling (doc 08)
 
-| Opération | Complexité | Temps estimé |
-|-----------|-----------|-------------|
-| Preview (n=10, k=5, t=3) | O(C(n,t) × k) | ~100ms |
-| Preview (n=15, k=5, t=3) | O(C(15,3) × 5) = O(2275) | ~500ms |
-| Preview (n=20, k=5, t=3) | O(C(20,3) × 5) = O(5700) | ~1s |
-| Generate (n=10, greedy) | ~100ms | ~200ms total |
-| Generate (n=15, greedy) | ~500ms | ~1s total |
-| Generate (n=20, greedy) | ~2s | ~3s total |
-| Generate (n=20, k=5, t=4) | Potentiellement lent | **~5-10s** |
+| Opération                 | Complexité               | Temps estimé |
+| ------------------------- | ------------------------ | ------------ |
+| Preview (n=10, k=5, t=3)  | O(C(n,t) × k)            | ~100ms       |
+| Preview (n=15, k=5, t=3)  | O(C(15,3) × 5) = O(2275) | ~500ms       |
+| Preview (n=20, k=5, t=3)  | O(C(20,3) × 5) = O(5700) | ~1s          |
+| Generate (n=10, greedy)   | ~100ms                   | ~200ms total |
+| Generate (n=15, greedy)   | ~500ms                   | ~1s total    |
+| Generate (n=20, greedy)   | ~2s                      | ~3s total    |
+| Generate (n=20, k=5, t=4) | Potentiellement lent     | **~5-10s**   |
 
 **Borne** : n ≤ 20 imposé côté validation. Au-delà, le temps explose (combinatoire).
 
 ### Budget (doc 09)
 
-| Opération | Complexité | Temps estimé |
-|-----------|-----------|-------------|
-| optimize (3 stratégies) | 3 × scoring + 1 wheeling potentiel | ~2-5s |
+| Opération               | Complexité                         | Temps estimé |
+| ----------------------- | ---------------------------------- | ------------ |
+| optimize (3 stratégies) | 3 × scoring + 1 wheeling potentiel | ~2-5s        |
 
 ### Comparaison (doc 10)
 
-| Opération | Complexité | Temps estimé |
-|-----------|-----------|-------------|
-| compare (3 stratégies, 8 axes) | 3 × (scoring + simulation légère) | ~3-8s |
+| Opération                      | Complexité                        | Temps estimé |
+| ------------------------------ | --------------------------------- | ------------ |
+| compare (3 stratégies, 8 axes) | 3 × (scoring + simulation légère) | ~3-8s        |
 
 ### Check played grids (doc 15)
 
-| Volume | Opération | Temps estimé |
-|--------|-----------|-------------|
-| 100 grilles jouées | 100 comparaisons vs 1 tirage | ~200ms |
-| 1000 grilles jouées | 1000 comparaisons | ~1s |
+| Volume              | Opération                    | Temps estimé |
+| ------------------- | ---------------------------- | ------------ |
+| 100 grilles jouées  | 100 comparaisons vs 1 tirage | ~200ms       |
+| 1000 grilles jouées | 1000 comparaisons            | ~1s          |
 
 ---
 
@@ -110,13 +110,13 @@
 
 ### Cache in-process (cachetools)
 
-| Donnée cachée | TTL | Clé | Taille max |
-|---------------|-----|-----|-----------|
-| StatisticsSnapshot (dernier par game) | 1h | `stats:{game_id}` | 5 entries |
-| GameDefinition (actives) | 24h | `games:active` | 1 entry |
-| GamePrizeTier (par game) | 24h | `prize_tiers:{game_id}` | 5 entries |
-| Top grilles du jour | 1h | `top_grids:{game_id}` | 5 entries |
-| Daily suggestion | 1h | `suggestion:{game_id}` | 5 entries |
+| Donnée cachée                         | TTL | Clé                     | Taille max |
+| ------------------------------------- | --- | ----------------------- | ---------- |
+| StatisticsSnapshot (dernier par game) | 1h  | `stats:{game_id}`       | 5 entries  |
+| GameDefinition (actives)              | 24h | `games:active`          | 1 entry    |
+| GamePrizeTier (par game)              | 24h | `prize_tiers:{game_id}` | 5 entries  |
+| Top grilles du jour                   | 1h  | `top_grids:{game_id}`   | 5 entries  |
+| Daily suggestion                      | 1h  | `suggestion:{game_id}`  | 5 entries  |
 
 ### Implémentation
 
@@ -155,11 +155,11 @@ async def get_statistics_cached(db: AsyncSession, game_id: int):
 
 ### Risques de concurrence
 
-| Scénario | Risque | Mitigation |
-|----------|--------|------------|
-| 2 requêtes generate simultanées | CPU spike | Rate limiting 10/min |
-| Pipeline nocturne + requête utilisateur | Contention DB | Pipeline utilise sa propre session |
-| Cache write simultané | Données incohérentes | TTLCache est thread-safe |
+| Scénario                                | Risque               | Mitigation                         |
+| --------------------------------------- | -------------------- | ---------------------------------- |
+| 2 requêtes generate simultanées         | CPU spike            | Rate limiting 10/min               |
+| Pipeline nocturne + requête utilisateur | Contention DB        | Pipeline utilise sa propre session |
+| Cache write simultané                   | Données incohérentes | TTLCache est thread-safe           |
 
 ---
 
@@ -167,25 +167,25 @@ async def get_statistics_cached(db: AsyncSession, game_id: int):
 
 ### Projections à 6 mois
 
-| Table | Volume 6 mois | Taille estimée |
-|-------|---------------|---------------|
-| draws | +1000 lignes (5 jeux × ~200 tirages) | ~500 KB |
-| scored_grids | +50000 (génération quotidienne) | ~50 MB |
-| wheeling_systems | +2000 | ~10 MB (grids JSON volumineux) |
-| user_saved_results | +10000 | ~20 MB |
-| grid_draw_results | +20000 | ~5 MB |
-| user_notifications | ~5000 (purgé à 30j) | ~2 MB |
-| statistics_snapshots | +1000 | ~50 MB (matrices JSON) |
+| Table                | Volume 6 mois                        | Taille estimée                 |
+| -------------------- | ------------------------------------ | ------------------------------ |
+| draws                | +1000 lignes (5 jeux × ~200 tirages) | ~500 KB                        |
+| scored_grids         | +50000 (génération quotidienne)      | ~50 MB                         |
+| wheeling_systems     | +2000                                | ~10 MB (grids JSON volumineux) |
+| user_saved_results   | +10000                               | ~20 MB                         |
+| grid_draw_results    | +20000                               | ~5 MB                          |
+| user_notifications   | ~5000 (purgé à 30j)                  | ~2 MB                          |
+| statistics_snapshots | +1000                                | ~50 MB (matrices JSON)         |
 
 **Total estimé** : ~140 MB en 6 mois. Pas de problème de volume.
 
 ### Requêtes les plus coûteuses
 
-| Requête | Fréquence | Coût |
-|---------|-----------|------|
-| SELECT scored_grids ORDER BY score DESC LIMIT 10 | Chaque visite dashboard | Moyen (index) |
-| SELECT statistics_snapshots WHERE game_id=? ORDER BY computed_at DESC LIMIT 1 | Chaque page stats | Léger (cache) |
-| SELECT user_saved_results WHERE user_id=? ORDER BY created_at DESC | Chaque visite historique | Moyen (index) |
+| Requête                                                                       | Fréquence                | Coût          |
+| ----------------------------------------------------------------------------- | ------------------------ | ------------- |
+| SELECT scored_grids ORDER BY score DESC LIMIT 10                              | Chaque visite dashboard  | Moyen (index) |
+| SELECT statistics_snapshots WHERE game_id=? ORDER BY computed_at DESC LIMIT 1 | Chaque page stats        | Léger (cache) |
+| SELECT user_saved_results WHERE user_id=? ORDER BY created_at DESC            | Chaque visite historique | Moyen (index) |
 
 ---
 
@@ -193,46 +193,46 @@ async def get_statistics_cached(db: AsyncSession, game_id: int):
 
 ### Phase A (quick wins)
 
-| Action | Impact | Effort |
-|--------|--------|--------|
-| Ajouter index sur scored_grids(game_id, score) | -50% temps GET grids | 0.25j |
-| Ajouter index sur draws(game_id, draw_date) | -30% temps GET draws | 0.25j |
-| Implémenter cache stats (TTLCache) | -80% temps GET stats | 0.5j |
-| Implémenter pagination (DT-05) | Éviter full scan | 0.5j |
+| Action                                         | Impact               | Effort |
+| ---------------------------------------------- | -------------------- | ------ |
+| Ajouter index sur scored_grids(game_id, score) | -50% temps GET grids | 0.25j  |
+| Ajouter index sur draws(game_id, draw_date)    | -30% temps GET draws | 0.25j  |
+| Implémenter cache stats (TTLCache)             | -80% temps GET stats | 0.5j   |
+| Implémenter pagination (DT-05)                 | Éviter full scan     | 0.5j   |
 
 ### Phase B
 
-| Action | Impact | Effort |
-|--------|--------|--------|
-| Cache games et prize_tiers | -90% temps sur données statiques | 0.25j |
-| Cache top grilles quotidiennes | Dashboard instantané | 0.25j |
+| Action                         | Impact                           | Effort |
+| ------------------------------ | -------------------------------- | ------ |
+| Cache games et prize_tiers     | -90% temps sur données statiques | 0.25j  |
+| Cache top grilles quotidiennes | Dashboard instantané             | 0.25j  |
 
 ### Phase C
 
-| Action | Impact | Effort |
-|--------|--------|--------|
-| Timeout wheeling 30s | Éviter blocage serveur | 0.25j |
+| Action                | Impact                          | Effort                 |
+| --------------------- | ------------------------------- | ---------------------- |
+| Timeout wheeling 30s  | Éviter blocage serveur          | 0.25j                  |
 | Borne n≤20 validation | Prévenir explosion combinatoire | Inclus dans validation |
 
 ### Phase D
 
-| Action | Impact | Effort |
-|--------|--------|--------|
-| Simulation allégée pour comparateur | 10× plus rapide | 0.25j |
-| Paralléliser pipeline steps indépendants | -30% durée pipeline | 0.5j |
+| Action                                   | Impact              | Effort |
+| ---------------------------------------- | ------------------- | ------ |
+| Simulation allégée pour comparateur      | 10× plus rapide     | 0.25j  |
+| Paralléliser pipeline steps indépendants | -30% durée pipeline | 0.5j   |
 
 ---
 
 ## 8. Métriques de performance à suivre
 
-| Métrique | Outil | Seuil alerte |
-|----------|-------|-------------|
+| Métrique                 | Outil                | Seuil alerte                   |
+| ------------------------ | -------------------- | ------------------------------ |
 | Latence P95 par endpoint | Prometheus + Grafana | > 2s (lecture), > 10s (calcul) |
-| Temps pipeline nocturne | job_executions | > 10 min |
-| Hit rate cache | Logs applicatifs | < 50% |
-| Connexions DB actives | pg_stat_activity | > 20 |
-| CPU utilisation | Docker stats | > 80% sustained |
-| Mémoire | Docker stats | > 3.5 GB |
+| Temps pipeline nocturne  | job_executions       | > 10 min                       |
+| Hit rate cache           | Logs applicatifs     | < 50%                          |
+| Connexions DB actives    | pg_stat_activity     | > 20                           |
+| CPU utilisation          | Docker stats         | > 80% sustained                |
+| Mémoire                  | Docker stats         | > 3.5 GB                       |
 
 ---
 
@@ -240,21 +240,21 @@ async def get_statistics_cached(db: AsyncSession, game_id: int):
 
 ### Bundle size
 
-| Action | Impact |
-|--------|--------|
-| React.lazy pour nouvelles pages | Chunk splitting automatique |
-| Recharts import sélectif | Réduire taille charts |
-| Tailwind CSS purge (déjà en place) | Pas de changement |
+| Action                             | Impact                      |
+| ---------------------------------- | --------------------------- |
+| React.lazy pour nouvelles pages    | Chunk splitting automatique |
+| Recharts import sélectif           | Réduire taille charts       |
+| Tailwind CSS purge (déjà en place) | Pas de changement           |
 
 ### Estimations taille bundle
 
-| Module | Taille estimée |
-|--------|---------------|
-| WheelingPage + composants | ~30 KB gzip |
-| BudgetPage + composants | ~20 KB gzip |
-| ComparatorPage + composants | ~25 KB gzip |
-| Dashboard enrichi | +15 KB gzip |
-| Total ajouté | ~90 KB gzip |
+| Module                      | Taille estimée |
+| --------------------------- | -------------- |
+| WheelingPage + composants   | ~30 KB gzip    |
+| BudgetPage + composants     | ~20 KB gzip    |
+| ComparatorPage + composants | ~25 KB gzip    |
+| Dashboard enrichi           | +15 KB gzip    |
+| Total ajouté                | ~90 KB gzip    |
 
 ---
 

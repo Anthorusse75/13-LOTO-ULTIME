@@ -24,13 +24,13 @@ Fournir une **hiérarchisation objective et argumentée** de tous les chantiers 
 
 Chaque chantier est évalué sur 5 axes (note 1–5) :
 
-| Axe | Description | Poids |
-|-----|-------------|-------|
-| **Valeur utilisateur** | Impact direct sur l'expérience et la satisfaction | 30 % |
-| **Différenciation** | Ce que les concurrents n'ont pas | 20 % |
-| **Faisabilité** | Complexité technique, risques, dépendances | 20 % |
-| **Fondation** | Déblocage d'autres évolutions | 15 % |
-| **Urgence** | Dettes, bugs, attentes utilisateur | 15 % |
+| Axe                    | Description                                       | Poids |
+| ---------------------- | ------------------------------------------------- | ----- |
+| **Valeur utilisateur** | Impact direct sur l'expérience et la satisfaction | 30 %  |
+| **Différenciation**    | Ce que les concurrents n'ont pas                  | 20 %  |
+| **Faisabilité**        | Complexité technique, risques, dépendances        | 20 %  |
+| **Fondation**          | Déblocage d'autres évolutions                     | 15 %  |
+| **Urgence**            | Dettes, bugs, attentes utilisateur                | 15 %  |
 
 **Score pondéré** = (V × 0.30) + (D × 0.20) + (F × 0.20) + (Fo × 0.15) + (U × 0.15)
 
@@ -42,11 +42,11 @@ Chaque chantier est évalué sur 5 axes (note 1–5) :
 
 Avant toute évolution, les **3 bugs P0** de l'audit doivent être corrigés :
 
-| Ref | Bug | Impact |
-|-----|-----|--------|
+| Ref    | Bug                           | Impact                           |
+| ------ | ----------------------------- | -------------------------------- |
 | BUG-01 | Multi-loterie non fonctionnel | Bloque toute évolution multi-jeu |
-| BUG-02 | Method selector bloqué | Bloque benchmark algorithmique |
-| BUG-03 | Profil scoring non transmis | Bloque comparaison profils |
+| BUG-02 | Method selector bloqué        | Bloque benchmark algorithmique   |
+| BUG-03 | Profil scoring non transmis   | Bloque comparaison profils       |
 
 **Estimation** : 1–2 jours de développement + tests.
 
@@ -54,18 +54,18 @@ Avant toute évolution, les **3 bugs P0** de l'audit doivent être corrigés :
 
 ## 4. Matrice de scoring
 
-| # | Chantier | V (30%) | D (20%) | F (20%) | Fo (15%) | U (15%) | **Score** |
-|---|----------|:-------:|:-------:|:-------:|:--------:|:-------:|:---------:|
-| 13 | Tooltips & aide contextuelle | 4 | 2 | 5 | 4 | 5 | **3.95** |
-| 11 | Historique / Favoris / Rejouer | 4 | 3 | 4 | 5 | 4 | **3.95** |
-| 12 | Explicabilité | 5 | 4 | 4 | 3 | 3 | **3.95** |
-| 08 | Système réduit / Wheeling | 5 | 5 | 2 | 3 | 2 | **3.55** |
-| 07 | Amélioration UI/UX profonde | 4 | 2 | 4 | 4 | 4 | **3.50** |
-| 09 | Mode budget intelligent | 5 | 5 | 2 | 2 | 2 | **3.35** |
-| 10 | Comparateur de stratégies | 4 | 4 | 3 | 3 | 2 | **3.25** |
-| 14 | Espace pédagogique | 3 | 2 | 5 | 3 | 3 | **3.15** |
-| 05 | Améliorations algorithmiques | 3 | 3 | 3 | 4 | 3 | **3.15** |
-| 15 | Automatisation & vie du produit | 4 | 4 | 2 | 2 | 2 | **2.95** |
+| #   | Chantier                        | V (30%) | D (20%) | F (20%) | Fo (15%) | U (15%) | **Score** |
+| --- | ------------------------------- | :-----: | :-----: | :-----: | :------: | :-----: | :-------: |
+| 13  | Tooltips & aide contextuelle    |    4    |    2    |    5    |    4     |    5    | **3.95**  |
+| 11  | Historique / Favoris / Rejouer  |    4    |    3    |    4    |    5     |    4    | **3.95**  |
+| 12  | Explicabilité                   |    5    |    4    |    4    |    3     |    3    | **3.95**  |
+| 08  | Système réduit / Wheeling       |    5    |    5    |    2    |    3     |    2    | **3.55**  |
+| 07  | Amélioration UI/UX profonde     |    4    |    2    |    4    |    4     |    4    | **3.50**  |
+| 09  | Mode budget intelligent         |    5    |    5    |    2    |    2     |    2    | **3.35**  |
+| 10  | Comparateur de stratégies       |    4    |    4    |    3    |    3     |    2    | **3.25**  |
+| 14  | Espace pédagogique              |    3    |    2    |    5    |    3     |    3    | **3.15**  |
+| 05  | Améliorations algorithmiques    |    3    |    3    |    3    |    4     |    3    | **3.15**  |
+| 15  | Automatisation & vie du produit |    4    |    4    |    2    |    2     |    2    | **2.95**  |
 
 ---
 
@@ -129,25 +129,25 @@ Corrections P0 ──────► Phase A (Tooltips, UX quick wins)
 
 ## 7. Distinction des niveaux
 
-| Niveau | Chantiers | Justification |
-|--------|-----------|---------------|
-| **Indispensable** | Corrections P0, 13, 11 | Bugs bloquants + fondation |
-| **Important** | 12, 07, 14, 08 | Core value + prérequis différenciation |
-| **Utile** | 09, 10, 05 | Fonctionnalités à forte valeur perçue |
-| **Premium** | 15 | Long terme, valeur de rétention |
+| Niveau            | Chantiers              | Justification                          |
+| ----------------- | ---------------------- | -------------------------------------- |
+| **Indispensable** | Corrections P0, 13, 11 | Bugs bloquants + fondation             |
+| **Important**     | 12, 07, 14, 08         | Core value + prérequis différenciation |
+| **Utile**         | 09, 10, 05             | Fonctionnalités à forte valeur perçue  |
+| **Premium**       | 15                     | Long terme, valeur de rétention        |
 
 ---
 
 ## 8. Estimation d'effort par phase
 
-| Phase | Contenu | Effort estimé | Risque |
-|-------|---------|---------------|--------|
-| P0 | Corrections bugs | 1–2 jours | Faible |
-| A | Tooltips, UX quick wins, pagination | 1–2 semaines | Faible |
-| B | Historique étendu, explicabilité, pédagogie | 2–4 semaines | Faible |
-| C | Wheeling + Budget + Comparateur | 6–10 semaines | Moyen à élevé |
-| D | Calibration algo, profils avancés | 2–4 semaines | Moyen |
-| E | Automatisation, alertes, récurrence | 3–5 semaines | Moyen |
+| Phase | Contenu                                     | Effort estimé | Risque        |
+| ----- | ------------------------------------------- | ------------- | ------------- |
+| P0    | Corrections bugs                            | 1–2 jours     | Faible        |
+| A     | Tooltips, UX quick wins, pagination         | 1–2 semaines  | Faible        |
+| B     | Historique étendu, explicabilité, pédagogie | 2–4 semaines  | Faible        |
+| C     | Wheeling + Budget + Comparateur             | 6–10 semaines | Moyen à élevé |
+| D     | Calibration algo, profils avancés           | 2–4 semaines  | Moyen         |
+| E     | Automatisation, alertes, récurrence         | 3–5 semaines  | Moyen         |
 
 **Total estimé** : 15–27 semaines de développement.
 
@@ -155,12 +155,12 @@ Corrections P0 ──────► Phase A (Tooltips, UX quick wins)
 
 ## 9. Critères d'acceptation
 
-| Critère | Mesure |
-|---------|--------|
-| Chaque chantier a un score pondéré documenté | Matrice section 4 |
-| Les dépendances sont identifiées | Graphe section 6 |
-| Les phases sont réalistes | Estimations section 8 |
-| La roadmap résultante est cohérente | [26_Roadmap_Evolutions](./26_Roadmap_Evolutions.md) |
+| Critère                                      | Mesure                                              |
+| -------------------------------------------- | --------------------------------------------------- |
+| Chaque chantier a un score pondéré documenté | Matrice section 4                                   |
+| Les dépendances sont identifiées             | Graphe section 6                                    |
+| Les phases sont réalistes                    | Estimations section 8                               |
+| La roadmap résultante est cohérente          | [26_Roadmap_Evolutions](./26_Roadmap_Evolutions.md) |
 
 ---
 

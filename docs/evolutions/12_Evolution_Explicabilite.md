@@ -31,11 +31,11 @@ Le système calcule déjà un score breakdown (6 critères) mais ne fournit aucu
 
 ### 3.1 — Niveaux d'explicabilité
 
-| Niveau | Description | Cible |
-|--------|-------------|-------|
-| **L1 — Résumé** | Phrase courte synthétisant le résultat | Tout le monde |
-| **L2 — Interprétation** | Paragraphe expliquant ce que signifie chaque métrique | Joueur régulier |
-| **L3 — Détail technique** | Formule, poids, méthode utilisée | Joueur analytique/expert |
+| Niveau                    | Description                                           | Cible                    |
+| ------------------------- | ----------------------------------------------------- | ------------------------ |
+| **L1 — Résumé**           | Phrase courte synthétisant le résultat                | Tout le monde            |
+| **L2 — Interprétation**   | Paragraphe expliquant ce que signifie chaque métrique | Joueur régulier          |
+| **L3 — Détail technique** | Formule, poids, méthode utilisée                      | Joueur analytique/expert |
 
 ### 3.2 — Éléments à expliquer
 
@@ -115,11 +115,11 @@ class Explanation:
 
 ## 4. Intérêt utilisateur
 
-| Persona | Bénéfice |
-|---------|----------|
-| Joueur régulier | Comprend ses résultats sans documentation externe |
-| Joueur analytique | Voit les raisons derrière chaque score |
-| Tous | Confiance : le système est transparent, pas une boîte noire |
+| Persona           | Bénéfice                                                    |
+| ----------------- | ----------------------------------------------------------- |
+| Joueur régulier   | Comprend ses résultats sans documentation externe           |
+| Joueur analytique | Voit les raisons derrière chaque score                      |
+| Tous              | Confiance : le système est transparent, pas une boîte noire |
 
 ---
 
@@ -173,33 +173,33 @@ Ajouter `<ExplanationPanel>` dans :
 
 ## 7. Phasage
 
-| Phase | Contenu | Effort |
-|-------|---------|--------|
-| B.4 | Backend : explainer grid + portfolio + templates | 2 jours |
-| B.5 | Frontend : ExplanationPanel + intégration pages existantes | 2 jours |
-| C.x | Explainers pour wheeling, budget, comparateur | inclus dans chaque chantier |
+| Phase | Contenu                                                    | Effort                      |
+| ----- | ---------------------------------------------------------- | --------------------------- |
+| B.4   | Backend : explainer grid + portfolio + templates           | 2 jours                     |
+| B.5   | Frontend : ExplanationPanel + intégration pages existantes | 2 jours                     |
+| C.x   | Explainers pour wheeling, budget, comparateur              | inclus dans chaque chantier |
 
 ---
 
 ## 8. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Textes inexacts ou trompeurs | Moyenne | Critique | Templates vérifiés + tests + vocabulaire contraint |
-| Surcharge visuelle | Moyenne | Moyen | Mode simplifié = résumé seul |
-| Maintenance des templates | Faible | Mineur | Templates centralisés, tests de smoke |
+| Risque                       | Probabilité | Impact   | Mitigation                                         |
+| ---------------------------- | ----------- | -------- | -------------------------------------------------- |
+| Textes inexacts ou trompeurs | Moyenne     | Critique | Templates vérifiés + tests + vocabulaire contraint |
+| Surcharge visuelle           | Moyenne     | Moyen    | Mode simplifié = résumé seul                       |
+| Maintenance des templates    | Faible      | Mineur   | Templates centralisés, tests de smoke              |
 
 ---
 
 ## 9. Critères d'acceptation
 
-| Critère | Test |
-|---------|------|
-| Chaque grille scorée a un champ explanation | Test schema |
-| Summary ≤ 150 caractères | Test template |
-| Interpretation est cohérente avec les données | Test avec données connues |
-| Aucun texte ne contient « garantie », « prédiction », « gagner » | Test vocabulaire |
-| Mode simplifié affiche summary seul | Test frontend |
+| Critère                                                          | Test                      |
+| ---------------------------------------------------------------- | ------------------------- |
+| Chaque grille scorée a un champ explanation                      | Test schema               |
+| Summary ≤ 150 caractères                                         | Test template             |
+| Interpretation est cohérente avec les données                    | Test avec données connues |
+| Aucun texte ne contient « garantie », « prédiction », « gagner » | Test vocabulaire          |
+| Mode simplifié affiche summary seul                              | Test frontend             |
 
 ---
 

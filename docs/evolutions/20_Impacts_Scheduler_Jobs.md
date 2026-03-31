@@ -239,31 +239,31 @@ async def cleanup_notifications(db: AsyncSession):
 
 ### fetch_draws
 
-| Aspect | Avant | Après |
-|--------|-------|-------|
-| Jeux scrapés | Tous les jeux actifs | Inchangé |
-| Post-action | Déclenche pipeline | Déclenche pipeline + create_new_draw_notifications |
-| Multi-lottery | Fonctionne déjà | Vérifier BUG-01 n'impacte pas |
+| Aspect        | Avant                | Après                                              |
+| ------------- | -------------------- | -------------------------------------------------- |
+| Jeux scrapés  | Tous les jeux actifs | Inchangé                                           |
+| Post-action   | Déclenche pipeline   | Déclenche pipeline + create_new_draw_notifications |
+| Multi-lottery | Fonctionne déjà      | Vérifier BUG-01 n'impacte pas                      |
 
 ### compute_statistics
 
-| Aspect | Avant | Après |
-|--------|-------|-------|
-| Post-action | Fin | + compute_hot_cold_summary |
-| Multi-lottery | Vérifier game_id | BUG-01 fix |
+| Aspect        | Avant            | Après                      |
+| ------------- | ---------------- | -------------------------- |
+| Post-action   | Fin              | + compute_hot_cold_summary |
+| Multi-lottery | Vérifier game_id | BUG-01 fix                 |
 
 ### compute_scoring
 
-| Aspect | Avant | Après |
-|--------|-------|-------|
-| Post-action | compute_top | + pre_generate_daily_content after top |
-| BUG-02 | method_selector broken | Fix method_selector |
+| Aspect      | Avant                  | Après                                  |
+| ----------- | ---------------------- | -------------------------------------- |
+| Post-action | compute_top            | + pre_generate_daily_content after top |
+| BUG-02      | method_selector broken | Fix method_selector                    |
 
 ### cleanup
 
-| Aspect | Avant | Après |
-|--------|-------|-------|
-| Scope | Données anciennes | + cleanup_notifications + cleanup_anonymous_data |
+| Aspect | Avant             | Après                                            |
+| ------ | ----------------- | ------------------------------------------------ |
+| Scope  | Données anciennes | + cleanup_notifications + cleanup_anonymous_data |
 
 ---
 
@@ -298,12 +298,12 @@ STANDALONE_JOBS = [
 
 ### Métriques à surveiller
 
-| Métrique | Seuil alerte | Action |
-|----------|-------------|--------|
-| Pipeline total duration | > 10 min | Investiguer job le plus lent |
-| check_played_grids duration | > 2 min | Optimiser requête / index |
-| fetch_draws failures | 2 consécutifs | Vérifier scraper / site FDJ |
-| notification count/day | > 1000 | Vérifier boucle infinie |
+| Métrique                    | Seuil alerte  | Action                       |
+| --------------------------- | ------------- | ---------------------------- |
+| Pipeline total duration     | > 10 min      | Investiguer job le plus lent |
+| check_played_grids duration | > 2 min       | Optimiser requête / index    |
+| fetch_draws failures        | 2 consécutifs | Vérifier scraper / site FDJ  |
+| notification count/day      | > 1000        | Vérifier boucle infinie      |
 
 ### Logging
 
@@ -316,23 +316,23 @@ Chaque nouveau job doit :
 
 ## 7. Résumé quantitatif
 
-| Métrique | Avant | Après | Delta |
-|----------|-------|-------|-------|
-| Jobs total | 9 | 17 | +8 |
-| Pipeline steps | 5 | 11 | +6 |
-| Standalone jobs | 4 | 4 | 0 (cleanup étendu) |
-| Durée pipeline estimée | ~3 min | ~5–7 min | +2–4 min |
+| Métrique               | Avant  | Après    | Delta              |
+| ---------------------- | ------ | -------- | ------------------ |
+| Jobs total             | 9      | 17       | +8                 |
+| Pipeline steps         | 5      | 11       | +6                 |
+| Standalone jobs        | 4      | 4        | 0 (cleanup étendu) |
+| Durée pipeline estimée | ~3 min | ~5–7 min | +2–4 min           |
 
 ---
 
 ## 8. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| Pipeline trop long (>10 min) | Résultats pas prêts au matin | Paralléliser jobs indépendants |
-| Job check_played_grids sur beaucoup de grilles | Lenteur | Index + batch processing |
-| Notification storm au déploiement initial | UX | Ne pas backfill les notifications |
-| Échec nightly_pipeline casse tout le flux | Critique | Chaque step indépendante, retry, continue on error |
+| Risque                                         | Impact                       | Mitigation                                         |
+| ---------------------------------------------- | ---------------------------- | -------------------------------------------------- |
+| Pipeline trop long (>10 min)                   | Résultats pas prêts au matin | Paralléliser jobs indépendants                     |
+| Job check_played_grids sur beaucoup de grilles | Lenteur                      | Index + batch processing                           |
+| Notification storm au déploiement initial      | UX                           | Ne pas backfill les notifications                  |
+| Échec nightly_pipeline casse tout le flux      | Critique                     | Chaque step indépendante, retry, continue on error |
 
 ---
 

@@ -27,56 +27,56 @@ Ce dossier d'évolution définit **10 chantiers majeurs** organisés en 5 phases
 
 ### 2.1 — Documents stratégiques
 
-| # | Document | Rôle |
-|---|----------|------|
-| [00](./00_Index_Evolutions.md) | **Index central** | Navigation, vue d'ensemble, dépendances |
-| [01](./01_Vision_Evolutions.md) | **Vision des évolutions** | Pourquoi évoluer, ambition produit, principes directeurs |
-| [02](./02_Strategie_Produit.md) | **Stratégie produit** | Positionnement, segmentation, différenciation |
-| [03](./03_Audit_Existant_et_Ecarts.md) | **Audit existant & écarts** | État des lieux, bugs critiques, dettes, écarts feature |
-| [04](./04_Priorisation_Evolutions.md) | **Priorisation** | Matrice valeur/effort, scoring, hiérarchie |
+| #                                      | Document                    | Rôle                                                     |
+| -------------------------------------- | --------------------------- | -------------------------------------------------------- |
+| [00](./00_Index_Evolutions.md)         | **Index central**           | Navigation, vue d'ensemble, dépendances                  |
+| [01](./01_Vision_Evolutions.md)        | **Vision des évolutions**   | Pourquoi évoluer, ambition produit, principes directeurs |
+| [02](./02_Strategie_Produit.md)        | **Stratégie produit**       | Positionnement, segmentation, différenciation            |
+| [03](./03_Audit_Existant_et_Ecarts.md) | **Audit existant & écarts** | État des lieux, bugs critiques, dettes, écarts feature   |
+| [04](./04_Priorisation_Evolutions.md)  | **Priorisation**            | Matrice valeur/effort, scoring, hiérarchie               |
 
 ### 2.2 — Évolutions transversales
 
-| # | Document | Rôle |
-|---|----------|------|
+| #                                       | Document                      | Rôle                                           |
+| --------------------------------------- | ----------------------------- | ---------------------------------------------- |
 | [05](./05_Evolutions_Algorithmiques.md) | **Évolutions algorithmiques** | Scoring, optimisation, simulation, calibration |
-| [06](./06_Evolutions_Fonctionnelles.md) | **Évolutions fonctionnelles** | Nouvelles capacités métier transversales |
-| [07](./07_Evolutions_UI_UX.md) | **Évolutions UI/UX** | Design system, navigation, modes, composants |
+| [06](./06_Evolutions_Fonctionnelles.md) | **Évolutions fonctionnelles** | Nouvelles capacités métier transversales       |
+| [07](./07_Evolutions_UI_UX.md)          | **Évolutions UI/UX**          | Design system, navigation, modes, composants   |
 
 ### 2.3 — Évolutions détaillées (chantiers)
 
-| # | Document | Chantier | Phase |
-|---|----------|----------|-------|
-| [08](./08_Evolution_Systeme_Reduit_Wheeling.md) | **Système réduit / Wheeling** | Covering design interactif | C |
-| [09](./09_Evolution_Mode_Budget_Intelligent.md) | **Mode budget intelligent** | Optimisation sous contrainte budgétaire | C |
-| [10](./10_Evolution_Comparateur_Strategies.md) | **Comparateur de stratégies** | Tableau de bord comparatif | C |
-| [11](./11_Evolution_Historique_Favoris.md) | **Historique / Favoris / Rejouer** | Persistance utilisateur avancée | B |
-| [12](./12_Evolution_Explicabilite.md) | **Explicabilité** | Couche d'explication premium | B |
-| [13](./13_Evolution_Tooltips_Aide_Contextuelle.md) | **Tooltips & aide contextuelle** | Micro-copy, guidance UX | A |
-| [14](./14_Evolution_Espace_Pedagogique.md) | **Espace pédagogique** | Pages de compréhension | B |
-| [15](./15_Evolution_Automatisation_Produit.md) | **Automatisation & vie du produit** | Alertes, suggestions, récurrence | D |
+| #                                                  | Document                            | Chantier                                | Phase |
+| -------------------------------------------------- | ----------------------------------- | --------------------------------------- | ----- |
+| [08](./08_Evolution_Systeme_Reduit_Wheeling.md)    | **Système réduit / Wheeling**       | Covering design interactif              | C     |
+| [09](./09_Evolution_Mode_Budget_Intelligent.md)    | **Mode budget intelligent**         | Optimisation sous contrainte budgétaire | C     |
+| [10](./10_Evolution_Comparateur_Strategies.md)     | **Comparateur de stratégies**       | Tableau de bord comparatif              | C     |
+| [11](./11_Evolution_Historique_Favoris.md)         | **Historique / Favoris / Rejouer**  | Persistance utilisateur avancée         | B     |
+| [12](./12_Evolution_Explicabilite.md)              | **Explicabilité**                   | Couche d'explication premium            | B     |
+| [13](./13_Evolution_Tooltips_Aide_Contextuelle.md) | **Tooltips & aide contextuelle**    | Micro-copy, guidance UX                 | A     |
+| [14](./14_Evolution_Espace_Pedagogique.md)         | **Espace pédagogique**              | Pages de compréhension                  | B     |
+| [15](./15_Evolution_Automatisation_Produit.md)     | **Automatisation & vie du produit** | Alertes, suggestions, récurrence        | D     |
 
 ### 2.4 — Analyses d'impacts techniques
 
-| # | Document | Périmètre |
-|---|----------|-----------|
-| [16](./16_Impacts_Backend.md) | **Impacts backend** | Services, engines, endpoints, repos, jobs |
-| [17](./17_Impacts_Frontend.md) | **Impacts frontend** | Pages, composants, hooks, stores, services |
-| [18](./18_Impacts_API.md) | **Impacts API** | Endpoints, schémas, validation, compatibilité |
-| [19](./19_Impacts_Base_De_Donnees.md) | **Impacts base de données** | Tables, colonnes, migrations, seed data |
-| [20](./20_Impacts_Scheduler_Jobs.md) | **Impacts scheduler / jobs** | Nouveaux jobs, recalculs, purges |
-| [21](./21_Impacts_Securite_Roles.md) | **Impacts sécurité / rôles** | RBAC, rate-limiting, validation |
-| [22](./22_Impacts_Performance_Scalabilite.md) | **Impacts performance / scalabilité** | Temps calcul, cache, async, volume |
-| [23](./23_Impacts_Production_Exploitation.md) | **Impacts production / exploitation** | Logs, métriques, déploiement, rollback |
+| #                                             | Document                              | Périmètre                                     |
+| --------------------------------------------- | ------------------------------------- | --------------------------------------------- |
+| [16](./16_Impacts_Backend.md)                 | **Impacts backend**                   | Services, engines, endpoints, repos, jobs     |
+| [17](./17_Impacts_Frontend.md)                | **Impacts frontend**                  | Pages, composants, hooks, stores, services    |
+| [18](./18_Impacts_API.md)                     | **Impacts API**                       | Endpoints, schémas, validation, compatibilité |
+| [19](./19_Impacts_Base_De_Donnees.md)         | **Impacts base de données**           | Tables, colonnes, migrations, seed data       |
+| [20](./20_Impacts_Scheduler_Jobs.md)          | **Impacts scheduler / jobs**          | Nouveaux jobs, recalculs, purges              |
+| [21](./21_Impacts_Securite_Roles.md)          | **Impacts sécurité / rôles**          | RBAC, rate-limiting, validation               |
+| [22](./22_Impacts_Performance_Scalabilite.md) | **Impacts performance / scalabilité** | Temps calcul, cache, async, volume            |
+| [23](./23_Impacts_Production_Exploitation.md) | **Impacts production / exploitation** | Logs, métriques, déploiement, rollback        |
 
 ### 2.5 — Qualité, roadmap et pilotage
 
-| # | Document | Rôle |
-|---|----------|------|
-| [24](./24_Strategie_Non_Regression.md) | **Stratégie de non-régression** | Protection de l'existant, smoke tests |
-| [25](./25_Strategie_Tests_Evolutions.md) | **Stratégie de tests des évolutions** | Tests unitaires, intégration, E2E |
-| [26](./26_Roadmap_Evolutions.md) | **Roadmap d'évolutions** | Phases A→E, jalons, estimations |
-| [27](./27_Checklist_Globale_Evolutions.md) | **Checklist globale** | Tâches atomiques cochables + références croisées |
+| #                                          | Document                              | Rôle                                             |
+| ------------------------------------------ | ------------------------------------- | ------------------------------------------------ |
+| [24](./24_Strategie_Non_Regression.md)     | **Stratégie de non-régression**       | Protection de l'existant, smoke tests            |
+| [25](./25_Strategie_Tests_Evolutions.md)   | **Stratégie de tests des évolutions** | Tests unitaires, intégration, E2E                |
+| [26](./26_Roadmap_Evolutions.md)           | **Roadmap d'évolutions**              | Phases A→E, jalons, estimations                  |
+| [27](./27_Checklist_Globale_Evolutions.md) | **Checklist globale**                 | Tâches atomiques cochables + références croisées |
 
 ---
 
@@ -104,16 +104,16 @@ Ce dossier d'évolution définit **10 chantiers majeurs** organisés en 5 phases
 
 ## 4. Matrice évolutions × impacts
 
-| Évolution | Backend | Frontend | API | DB | Scheduler | Sécurité | Perf | Prod |
-|-----------|:-------:|:--------:|:---:|:--:|:---------:|:--------:|:----:|:----:|
-| 08 Wheeling | ●●● | ●●● | ●●● | ●● | ● | ● | ●●● | ● |
-| 09 Budget | ●●● | ●●● | ●● | ● | ● | ● | ●● | ● |
-| 10 Comparateur | ●● | ●●● | ●● | ○ | ○ | ○ | ●● | ○ |
-| 11 Historique | ●● | ●● | ●● | ●●● | ● | ●● | ● | ● |
-| 12 Explicabilité | ●● | ●●● | ● | ○ | ○ | ○ | ● | ○ |
-| 13 Tooltips | ○ | ●●● | ○ | ○ | ○ | ○ | ○ | ○ |
-| 14 Pédagogie | ○ | ●● | ○ | ○ | ○ | ○ | ○ | ○ |
-| 15 Automatisation | ●●● | ●● | ●● | ●● | ●●● | ●● | ●● | ●● |
+| Évolution         | Backend | Frontend |  API  |  DB   | Scheduler | Sécurité | Perf  | Prod  |
+| ----------------- | :-----: | :------: | :---: | :---: | :-------: | :------: | :---: | :---: |
+| 08 Wheeling       |   ●●●   |   ●●●    |  ●●●  |  ●●   |     ●     |    ●     |  ●●●  |   ●   |
+| 09 Budget         |   ●●●   |   ●●●    |  ●●   |   ●   |     ●     |    ●     |  ●●   |   ●   |
+| 10 Comparateur    |   ●●    |   ●●●    |  ●●   |   ○   |     ○     |    ○     |  ●●   |   ○   |
+| 11 Historique     |   ●●    |    ●●    |  ●●   |  ●●●  |     ●     |    ●●    |   ●   |   ●   |
+| 12 Explicabilité  |   ●●    |   ●●●    |   ●   |   ○   |     ○     |    ○     |   ●   |   ○   |
+| 13 Tooltips       |    ○    |   ●●●    |   ○   |   ○   |     ○     |    ○     |   ○   |   ○   |
+| 14 Pédagogie      |    ○    |    ●●    |   ○   |   ○   |     ○     |    ○     |   ○   |   ○   |
+| 15 Automatisation |   ●●●   |    ●●    |  ●●   |  ●●   |    ●●●    |    ●●    |  ●●   |  ●●   |
 
 _Légende : ○ aucun · ● mineur · ●● modéré · ●●● majeur_
 
@@ -131,12 +131,12 @@ _Légende : ○ aucun · ● mineur · ●● modéré · ●●● majeur_
 
 ## 6. Liens rapides
 
-| Besoin | Document |
-|--------|----------|
-| Comprendre la vision | [01_Vision_Evolutions](./01_Vision_Evolutions.md) |
-| Voir les bugs à corriger | [03_Audit_Existant_et_Ecarts](./03_Audit_Existant_et_Ecarts.md) |
-| Savoir quoi faire en premier | [04_Priorisation_Evolutions](./04_Priorisation_Evolutions.md) |
-| Planifier le développement | [26_Roadmap_Evolutions](./26_Roadmap_Evolutions.md) |
-| Suivre l'avancement | [27_Checklist_Globale_Evolutions](./27_Checklist_Globale_Evolutions.md) |
-| Vérifier l'impact DB | [19_Impacts_Base_De_Donnees](./19_Impacts_Base_De_Donnees.md) |
-| Protéger l'existant | [24_Strategie_Non_Regression](./24_Strategie_Non_Regression.md) |
+| Besoin                       | Document                                                                |
+| ---------------------------- | ----------------------------------------------------------------------- |
+| Comprendre la vision         | [01_Vision_Evolutions](./01_Vision_Evolutions.md)                       |
+| Voir les bugs à corriger     | [03_Audit_Existant_et_Ecarts](./03_Audit_Existant_et_Ecarts.md)         |
+| Savoir quoi faire en premier | [04_Priorisation_Evolutions](./04_Priorisation_Evolutions.md)           |
+| Planifier le développement   | [26_Roadmap_Evolutions](./26_Roadmap_Evolutions.md)                     |
+| Suivre l'avancement          | [27_Checklist_Globale_Evolutions](./27_Checklist_Globale_Evolutions.md) |
+| Vérifier l'impact DB         | [19_Impacts_Base_De_Donnees](./19_Impacts_Base_De_Donnees.md)           |
+| Protéger l'existant          | [24_Strategie_Non_Regression](./24_Strategie_Non_Regression.md)         |

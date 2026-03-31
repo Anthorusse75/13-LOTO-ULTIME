@@ -36,15 +36,15 @@ Définir et implémenter une **stratégie d'aide contextuelle complète** couvra
 
 ### 3.1 — Couches d'aide (du plus discret au plus visible)
 
-| Couche | Composant | Quand | Exemple |
-|--------|-----------|-------|---------|
-| **Placeholder text** | input placeholder | Champ vide | « Ex: 10 grilles » |
-| **Microcopy** | Texte sous un champ | Toujours visible | « Nombre de grilles à générer (1 à 100) » |
-| **InfoTooltip** | Icône ⓘ au survol | Hover / tap | « Le score de fréquence mesure... » |
-| **PageIntro** | Bloc en haut de page | Toujours visible | Termes clés + exemples concrets |
-| **Empty state** | Bloc quand pas de données | Première visite | « Pas encore de grilles. Cliquez ici pour en générer. » |
-| **Comment lire** | Panneau collapsible | Sous un graphe ou tableau | « 📘 La courbe bleue représente... » |
-| **Aide complète** | Lien vers HowItWorks | Fin de section | « En savoir plus → Comment ça marche » |
+| Couche               | Composant                 | Quand                     | Exemple                                                 |
+| -------------------- | ------------------------- | ------------------------- | ------------------------------------------------------- |
+| **Placeholder text** | input placeholder         | Champ vide                | « Ex: 10 grilles »                                      |
+| **Microcopy**        | Texte sous un champ       | Toujours visible          | « Nombre de grilles à générer (1 à 100) »               |
+| **InfoTooltip**      | Icône ⓘ au survol         | Hover / tap               | « Le score de fréquence mesure... »                     |
+| **PageIntro**        | Bloc en haut de page      | Toujours visible          | Termes clés + exemples concrets                         |
+| **Empty state**      | Bloc quand pas de données | Première visite           | « Pas encore de grilles. Cliquez ici pour en générer. » |
+| **Comment lire**     | Panneau collapsible       | Sous un graphe ou tableau | « 📘 La courbe bleue représente... »                     |
+| **Aide complète**    | Lien vers HowItWorks      | Fin de section            | « En savoir plus → Comment ça marche »                  |
 
 ### 3.2 — Inventaire des tooltips par page
 
@@ -95,29 +95,29 @@ Définir et implémenter une **stratégie d'aide contextuelle complète** couvra
 
 ### 3.3 — Empty states enrichis
 
-| Page | Message actuel | Message cible |
-|------|---------------|---------------|
-| FavoritesPage | « Pas de favoris » | « ❤️ Vous n'avez pas encore de grilles favorites. Allez dans Grilles, générez des grilles, puis cliquez sur le ❤️ pour les sauvegarder ici. » |
-| HistoryPage | « Pas de grilles jouées » | « 📋 Votre historique est vide. Quand vous marquez une grille comme "jouée" ✓, elle apparaît ici avec la correspondance aux tirages réels. » |
-| PortfolioPage | « Pas de portefeuille » | « 📦 Pas de portefeuille généré. Un portefeuille est un ensemble de grilles diversifiées. Allez dans Grilles pour en générer, puis optimisez-les ici. » |
-| SimulationPage | « Pas de résultats » | « 🎲 Lancez votre première simulation. Choisissez une grille et simulez-la sur 10 000 tirages pour voir sa performance statistique. » |
+| Page           | Message actuel            | Message cible                                                                                                                                          |
+| -------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| FavoritesPage  | « Pas de favoris »        | « ❤️ Vous n'avez pas encore de grilles favorites. Allez dans Grilles, générez des grilles, puis cliquez sur le ❤️ pour les sauvegarder ici. »            |
+| HistoryPage    | « Pas de grilles jouées » | « 📋 Votre historique est vide. Quand vous marquez une grille comme "jouée" ✓, elle apparaît ici avec la correspondance aux tirages réels. »            |
+| PortfolioPage  | « Pas de portefeuille »   | « 📦 Pas de portefeuille généré. Un portefeuille est un ensemble de grilles diversifiées. Allez dans Grilles pour en générer, puis optimisez-les ici. » |
+| SimulationPage | « Pas de résultats »      | « 🎲 Lancez votre première simulation. Choisissez une grille et simulez-la sur 10 000 tirages pour voir sa performance statistique. »                   |
 
 ### 3.4 — Loading states
 
-| Page | Spinner actuel | Loading state cible |
-|------|---------------|---------------------|
-| GridsPage / Génération | Spinner simple | « 🔄 Génération de N grilles avec algorithme X... Cela prend quelques secondes. » |
-| SimulationPage / Monte Carlo | Spinner simple | « 🎲 Simulation de 10 000 tirages en cours... » |
-| StatisticsPage / Recompute | Spinner simple | « 📊 Recalcul des 7 moteurs statistiques... 2/7 terminés » |
+| Page                         | Spinner actuel | Loading state cible                                                              |
+| ---------------------------- | -------------- | -------------------------------------------------------------------------------- |
+| GridsPage / Génération       | Spinner simple | « 🔄 Génération de N grilles avec algorithme X... Cela prend quelques secondes. » |
+| SimulationPage / Monte Carlo | Spinner simple | « 🎲 Simulation de 10 000 tirages en cours... »                                   |
+| StatisticsPage / Recompute   | Spinner simple | « 📊 Recalcul des 7 moteurs statistiques... 2/7 terminés »                        |
 
 ### 3.5 — Erreurs explicatives
 
-| Erreur | Message technique | Message UX |
-|--------|-------------------|------------|
-| 422 (validation) | « numbers count must be 5 » | « Le jeu Loto FDJ nécessite exactement 5 numéros entre 1 et 49. Vous en avez sélectionné 4. » |
-| 429 (rate limit) | « Too many requests » | « ⏱️ Trop de requêtes. Le système est protégé contre la surcharge. Réessayez dans 30 secondes. » |
-| 500 (erreur serveur) | « Internal server error » | « ❌ Une erreur inattendue est survenue. L'équipe a été notifiée. Rechargez la page ou réessayez plus tard. » |
-| Timeout | « Request timeout » | « ⏳ Le calcul a pris trop de temps. Essayez avec moins de grilles ou un ensemble plus petit. » |
+| Erreur               | Message technique           | Message UX                                                                                                   |
+| -------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| 422 (validation)     | « numbers count must be 5 » | « Le jeu Loto FDJ nécessite exactement 5 numéros entre 1 et 49. Vous en avez sélectionné 4. »                |
+| 429 (rate limit)     | « Too many requests »       | « ⏱️ Trop de requêtes. Le système est protégé contre la surcharge. Réessayez dans 30 secondes. »              |
+| 500 (erreur serveur) | « Internal server error »   | « ❌ Une erreur inattendue est survenue. L'équipe a été notifiée. Rechargez la page ou réessayez plus tard. » |
+| Timeout              | « Request timeout »         | « ⏳ Le calcul a pris trop de temps. Essayez avec moins de grilles ou un ensemble plus petit. »               |
 
 ---
 
@@ -154,35 +154,35 @@ export const HELP_TEXTS = {
 
 ## 5. Phasage
 
-| Phase | Contenu | Effort |
-|-------|---------|--------|
-| A.1 | Centraliser helpTexts.ts | 0.5 jour |
-| A.2 | Ajouter tooltips manquants (Dashboard, Draws, Statistics, Portfolio) | 1–2 jours |
-| A.3 | Enrichir empty states (4 pages) | 0.5 jour |
-| A.4 | Enrichir loading states (3 pages) | 0.5 jour |
-| A.5 | Créer ErrorState composant + mapping codes HTTP | 1 jour |
-| Total Phase A | | ~3–4 jours |
+| Phase         | Contenu                                                              | Effort     |
+| ------------- | -------------------------------------------------------------------- | ---------- |
+| A.1           | Centraliser helpTexts.ts                                             | 0.5 jour   |
+| A.2           | Ajouter tooltips manquants (Dashboard, Draws, Statistics, Portfolio) | 1–2 jours  |
+| A.3           | Enrichir empty states (4 pages)                                      | 0.5 jour   |
+| A.4           | Enrichir loading states (3 pages)                                    | 0.5 jour   |
+| A.5           | Créer ErrorState composant + mapping codes HTTP                      | 1 jour     |
+| Total Phase A |                                                                      | ~3–4 jours |
 
 ---
 
 ## 6. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Surcharge visuelle (trop de tooltips) | Moyenne | Moyen | Mode simplifié les réduit, mode expert les détaille |
-| Textes obsolètes si fonctionnalités changent | Moyenne | Mineur | Fichier centralisé, revue à chaque release |
-| Traduction si multi-langue | Future | Moyen | helpTexts.ts structuré pour i18n |
+| Risque                                       | Probabilité | Impact | Mitigation                                          |
+| -------------------------------------------- | ----------- | ------ | --------------------------------------------------- |
+| Surcharge visuelle (trop de tooltips)        | Moyenne     | Moyen  | Mode simplifié les réduit, mode expert les détaille |
+| Textes obsolètes si fonctionnalités changent | Moyenne     | Mineur | Fichier centralisé, revue à chaque release          |
+| Traduction si multi-langue                   | Future      | Moyen  | helpTexts.ts structuré pour i18n                    |
 
 ---
 
 ## 7. Critères d'acceptation
 
-| Critère | Test |
-|---------|------|
-| Chaque page a au moins 3 tooltips pertinents | Audit visuel |
-| Chaque page a un empty state guidant | Test (suppression données + vérification message) |
-| Les erreurs 422/429/500 affichent un message UX | Test avec erreurs simulées |
-| helpTexts.ts couvre toutes les pages | Exhaustivité vérifiable |
+| Critère                                         | Test                                              |
+| ----------------------------------------------- | ------------------------------------------------- |
+| Chaque page a au moins 3 tooltips pertinents    | Audit visuel                                      |
+| Chaque page a un empty state guidant            | Test (suppression données + vérification message) |
+| Les erreurs 422/429/500 affichent un message UX | Test avec erreurs simulées                        |
+| helpTexts.ts couvre toutes les pages            | Exhaustivité vérifiable                           |
 
 ---
 

@@ -29,13 +29,13 @@ Offrir un **outil interactif de construction de systèmes réduits** : l'utilisa
 
 ### 2.1 — Terminologie
 
-| Terme | Définition |
-|-------|-----------|
-| **Système réduit** | Ensemble de grilles construit pour couvrir toutes les sous-combinaisons d'un sous-ensemble de numéros choisis |
-| **Wheeling system** | Terme anglais pour système réduit |
-| **Covering design** | Formalisation mathématique : C(n, k, t) — couvrir toute t-combinaison d'un ensemble de n éléments avec des blocs de k éléments |
-| **Full wheel** | Toutes les C(n, k) combinaisons — coûteux mais exhaustif |
-| **Abbreviated wheel** | Sous-ensemble optimisé — moins de grilles, couverture partielle ou totale d'un sous-niveau t |
+| Terme                 | Définition                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Système réduit**    | Ensemble de grilles construit pour couvrir toutes les sous-combinaisons d'un sous-ensemble de numéros choisis                  |
+| **Wheeling system**   | Terme anglais pour système réduit                                                                                              |
+| **Covering design**   | Formalisation mathématique : C(n, k, t) — couvrir toute t-combinaison d'un ensemble de n éléments avec des blocs de k éléments |
+| **Full wheel**        | Toutes les C(n, k) combinaisons — coûteux mais exhaustif                                                                       |
+| **Abbreviated wheel** | Sous-ensemble optimisé — moins de grilles, couverture partielle ou totale d'un sous-niveau t                                   |
 
 ### 2.2 — Formalisation mathématique
 
@@ -59,11 +59,11 @@ Le problème C(n, k, t) est un cas particulier du **Set Cover Problem** (NP-hard
 
 ## 3. Intérêt utilisateur
 
-| Persona | Bénéfice |
-|---------|----------|
-| Joueur régulier | « Je choisis mes 12 numéros fétiches et le système me dit quoi jouer exactement » |
-| Joueur analytique | « Je vois exactement quelle couverture j'obtiens et combien ça coûte » |
-| Passionné combinatoire | « J'explore les paramètres (n, k, t) et je comprends les compromis » |
+| Persona                | Bénéfice                                                                          |
+| ---------------------- | --------------------------------------------------------------------------------- |
+| Joueur régulier        | « Je choisis mes 12 numéros fétiches et le système me dit quoi jouer exactement » |
+| Joueur analytique      | « Je vois exactement quelle couverture j'obtiens et combien ça coûte »            |
+| Passionné combinatoire | « J'explore les paramètres (n, k, t) et je comprends les compromis »              |
 
 ---
 
@@ -89,10 +89,10 @@ Il clique sur les numéros souhaités. Les numéros sélectionnés sont mis en a
 
 ### Étape 2 — Configuration
 
-| Paramètre | Description | Valeur par défaut |
-|-----------|-------------|-------------------|
-| Garantie t | Niveau de sous-combinaison garanti (2, 3, 4 ou k) | 3 |
-| Étoiles/chance | Stratégie : toutes les combinaisons ou distribution | « distribuer » |
+| Paramètre      | Description                                         | Valeur par défaut |
+| -------------- | --------------------------------------------------- | ----------------- |
+| Garantie t     | Niveau de sous-combinaison garanti (2, 3, 4 ou k)   | 3                 |
+| Étoiles/chance | Stratégie : toutes les combinaisons ou distribution | « distribuer »    |
 
 **Présets** :
 - « Économique » : t=2 (couverture minimale, peu de grilles)
@@ -230,16 +230,16 @@ GET    /games/{slug}/prize-tiers → list[PrizeTierResponse]
 
 #### Nouveaux composants
 
-| Composant | Rôle |
-|-----------|------|
-| `NumberGrid` | Grille interactive de sélection (1–49/50/69/70) |
-| `StarsGrid` | Grille interactive étoiles/chance/PowerBall |
-| `SelectionSummary` | Résumé de la sélection (count, auto-validation) |
-| `WheelingConfig` | Panneau de configuration (t, présets, étoiles) |
-| `WheelingPreview` | Affichage preview (coût estimé, grilles estimées) |
-| `WheelingResults` | Résultats complets (grilles, métriques, scénarios) |
-| `CoverageMatrix` | Heatmap de couverture (numéros × grilles) |
-| `GainScenariosTable` | Tableau 3 scénarios × rangs de gains |
+| Composant            | Rôle                                               |
+| -------------------- | -------------------------------------------------- |
+| `NumberGrid`         | Grille interactive de sélection (1–49/50/69/70)    |
+| `StarsGrid`          | Grille interactive étoiles/chance/PowerBall        |
+| `SelectionSummary`   | Résumé de la sélection (count, auto-validation)    |
+| `WheelingConfig`     | Panneau de configuration (t, présets, étoiles)     |
+| `WheelingPreview`    | Affichage preview (coût estimé, grilles estimées)  |
+| `WheelingResults`    | Résultats complets (grilles, métriques, scénarios) |
+| `CoverageMatrix`     | Heatmap de couverture (numéros × grilles)          |
+| `GainScenariosTable` | Tableau 3 scénarios × rangs de gains               |
 
 #### Nouvelle page : `WheelingPage.tsx`
 
@@ -257,39 +257,39 @@ Sidebar : icône `Layers` (lucide-react), groupe « GÉNÉRATION ».
 
 ## 7. Phasage
 
-| Phase | Contenu | Effort |
-|-------|---------|--------|
-| C.1 | Backend : modèles, migration, greedy_cover, coverage, service, endpoints | 3–5 jours |
-| C.2 | Frontend : NumberGrid, StarsGrid, page assemblage, intégration API | 3–5 jours |
-| C.3 | Enrichissement : GainScenarios, CoverageMatrix, preview, export | 2–3 jours |
-| D.1 | Algorithme avancé : ILP exact ou Genetic Wheel (V2) | 3–5 jours |
+| Phase | Contenu                                                                  | Effort    |
+| ----- | ------------------------------------------------------------------------ | --------- |
+| C.1   | Backend : modèles, migration, greedy_cover, coverage, service, endpoints | 3–5 jours |
+| C.2   | Frontend : NumberGrid, StarsGrid, page assemblage, intégration API       | 3–5 jours |
+| C.3   | Enrichissement : GainScenarios, CoverageMatrix, preview, export          | 2–3 jours |
+| D.1   | Algorithme avancé : ILP exact ou Genetic Wheel (V2)                      | 3–5 jours |
 
 ---
 
 ## 8. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Explosion combinatoire n > 20 | Haute | Fort | Borne stricte n ≤ 20, m ≤ 6, timeout 30s |
-| UX confuse pour novices | Moyenne | Fort | Présets, PageIntro explicatif, mode simplifié |
-| Covering non optimal (glouton) | Certaine | Faible | Acceptable en V1, ILP en V2 |
-| Formulation trompeuse (« garantie de gain ») | Moyenne | Critique | Vocabulaire : « couverture combinatoire », pas « garantie » |
-| Résultats lents sur mobile | Moyenne | Moyen | Calcul côté serveur, pas côté client |
+| Risque                                       | Probabilité | Impact   | Mitigation                                                  |
+| -------------------------------------------- | ----------- | -------- | ----------------------------------------------------------- |
+| Explosion combinatoire n > 20                | Haute       | Fort     | Borne stricte n ≤ 20, m ≤ 6, timeout 30s                    |
+| UX confuse pour novices                      | Moyenne     | Fort     | Présets, PageIntro explicatif, mode simplifié               |
+| Covering non optimal (glouton)               | Certaine    | Faible   | Acceptable en V1, ILP en V2                                 |
+| Formulation trompeuse (« garantie de gain ») | Moyenne     | Critique | Vocabulaire : « couverture combinatoire », pas « garantie » |
+| Résultats lents sur mobile                   | Moyenne     | Moyen    | Calcul côté serveur, pas côté client                        |
 
 ---
 
 ## 9. Critères d'acceptation
 
-| Critère | Test |
-|---------|------|
-| n=10, k=5, t=3 → ≤ 15 grilles et couverture 100% | Test unitaire |
-| n=15, k=5, t=3 → ≤ 60 grilles et couverture 100% | Test unitaire |
+| Critère                                           | Test             |
+| ------------------------------------------------- | ---------------- |
+| n=10, k=5, t=3 → ≤ 15 grilles et couverture 100%  | Test unitaire    |
+| n=15, k=5, t=3 → ≤ 60 grilles et couverture 100%  | Test unitaire    |
 | Toute t-combinaison de N apparaît dans ≥ 1 grille | Test de validité |
-| Coût = grid_count × grid_price | Test calcul |
-| Scénarios de gains cohérents avec prize_tiers | Test calcul |
-| Temps < 5s pour n ≤ 15, < 30s pour n ≤ 20 | Test perf |
-| Preview retourne en < 500ms | Test perf |
-| Système sauvegardé et retrouvable dans historique | Test E2E |
+| Coût = grid_count × grid_price                    | Test calcul      |
+| Scénarios de gains cohérents avec prize_tiers     | Test calcul      |
+| Temps < 5s pour n ≤ 15, < 30s pour n ≤ 20         | Test perf        |
+| Preview retourne en < 500ms                       | Test perf        |
+| Système sauvegardé et retrouvable dans historique | Test E2E         |
 
 ---
 

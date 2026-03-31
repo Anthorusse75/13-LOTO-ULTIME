@@ -35,12 +35,12 @@ Définir la **stratégie produit** qui gouverne les choix d'évolution : pour qu
 
 ### 2.3 — Compétiteurs et différenciation
 
-| Compétiteur type | Limite | Notre différence |
-|------------------|--------|-------------------|
+| Compétiteur type          | Limite                      | Notre différence                                |
+| ------------------------- | --------------------------- | ----------------------------------------------- |
 | Sites de statistiques FDJ | Données brutes sans analyse | 7 moteurs statistiques + scoring multi-critères |
-| Générateurs aléatoires | Aucune intelligence | 5 algorithmes d'optimisation + profils |
-| Apps de « prédiction » | Fausses promesses | Honnêteté scientifique + explicabilité |
-| Feuilles Excel manuelles | Fastidieux, limité | Automatisation + UX + covering design |
+| Générateurs aléatoires    | Aucune intelligence         | 5 algorithmes d'optimisation + profils          |
+| Apps de « prédiction »    | Fausses promesses           | Honnêteté scientifique + explicabilité          |
+| Feuilles Excel manuelles  | Fastidieux, limité          | Automatisation + UX + covering design           |
 
 ---
 
@@ -71,11 +71,11 @@ Définir la **stratégie produit** qui gouverne les choix d'évolution : pour qu
 
 ### 3.2 — Implications sur les évolutions
 
-| Persona | Fonctionnalités prioritaires | Mode UX |
-|---------|------------------------------|---------|
-| A | Wheeling simplifié, budget intelligent, tooltips, pédagogie | Mode simplifié |
-| B | Comparateur, historique complet, explicabilité, profils avancés | Mode standard |
-| C | Paramétrage fin, algorithmes avancés, exports, documentation | Mode expert |
+| Persona | Fonctionnalités prioritaires                                    | Mode UX        |
+| ------- | --------------------------------------------------------------- | -------------- |
+| A       | Wheeling simplifié, budget intelligent, tooltips, pédagogie     | Mode simplifié |
+| B       | Comparateur, historique complet, explicabilité, profils avancés | Mode standard  |
+| C       | Paramétrage fin, algorithmes avancés, exports, documentation    | Mode expert    |
 
 ---
 
@@ -107,11 +107,11 @@ Définir la **stratégie produit** qui gouverne les choix d'évolution : pour qu
 
 Ce document ne traite pas de monétisation active, mais pose les bases pour un futur modèle :
 
-| Tier | Accès | Fonctionnalités |
-|------|-------|-----------------|
-| **Gratuit** | Consultation statistiques, top 10, tirages, pédagogie | Lecture seule |
-| **Standard** | Génération de grilles, scoring, favoris, historique | Utilisation active |
-| **Premium** | Wheeling, budget intelligent, comparateur, automatisation | Aide à la décision complète |
+| Tier         | Accès                                                     | Fonctionnalités             |
+| ------------ | --------------------------------------------------------- | --------------------------- |
+| **Gratuit**  | Consultation statistiques, top 10, tirages, pédagogie     | Lecture seule               |
+| **Standard** | Génération de grilles, scoring, favoris, historique       | Utilisation active          |
+| **Premium**  | Wheeling, budget intelligent, comparateur, automatisation | Aide à la décision complète |
 
 > Cette segmentation est indicative et ne sera pas implémentée dans les phases A–C. Elle guide simplement l'architecture (RBAC, features conditionnelles).
 
@@ -128,12 +128,12 @@ Ce document ne traite pas de monétisation active, mais pose les bases pour un f
 
 ### 6.2 — Vocabulaire contraint
 
-| ❌ Interdit | ✅ Autorisé |
-|-------------|-------------|
-| « Gagnez plus » | « Optimisez votre couverture combinatoire » |
-| « Numéros chanceux » | « Numéros fréquents dans l'historique » |
-| « Prédiction » | « Analyse statistique » |
-| « Garantie » | « Scénario théorique conditionnel » |
+| ❌ Interdit           | ✅ Autorisé                                    |
+| -------------------- | --------------------------------------------- |
+| « Gagnez plus »      | « Optimisez votre couverture combinatoire »   |
+| « Numéros chanceux » | « Numéros fréquents dans l'historique »       |
+| « Prédiction »       | « Analyse statistique »                       |
+| « Garantie »         | « Scénario théorique conditionnel »           |
 | « Chance augmentée » | « Couverture de sous-combinaisons améliorée » |
 
 ### 6.3 — Mention légale
@@ -146,37 +146,37 @@ Chaque page générant des grilles ou systèmes doit afficher :
 
 ## 7. Indicateurs produit (KPI cibles)
 
-| KPI | Baseline actuel | Cible post-évolutions |
-|-----|-----------------|----------------------|
-| Pages par session | ~3 | 5–7 |
-| Taux de rétention J+7 | Non mesuré | ≥ 30 % |
-| Grilles générées / session | ~1 | 2–5 |
-| Usage wheeling / session (post-launch) | 0 | ≥ 20 % des sessions |
-| Temps avant première grille | Non mesuré | < 2 min |
-| Taux d'erreur API | < 1 % | < 0.5 % |
+| KPI                                    | Baseline actuel | Cible post-évolutions |
+| -------------------------------------- | --------------- | --------------------- |
+| Pages par session                      | ~3              | 5–7                   |
+| Taux de rétention J+7                  | Non mesuré      | ≥ 30 %                |
+| Grilles générées / session             | ~1              | 2–5                   |
+| Usage wheeling / session (post-launch) | 0               | ≥ 20 % des sessions   |
+| Temps avant première grille            | Non mesuré      | < 2 min               |
+| Taux d'erreur API                      | < 1 %           | < 0.5 %               |
 
 ---
 
 ## 8. Risques produit
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Complexité perçue trop élevée | Moyenne | Fort | Mode simplifié, pédagogie, onboarding |
-| Mauvaise interprétation (« outil de prédiction ») | Haute | Critique | Vocabulaire contraint, disclaimers, éducation |
-| Surcharge calcul (wheeling grands ensembles) | Moyenne | Moyen | Bornes, timeouts, feedback progressif |
-| Manque d'engagement (pas de raison de revenir) | Moyenne | Fort | Automatisation, suggestions récurrentes, historique |
+| Risque                                            | Probabilité | Impact   | Mitigation                                          |
+| ------------------------------------------------- | ----------- | -------- | --------------------------------------------------- |
+| Complexité perçue trop élevée                     | Moyenne     | Fort     | Mode simplifié, pédagogie, onboarding               |
+| Mauvaise interprétation (« outil de prédiction ») | Haute       | Critique | Vocabulaire contraint, disclaimers, éducation       |
+| Surcharge calcul (wheeling grands ensembles)      | Moyenne     | Moyen    | Bornes, timeouts, feedback progressif               |
+| Manque d'engagement (pas de raison de revenir)    | Moyenne     | Fort     | Automatisation, suggestions récurrentes, historique |
 
 ---
 
 ## 9. Critères d'acceptation
 
-| Critère | Mesure |
-|---------|--------|
-| 3 personas documentés et pris en compte | Ce document |
-| Mode simplifié / expert défini | [07_Evolutions_UI_UX](./07_Evolutions_UI_UX.md) |
-| Vocabulaire contraint formalisé | Section 6.2 ci-dessus |
+| Critère                                    | Mesure                                                        |
+| ------------------------------------------ | ------------------------------------------------------------- |
+| 3 personas documentés et pris en compte    | Ce document                                                   |
+| Mode simplifié / expert défini             | [07_Evolutions_UI_UX](./07_Evolutions_UI_UX.md)               |
+| Vocabulaire contraint formalisé            | Section 6.2 ci-dessus                                         |
 | Pyramide de valeur utilisée pour prioriser | [04_Priorisation_Evolutions](./04_Priorisation_Evolutions.md) |
-| Disclaimers intégrés dans les maquettes | Vérification frontend |
+| Disclaimers intégrés dans les maquettes    | Vérification frontend                                         |
 
 ---
 

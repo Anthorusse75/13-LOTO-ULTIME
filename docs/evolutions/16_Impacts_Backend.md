@@ -48,38 +48,38 @@ backend/
 
 ### Métriques existantes
 
-| Métrique | Valeur |
-|----------|--------|
-| Modèles SQLAlchemy | 7 |
-| Schemas Pydantic | ~30 |
-| Routers | 9 |
-| Endpoints | 41 |
-| Services | ~8 |
-| Engines | ~20 modules |
-| Tests | 337 |
+| Métrique           | Valeur      |
+| ------------------ | ----------- |
+| Modèles SQLAlchemy | 7           |
+| Schemas Pydantic   | ~30         |
+| Routers            | 9           |
+| Endpoints          | 41          |
+| Services           | ~8          |
+| Engines            | ~20 modules |
+| Tests              | 337         |
 
 ---
 
 ## 2. Nouveaux modèles SQLAlchemy
 
-| Modèle | Source (doc) | Table | Colonnes principales |
-|--------|-------------|-------|---------------------|
-| `GamePrizeTier` | 08 | `game_prize_tiers` | game_id, rank, name, match_numbers, match_stars, avg_prize, probability |
-| `WheelingSystem` | 08 | `wheeling_systems` | user_id, game_id, selected_numbers, selected_stars, guarantee_level, grids(JSON), grid_count, total_cost, coverage_rate, reduction_rate |
-| `BudgetPlan` | 09 | `budget_plans` | user_id, game_id, budget, objective, selected_numbers, recommendations(JSON), chosen_strategy |
-| `UserSavedResult` | 11 | `user_saved_results` | user_id, type, parameters(JSON), result_data(JSON), is_favorite, tags |
-| `GridDrawResult` | 15 | `grid_draw_results` | scored_grid_id, draw_id, matched_numbers, matched_stars, match_count, prize_rank, estimated_prize |
-| `UserNotification` | 15 | `user_notifications` | user_id, type, title, message, data(JSON), is_read |
+| Modèle             | Source (doc) | Table                | Colonnes principales                                                                                                                    |
+| ------------------ | ------------ | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `GamePrizeTier`    | 08           | `game_prize_tiers`   | game_id, rank, name, match_numbers, match_stars, avg_prize, probability                                                                 |
+| `WheelingSystem`   | 08           | `wheeling_systems`   | user_id, game_id, selected_numbers, selected_stars, guarantee_level, grids(JSON), grid_count, total_cost, coverage_rate, reduction_rate |
+| `BudgetPlan`       | 09           | `budget_plans`       | user_id, game_id, budget, objective, selected_numbers, recommendations(JSON), chosen_strategy                                           |
+| `UserSavedResult`  | 11           | `user_saved_results` | user_id, type, parameters(JSON), result_data(JSON), is_favorite, tags                                                                   |
+| `GridDrawResult`   | 15           | `grid_draw_results`  | scored_grid_id, draw_id, matched_numbers, matched_stars, match_count, prize_rank, estimated_prize                                       |
+| `UserNotification` | 15           | `user_notifications` | user_id, type, title, message, data(JSON), is_read                                                                                      |
 
 **Total modèles** : 7 existants + 6 nouveaux = **13 modèles**
 
 ### Colonnes ajoutées sur modèles existants
 
-| Modèle | Colonne | Type | Doc |
-|--------|---------|------|-----|
-| `ScoredGrid` | `user_id` | FK nullable | 11 |
-| `Portfolio` | `user_id` | FK nullable | 11 |
-| `StatisticsSnapshot` | `hot_cold_summary` | JSON nullable | 15 |
+| Modèle               | Colonne            | Type          | Doc |
+| -------------------- | ------------------ | ------------- | --- |
+| `ScoredGrid`         | `user_id`          | FK nullable   | 11  |
+| `Portfolio`          | `user_id`          | FK nullable   | 11  |
+| `StatisticsSnapshot` | `hot_cold_summary` | JSON nullable | 15  |
 
 ---
 
@@ -123,15 +123,15 @@ engines/budget/
 
 ## 4. Nouveaux services
 
-| Service | Doc | Méthodes principales |
-|---------|-----|---------------------|
-| `WheelingService` | 08 | `preview()`, `generate()`, `list_history()`, `get_detail()`, `delete()` |
-| `BudgetService` | 09 | `optimize()`, `list_plans()`, `get_plan()` |
-| `ComparisonService` | 10 | `compare()` (stateless, pas de stockage) |
-| `HistoryService` | 11 | `save()`, `list()`, `detail()`, `duplicate()`, `delete()` |
-| `ExplainabilityService` | 12 | `explain_grid()`, `explain_portfolio()`, `explain_wheeling()`, `explain_simulation()`, `explain_comparison()` |
-| `SuggestionService` | 15 | `get_daily_suggestion()` |
-| `NotificationService` | 15 | `list()`, `mark_read()`, `mark_all_read()`, `unread_count()`, `create()` |
+| Service                 | Doc | Méthodes principales                                                                                          |
+| ----------------------- | --- | ------------------------------------------------------------------------------------------------------------- |
+| `WheelingService`       | 08  | `preview()`, `generate()`, `list_history()`, `get_detail()`, `delete()`                                       |
+| `BudgetService`         | 09  | `optimize()`, `list_plans()`, `get_plan()`                                                                    |
+| `ComparisonService`     | 10  | `compare()` (stateless, pas de stockage)                                                                      |
+| `HistoryService`        | 11  | `save()`, `list()`, `detail()`, `duplicate()`, `delete()`                                                     |
+| `ExplainabilityService` | 12  | `explain_grid()`, `explain_portfolio()`, `explain_wheeling()`, `explain_simulation()`, `explain_comparison()` |
+| `SuggestionService`     | 15  | `get_daily_suggestion()`                                                                                      |
+| `NotificationService`   | 15  | `list()`, `mark_read()`, `mark_all_read()`, `unread_count()`, `create()`                                      |
 
 **Total services** : ~8 existants + 7 nouveaux = **~15 services**
 
@@ -191,27 +191,27 @@ engines/budget/
 
 ## 7. Fichiers de configuration impactés
 
-| Fichier | Changements |
-|---------|-------------|
-| `config.py` | Nouvelles variables : `WHEELING_MAX_NUMBERS`, `BUDGET_MAX`, `NOTIFICATION_RETENTION_DAYS` |
-| `main.py` | Nouveaux routers : wheeling, budget, comparison, history, notifications, suggestions |
-| `database.py` | Import nouveaux modèles |
-| `requirements.txt` | `slowapi` (rate limiting), `cachetools` (cache) |
+| Fichier            | Changements                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------- |
+| `config.py`        | Nouvelles variables : `WHEELING_MAX_NUMBERS`, `BUDGET_MAX`, `NOTIFICATION_RETENTION_DAYS` |
+| `main.py`          | Nouveaux routers : wheeling, budget, comparison, history, notifications, suggestions      |
+| `database.py`      | Import nouveaux modèles                                                                   |
+| `requirements.txt` | `slowapi` (rate limiting), `cachetools` (cache)                                           |
 
 ---
 
 ## 8. Matrice évolutions × fichiers backend
 
-| Évolution | Modèles | Engines | Services | Routers | Schemas | Tests |
-|-----------|---------|---------|----------|---------|---------|-------|
-| Wheeling (08) | +2 | +5 fichiers | +1 | +1 (6 endpoints) | +4 | +16 |
-| Budget (09) | +1 | +2 fichiers | +1 | +1 (4 endpoints) | +3 | +10 |
-| Comparateur (10) | — | — | +1 | +1 (1 endpoint) | +2 | +8 |
-| Historique (11) | +1, +2 cols | — | +1 | +1 (8 endpoints) | +3 | +12 |
-| Explicabilité (12) | — | +6 fichiers | +1 | intégré | +1 | +10 |
-| Tooltips (13) | — | — | — | — | — | — |
-| Pédagogie (14) | — | — | — | — | — | — |
-| Automatisation (15) | +2 | — | +2 | +1 (5 endpoints) | +3 | +10 |
+| Évolution           | Modèles     | Engines     | Services | Routers          | Schemas | Tests |
+| ------------------- | ----------- | ----------- | -------- | ---------------- | ------- | ----- |
+| Wheeling (08)       | +2          | +5 fichiers | +1       | +1 (6 endpoints) | +4      | +16   |
+| Budget (09)         | +1          | +2 fichiers | +1       | +1 (4 endpoints) | +3      | +10   |
+| Comparateur (10)    | —           | —           | +1       | +1 (1 endpoint)  | +2      | +8    |
+| Historique (11)     | +1, +2 cols | —           | +1       | +1 (8 endpoints) | +3      | +12   |
+| Explicabilité (12)  | —           | +6 fichiers | +1       | intégré          | +1      | +10   |
+| Tooltips (13)       | —           | —           | —        | —                | —       | —     |
+| Pédagogie (14)      | —           | —           | —        | —                | —       | —     |
+| Automatisation (15) | +2          | —           | +2       | +1 (5 endpoints) | +3      | +10   |
 
 **Total estimé** : +6 modèles, +13 fichiers engines, +7 services, +5 routers (+24 endpoints), +16 schemas, +66 tests
 
@@ -219,12 +219,12 @@ engines/budget/
 
 ## 9. Risques backend
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| Explosion du nombre de fichiers | Complexité accrue | Respecter la structure existante, éviter les fichiers monolithiques |
-| Couplage entre services | Maintenance difficile | Injection de dépendances, interfaces claires |
-| Régression multi-lottery | Casse du scoring existant | Tests de non-régression avant/après BUG-01 fix |
-| Performance engines wheeling | Lenteur n>15 | Borner à n≤20, timeout, cache des résultats |
+| Risque                          | Impact                    | Mitigation                                                          |
+| ------------------------------- | ------------------------- | ------------------------------------------------------------------- |
+| Explosion du nombre de fichiers | Complexité accrue         | Respecter la structure existante, éviter les fichiers monolithiques |
+| Couplage entre services         | Maintenance difficile     | Injection de dépendances, interfaces claires                        |
+| Régression multi-lottery        | Casse du scoring existant | Tests de non-régression avant/après BUG-01 fix                      |
+| Performance engines wheeling    | Lenteur n>15              | Borner à n≤20, timeout, cache des résultats                         |
 
 ---
 

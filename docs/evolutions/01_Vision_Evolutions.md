@@ -24,18 +24,18 @@ Formaliser la **vision d'évolution** de LOTO ULTIME : d'où vient-on, où va-t-
 
 LOTO ULTIME est en production. Le produit couvre déjà :
 
-| Capacité | Statut |
-|----------|--------|
-| Import automatique des tirages (5 loteries) | ✅ Production |
-| 7 moteurs statistiques (fréquence, écart, cooccurrence, temporel, distribution, bayésien, graphe) | ✅ Production |
-| 6 critères de scoring + 5 profils de pondération | ✅ Production |
-| 5 algorithmes d'optimisation (génétique, recuit simulé, tabou, hill climbing, NSGA-II) | ⚠️ Partiel (recuit simulé inaccessible en prod) |
-| Portefeuille optimisé (greedy + Hamming) | ✅ Production |
-| Simulation Monte Carlo + robustesse + comparaison aléatoire | ✅ Production |
-| Favoris, grilles jouées, historique | ✅ Production (basique) |
-| Auth JWT, 3 rôles, admin panel | ✅ Production |
-| Scheduler nightly (9 jobs) | ✅ Production |
-| 13 pages front, 40+ composants, dark mode | ✅ Production |
+| Capacité                                                                                          | Statut                                         |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Import automatique des tirages (5 loteries)                                                       | ✅ Production                                   |
+| 7 moteurs statistiques (fréquence, écart, cooccurrence, temporel, distribution, bayésien, graphe) | ✅ Production                                   |
+| 6 critères de scoring + 5 profils de pondération                                                  | ✅ Production                                   |
+| 5 algorithmes d'optimisation (génétique, recuit simulé, tabou, hill climbing, NSGA-II)            | ⚠️ Partiel (recuit simulé inaccessible en prod) |
+| Portefeuille optimisé (greedy + Hamming)                                                          | ✅ Production                                   |
+| Simulation Monte Carlo + robustesse + comparaison aléatoire                                       | ✅ Production                                   |
+| Favoris, grilles jouées, historique                                                               | ✅ Production (basique)                         |
+| Auth JWT, 3 rôles, admin panel                                                                    | ✅ Production                                   |
+| Scheduler nightly (9 jobs)                                                                        | ✅ Production                                   |
+| 13 pages front, 40+ composants, dark mode                                                         | ✅ Production                                   |
 
 **Ce qui manque** : passage de « plateforme d'analyse » à « outil d'aide à la décision complet et premium ».
 
@@ -67,18 +67,18 @@ LOTO ULTIME est en production. Le produit couvre déjà :
 
 ## 4. Dix chantiers d'évolution
 
-| # | Chantier | Classification | Valeur |
-|---|----------|---------------|--------|
-| 1 | Système réduit / Wheeling | Différenciation forte | ★★★★★ |
-| 2 | Mode budget intelligent | Amélioration produit | ★★★★☆ |
-| 3 | Comparateur de stratégies | Amélioration fonctionnelle | ★★★★☆ |
-| 4 | Historique / Favoris / Rejouer | Amélioration fonctionnelle | ★★★☆☆ |
-| 5 | Explicabilité | Amélioration UX | ★★★★☆ |
-| 6 | Tooltips & aide contextuelle | Amélioration UX | ★★★☆☆ |
-| 7 | Amélioration UI/UX profonde | Amélioration UX | ★★★☆☆ |
-| 8 | Améliorations algorithmiques | Amélioration algorithmique | ★★★★☆ |
-| 9 | Espace pédagogique | Amélioration produit | ★★★☆☆ |
-| 10 | Automatisation & vie du produit | Chantier premium | ★★★★☆ |
+| #   | Chantier                        | Classification             | Valeur |
+| --- | ------------------------------- | -------------------------- | ------ |
+| 1   | Système réduit / Wheeling       | Différenciation forte      | ★★★★★  |
+| 2   | Mode budget intelligent         | Amélioration produit       | ★★★★☆  |
+| 3   | Comparateur de stratégies       | Amélioration fonctionnelle | ★★★★☆  |
+| 4   | Historique / Favoris / Rejouer  | Amélioration fonctionnelle | ★★★☆☆  |
+| 5   | Explicabilité                   | Amélioration UX            | ★★★★☆  |
+| 6   | Tooltips & aide contextuelle    | Amélioration UX            | ★★★☆☆  |
+| 7   | Amélioration UI/UX profonde     | Amélioration UX            | ★★★☆☆  |
+| 8   | Améliorations algorithmiques    | Amélioration algorithmique | ★★★★☆  |
+| 9   | Espace pédagogique              | Amélioration produit       | ★★★☆☆  |
+| 10  | Automatisation & vie du produit | Chantier premium           | ★★★★☆  |
 
 ---
 
@@ -109,23 +109,23 @@ Les calculs combinatoires (wheeling, budget) peuvent être coûteux. Toujours bo
 
 ## 6. Critères d'acceptation de la vision
 
-| Critère | Vérifiable par |
-|---------|---------------|
-| Les 10 chantiers sont documentés | Existence des documents 08→15 |
-| Les impacts sont cartographiés | Documents 16→23 complétés |
-| La roadmap existe et est phasée | Document 26 validé |
-| Chaque chantier a une checklist | Document 27 + checklists locales |
-| Les tests protègent l'existant | Document 24 appliqué |
-| L'honnêteté scientifique est garantie | Audit des formulations UX |
+| Critère                               | Vérifiable par                   |
+| ------------------------------------- | -------------------------------- |
+| Les 10 chantiers sont documentés      | Existence des documents 08→15    |
+| Les impacts sont cartographiés        | Documents 16→23 complétés        |
+| La roadmap existe et est phasée       | Document 26 validé               |
+| Chaque chantier a une checklist       | Document 27 + checklists locales |
+| Les tests protègent l'existant        | Document 24 appliqué             |
+| L'honnêteté scientifique est garantie | Audit des formulations UX        |
 
 ---
 
 ## 7. Risques stratégiques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| Over-engineering V1 des chantiers | Délais, complexité | Phasage strict, MVP d'abord |
-| Formulations trompeuses | Réputation, légal | Relecture systématique, vocabulaire contraint |
-| Régression sur l'existant | Perte de fonctionnalités | Suite de tests, smoke tests, CI |
-| Explosion combinatoire (wheeling) | UX dégradée, serveur surchargé | Bornes strictes, feedback temps réel |
-| Scope creep | Jamais livré | Priorisation formelle (doc 04) |
+| Risque                            | Impact                         | Mitigation                                    |
+| --------------------------------- | ------------------------------ | --------------------------------------------- |
+| Over-engineering V1 des chantiers | Délais, complexité             | Phasage strict, MVP d'abord                   |
+| Formulations trompeuses           | Réputation, légal              | Relecture systématique, vocabulaire contraint |
+| Régression sur l'existant         | Perte de fonctionnalités       | Suite de tests, smoke tests, CI               |
+| Explosion combinatoire (wheeling) | UX dégradée, serveur surchargé | Bornes strictes, feedback temps réel          |
+| Scope creep                       | Jamais livré                   | Priorisation formelle (doc 04)                |

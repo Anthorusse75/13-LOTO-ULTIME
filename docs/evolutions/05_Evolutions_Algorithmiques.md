@@ -27,43 +27,43 @@ Cartographier **toutes les améliorations algorithmiques** possibles, les classe
 
 ### 2.1 — Moteurs statistiques (7)
 
-| Moteur | Maturité | Améliorations possibles |
-|--------|----------|------------------------|
-| Fréquence | ✅ Mature | Fenêtrage temporel configurable |
-| Écart (Gap) | ✅ Mature | Gap moyen / médian / max séparés |
-| Cooccurrence | ✅ Mature | Triplets en plus des paires |
-| Temporel | ⚠️ Correct | Détection de changement de régime |
-| Distribution | ✅ Mature | Tests de goodness-of-fit (Kolmogorov-Smirnov) |
-| Bayésien | ✅ Mature | Prior configurable, sensibilité paramétrable |
-| Graphe | ✅ Mature | Communautés dynamiques (temporal network) |
+| Moteur       | Maturité  | Améliorations possibles                       |
+| ------------ | --------- | --------------------------------------------- |
+| Fréquence    | ✅ Mature  | Fenêtrage temporel configurable               |
+| Écart (Gap)  | ✅ Mature  | Gap moyen / médian / max séparés              |
+| Cooccurrence | ✅ Mature  | Triplets en plus des paires                   |
+| Temporel     | ⚠️ Correct | Détection de changement de régime             |
+| Distribution | ✅ Mature  | Tests de goodness-of-fit (Kolmogorov-Smirnov) |
+| Bayésien     | ✅ Mature  | Prior configurable, sensibilité paramétrable  |
+| Graphe       | ✅ Mature  | Communautés dynamiques (temporal network)     |
 
 ### 2.2 — Critères de scoring (6)
 
-| Critère | Maturité | Améliorations possibles |
-|---------|----------|------------------------|
-| Fréquence | ✅ Mature | Pondération par fenêtre temporelle |
-| Balance | ✅ Mature | Granularité configurable (3 ou 5 tranches) |
-| Gap | ✅ Mature | Sensibilité ajustable |
-| Cooccurrence | ✅ Mature | Prise en compte des triplets |
-| Structure | ⚠️ Correct | Critères plus fins (parité, décades) |
-| Pattern Penalty | ⚠️ Rigide | Seuils codés en dur → configurable |
+| Critère         | Maturité  | Améliorations possibles                    |
+| --------------- | --------- | ------------------------------------------ |
+| Fréquence       | ✅ Mature  | Pondération par fenêtre temporelle         |
+| Balance         | ✅ Mature  | Granularité configurable (3 ou 5 tranches) |
+| Gap             | ✅ Mature  | Sensibilité ajustable                      |
+| Cooccurrence    | ✅ Mature  | Prise en compte des triplets               |
+| Structure       | ⚠️ Correct | Critères plus fins (parité, décades)       |
+| Pattern Penalty | ⚠️ Rigide  | Seuils codés en dur → configurable         |
 
 ### 2.3 — Optimiseurs (5)
 
-| Algorithme | Maturité | Améliorations possibles |
-|------------|----------|------------------------|
-| Génétique | ✅ Mature | Adaptive mutation rate |
+| Algorithme    | Maturité                | Améliorations possibles          |
+| ------------- | ----------------------- | -------------------------------- |
+| Génétique     | ✅ Mature                | Adaptive mutation rate           |
 | Recuit Simulé | ❌ Inaccessible (BUG-02) | Corriger method_selector d'abord |
-| Tabou | ✅ Mature | Tabu tenure adaptatif |
-| Hill Climbing | ✅ Mature | Multi-start, stochastic HC |
-| NSGA-II | ✅ Mature | Objectifs supplémentaires |
+| Tabou         | ✅ Mature                | Tabu tenure adaptatif            |
+| Hill Climbing | ✅ Mature                | Multi-start, stochastic HC       |
+| NSGA-II       | ✅ Mature                | Objectifs supplémentaires        |
 
 ### 2.4 — Simulateurs (2)
 
-| Simulateur | Maturité | Améliorations possibles |
-|------------|----------|------------------------|
+| Simulateur  | Maturité | Améliorations possibles                              |
+| ----------- | -------- | ---------------------------------------------------- |
 | Monte Carlo | ✅ Mature | Variance reduction (antithetic), importance sampling |
-| Robustesse | ✅ Mature | Cross-validation k-fold, confidence intervals |
+| Robustesse  | ✅ Mature | Cross-validation k-fold, confidence intervals        |
 
 ---
 
@@ -71,41 +71,41 @@ Cartographier **toutes les améliorations algorithmiques** possibles, les classe
 
 ### 3.1 — Indispensable (Phase A/B)
 
-| ID | Amélioration | Raison | Effort |
-|----|-------------|--------|--------|
-| ALG-01 | Corriger method_selector (BUG-02) | SA inaccessible en prod | 0.5 jour |
-| ALG-02 | Rendre Pattern Penalty configurable | Seuils arbitraires en dur | 1 jour |
-| ALG-03 | Normalisation scoring stable (edge cases) | Scores incohérents sur petits ensembles | 1 jour |
+| ID     | Amélioration                              | Raison                                  | Effort   |
+| ------ | ----------------------------------------- | --------------------------------------- | -------- |
+| ALG-01 | Corriger method_selector (BUG-02)         | SA inaccessible en prod                 | 0.5 jour |
+| ALG-02 | Rendre Pattern Penalty configurable       | Seuils arbitraires en dur               | 1 jour   |
+| ALG-03 | Normalisation scoring stable (edge cases) | Scores incohérents sur petits ensembles | 1 jour   |
 
 ### 3.2 — Utile (Phase C/D)
 
-| ID | Amélioration | Raison | Effort |
-|----|-------------|--------|--------|
-| ALG-04 | Greedy covering engine (système réduit) | Fondation du wheeling | 3–5 jours |
-| ALG-05 | Optimisation sous contrainte budgétaire | Fondation du mode budget | 2–3 jours |
-| ALG-06 | Benchmark automatisé des 5 méthodes | Valider quelle méthode est la meilleure par contexte | 2 jours |
-| ALG-07 | Multi-start hill climbing | Éviter les minima locaux | 1 jour |
-| ALG-08 | Fenêtrage temporel configurable pour scoring | Score basé sur N derniers tirages | 1–2 jours |
-| ALG-09 | Scoring séparé des étoiles/chance | Score 0–10 distinct pour les numéros complémentaires | 1 jour |
+| ID     | Amélioration                                 | Raison                                               | Effort    |
+| ------ | -------------------------------------------- | ---------------------------------------------------- | --------- |
+| ALG-04 | Greedy covering engine (système réduit)      | Fondation du wheeling                                | 3–5 jours |
+| ALG-05 | Optimisation sous contrainte budgétaire      | Fondation du mode budget                             | 2–3 jours |
+| ALG-06 | Benchmark automatisé des 5 méthodes          | Valider quelle méthode est la meilleure par contexte | 2 jours   |
+| ALG-07 | Multi-start hill climbing                    | Éviter les minima locaux                             | 1 jour    |
+| ALG-08 | Fenêtrage temporel configurable pour scoring | Score basé sur N derniers tirages                    | 1–2 jours |
+| ALG-09 | Scoring séparé des étoiles/chance            | Score 0–10 distinct pour les numéros complémentaires | 1 jour    |
 
 ### 3.3 — Avancé (Phase D)
 
-| ID | Amélioration | Raison | Effort |
-|----|-------------|--------|--------|
-| ALG-10 | Triplets dans cooccurrence | Enrichir au-delà des paires | 2 jours |
-| ALG-11 | Profils de scoring hybrides / custom | Utilisateur défini ses propres poids | 2 jours |
-| ALG-12 | Adaptive mutation rate (génétique) | Convergence plus rapide | 1 jour |
-| ALG-13 | Variance reduction Monte Carlo | Simulations plus précises avec moins d'itérations | 2 jours |
-| ALG-14 | Détection de changement de régime (temporal) | Alerter sur un changement de distribution | 3 jours |
+| ID     | Amélioration                                 | Raison                                            | Effort  |
+| ------ | -------------------------------------------- | ------------------------------------------------- | ------- |
+| ALG-10 | Triplets dans cooccurrence                   | Enrichir au-delà des paires                       | 2 jours |
+| ALG-11 | Profils de scoring hybrides / custom         | Utilisateur défini ses propres poids              | 2 jours |
+| ALG-12 | Adaptive mutation rate (génétique)           | Convergence plus rapide                           | 1 jour  |
+| ALG-13 | Variance reduction Monte Carlo               | Simulations plus précises avec moins d'itérations | 2 jours |
+| ALG-14 | Détection de changement de régime (temporal) | Alerter sur un changement de distribution         | 3 jours |
 
 ### 3.4 — Premium / Recherche (Phase E)
 
-| ID | Amélioration | Raison | Effort |
-|----|-------------|--------|--------|
-| ALG-15 | ILP exact pour covering design | Solution optimale garantie (NP-hard, petits ensembles) | 5 jours |
-| ALG-16 | Genetic wheel (covering optimization) | Évolution de systèmes réduits entiers | 5 jours |
-| ALG-17 | Temporal network analysis | Communautés de numéros évoluant dans le temps | 5 jours |
-| ALG-18 | Calibration automatique des poids (backtesting) | Optimiser les poids de scoring sur l'historique | 5–10 jours |
+| ID     | Amélioration                                    | Raison                                                 | Effort     |
+| ------ | ----------------------------------------------- | ------------------------------------------------------ | ---------- |
+| ALG-15 | ILP exact pour covering design                  | Solution optimale garantie (NP-hard, petits ensembles) | 5 jours    |
+| ALG-16 | Genetic wheel (covering optimization)           | Évolution de systèmes réduits entiers                  | 5 jours    |
+| ALG-17 | Temporal network analysis                       | Communautés de numéros évoluant dans le temps          | 5 jours    |
+| ALG-18 | Calibration automatique des poids (backtesting) | Optimiser les poids de scoring sur l'historique        | 5–10 jours |
 
 ---
 
@@ -149,38 +149,38 @@ Cartographier **toutes les améliorations algorithmiques** possibles, les classe
 
 ## 5. Impacts techniques
 
-| Amélioration | Backend | Frontend | API | DB | Perf |
-|-------------|---------|----------|-----|----|----|
-| ALG-01 (method_selector) | ●● | ○ | ○ | ○ | ○ |
-| ALG-04 (greedy covering) | ●●● | ○ | ●●● | ●● | ●●● |
-| ALG-05 (budget optimizer) | ●●● | ○ | ●● | ● | ●● |
-| ALG-06 (benchmark) | ●● | ●● | ●● | ○ | ●● |
-| ALG-08 (fenêtrage) | ● | ● | ● | ○ | ○ |
-| ALG-11 (custom profiles) | ● | ●● | ● | ○ | ○ |
-| ALG-18 (calibration auto) | ●●● | ○ | ● | ● | ●●● |
+| Amélioration              | Backend | Frontend | API | DB  | Perf |
+| ------------------------- | ------- | -------- | --- | --- | ---- |
+| ALG-01 (method_selector)  | ●●      | ○        | ○   | ○   | ○    |
+| ALG-04 (greedy covering)  | ●●●     | ○        | ●●● | ●●  | ●●●  |
+| ALG-05 (budget optimizer) | ●●●     | ○        | ●●  | ●   | ●●   |
+| ALG-06 (benchmark)        | ●●      | ●●       | ●●  | ○   | ●●   |
+| ALG-08 (fenêtrage)        | ●       | ●        | ●   | ○   | ○    |
+| ALG-11 (custom profiles)  | ●       | ●●       | ●   | ○   | ○    |
+| ALG-18 (calibration auto) | ●●●     | ○        | ●   | ●   | ●●●  |
 
 ---
 
 ## 6. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Explosion combinatoire (covering grands ensembles) | Haute | Fort | Bornes strictes n ≤ 20, timeout 30s |
-| Résultats non déterministes (algo stochastiques) | Certaine | Moyen | Seed fixe en test, documentation variance |
-| Sur-optimisation scoring sur historique (overfitting) | Moyenne | Moyen | Validation croisée, backtesting out-of-sample |
-| Complexité de maintenance (nhiều algorithmes) | Moyenne | Moyen | Interface commune BaseEngine, tests systématiques |
+| Risque                                                | Probabilité | Impact | Mitigation                                        |
+| ----------------------------------------------------- | ----------- | ------ | ------------------------------------------------- |
+| Explosion combinatoire (covering grands ensembles)    | Haute       | Fort   | Bornes strictes n ≤ 20, timeout 30s               |
+| Résultats non déterministes (algo stochastiques)      | Certaine    | Moyen  | Seed fixe en test, documentation variance         |
+| Sur-optimisation scoring sur historique (overfitting) | Moyenne     | Moyen  | Validation croisée, backtesting out-of-sample     |
+| Complexité de maintenance (nhiều algorithmes)         | Moyenne     | Moyen  | Interface commune BaseEngine, tests systématiques |
 
 ---
 
 ## 7. Critères d'acceptation
 
-| Critère | Mesure |
-|---------|--------|
-| BUG-02 corrigé et testé | Test avec n_grids=100 → SA sélectionné |
+| Critère                                    | Mesure                                           |
+| ------------------------------------------ | ------------------------------------------------ |
+| BUG-02 corrigé et testé                    | Test avec n_grids=100 → SA sélectionné           |
 | Greedy covering produit un covering valide | Test : C(n,t) sous-combinaisons couvertes à 100% |
-| Benchmark compare les 5 méthodes | Endpoint retourne tableau comparatif |
-| Temps de calcul covering < 30s pour n=15 | Test de performance |
-| Normalisation scoring stable | Test avec 1 tirage, 10 tirages, 1000 tirages |
+| Benchmark compare les 5 méthodes           | Endpoint retourne tableau comparatif             |
+| Temps de calcul covering < 30s pour n=15   | Test de performance                              |
+| Normalisation scoring stable               | Test avec 1 tirage, 10 tirages, 1000 tirages     |
 
 ---
 

@@ -24,16 +24,16 @@ Transformer la page Historique et Favoris actuels (basiques) en une **vraie couc
 
 ## 2. État actuel
 
-| Fonctionnalité | Statut | Limites |
-|----------------|--------|---------|
-| Grilles favorites | ✅ `is_favorite` sur `ScoredGrid` | Limité aux grilles scorées |
-| Grilles jouées | ✅ `is_played` + `played_at` sur `ScoredGrid` | Limité aux grilles scorées |
-| Historique grilles | ⚠️ Page HistoryPage | Affiche les grilles jouées mais pas d'autres types |
-| Portefeuilles | ⚠️ Table `portfolios` | Pas de lien utilisateur, pas de duplication |
-| Wheeling | ❌ N'existe pas | — |
-| Budget plans | ❌ N'existe pas | — |
-| Comparaisons | ❌ N'existe pas | — |
-| Simulations | ❌ Non sauvegardées | Résultats perdus à chaque session |
+| Fonctionnalité     | Statut                                       | Limites                                            |
+| ------------------ | -------------------------------------------- | -------------------------------------------------- |
+| Grilles favorites  | ✅ `is_favorite` sur `ScoredGrid`             | Limité aux grilles scorées                         |
+| Grilles jouées     | ✅ `is_played` + `played_at` sur `ScoredGrid` | Limité aux grilles scorées                         |
+| Historique grilles | ⚠️ Page HistoryPage                           | Affiche les grilles jouées mais pas d'autres types |
+| Portefeuilles      | ⚠️ Table `portfolios`                         | Pas de lien utilisateur, pas de duplication        |
+| Wheeling           | ❌ N'existe pas                               | —                                                  |
+| Budget plans       | ❌ N'existe pas                               | —                                                  |
+| Comparaisons       | ❌ N'existe pas                               | —                                                  |
+| Simulations        | ❌ Non sauvegardées                           | Résultats perdus à chaque session                  |
 
 ---
 
@@ -41,26 +41,26 @@ Transformer la page Historique et Favoris actuels (basiques) en une **vraie couc
 
 ### 3.1 — Types de résultats sauvegardables
 
-| Type | Contenu | Source |
-|------|---------|--------|
-| `grid` | Grille scorée (numéros, étoiles, score, breakdown) | GridsPage |
-| `portfolio` | Portefeuille (grilles, métriques, stratégie) | PortfolioPage |
-| `wheeling` | Système réduit (sélection, config, grilles, couverture) | WheelingPage |
-| `budget_plan` | Plan budgétaire (budget, recommandations) | BudgetPage |
-| `comparison` | Comparaison (stratégies, métriques, résultats) | ComparatorPage |
-| `simulation` | Résultat Monte Carlo (distribution, stats) | SimulationPage |
+| Type          | Contenu                                                 | Source         |
+| ------------- | ------------------------------------------------------- | -------------- |
+| `grid`        | Grille scorée (numéros, étoiles, score, breakdown)      | GridsPage      |
+| `portfolio`   | Portefeuille (grilles, métriques, stratégie)            | PortfolioPage  |
+| `wheeling`    | Système réduit (sélection, config, grilles, couverture) | WheelingPage   |
+| `budget_plan` | Plan budgétaire (budget, recommandations)               | BudgetPage     |
+| `comparison`  | Comparaison (stratégies, métriques, résultats)          | ComparatorPage |
+| `simulation`  | Résultat Monte Carlo (distribution, stats)              | SimulationPage |
 
 ### 3.2 — Actions utilisateur
 
-| Action | Description |
-|--------|-------------|
-| **Sauvegarder** | Stocker le résultat avec un nom optionnel |
-| **Lister** | Voir tous ses résultats sauvegardés, filtrables par type |
-| **Détail** | Ouvrir un résultat sauvegardé en lecture |
-| **Dupliquer** | Copier un résultat sauvegardé comme point de départ pour une nouvelle génération |
-| **Relancer** | Réexécuter la même stratégie avec les mêmes paramètres (sur données à jour) |
-| **Supprimer** | Effacer un résultat |
-| **Exporter** | PDF / CSV / JSON |
+| Action          | Description                                                                      |
+| --------------- | -------------------------------------------------------------------------------- |
+| **Sauvegarder** | Stocker le résultat avec un nom optionnel                                        |
+| **Lister**      | Voir tous ses résultats sauvegardés, filtrables par type                         |
+| **Détail**      | Ouvrir un résultat sauvegardé en lecture                                         |
+| **Dupliquer**   | Copier un résultat sauvegardé comme point de départ pour une nouvelle génération |
+| **Relancer**    | Réexécuter la même stratégie avec les mêmes paramètres (sur données à jour)      |
+| **Supprimer**   | Effacer un résultat                                                              |
+| **Exporter**    | PDF / CSV / JSON                                                                 |
 
 ### 3.3 — Approche de modélisation
 
@@ -149,47 +149,47 @@ class HistoryService:
 
 #### Nouveaux composants
 
-| Composant | Rôle |
-|-----------|------|
+| Composant         | Rôle                                                     |
+| ----------------- | -------------------------------------------------------- |
 | `SavedResultCard` | Carte résumée d'un résultat (type, date, métriques clés) |
-| `HistoryFilters` | Filtres par type, date, favori |
-| `SaveButton` | Bouton « Sauvegarder » avec nom optionnel |
-| `ReplayButton` | Bouton « Relancer cette stratégie » |
+| `HistoryFilters`  | Filtres par type, date, favori                           |
+| `SaveButton`      | Bouton « Sauvegarder » avec nom optionnel                |
+| `ReplayButton`    | Bouton « Relancer cette stratégie »                      |
 
 ---
 
 ## 5. Phasage
 
-| Phase | Contenu | Effort |
-|-------|---------|--------|
-| B.1 | Backend : modèle UserSavedResult, migration, service, endpoints | 2–3 jours |
-| B.2 | Frontend : HistoryPage enrichie, composants, intégration | 2–3 jours |
-| B.3 | Extension : ajouter user_id sur ScoredGrid et Portfolio + migration | 1 jour |
-| C.x | Intégration avec chaque nouveau chantier (wheeling, budget, comparateur) | inclus dans chaque chantier |
+| Phase | Contenu                                                                  | Effort                      |
+| ----- | ------------------------------------------------------------------------ | --------------------------- |
+| B.1   | Backend : modèle UserSavedResult, migration, service, endpoints          | 2–3 jours                   |
+| B.2   | Frontend : HistoryPage enrichie, composants, intégration                 | 2–3 jours                   |
+| B.3   | Extension : ajouter user_id sur ScoredGrid et Portfolio + migration      | 1 jour                      |
+| C.x   | Intégration avec chaque nouveau chantier (wheeling, budget, comparateur) | inclus dans chaque chantier |
 
 ---
 
 ## 6. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Volume de données JSON croissant | Moyenne | Moyen | Politique de rétention (ex: 100 résultats max par user) |
-| Replay avec données obsolètes (stats changées) | Certaine | Mineur | Indiquer « résultat recalculé avec les données du jour » |
-| Migration user_id sur tables existantes | Faible | Moyen | Colonne nullable, pas de breaking change |
-| Conflit entre is_favorite sur ScoredGrid et UserSavedResult | Faible | Mineur | Migrer progressivement, cohabitation initiale |
+| Risque                                                      | Probabilité | Impact | Mitigation                                               |
+| ----------------------------------------------------------- | ----------- | ------ | -------------------------------------------------------- |
+| Volume de données JSON croissant                            | Moyenne     | Moyen  | Politique de rétention (ex: 100 résultats max par user)  |
+| Replay avec données obsolètes (stats changées)              | Certaine    | Mineur | Indiquer « résultat recalculé avec les données du jour » |
+| Migration user_id sur tables existantes                     | Faible      | Moyen  | Colonne nullable, pas de breaking change                 |
+| Conflit entre is_favorite sur ScoredGrid et UserSavedResult | Faible      | Mineur | Migrer progressivement, cohabitation initiale            |
 
 ---
 
 ## 7. Critères d'acceptation
 
-| Critère | Test |
-|---------|------|
-| Sauvegarder un résultat → retrouvé dans /history | Test E2E |
-| Filtrer par type retourne les bons résultats | Test intégration |
-| Dupliquer crée un nouveau résultat identique | Test |
-| Relancer retourne un nouveau résultat (potentiellement différent) | Test |
-| Pagination fonctionne (page 1, page 2) | Test |
-| Supprimer → 204 + disparu de la liste | Test |
+| Critère                                                           | Test             |
+| ----------------------------------------------------------------- | ---------------- |
+| Sauvegarder un résultat → retrouvé dans /history                  | Test E2E         |
+| Filtrer par type retourne les bons résultats                      | Test intégration |
+| Dupliquer crée un nouveau résultat identique                      | Test             |
+| Relancer retourne un nouveau résultat (potentiellement différent) | Test             |
+| Pagination fonctionne (page 1, page 2)                            | Test             |
+| Supprimer → 204 + disparu de la liste                             | Test             |
 
 ---
 

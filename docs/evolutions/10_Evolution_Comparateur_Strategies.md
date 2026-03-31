@@ -26,28 +26,28 @@ Offrir un **tableau de bord comparatif** permettant de mettre côte à côte plu
 
 ### 2.1 — Stratégies comparables
 
-| Stratégie | Source | Description |
-|-----------|--------|-------------|
-| Top N | Existant | Les N meilleures grilles du scoring nightly |
-| Portefeuille | Existant | Portefeuille optimisé (Greedy + Hamming) |
-| Aléatoire | Existant | N grilles aléatoires (baseline) |
-| Système réduit | Nouveau (08) | Wheeling à partir de numéros sélectionnés |
-| Budget intelligent | Nouveau (09) | Recommandation optimisée sous budget |
-| Profil X | Existant | Grilles avec profil scoring spécifique (frequence, gaps, cooccurrence, balance) |
-| Méthode Y | Existant | Grilles via algorithme spécifique (genetic, SA, tabu, HC, NSGA-II) |
+| Stratégie          | Source       | Description                                                                     |
+| ------------------ | ------------ | ------------------------------------------------------------------------------- |
+| Top N              | Existant     | Les N meilleures grilles du scoring nightly                                     |
+| Portefeuille       | Existant     | Portefeuille optimisé (Greedy + Hamming)                                        |
+| Aléatoire          | Existant     | N grilles aléatoires (baseline)                                                 |
+| Système réduit     | Nouveau (08) | Wheeling à partir de numéros sélectionnés                                       |
+| Budget intelligent | Nouveau (09) | Recommandation optimisée sous budget                                            |
+| Profil X           | Existant     | Grilles avec profil scoring spécifique (frequence, gaps, cooccurrence, balance) |
+| Méthode Y          | Existant     | Grilles via algorithme spécifique (genetic, SA, tabu, HC, NSGA-II)              |
 
 ### 2.2 — Axes de comparaison
 
-| Axe | Description | Unité |
-|-----|-------------|-------|
-| **Score moyen** | Qualité moyenne des grilles | 0–10 |
-| **Score variance** | Homogénéité du lot | σ² |
-| **Diversité** | Distance Hamming moyenne entre grilles | 0–1 |
-| **Couverture** | % de t-combinaisons couvertes (si applicable) | 0–100% |
-| **Coût** | Prix total en euros | € |
-| **Nombre de grilles** | Quantité | entier |
-| **Robustesse** | CV du score en bootstrap | 0–100% |
-| **Gain espéré** | Espérance conditionnelle pondérée par les prize tiers | € |
+| Axe                   | Description                                           | Unité  |
+| --------------------- | ----------------------------------------------------- | ------ |
+| **Score moyen**       | Qualité moyenne des grilles                           | 0–10   |
+| **Score variance**    | Homogénéité du lot                                    | σ²     |
+| **Diversité**         | Distance Hamming moyenne entre grilles                | 0–1    |
+| **Couverture**        | % de t-combinaisons couvertes (si applicable)         | 0–100% |
+| **Coût**              | Prix total en euros                                   | €      |
+| **Nombre de grilles** | Quantité                                              | entier |
+| **Robustesse**        | CV du score en bootstrap                              | 0–100% |
+| **Gain espéré**       | Espérance conditionnelle pondérée par les prize tiers | €      |
 
 ### 2.3 — Visualisations
 
@@ -61,11 +61,11 @@ Offrir un **tableau de bord comparatif** permettant de mettre côte à côte plu
 
 ## 3. Intérêt utilisateur
 
-| Persona | Bénéfice |
-|---------|----------|
-| Joueur régulier | « Quelle est la meilleure approche pour moi ? » — réponse visuelle claire |
-| Joueur analytique | « Je vois les trade-offs et je décide en connaissance de cause » |
-| Passionné combinatoire | « Je benchmark toutes les méthodes et optimise mon choix » |
+| Persona                | Bénéfice                                                                  |
+| ---------------------- | ------------------------------------------------------------------------- |
+| Joueur régulier        | « Quelle est la meilleure approche pour moi ? » — réponse visuelle claire |
+| Joueur analytique      | « Je vois les trade-offs et je décide en connaissance de cause »          |
+| Passionné combinatoire | « Je benchmark toutes les méthodes et optimise mon choix »                |
 
 ---
 
@@ -135,13 +135,13 @@ class ComparisonService:
 
 #### Nouveaux composants
 
-| Composant | Rôle |
-|-----------|------|
-| `StrategySelector` | Sélection des stratégies à comparer (checkboxes + config) |
-| `ComparisonTable` | Tableau comparatif avec coloration |
-| `ComparisonRadar` | Radar chart Recharts |
-| `ComparisonScatter` | Scatter plot coût/couverture |
-| `ComparisonSummary` | Résumé textuel généré |
+| Composant           | Rôle                                                      |
+| ------------------- | --------------------------------------------------------- |
+| `StrategySelector`  | Sélection des stratégies à comparer (checkboxes + config) |
+| `ComparisonTable`   | Tableau comparatif avec coloration                        |
+| `ComparisonRadar`   | Radar chart Recharts                                      |
+| `ComparisonScatter` | Scatter plot coût/couverture                              |
+| `ComparisonSummary` | Résumé textuel généré                                     |
 
 #### Nouvelle page : `ComparatorPage.tsx`
 
@@ -153,47 +153,47 @@ Sidebar : icône `BarChart3` (lucide-react), groupe « ÉVALUATION ».
 
 ## 7. Phasage
 
-| Phase | Contenu | Effort |
-|-------|---------|--------|
-| C.7 | Backend : service comparison, endpoint, schémas | 2–3 jours |
-| C.8 | Frontend : composants, page, intégration | 3–4 jours |
-| C.9 | Polish : résumé textuel, export PDF | 1–2 jours |
+| Phase | Contenu                                         | Effort    |
+| ----- | ----------------------------------------------- | --------- |
+| C.7   | Backend : service comparison, endpoint, schémas | 2–3 jours |
+| C.8   | Frontend : composants, page, intégration        | 3–4 jours |
+| C.9   | Polish : résumé textuel, export PDF             | 1–2 jours |
 
 ---
 
 ## 8. Dépendances
 
-| Dépendance | Raison | Obligatoire ? |
-|------------|--------|---------------|
-| Top 50 existant | Stratégie top | Oui |
-| Portfolio existant | Stratégie portfolio | Oui |
-| Simulation existante (compare random) | Stratégie aléatoire | Oui |
-| 08 Wheeling | Stratégie wheeling | Non (optionnel) |
-| 09 Budget | Stratégie budget | Non (optionnel) |
-| FUNC-04 (prize_tiers) | Scénarios de gain | Non |
+| Dépendance                            | Raison              | Obligatoire ?   |
+| ------------------------------------- | ------------------- | --------------- |
+| Top 50 existant                       | Stratégie top       | Oui             |
+| Portfolio existant                    | Stratégie portfolio | Oui             |
+| Simulation existante (compare random) | Stratégie aléatoire | Oui             |
+| 08 Wheeling                           | Stratégie wheeling  | Non (optionnel) |
+| 09 Budget                             | Stratégie budget    | Non (optionnel) |
+| FUNC-04 (prize_tiers)                 | Scénarios de gain   | Non             |
 
 ---
 
 ## 9. Risques
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Temps de calcul (5 stratégies en parallèle) | Moyenne | Moyen | asyncio.gather pour paralléliser, timeout 60s |
-| Comparaison trompeuse (pas les mêmes n_grilles) | Moyenne | Fort | Forcer count commun ou afficher la comparaison par grille |
-| Radar chart illisible avec > 4 stratégies | Faible | Mineur | Limiter à 5 stratégies max |
-| Résumé textuel incorrect | Faible | Moyen | Templates structurés, pas de GPT |
+| Risque                                          | Probabilité | Impact | Mitigation                                                |
+| ----------------------------------------------- | ----------- | ------ | --------------------------------------------------------- |
+| Temps de calcul (5 stratégies en parallèle)     | Moyenne     | Moyen  | asyncio.gather pour paralléliser, timeout 60s             |
+| Comparaison trompeuse (pas les mêmes n_grilles) | Moyenne     | Fort   | Forcer count commun ou afficher la comparaison par grille |
+| Radar chart illisible avec > 4 stratégies       | Faible      | Mineur | Limiter à 5 stratégies max                                |
+| Résumé textuel incorrect                        | Faible      | Moyen  | Templates structurés, pas de GPT                          |
 
 ---
 
 ## 10. Critères d'acceptation
 
-| Critère | Test |
-|---------|------|
+| Critère                                               | Test             |
+| ----------------------------------------------------- | ---------------- |
 | Comparer 3 stratégies retourne métriques pour chacune | Test intégration |
-| Métriques cohérentes (score, diversité, coût) | Test calcul |
-| Radar chart rend correctement | Test visuel |
-| Temps < 30s pour 4 stratégies × 10 grilles | Test perf |
-| Résumé textuel identifie la meilleure stratégie | Test |
+| Métriques cohérentes (score, diversité, coût)         | Test calcul      |
+| Radar chart rend correctement                         | Test visuel      |
+| Temps < 30s pour 4 stratégies × 10 grilles            | Test perf        |
+| Résumé textuel identifie la meilleure stratégie       | Test             |
 
 ---
 
