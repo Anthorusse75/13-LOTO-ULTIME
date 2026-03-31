@@ -6,10 +6,12 @@ interface SettingsState {
   sidebarCollapsed: boolean;
   coachEnabled: boolean;
   onboardingDone: boolean;
+  displayMode: "simple" | "expert";
   toggleTheme: () => void;
   toggleSidebar: () => void;
   toggleCoach: () => void;
   setOnboardingDone: (done: boolean) => void;
+  toggleDisplayMode: () => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -19,6 +21,7 @@ export const useSettingsStore = create<SettingsState>()(
       sidebarCollapsed: false,
       coachEnabled: true,
       onboardingDone: false,
+      displayMode: "simple",
       toggleTheme: () => {
         const next = get().theme === "dark" ? "light" : "dark";
         document.documentElement.classList.toggle("dark", next === "dark");
@@ -28,6 +31,8 @@ export const useSettingsStore = create<SettingsState>()(
       toggleSidebar: () => set({ sidebarCollapsed: !get().sidebarCollapsed }),
       toggleCoach: () => set({ coachEnabled: !get().coachEnabled }),
       setOnboardingDone: (done) => set({ onboardingDone: done }),
+      toggleDisplayMode: () =>
+        set({ displayMode: get().displayMode === "simple" ? "expert" : "simple" }),
     }),
     {
       name: "settings-storage",

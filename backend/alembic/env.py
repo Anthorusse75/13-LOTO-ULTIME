@@ -21,6 +21,8 @@ from app.models.token_blacklist import TokenBlacklistEntry  # noqa: F401
 from app.models.user import User  # noqa: F401
 from app.models.wheeling import WheelingSystem  # noqa: F401
 from app.models.budget import BudgetPlan  # noqa: F401
+from app.models.grid_draw_result import GridDrawResult  # noqa: F401
+from app.models.notification import UserNotification  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:

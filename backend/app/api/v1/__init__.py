@@ -14,6 +14,9 @@ from .simulations import router as simulations_router
 from .statistics import router as statistics_router
 from .wheeling import router as wheeling_router
 from .budget import router as budget_router
+from .comparison import router as comparison_router
+from .suggestions import router as suggestions_router
+from .notifications import router as notifications_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
 api_v1_router.include_router(auth_router, prefix="/auth", tags=["Auth"])
@@ -57,4 +60,19 @@ api_v1_router.include_router(
     budget_router,
     prefix="/games/{game_id}/budget",
     tags=["Budget"],
+)
+api_v1_router.include_router(
+    comparison_router,
+    prefix="/games/{game_id}/comparison",
+    tags=["Comparison"],
+)
+api_v1_router.include_router(
+    suggestions_router,
+    prefix="/games/{game_id}/suggestions",
+    tags=["Suggestions"],
+)
+api_v1_router.include_router(
+    notifications_router,
+    prefix="/notifications",
+    tags=["Notifications"],
 )

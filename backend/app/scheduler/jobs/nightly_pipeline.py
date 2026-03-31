@@ -28,6 +28,9 @@ async def _do_nightly_pipeline() -> dict[str, Any]:
     from app.scheduler.jobs.fetch_draws import _do_fetch
     from app.scheduler.jobs.optimize_portfolio import _do_optimize_portfolio
     from app.scheduler.jobs.pre_generate_daily_content import _do_pre_generate
+    from app.scheduler.jobs.check_played_grids import _do_check_played_grids
+    from app.scheduler.jobs.create_notifications import _do_create_grid_result_notifications
+    from app.scheduler.jobs.cleanup_notifications import _do_cleanup_notifications
 
     results: dict[str, Any] = {}
     steps: list[tuple[str, Callable[..., Coroutine[Any, Any, dict[str, Any]]]]] = [
@@ -40,6 +43,9 @@ async def _do_nightly_pipeline() -> dict[str, Any]:
         ("optimize_portfolio", _do_optimize_portfolio),
         ("compute_hot_cold", _do_compute_hot_cold),
         ("pre_generate_daily_content", _do_pre_generate),
+        ("check_played_grids", _do_check_played_grids),
+        ("create_grid_result_notifications", _do_create_grid_result_notifications),
+        ("cleanup_notifications", _do_cleanup_notifications),
     ]
 
     for step_name, step_func in steps:

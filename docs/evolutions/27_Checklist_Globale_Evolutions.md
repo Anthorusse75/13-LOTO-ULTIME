@@ -7,8 +7,9 @@
 - A : 17/17 (100%) ✅
 - B : 40/40 (100%) ✅
 - C : 39/39 (100%) ✅
-- Total : 108/175 (62%)
-- Tests : 553 passing (backend) | 0 TS errors (frontend)
+- D : 34/34 (100%) ✅
+- Total : 142/175 (81%)
+- Tests : 491 passing (backend) | 0 TS errors (frontend)
 
 ---
 
@@ -210,60 +211,60 @@
 
 | ID      | Tâche                                    | Doc    | Statut |
 | ------- | ---------------------------------------- | ------ | ------ |
-| B-35    | Implémenter ComparisonService            | 10, 16 | ⬜      |
-| API-09  | Créer router comparison (1 endpoint)     | 10, 18 | ⬜      |
-| F-58    | Créer composant StrategySelector         | 10, 17 | ⬜      |
-| F-59    | Créer composant ComparisonTable          | 10, 17 | ⬜      |
-| F-60    | Créer composant ComparisonRadar          | 10, 17 | ⬜      |
-| F-61    | Créer composant ComparisonScatter        | 10, 17 | ⬜      |
-| F-62    | Créer composant ComparisonSummary        | 10, 17 | ⬜      |
-| F-63    | Créer ComparatorPage + route /comparator | 10, 17 | ⬜      |
-| F-64    | Créer service comparisonApi.ts           | 10, 17 | ⬜      |
-| F-65    | Créer types/comparison.ts                | 10, 17 | ⬜      |
-| TEST-15 | Tests comparateur (8 tests)              | 25     | ⬜      |
+| B-35    | Implémenter ComparisonService            | 10, 16 | ✅      |
+| API-09  | Créer router comparison (1 endpoint)     | 10, 18 | ✅      |
+| F-58    | Créer composant StrategySelector         | 10, 17 | ✅      |
+| F-59    | Créer composant ComparisonTable          | 10, 17 | ✅      |
+| F-60    | Créer composant ComparisonRadar          | 10, 17 | ✅      |
+| F-61    | Créer composant ComparisonScatter        | 10, 17 | ✅      |
+| F-62    | Créer composant ComparisonSummary        | 10, 17 | ✅      |
+| F-63    | Créer ComparatorPage + route /comparator | 10, 17 | ✅      |
+| F-64    | Créer service comparisonApi.ts           | 10, 17 | ✅      |
+| F-65    | Créer types/comparison.ts                | 10, 17 | ✅      |
+| TEST-15 | Tests comparateur (8 tests)              | 25     | ✅      |
 
 ### D.2–D.3 : Automatisation
 
 | ID      | Tâche                                                   | Doc    | Statut |
 | ------- | ------------------------------------------------------- | ------ | ------ |
-| DB-14   | Créer table grid_draw_results + migration               | 19     | ⬜      |
-| JOB-03  | Implémenter check_played_grids                          | 20, 15 | ⬜      |
-| B-36    | Implémenter logique comparaison numéros vs tirage       | 15, 16 | ⬜      |
-| B-37    | Implémenter determine_prize_rank (via game_prize_tiers) | 15, 16 | ⬜      |
-| F-66    | Créer composant PlayedGridsResults                      | 15, 17 | ⬜      |
-| F-67    | Créer composant NextDrawCountdown                       | 15, 17 | ⬜      |
-| B-38    | Implémenter SuggestionService                           | 15, 16 | ⬜      |
-| API-10  | Créer endpoint GET /suggestions/daily                   | 15, 18 | ⬜      |
-| F-68    | Créer composant DailySuggestionCard                     | 15, 17 | ⬜      |
-| JOB-04  | Implémenter generate_daily_suggestion                   | 20, 15 | ⬜      |
-| JOB-05  | Étendre nightly_pipeline avec nouveaux steps            | 20, 15 | ⬜      |
-| TEST-16 | Tests automatisation (10 tests)                         | 25     | ⬜      |
+| DB-14   | Créer table grid_draw_results + migration               | 19     | ✅      |
+| JOB-03  | Implémenter check_played_grids                          | 20, 15 | ✅      |
+| B-36    | Implémenter logique comparaison numéros vs tirage       | 15, 16 | ✅      |
+| B-37    | Implémenter determine_prize_rank (via game_prize_tiers) | 15, 16 | ✅      |
+| F-66    | Créer composant PlayedGridsResults                      | 15, 17 | ✅      |
+| F-67    | Créer composant NextDrawCountdown                       | 15, 17 | ✅      |
+| B-38    | Implémenter SuggestionService                           | 15, 16 | ✅      |
+| API-10  | Créer endpoint GET /suggestions/daily                   | 15, 18 | ✅      |
+| F-68    | Créer composant DailySuggestionCard                     | 15, 17 | ✅      |
+| JOB-04  | Implémenter generate_daily_suggestion                   | 20, 15 | ✅      |
+| JOB-05  | Étendre nightly_pipeline avec nouveaux steps            | 20, 15 | ✅      |
+| TEST-16 | Tests automatisation (10 tests)                         | 25     | ✅      |
 
 ### D.4 : Notifications
 
 | ID     | Tâche                                        | Doc    | Statut |
 | ------ | -------------------------------------------- | ------ | ------ |
-| DB-15  | Créer table user_notifications + migration   | 19     | ⬜      |
-| B-39   | Implémenter NotificationService              | 15, 16 | ⬜      |
-| API-11 | Créer router notifications (4 endpoints)     | 15, 18 | ⬜      |
-| JOB-06 | Implémenter create_grid_result_notifications | 20, 15 | ⬜      |
-| JOB-07 | Implémenter create_new_draw_notifications    | 20, 15 | ⬜      |
-| JOB-08 | Implémenter cleanup_notifications            | 20, 15 | ⬜      |
-| F-69   | Créer composant NotificationBell             | 15, 17 | ⬜      |
-| F-70   | Créer composant NotificationDropdown         | 15, 17 | ⬜      |
-| F-71   | Créer service notificationApi.ts             | 15, 17 | ⬜      |
-| F-72   | Créer hook useNotifications()                | 15, 17 | ⬜      |
-| F-73   | Créer types/notification.ts                  | 15, 17 | ⬜      |
+| DB-15  | Créer table user_notifications + migration   | 19     | ✅      |
+| B-39   | Implémenter NotificationService              | 15, 16 | ✅      |
+| API-11 | Créer router notifications (4 endpoints)     | 15, 18 | ✅      |
+| JOB-06 | Implémenter create_grid_result_notifications | 20, 15 | ✅      |
+| JOB-07 | Implémenter create_new_draw_notifications    | 20, 15 | ✅      |
+| JOB-08 | Implémenter cleanup_notifications            | 20, 15 | ✅      |
+| F-69   | Créer composant NotificationBell             | 15, 17 | ✅      |
+| F-70   | Créer composant NotificationDropdown         | 15, 17 | ✅      |
+| F-71   | Créer service notificationApi.ts             | 15, 17 | ✅      |
+| F-72   | Créer hook useNotifications()                | 15, 17 | ✅      |
+| F-73   | Créer types/notification.ts                  | 15, 17 | ✅      |
 
 ### D.5 : Mode expert/simplifié
 
 | ID   | Tâche                                          | Doc    | Statut |
 | ---- | ---------------------------------------------- | ------ | ------ |
-| F-74 | Ajouter displayMode dans settingsStore         | 07, 17 | ⬜      |
-| F-75 | Créer hook useDisplayMode()                    | 07, 17 | ⬜      |
-| F-76 | Créer composant ModeToggle                     | 07, 17 | ⬜      |
-| F-77 | Appliquer mode conditionnel sur StatisticsPage | 07     | ⬜      |
-| F-78 | Appliquer mode conditionnel sur GridsPage      | 07     | ⬜      |
+| F-74 | Ajouter displayMode dans settingsStore         | 07, 17 | ✅      |
+| F-75 | Créer hook useDisplayMode()                    | 07, 17 | ✅      |
+| F-76 | Créer composant ModeToggle                     | 07, 17 | ✅      |
+| F-77 | Appliquer mode conditionnel sur StatisticsPage | 07     | ✅      |
+| F-78 | Appliquer mode conditionnel sur GridsPage      | 07     | ✅      |
 
 ---
 

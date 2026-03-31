@@ -962,11 +962,26 @@ class TestNightlyPipelineJob:
                 new_callable=AsyncMock,
                 return_value={"grids_generated": 1},
             ),
+            patch(
+                "app.scheduler.jobs.check_played_grids._do_check_played_grids",
+                new_callable=AsyncMock,
+                return_value={"games_processed": 1},
+            ),
+            patch(
+                "app.scheduler.jobs.create_notifications._do_create_grid_result_notifications",
+                new_callable=AsyncMock,
+                return_value={"notified": 0},
+            ),
+            patch(
+                "app.scheduler.jobs.cleanup_notifications._do_cleanup_notifications",
+                new_callable=AsyncMock,
+                return_value={"cleaned": 0},
+            ),
         ):
             from app.scheduler.jobs.nightly_pipeline import _do_nightly_pipeline
 
             result = await _do_nightly_pipeline()
-            assert result["steps"] == 9
+            assert result["steps"] == 12
             for step in result["details"].values():
                 assert step["status"] == "success"
 

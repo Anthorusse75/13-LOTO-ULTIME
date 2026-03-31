@@ -1,5 +1,6 @@
 import AiAnalysisPanel from "@/components/common/AiAnalysisPanel";
 import InfoTooltip from "@/components/common/InfoTooltip";
+import ModeToggle from "@/components/common/ModeToggle";
 import PageIntro from "@/components/common/PageIntro";
 import BayesianTab from "@/components/statistics/BayesianTab";
 import CooccurrenceTab from "@/components/statistics/CooccurrenceTab";
@@ -9,6 +10,7 @@ import GapTab from "@/components/statistics/GapTab";
 import GraphTab from "@/components/statistics/GraphTab";
 import StarsTab from "@/components/statistics/StarsTab";
 import TemporalTab from "@/components/statistics/TemporalTab";
+import { useDisplayMode } from "@/hooks/useDisplayMode";
 import { useStatistics } from "@/hooks/useStatistics";
 import { gameService } from "@/services/gameService";
 import { useGameStore } from "@/stores/gameStore";
@@ -72,6 +74,7 @@ const PERIOD_SUPPORTED_TABS: TabKey[] = ["frequencies", "gaps"];
 export default function StatisticsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("frequencies");
   const [lastN, setLastN] = useState<PeriodValue>(undefined);
+  const { isExpert } = useDisplayMode();
 
   const slug = useGameStore((s) => s.currentGameSlug);
   const { data: game } = useQuery({
@@ -88,22 +91,30 @@ export default function StatisticsPage() {
     ? game.star_name.charAt(0).toUpperCase() + game.star_name.slice(1) + "s"
     : "Étoiles";
 
+  const EXPERT_ONLY_TABS: TabKey[] = ["distribution", "bayesian", "graph"];
+
   const tabs = useMemo(() => {
     const base = BASE_TABS as unknown as Array<{
       key: TabKey;
       label: string;
       tooltip: string;
     }>;
-    if (!hasStars) return base;
-    return [
-      ...base,
-      {
-        key: "stars" as TabKey,
-        label: starTabLabel,
-        tooltip: `Fréquences et écarts des ${starTabLabel.toLowerCase()} (numéros complémentaires).`,
-      },
-    ];
-  }, [hasStars, starTabLabel]);
+    let result = base;
+    if (hasStars) {
+      result = [
+        ...base,
+        {
+          key: "stars" as TabKey,
+          label: starTabLabel,
+          tooltip: `Fréquences et écarts des ${starTabLabel.toLowerCase()} (numéros complémentaires).`,
+        },
+      ];
+    }
+    if (!isExpert) {
+      result = result.filter((t) => !EXPERT_ONLY_TABS.includes(t.key));
+    }
+    return result;
+  }, [hasStars, starTabLabel, isExpert]);
 
   const showPeriodSelector = PERIOD_SUPPORTED_TABS.includes(activeTab);
 
@@ -131,7 +142,10 @@ export default function StatisticsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">Statistiques</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold">Statistiques</h1>
+          <ModeToggle />
+        </div>
         {showPeriodSelector && (
           <div className="flex items-center gap-2">
             <span className="text-xs text-text-secondary">Période :</span>

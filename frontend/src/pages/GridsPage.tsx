@@ -1,6 +1,7 @@
 import ExplanationPanel from "@/components/common/ExplanationPanel";
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ModeToggle from "@/components/common/ModeToggle";
 import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
 import CustomWeightsEditor from "@/components/grids/CustomWeightsEditor";
@@ -12,6 +13,7 @@ import {
   useToggleFavorite,
   useTopGrids,
 } from "@/hooks/useGrids";
+import { useDisplayMode } from "@/hooks/useDisplayMode";
 import { useSaveResult } from "@/hooks/useHistory";
 import { gameService } from "@/services/gameService";
 import { useGameStore } from "@/stores/gameStore";
@@ -39,6 +41,7 @@ export default function GridsPage() {
     string,
     number
   > | null>(null);
+  const { isExpert } = useDisplayMode();
 
   const { data: topGrids, isLoading: topLoading } = useTopGrids(10);
   const generateMutation = useGenerateGrids();
@@ -75,7 +78,10 @@ export default function GridsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Grilles</h1>
+      <div className="flex items-center gap-3">
+        <h1 className="text-2xl font-bold">Grilles</h1>
+        <ModeToggle />
+      </div>
 
       <PageIntro
         storageKey="grids"
@@ -196,10 +202,12 @@ export default function GridsPage() {
           </div>
         </div>
 
-        {/* Custom weights */}
-        <div className="mb-4">
-          <CustomWeightsEditor onChange={setCustomWeights} />
-        </div>
+        {/* Custom weights — expert only */}
+        {isExpert && (
+          <div className="mb-4">
+            <CustomWeightsEditor onChange={setCustomWeights} />
+          </div>
+        )}
         <button
           onClick={handleGenerate}
           disabled={generateMutation.isPending}
@@ -334,7 +342,9 @@ export default function GridsPage() {
             le « ? » pour comprendre ce que chaque critère mesure :
           </p>
           <div className="space-y-2">
-            {SCORE_CRITERIA.map((c) => (
+            {SCORE_CRITERIA.filter(
+              (c) => isExpert || !["pattern_penalty", "cooccurrence"].includes(c.key),
+            ).map((c) => (
               <ScoreBar
                 key={c.key}
                 label={c.label}

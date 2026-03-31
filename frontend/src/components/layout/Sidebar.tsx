@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Scale,
   Settings,
   Target,
   Wallet,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -30,6 +32,7 @@ const navItems = [
   { to: "/simulation", icon: FlaskConical, label: "Simulation" },
   { to: "/wheeling", icon: Layers, label: "Système réduit" },
   { to: "/budget", icon: Wallet, label: "Budget" },
+  { to: "/comparator", icon: Scale, label: "Comparateur" },
   { to: "/admin", icon: Settings, label: "Admin", adminOnly: true },
 ];
 
@@ -149,6 +152,9 @@ export default function Sidebar() {
               <span className="font-bold text-accent-blue text-lg tracking-tight">
                 LOTO ULTIME
               </span>
+              <div className="ml-auto mr-2">
+                <NotificationBell />
+              </div>
               <button
                 onClick={() => setMobileOpen(false)}
                 className="p-1.5 rounded-md hover:bg-surface-hover text-text-secondary"
@@ -183,6 +189,9 @@ export default function Sidebar() {
               LOTO ULTIME
             </span>
           )}
+          <div className="ml-auto">
+            <NotificationBell />
+          </div>
         </div>
         {navContent(false)}
       </aside>

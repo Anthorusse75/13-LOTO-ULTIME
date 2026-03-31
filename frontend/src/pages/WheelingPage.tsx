@@ -232,7 +232,8 @@ export default function WheelingPage() {
                       onClick={() => toggleNumber(n)}
                       className="w-10 h-10 rounded-full text-xs font-bold transition-all duration-150 flex items-center justify-center relative overflow-hidden cursor-pointer"
                       style={{
-                        transform: isSelected ? "scale(1.12)" : "scale(1)",
+                        transform: isSelected ? "scale(1.15)" : "scale(1)",
+                        opacity: isSelected ? 1 : 0.4,
                       }}
                     >
                       {/* Ball body — blue for Loto, red/dark-red for EuroMillions */}
@@ -266,7 +267,8 @@ export default function WheelingPage() {
                         <span
                           className="absolute inset-0 rounded-full"
                           style={{
-                            border: "2.5px solid rgba(255,255,255,0.7)",
+                            border: "3px solid #fff",
+                            boxShadow: "0 0 0 2px rgba(255,255,255,0.5)",
                           }}
                         />
                       )}
@@ -313,7 +315,8 @@ export default function WheelingPage() {
                       onClick={() => toggleStar(s)}
                       className={`text-xs font-bold transition-all duration-150 flex items-center justify-center relative cursor-pointer ${isLoto ? "w-10 h-10 rounded-full overflow-hidden" : "w-11 h-11"}`}
                       style={{
-                        transform: isSelected ? "scale(1.12)" : "scale(1)",
+                        transform: isSelected ? "scale(1.15)" : "scale(1)",
+                        opacity: isSelected ? 1 : 0.4,
                       }}
                     >
                       {isLoto ? (
@@ -345,7 +348,8 @@ export default function WheelingPage() {
                             <span
                               className="absolute inset-0 rounded-full"
                               style={{
-                                border: "2.5px solid rgba(255,255,255,0.7)",
+                                border: "3px solid #fff",
+                                boxShadow: "0 0 0 2px rgba(255,255,255,0.5)",
                               }}
                             />
                           )}
@@ -568,34 +572,88 @@ export default function WheelingPage() {
             </table>
           </div>
 
-          {/* Coverage Matrix (heatmap) */}
+          {/* Coverage Matrix (heatmap with %) */}
           {result.number_distribution &&
             Object.keys(result.number_distribution).length > 0 && (
               <div>
                 <h3 className="text-sm font-semibold mb-2">
-                  Distribution des numéros
+                  Couverture par numéro
                 </h3>
-                <div className="flex flex-wrap gap-1.5">
+                <p className="text-xs text-text-secondary mb-3">
+                  Pourcentage de grilles contenant chaque numéro. 100% = présent
+                  dans toutes les grilles.
+                </p>
+                <div className="flex flex-wrap gap-2">
                   {[...selectedNumbers]
                     .sort((a, b) => a - b)
                     .map((n) => {
                       const count = result.number_distribution[n] ?? 0;
-                      const maxCount = Math.max(
-                        ...Object.values(result.number_distribution),
-                      );
-                      const intensity = maxCount > 0 ? count / maxCount : 0;
+                      const pct =
+                        result.grid_count > 0
+                          ? Math.round((count / result.grid_count) * 100)
+                          : 0;
+                      const intensity = pct / 100;
+                      const isLoto = game?.slug.includes("loto");
+                      // Color: blue for loto, red for euromillions
+                      const baseR = isLoto ? 59 : 220;
+                      const baseG = isLoto ? 130 : 38;
+                      const baseB = isLoto ? 246 : 38;
                       return (
                         <div
                           key={n}
-                          className="w-10 h-10 rounded-lg flex flex-col items-center justify-center text-xs"
+                          className="w-14 rounded-xl flex flex-col items-center py-2 border transition-all"
                           style={{
-                            backgroundColor: `rgba(59, 130, 246, ${0.1 + intensity * 0.7})`,
-                            color: intensity > 0.5 ? "white" : "inherit",
+                            backgroundColor: `rgba(${baseR}, ${baseG}, ${baseB}, ${0.05 + intensity * 0.35})`,
+                            borderColor: `rgba(${baseR}, ${baseG}, ${baseB}, ${0.15 + intensity * 0.45})`,
                           }}
                         >
-                          <span className="font-medium">{n}</span>
-                          <span className="text-[10px] opacity-75">
-                            ×{count}
+                          {/* Mini ball */}
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold relative overflow-hidden"
+                            style={{ opacity: 0.3 + intensity * 0.7 }}
+                          >
+                            <span
+                              className="absolute inset-0 rounded-full"
+                              style={{
+                                background: isLoto
+                                  ? "radial-gradient(circle at 35% 30%, #5ba3f5, #1a6dd4 55%, #0c4a9e 80%, #082f6a)"
+                                  : "radial-gradient(circle at 35% 30%, #f07070, #c62828 55%, #8e1a1a 80%, #5c1010)",
+                                boxShadow:
+                                  "inset -2px -3px 5px rgba(0,0,0,0.35), inset 2px 2px 4px rgba(255,255,255,0.15)",
+                              }}
+                            />
+                            <span
+                              className="absolute rounded-full"
+                              style={{
+                                width: "58%",
+                                height: "58%",
+                                background:
+                                  "radial-gradient(circle at 45% 40%, #ffffff, #e2e2e2 80%)",
+                                boxShadow:
+                                  "inset 0 1px 2px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.15)",
+                              }}
+                            />
+                            <span className="relative z-10 text-gray-900">
+                              {n}
+                            </span>
+                          </div>
+                          {/* Percentage */}
+                          <span
+                            className="text-xs font-bold mt-1 tabular-nums"
+                            style={{
+                              color:
+                                pct === 100
+                                  ? "#10b981"
+                                  : pct >= 70
+                                    ? `rgb(${baseR}, ${baseG}, ${baseB})`
+                                    : "var(--color-text-secondary)",
+                            }}
+                          >
+                            {pct}%
+                          </span>
+                          {/* Count */}
+                          <span className="text-[10px] text-text-secondary tabular-nums">
+                            {count}/{result.grid_count}
                           </span>
                         </div>
                       );

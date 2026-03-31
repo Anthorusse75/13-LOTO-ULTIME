@@ -28,7 +28,13 @@ from app.services.statistics import StatisticsService
 from app.repositories.wheeling_repository import WheelingRepository
 from app.services.wheeling import WheelingService
 from app.repositories.budget_repository import BudgetRepository
+from app.repositories.grid_draw_result_repository import GridDrawResultRepository
+from app.repositories.notification_repository import NotificationRepository
 from app.services.budget import BudgetService
+from app.services.comparison import ComparisonService
+from app.services.automation import AutomationService
+from app.services.suggestion import SuggestionService
+from app.services.notification import NotificationService
 
 # ── Database session ──
 
@@ -137,6 +143,43 @@ def get_budget_service(
     session: AsyncSession = Depends(get_db),
 ) -> BudgetService:
     return BudgetService(repo, grid_service, session)
+
+
+def get_comparison_service(
+    grid_service: GridService = Depends(get_grid_service),
+    simulation_service: SimulationService = Depends(get_simulation_service),
+) -> ComparisonService:
+    return ComparisonService(grid_service, simulation_service)
+
+
+def get_grid_draw_result_repository(
+    session: AsyncSession = Depends(get_db),
+) -> GridDrawResultRepository:
+    return GridDrawResultRepository(session)
+
+
+def get_notification_repository(
+    session: AsyncSession = Depends(get_db),
+) -> NotificationRepository:
+    return NotificationRepository(session)
+
+
+def get_automation_service(
+    session: AsyncSession = Depends(get_db),
+) -> AutomationService:
+    return AutomationService(session)
+
+
+def get_suggestion_service(
+    grid_repo: GridRepository = Depends(get_grid_repository),
+) -> SuggestionService:
+    return SuggestionService(grid_repo)
+
+
+def get_notification_service(
+    notification_repo: NotificationRepository = Depends(get_notification_repository),
+) -> NotificationService:
+    return NotificationService(notification_repo)
 
 
 # ── Game config resolution ──
