@@ -102,7 +102,9 @@ export default function HowItWorksPage() {
                 <Icon size={20} className="text-accent-blue" />
               </div>
               <div>
-                <h3 className="font-semibold text-text-primary mb-1">{title}</h3>
+                <h3 className="font-semibold text-text-primary mb-1">
+                  {title}
+                </h3>
                 <p className="text-sm text-text-secondary leading-relaxed">
                   {description}
                 </p>
@@ -126,9 +128,9 @@ export default function HowItWorksPage() {
             <p>
               Alors pourquoi analyser ? Parce que le scoring mesure la
               <strong> qualité statistique</strong> d'une grille (équilibre,
-              diversité), pas sa probabilité de gain. C'est comme choisir un
-              bon cheval aux courses : on n'est pas sûr qu'il gagne, mais on
-              peut évaluer ses chances objectivement.
+              diversité), pas sa probabilité de gain. C'est comme choisir un bon
+              cheval aux courses : on n'est pas sûr qu'il gagne, mais on peut
+              évaluer ses chances objectivement.
             </p>
           </LearnSection>
 
@@ -138,12 +140,29 @@ export default function HowItWorksPage() {
               note finale (0-10) est une moyenne pondérée. Les critères sont :
             </p>
             <ul className="list-disc pl-5 space-y-1">
-              <li><strong>Fréquence</strong> — les numéros sont-ils souvent sortis ?</li>
-              <li><strong>Écart (gap)</strong> — quand sont-ils sortis pour la dernière fois ?</li>
-              <li><strong>Co-occurrence</strong> — ces numéros sortent-ils souvent ensemble ?</li>
-              <li><strong>Structure</strong> — répartition par dizaines, terminaisons, somme.</li>
-              <li><strong>Équilibre</strong> — mix pair/impair, haut/bas.</li>
-              <li><strong>Pénalité pattern</strong> — malus pour les suites trop régulières.</li>
+              <li>
+                <strong>Fréquence</strong> — les numéros sont-ils souvent sortis
+                ?
+              </li>
+              <li>
+                <strong>Écart (gap)</strong> — quand sont-ils sortis pour la
+                dernière fois ?
+              </li>
+              <li>
+                <strong>Co-occurrence</strong> — ces numéros sortent-ils souvent
+                ensemble ?
+              </li>
+              <li>
+                <strong>Structure</strong> — répartition par dizaines,
+                terminaisons, somme.
+              </li>
+              <li>
+                <strong>Équilibre</strong> — mix pair/impair, haut/bas.
+              </li>
+              <li>
+                <strong>Pénalité pattern</strong> — malus pour les suites trop
+                régulières.
+              </li>
             </ul>
           </LearnSection>
 
@@ -153,23 +172,35 @@ export default function HowItWorksPage() {
               possibilités, on utilise des <strong>méta-heuristiques</strong> :
             </p>
             <ul className="list-disc pl-5 space-y-1">
-              <li><strong>Algorithme génétique</strong> — s'inspire de l'évolution darwinienne (sélection, croisement, mutation).</li>
-              <li><strong>Recuit simulé</strong> — imite le refroidissement des métaux pour éviter les minimums locaux.</li>
-              <li><strong>Recherche tabou</strong> — explore intelligemment en mémorisant les zones déjà visitées.</li>
-              <li><strong>Hill climbing</strong> — amélioration itérative simple et rapide.</li>
+              <li>
+                <strong>Algorithme génétique</strong> — s'inspire de l'évolution
+                darwinienne (sélection, croisement, mutation).
+              </li>
+              <li>
+                <strong>Recuit simulé</strong> — imite le refroidissement des
+                métaux pour éviter les minimums locaux.
+              </li>
+              <li>
+                <strong>Recherche tabou</strong> — explore intelligemment en
+                mémorisant les zones déjà visitées.
+              </li>
+              <li>
+                <strong>Hill climbing</strong> — amélioration itérative simple
+                et rapide.
+              </li>
             </ul>
           </LearnSection>
 
           <LearnSection title="La simulation Monte Carlo">
             <p>
-              On simule des milliers (voire des centaines de milliers) de tirages
-              aléatoires fictifs et on regarde combien de fois vos numéros
-              seraient sortis. Le résultat converge vers l'<strong>espérance
-              mathématique</strong> (loi hypergéométrique).
+              On simule des milliers (voire des centaines de milliers) de
+              tirages aléatoires fictifs et on regarde combien de fois vos
+              numéros seraient sortis. Le résultat converge vers l'
+              <strong>espérance mathématique</strong> (loi hypergéométrique).
             </p>
             <p>
-              C'est utile pour vérifier que votre grille se comporte
-              « normalement » et pour estimer la distribution de vos gains
+              C'est utile pour vérifier que votre grille se comporte «
+              normalement » et pour estimer la distribution de vos gains
               potentiels.
             </p>
           </LearnSection>
@@ -190,13 +221,20 @@ export default function HowItWorksPage() {
 
           <LearnSection title="Jeu responsable">
             <p>
-              La loterie reste un jeu de hasard. <strong>Aucun outil ne
-              garantit un gain</strong>. Loto Ultime vous aide à faire des choix
-              plus informés, pas à prédire l'avenir. Fixez-vous un budget
-              mensuel et ne le dépassez jamais. Si le jeu n'est plus un
-              plaisir, consultez <a href="https://www.joueurs-info-service.fr/"
-              target="_blank" rel="noopener noreferrer"
-              className="text-accent-blue underline">Joueurs Info Service</a>.
+              La loterie reste un jeu de hasard.{" "}
+              <strong>Aucun outil ne garantit un gain</strong>. Loto Ultime vous
+              aide à faire des choix plus informés, pas à prédire l'avenir.
+              Fixez-vous un budget mensuel et ne le dépassez jamais. Si le jeu
+              n'est plus un plaisir, consultez{" "}
+              <a
+                href="https://www.joueurs-info-service.fr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent-blue underline"
+              >
+                Joueurs Info Service
+              </a>
+              .
             </p>
           </LearnSection>
         </div>

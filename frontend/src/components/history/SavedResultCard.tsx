@@ -1,9 +1,12 @@
-import { useDeleteSavedResult, useToggleSavedFavorite } from "@/hooks/useHistory";
-import type { SavedResult } from "@/types/history";
-import { ChevronDown, ChevronUp, Copy, Heart, Trash2 } from "lucide-react";
-import { useDuplicateSavedResult } from "@/hooks/useHistory";
 import DrawBalls from "@/components/draws/DrawBalls";
+import {
+  useDeleteSavedResult,
+  useDuplicateSavedResult,
+  useToggleSavedFavorite,
+} from "@/hooks/useHistory";
+import type { SavedResult } from "@/types/history";
 import { formatScore } from "@/utils/formatters";
+import { ChevronDown, ChevronUp, Copy, Heart, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -21,7 +24,13 @@ interface SavedResultCardProps {
 
 /* ── Render the actual result_data depending on type ── */
 
-function GridDetail({ data, params }: { data: Record<string, unknown>; params: Record<string, unknown> }) {
+function GridDetail({
+  data,
+  params,
+}: {
+  data: Record<string, unknown>;
+  params: Record<string, unknown>;
+}) {
   const numbers = (data.numbers as number[]) ?? [];
   const stars = (data.stars as number[] | null) ?? undefined;
   const score = data.total_score as number | undefined;
@@ -49,15 +58,27 @@ function GridDetail({ data, params }: { data: Record<string, unknown>; params: R
       )}
       {params.method && (
         <p className="text-xs text-text-secondary">
-          Méthode : {params.method as string} | Profil : {(params.profile as string) ?? "—"}
+          Méthode : {params.method as string} | Profil :{" "}
+          {(params.profile as string) ?? "—"}
         </p>
       )}
     </div>
   );
 }
 
-function PortfolioDetail({ data, params }: { data: Record<string, unknown>; params: Record<string, unknown> }) {
-  const grids = (data.grids as Array<{ numbers: number[]; stars?: number[] | null; score: number }>) ?? [];
+function PortfolioDetail({
+  data,
+  params,
+}: {
+  data: Record<string, unknown>;
+  params: Record<string, unknown>;
+}) {
+  const grids =
+    (data.grids as Array<{
+      numbers: number[];
+      stars?: number[] | null;
+      score: number;
+    }>) ?? [];
   const diversity = data.diversity_score as number | undefined;
   const coverage = data.coverage_score as number | undefined;
   const avgScore = data.avg_grid_score as number | undefined;
@@ -69,7 +90,9 @@ function PortfolioDetail({ data, params }: { data: Record<string, unknown>; para
         {avgScore != null && (
           <div>
             <span className="text-text-secondary">Score moyen </span>
-            <span className="font-mono text-accent-green">{formatScore(avgScore)}/10</span>
+            <span className="font-mono text-accent-green">
+              {formatScore(avgScore)}/10
+            </span>
           </div>
         )}
         {diversity != null && (
@@ -94,11 +117,17 @@ function PortfolioDetail({ data, params }: { data: Record<string, unknown>; para
 
       {/* Grids list */}
       <div className="space-y-1.5">
-        <p className="text-xs text-text-secondary font-semibold">{grids.length} grilles :</p>
+        <p className="text-xs text-text-secondary font-semibold">
+          {grids.length} grilles :
+        </p>
         {grids.map((g, i) => (
           <div key={i} className="flex items-center gap-3 py-1">
             <span className="text-xs text-text-secondary w-5">#{i + 1}</span>
-            <DrawBalls numbers={g.numbers} stars={g.stars ?? undefined} size="sm" />
+            <DrawBalls
+              numbers={g.numbers}
+              stars={g.stars ?? undefined}
+              size="sm"
+            />
             <span className="ml-auto font-mono text-accent-green text-xs">
               {formatScore(g.score)}
             </span>
@@ -113,19 +142,30 @@ function SimulationDetail({ data }: { data: Record<string, unknown> }) {
   const avgMatches = data.avg_matches as number | undefined;
   const expected = data.expected_matches as number | undefined;
   const nSims = data.n_simulations as number | undefined;
-  const distribution = data.match_distribution as Record<string, number> | undefined;
+  const distribution = data.match_distribution as
+    | Record<string, number>
+    | undefined;
 
   return (
     <div className="space-y-2 text-xs">
       <div className="flex flex-wrap gap-4">
         {nSims != null && (
-          <div><span className="text-text-secondary">Simulations </span><span className="font-mono">{nSims.toLocaleString("fr-FR")}</span></div>
+          <div>
+            <span className="text-text-secondary">Simulations </span>
+            <span className="font-mono">{nSims.toLocaleString("fr-FR")}</span>
+          </div>
         )}
         {avgMatches != null && (
-          <div><span className="text-text-secondary">Moyenne matches </span><span className="font-mono">{avgMatches.toFixed(2)}</span></div>
+          <div>
+            <span className="text-text-secondary">Moyenne matches </span>
+            <span className="font-mono">{avgMatches.toFixed(2)}</span>
+          </div>
         )}
         {expected != null && (
-          <div><span className="text-text-secondary">Espérance </span><span className="font-mono">{expected.toFixed(2)}</span></div>
+          <div>
+            <span className="text-text-secondary">Espérance </span>
+            <span className="font-mono">{expected.toFixed(2)}</span>
+          </div>
         )}
       </div>
       {distribution && (
@@ -134,8 +174,12 @@ function SimulationDetail({ data }: { data: Record<string, unknown> }) {
             .sort(([a], [b]) => Number(a) - Number(b))
             .map(([k, v]) => (
               <div key={k} className="bg-surface-hover rounded px-2 py-1">
-                <span className="text-text-secondary">{k} match{Number(k) > 1 ? "es" : ""} </span>
-                <span className="font-mono">{(v as number).toLocaleString("fr-FR")}</span>
+                <span className="text-text-secondary">
+                  {k} match{Number(k) > 1 ? "es" : ""}{" "}
+                </span>
+                <span className="font-mono">
+                  {(v as number).toLocaleString("fr-FR")}
+                </span>
               </div>
             ))}
         </div>
@@ -144,7 +188,13 @@ function SimulationDetail({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-function GenericDetail({ data, params }: { data: Record<string, unknown>; params: Record<string, unknown> }) {
+function GenericDetail({
+  data,
+  params,
+}: {
+  data: Record<string, unknown>;
+  params: Record<string, unknown>;
+}) {
   const entries = Object.entries({ ...params, ...data }).filter(
     ([, v]) => typeof v !== "object" || v === null,
   );
@@ -228,8 +278,13 @@ export default function SavedResultCard({ result }: SavedResultCardProps) {
 
         <div className="flex items-center gap-1 shrink-0">
           <span
-            onClick={(e) => { e.stopPropagation(); toggleFavorite.mutate(result.id); }}
-            title={result.is_favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleFavorite.mutate(result.id);
+            }}
+            title={
+              result.is_favorite ? "Retirer des favoris" : "Ajouter aux favoris"
+            }
             className="p-1.5 rounded hover:bg-surface-hover transition-colors cursor-pointer"
             role="button"
           >
@@ -243,7 +298,10 @@ export default function SavedResultCard({ result }: SavedResultCardProps) {
             />
           </span>
           <span
-            onClick={(e) => { e.stopPropagation(); duplicateMutation.mutate(result.id); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              duplicateMutation.mutate(result.id);
+            }}
             title="Dupliquer"
             className="p-1.5 rounded hover:bg-surface-hover transition-colors cursor-pointer"
             role="button"
@@ -251,7 +309,10 @@ export default function SavedResultCard({ result }: SavedResultCardProps) {
             <Copy size={14} className="text-text-secondary" />
           </span>
           <span
-            onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(result.id); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteMutation.mutate(result.id);
+            }}
             title="Supprimer"
             className="p-1.5 rounded hover:bg-surface-hover transition-colors hover:text-accent-red cursor-pointer"
             role="button"

@@ -1,6 +1,10 @@
-import api from "./api";
 import type { PaginatedResponse } from "@/types/api";
-import type { SaveResultRequest, SavedResult, UpdateTagsRequest } from "@/types/history";
+import type {
+  SaveResultRequest,
+  SavedResult,
+  UpdateTagsRequest,
+} from "@/types/history";
+import api from "./api";
 
 export const historyService = {
   save: (_gameId: number, data: SaveResultRequest) =>
@@ -29,21 +33,14 @@ export const historyService = {
   get: (_gameId: number, id: number) =>
     api.get<SavedResult>(`/history/${id}`).then((r) => r.data),
 
-  delete: (_gameId: number, id: number) =>
-    api.delete(`/history/${id}`),
+  delete: (_gameId: number, id: number) => api.delete(`/history/${id}`),
 
   toggleFavorite: (_gameId: number, id: number) =>
-    api
-      .patch<SavedResult>(`/history/${id}/favorite`)
-      .then((r) => r.data),
+    api.patch<SavedResult>(`/history/${id}/favorite`).then((r) => r.data),
 
   updateTags: (_gameId: number, id: number, data: UpdateTagsRequest) =>
-    api
-      .patch<SavedResult>(`/history/${id}/tags`, data)
-      .then((r) => r.data),
+    api.patch<SavedResult>(`/history/${id}/tags`, data).then((r) => r.data),
 
   duplicate: (_gameId: number, id: number) =>
-    api
-      .post<SavedResult>(`/history/${id}/duplicate`)
-      .then((r) => r.data),
+    api.post<SavedResult>(`/history/${id}/duplicate`).then((r) => r.data),
 };

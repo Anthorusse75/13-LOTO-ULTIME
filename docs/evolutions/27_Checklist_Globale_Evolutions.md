@@ -98,55 +98,55 @@
 
 ### B.4–B.5 : Explicabilité et aide contextuelle
 
-| ID      | Tâche                                               | Doc    | Statut |
-| ------- | --------------------------------------------------- | ------ | ------ |
-| B-16    | Créer engines/explainability/__init__.py            | 12, 16 | ✅      |
-| B-17    | Créer grid_explainer.py                             | 12, 16 | ✅      |
-| B-18    | Créer portfolio_explainer.py                        | 12, 16 | ✅      |
-| B-19    | Créer wheeling_explainer.py                         | 12, 16 | ✅      |
-| B-20    | Créer simulation_explainer.py                       | 12, 16 | ✅      |
-| B-21    | Créer comparison_explainer.py                       | 12, 16 | ✅      |
-| B-22    | Créer templates.py (templates français)             | 12, 16 | ✅      |
-| B-23    | Intégrer explanation dans schema GridResponse       | 12, 18 | ✅      |
-| B-24    | Intégrer explanation dans schema PortfolioResponse  | 12, 18 | ✅      |
-| B-25    | Intégrer explanation dans schema SimulationResponse | 12, 18 | ✅      |
-| F-10    | Créer composant ExplanationPanel                    | 12, 17 | ✅      |
-| F-11    | Intégrer ExplanationPanel dans GridsPage            | 12, 17 | ✅      |
-| F-12    | Intégrer ExplanationPanel dans PortfolioPage        | 12, 17 | ✅      |
-| F-13    | Intégrer ExplanationPanel dans SimulationPage       | 12, 17 | ✅      |
-| F-14    | Créer utils/helpTexts.ts centralisé                 | 13, 17 | ✅      |
-| F-15    | Créer composant EmptyState enrichi                  | 13, 17 | ✅      |
+| ID      | Tâche                                               | Doc    | Statut            |
+| ------- | --------------------------------------------------- | ------ | ----------------- |
+| B-16    | Créer engines/explainability/__init__.py            | 12, 16 | ✅                 |
+| B-17    | Créer grid_explainer.py                             | 12, 16 | ✅                 |
+| B-18    | Créer portfolio_explainer.py                        | 12, 16 | ✅                 |
+| B-19    | Créer wheeling_explainer.py                         | 12, 16 | ✅                 |
+| B-20    | Créer simulation_explainer.py                       | 12, 16 | ✅                 |
+| B-21    | Créer comparison_explainer.py                       | 12, 16 | ✅                 |
+| B-22    | Créer templates.py (templates français)             | 12, 16 | ✅                 |
+| B-23    | Intégrer explanation dans schema GridResponse       | 12, 18 | ✅                 |
+| B-24    | Intégrer explanation dans schema PortfolioResponse  | 12, 18 | ✅                 |
+| B-25    | Intégrer explanation dans schema SimulationResponse | 12, 18 | ✅                 |
+| F-10    | Créer composant ExplanationPanel                    | 12, 17 | ✅                 |
+| F-11    | Intégrer ExplanationPanel dans GridsPage            | 12, 17 | ✅                 |
+| F-12    | Intégrer ExplanationPanel dans PortfolioPage        | 12, 17 | ✅                 |
+| F-13    | Intégrer ExplanationPanel dans SimulationPage       | 12, 17 | ✅                 |
+| F-14    | Créer utils/helpTexts.ts centralisé                 | 13, 17 | ✅                 |
+| F-15    | Créer composant EmptyState enrichi                  | 13, 17 | ✅                 |
 | F-16    | Créer composant LoadingState enrichi                | 13, 17 | ✅ (existait déjà) |
 | F-17    | Créer composant ErrorState enrichi                  | 13, 17 | ✅ (existait déjà) |
-| F-18    | Enrichir tooltips sur DrawsPage                     | 13     | ✅      |
-| F-19    | Enrichir tooltips sur StatisticsPage                | 13     | ✅      |
-| F-20    | Enrichir tooltips sur PortfolioPage                 | 13     | ✅      |
-| F-21    | Ajouter empty states sur pages sans données         | 13     | ✅      |
-| TEST-10 | Tests explicabilité (10 tests)                      | 25     | ✅ (19 tests) |
+| F-18    | Enrichir tooltips sur DrawsPage                     | 13     | ✅                 |
+| F-19    | Enrichir tooltips sur StatisticsPage                | 13     | ✅                 |
+| F-20    | Enrichir tooltips sur PortfolioPage                 | 13     | ✅                 |
+| F-21    | Ajouter empty states sur pages sans données         | 13     | ✅                 |
+| TEST-10 | Tests explicabilité (10 tests)                      | 25     | ✅ (19 tests)      |
 
 ### B.6–B.9 : Pédagogie, design, dashboard
 
-| ID     | Tâche                                              | Doc    | Statut |
-| ------ | -------------------------------------------------- | ------ | ------ |
-| F-22   | PED-01 : Section « Comprendre les scores »         | 14, 17 | ✅      |
-| F-23   | PED-02 : Section « Comprendre les simulations »    | 14, 17 | ✅      |
-| F-24   | PED-03 : Section « Comprendre les stratégies »     | 14, 17 | ✅      |
-| F-25   | PED-05 : Section « Loto vs EuroMillions »          | 14, 17 | ✅      |
-| F-26   | PED-06 : Section « Limites réelles » + disclaimer  | 14, 17 | ✅      |
-| F-27   | Créer composant LearnSection                       | 14, 17 | ✅      |
-| F-28   | Créer composant LearnTOC                           | 14, 17 | ✅ (intégré dans HowItWorksPage) |
-| F-29   | Enrichir HowItWorksPage avec sections pédagogiques | 14, 17 | ✅      |
+| ID     | Tâche                                              | Doc    | Statut                           |
+| ------ | -------------------------------------------------- | ------ | -------------------------------- |
+| F-22   | PED-01 : Section « Comprendre les scores »         | 14, 17 | ✅                                |
+| F-23   | PED-02 : Section « Comprendre les simulations »    | 14, 17 | ✅                                |
+| F-24   | PED-03 : Section « Comprendre les stratégies »     | 14, 17 | ✅                                |
+| F-25   | PED-05 : Section « Loto vs EuroMillions »          | 14, 17 | ✅                                |
+| F-26   | PED-06 : Section « Limites réelles » + disclaimer  | 14, 17 | ✅                                |
+| F-27   | Créer composant LearnSection                       | 14, 17 | ✅                                |
+| F-28   | Créer composant LearnTOC                           | 14, 17 | ✅ (intégré dans HowItWorksPage)  |
+| F-29   | Enrichir HowItWorksPage avec sections pédagogiques | 14, 17 | ✅                                |
 | F-30   | Définir design tokens CSS variables                | 07, 17 | ✅ (existait déjà dans index.css) |
-| F-31   | Créer composant DataTable<T> générique             | 07, 17 | ✅      |
-| F-32   | Créer composant StatCard avec sparkline            | 07, 17 | ✅      |
-| F-33   | Créer LatestDrawCard                               | 15, 17 | ✅      |
-| F-34   | Créer DailyTopGridsCard                            | 15, 17 | ✅      |
-| F-35   | Créer PortfolioSummaryCard                         | 15, 17 | ✅      |
-| F-36   | Créer StatOfTheDay                                 | 15, 17 | ✅      |
-| F-37   | Enrichir DashboardPage avec 5 blocs                | 15, 17 | ✅      |
-| DB-11  | Ajouter hot_cold_summary sur statistics_snapshots  | 19, 15 | ✅      |
-| JOB-01 | Implémenter compute_hot_cold_summary               | 20, 15 | ✅      |
-| JOB-02 | Implémenter pre_generate_daily_content             | 20, 15 | ✅      |
+| F-31   | Créer composant DataTable<T> générique             | 07, 17 | ✅                                |
+| F-32   | Créer composant StatCard avec sparkline            | 07, 17 | ✅                                |
+| F-33   | Créer LatestDrawCard                               | 15, 17 | ✅                                |
+| F-34   | Créer DailyTopGridsCard                            | 15, 17 | ✅                                |
+| F-35   | Créer PortfolioSummaryCard                         | 15, 17 | ✅                                |
+| F-36   | Créer StatOfTheDay                                 | 15, 17 | ✅                                |
+| F-37   | Enrichir DashboardPage avec 5 blocs                | 15, 17 | ✅                                |
+| DB-11  | Ajouter hot_cold_summary sur statistics_snapshots  | 19, 15 | ✅                                |
+| JOB-01 | Implémenter compute_hot_cold_summary               | 20, 15 | ✅                                |
+| JOB-02 | Implémenter pre_generate_daily_content             | 20, 15 | ✅                                |
 
 ---
 

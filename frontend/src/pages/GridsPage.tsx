@@ -1,16 +1,18 @@
+import ExplanationPanel from "@/components/common/ExplanationPanel";
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
-import ExplanationPanel from "@/components/common/ExplanationPanel";
-import SaveButton from "@/components/history/SaveButton";
 import DrawBalls from "@/components/draws/DrawBalls";
 import CustomWeightsEditor from "@/components/grids/CustomWeightsEditor";
 import ScoreBar from "@/components/grids/ScoreBar";
+import SaveButton from "@/components/history/SaveButton";
 import {
   useGenerateGrids,
   useToggleFavorite,
   useTopGrids,
 } from "@/hooks/useGrids";
+import { useSaveResult } from "@/hooks/useHistory";
+import { useGameStore } from "@/stores/gameStore";
 import type { GridScoreResponse } from "@/types/grid";
 import {
   OPTIMIZATION_METHODS,
@@ -21,8 +23,6 @@ import { formatScore } from "@/utils/formatters";
 import { exportGridPDF, exportReportPDF } from "@/utils/pdfExport";
 import { Download, FileText, Heart, Loader2, Save } from "lucide-react";
 import { useState } from "react";
-import { useSaveResult } from "@/hooks/useHistory";
-import { useGameStore } from "@/stores/gameStore";
 
 export default function GridsPage() {
   const [count, setCount] = useState(10);

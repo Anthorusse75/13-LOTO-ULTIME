@@ -1,4 +1,10 @@
-export type ResultType = "grid" | "portfolio" | "wheeling" | "budget_plan" | "comparison" | "simulation";
+export type ResultType =
+  | "grid"
+  | "portfolio"
+  | "wheeling"
+  | "budget_plan"
+  | "comparison"
+  | "simulation";
 
 export interface SaveResultRequest {
   result_type: ResultType;

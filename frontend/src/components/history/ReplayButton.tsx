@@ -1,6 +1,6 @@
+import type { ResultType } from "@/types/history";
 import { PlayCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { ResultType } from "@/types/history";
 
 interface ReplayButtonProps {
   resultType: ResultType;

@@ -59,10 +59,7 @@ export default function PageIntro({
       {/* Tip — ALWAYS visible */}
       {tip && (
         <div className="flex items-start gap-2.5 bg-accent-yellow/10 border border-accent-yellow/25 rounded-lg px-4 py-3">
-          <Lightbulb
-            size={15}
-            className="text-accent-yellow mt-0.5 shrink-0"
-          />
+          <Lightbulb size={15} className="text-accent-yellow mt-0.5 shrink-0" />
           <p className="text-sm text-text-primary leading-relaxed">{tip}</p>
         </div>
       )}

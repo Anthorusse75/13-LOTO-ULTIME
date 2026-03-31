@@ -1,8 +1,8 @@
 import Disclaimer from "@/components/common/Disclaimer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
-import StatOfTheDay from "@/components/dashboard/StatOfTheDay";
 import type { StatHighlight } from "@/components/dashboard/StatOfTheDay";
+import StatOfTheDay from "@/components/dashboard/StatOfTheDay";
 import DrawBalls from "@/components/draws/DrawBalls";
 import { useDraws, useLatestDraw } from "@/hooks/useDraws";
 import { useTopGrids } from "@/hooks/useGrids";

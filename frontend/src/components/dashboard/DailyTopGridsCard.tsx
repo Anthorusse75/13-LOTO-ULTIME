@@ -1,7 +1,7 @@
 import DrawBalls from "@/components/draws/DrawBalls";
+import type { ScoredGrid } from "@/types/grid";
 import { formatScore } from "@/utils/formatters";
 import { Award } from "lucide-react";
-import type { ScoredGrid } from "@/types/grid";
 
 interface DailyTopGridsCardProps {
   grids: ScoredGrid[] | undefined;

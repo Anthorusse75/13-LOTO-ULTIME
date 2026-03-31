@@ -48,7 +48,10 @@ export default function DataTable<T>({
               className="border-b border-border/50 hover:bg-surface-hover transition-colors"
             >
               {columns.map((col) => (
-                <td key={col.key} className={`py-2 px-3 ${col.className ?? ""}`}>
+                <td
+                  key={col.key}
+                  className={`py-2 px-3 ${col.className ?? ""}`}
+                >
                   {col.render(row)}
                 </td>
               ))}

@@ -1,5 +1,11 @@
 import type { Explanation } from "@/types/explanation";
-import { AlertTriangle, ChevronDown, ChevronRight, Lightbulb, Sparkles } from "lucide-react";
+import {
+  AlertTriangle,
+  ChevronDown,
+  ChevronRight,
+  Lightbulb,
+  Sparkles,
+} from "lucide-react";
 import { useState } from "react";
 
 interface ExplanationPanelProps {

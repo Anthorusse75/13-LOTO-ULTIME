@@ -1,5 +1,3 @@
-import type { ResultType } from "@/types/history";
-
 const TYPE_OPTIONS: { value: string; label: string }[] = [
   { value: "", label: "Tous les types" },
   { value: "grid", label: "Grilles" },

@@ -10,8 +10,7 @@ export const HELP_TEXTS = {
       "Note globale de 0 à 10 combinant fréquence, écart, co-occurrence, structure, équilibre et pénalité. Plus c'est haut, meilleure est la qualité statistique.",
     frequency:
       "Mesure si les numéros choisis correspondent aux numéros les plus fréquents dans l'historique.",
-    gap:
-      "Évalue les écarts (retards) des numéros — un numéro qui n'est pas sorti depuis longtemps a un écart élevé.",
+    gap: "Évalue les écarts (retards) des numéros — un numéro qui n'est pas sorti depuis longtemps a un écart élevé.",
     cooccurrence:
       "Vérifie si les paires de numéros de la grille sont historiquement associées (sortent souvent ensemble).",
     structure:
@@ -30,8 +29,7 @@ export const HELP_TEXTS = {
       "Pourcentage de numéros du jeu présents dans au moins une grille de votre portefeuille.",
     hammingDistance:
       "Nombre minimum de numéros différents entre deux grilles du portefeuille. Plus c'est élevé, meilleure est la diversité.",
-    avgScore:
-      "Moyenne des scores individuels des grilles du portefeuille.",
+    avgScore: "Moyenne des scores individuels des grilles du portefeuille.",
   },
 
   // ── Simulation page ──
@@ -54,6 +52,7 @@ export const HELP_TEXTS = {
   dashboard: {
     hotNumbers: "Numéros les plus fréquents dans l'historique récent.",
     coldNumbers: "Numéros les moins fréquents ou les plus absents récemment.",
-    pipeline: "État du système automatique qui met à jour les données chaque nuit.",
+    pipeline:
+      "État du système automatique qui met à jour les données chaque nuit.",
   },
 } as const;

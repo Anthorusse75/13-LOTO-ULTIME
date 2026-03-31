@@ -1,7 +1,7 @@
 import DrawBalls from "@/components/draws/DrawBalls";
+import type { Draw } from "@/types/draw";
 import { formatDate } from "@/utils/formatters";
 import { Calendar } from "lucide-react";
-import type { Draw } from "@/types/draw";
 
 interface LatestDrawCardProps {
   draw: Draw | undefined;

@@ -3,7 +3,14 @@ import { useGameStore } from "@/stores/gameStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import type { GameDefinition } from "@/types/game";
 import { useQuery } from "@tanstack/react-query";
-import { BookOpen, ChevronDown, HelpCircle, Info, Moon, Sun } from "lucide-react";
+import {
+  BookOpen,
+  ChevronDown,
+  HelpCircle,
+  Info,
+  Moon,
+  Sun,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

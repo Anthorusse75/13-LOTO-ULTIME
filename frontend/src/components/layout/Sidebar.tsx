@@ -2,12 +2,10 @@ import { useAuthStore } from "@/stores/authStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import {
   BarChart3,
-  BookOpen,
   Briefcase,
   Dices,
   FlaskConical,
   Heart,
-  HelpCircle,
   History,
   LayoutDashboard,
   LogOut,

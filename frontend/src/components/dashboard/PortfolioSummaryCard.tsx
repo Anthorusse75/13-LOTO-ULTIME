@@ -1,5 +1,5 @@
-import { Layers } from "lucide-react";
 import { formatScore } from "@/utils/formatters";
+import { Layers } from "lucide-react";
 
 interface PortfolioSummaryCardProps {
   strategy?: string;
@@ -35,9 +35,7 @@ export default function PortfolioSummaryCard({
           <div className="flex justify-between">
             <span className="text-text-secondary">Diversité</span>
             <span className="font-mono text-accent-blue">
-              {diversityScore !== undefined
-                ? formatScore(diversityScore)
-                : "—"}
+              {diversityScore !== undefined ? formatScore(diversityScore) : "—"}
             </span>
           </div>
           <div className="flex justify-between">
@@ -48,9 +46,7 @@ export default function PortfolioSummaryCard({
           </div>
         </div>
       ) : (
-        <p className="text-sm text-text-secondary">
-          Aucun portefeuille généré
-        </p>
+        <p className="text-sm text-text-secondary">Aucun portefeuille généré</p>
       )}
     </div>
   );

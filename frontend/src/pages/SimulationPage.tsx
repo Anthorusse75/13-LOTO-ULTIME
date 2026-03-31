@@ -1,10 +1,10 @@
+import ExplanationPanel from "@/components/common/ExplanationPanel";
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
-import ExplanationPanel from "@/components/common/ExplanationPanel";
-import SaveButton from "@/components/history/SaveButton";
 import DrawBalls from "@/components/draws/DrawBalls";
 import ScoreBar from "@/components/grids/ScoreBar";
+import SaveButton from "@/components/history/SaveButton";
 import { useGenerateGrids } from "@/hooks/useGrids";
 import {
   useCompareRandom,

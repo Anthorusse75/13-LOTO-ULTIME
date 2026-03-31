@@ -1,9 +1,9 @@
+import ExplanationPanel from "@/components/common/ExplanationPanel";
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
-import ExplanationPanel from "@/components/common/ExplanationPanel";
-import SaveButton from "@/components/history/SaveButton";
 import DrawBalls from "@/components/draws/DrawBalls";
+import SaveButton from "@/components/history/SaveButton";
 import NumberHeatmap from "@/components/statistics/NumberHeatmap";
 import { useGeneratePortfolio } from "@/hooks/usePortfolios";
 import { gameService } from "@/services/gameService";
@@ -119,7 +119,8 @@ export default function PortfolioPage() {
               className="w-full bg-surface-hover border border-border rounded-md px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 focus:ring-accent-blue"
             />
             <p className="text-xs text-text-secondary mt-1">
-              💡 Entre 5 et 10 pour un bon rapport couverture/budget. Jusqu'à 200 pour une couverture maximale.
+              💡 Entre 5 et 10 pour un bon rapport couverture/budget. Jusqu'à
+              200 pour une couverture maximale.
             </p>
           </div>
           <div>

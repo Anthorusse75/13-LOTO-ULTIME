@@ -1,6 +1,6 @@
+import EmptyState from "@/components/common/EmptyState";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
-import EmptyState from "@/components/common/EmptyState";
 import DrawBalls from "@/components/draws/DrawBalls";
 import HistoryFilters from "@/components/history/HistoryFilters";
 import SavedResultCard from "@/components/history/SavedResultCard";
@@ -408,13 +408,14 @@ export default function HistoryPage() {
 
           {loadingSaved && <LoadingSpinner message="Chargement..." />}
 
-          {!loadingSaved && (!savedResults || savedResults.items.length === 0) && (
-            <EmptyState
-              icon={<Archive size={40} strokeWidth={1.5} />}
-              title="Aucun résultat sauvegardé"
-              message="Utilisez le bouton « Sauvegarder » depuis les pages Grilles, Portfolio ou Simulation pour conserver vos résultats ici."
-            />
-          )}
+          {!loadingSaved &&
+            (!savedResults || savedResults.items.length === 0) && (
+              <EmptyState
+                icon={<Archive size={40} strokeWidth={1.5} />}
+                title="Aucun résultat sauvegardé"
+                message="Utilisez le bouton « Sauvegarder » depuis les pages Grilles, Portfolio ou Simulation pour conserver vos résultats ici."
+              />
+            )}
 
           {savedResults && savedResults.items.length > 0 && (
             <>
