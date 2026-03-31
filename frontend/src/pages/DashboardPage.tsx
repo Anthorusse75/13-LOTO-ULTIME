@@ -77,8 +77,10 @@ export default function DashboardPage() {
             term: "Score d'une grille",
             definition:
               "Note de 0 à 10 calculée par nos algorithmes à partir de 6 critères statistiques (fréquence, écart, cooccurrence, structure, équilibre, originalité). Ce n'est pas une prédiction — c'est une mesure de qualité statistique.",
-            strength: "Permet de comparer objectivement des grilles entre elles",
-            limit: "La loterie reste un jeu de hasard — un bon score n'augmente pas vos chances de gagner",
+            strength:
+              "Permet de comparer objectivement des grilles entre elles",
+            limit:
+              "La loterie reste un jeu de hasard — un bon score n'augmente pas vos chances de gagner",
           },
           {
             term: "Hot numbers (numéros chauds)",

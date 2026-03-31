@@ -163,13 +163,15 @@ export default function StatisticsPage() {
             definition:
               "Combien de fois un numéro est sorti dans l'historique. Exemple : si le 7 est sorti 85 fois sur 1000 tirages, sa fréquence est de 8.5%. La moyenne théorique pour le Loto (5 numéros parmi 49) est d'environ 10.2% par numéro.",
             strength: "Facile à comprendre — un bon point de départ",
-            limit: "Un numéro « chaud » peut refroidir du jour au lendemain — chaque tirage est indépendant",
+            limit:
+              "Un numéro « chaud » peut refroidir du jour au lendemain — chaque tirage est indépendant",
           },
           {
             term: "Écart (retard)",
             definition:
               "Le nombre de tirages qui se sont passés depuis la dernière fois qu'un numéro est sorti. Exemple : si le 23 n'est sorti à aucun des 40 derniers tirages, son écart est de 40. Si en moyenne il sort tous les 10 tirages, il est « en retard ».",
-            strength: "Permet de repérer les numéros qui sont absents depuis longtemps",
+            strength:
+              "Permet de repérer les numéros qui sont absents depuis longtemps",
             limit:
               "Attention au « biais du joueur » : le retard ne crée aucune obligation de sortie — la loterie n'a pas de mémoire",
           },
@@ -177,14 +179,16 @@ export default function StatisticsPage() {
             term: "Cooccurrence",
             definition:
               "Les paires de numéros qui sortent souvent ensemble dans le même tirage. Exemple : si le 7 et le 12 sont sortis ensemble 15 fois alors que la moyenne est de 5, c'est une paire forte. Utile pour construire des grilles avec des associations « historiquement gagnantes ».",
-            strength: "Aide à construire des grilles cohérentes (numéros qui « vont ensemble »)",
+            strength:
+              "Aide à construire des grilles cohérentes (numéros qui « vont ensemble »)",
           },
           {
             term: "Tendance temporelle",
             definition:
               "Analyse comment la fréquence d'un numéro évolue dans le temps récent. Un numéro peut être peu fréquent globalement mais en forte hausse sur les 50 derniers tirages — c'est la tendance qui le détecte.",
             strength: "Détecte les numéros « en montée » ou « en descente »",
-            limit: "Fiable surtout quand la tendance est nette (indicateur R² > 0.5)",
+            limit:
+              "Fiable surtout quand la tendance est nette (indicateur R² > 0.5)",
           },
           {
             term: "Distribution",
@@ -195,7 +199,8 @@ export default function StatisticsPage() {
             term: "Bayésien",
             definition:
               "Estimation « intelligente » de la probabilité de chaque numéro, qui combine la théorie (chaque numéro a la même chance) avec les données réelles. Plus robuste que la simple fréquence car elle ne « sur-réagit » pas aux anomalies récentes.",
-            strength: "Plus fiable que la fréquence brute, surtout avec peu de données",
+            strength:
+              "Plus fiable que la fréquence brute, surtout avec peu de données",
           },
           {
             term: "Graphe",

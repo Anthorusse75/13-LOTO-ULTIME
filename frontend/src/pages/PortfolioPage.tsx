@@ -57,19 +57,22 @@ export default function PortfolioPage() {
             term: "Couverture",
             definition:
               "Pourcentage de numéros du jeu présents dans au moins une de vos grilles. Exemple : au Loto (49 numéros), si vos 7 grilles contiennent 35 numéros différents, la couverture est de 71%.",
-            strength: "Plus c'est haut, moins vous risquez de « rater » un numéro gagnant",
+            strength:
+              "Plus c'est haut, moins vous risquez de « rater » un numéro gagnant",
           },
           {
             term: "Diversité",
             definition:
               "Mesure à quel point vos grilles sont différentes les unes des autres. Si deux grilles partagent 4 numéros sur 5, la diversité est faible.",
-            strength: "Évite de jouer presque la même grille en double (gaspillage d'argent)",
+            strength:
+              "Évite de jouer presque la même grille en double (gaspillage d'argent)",
           },
           {
             term: "Distance de Hamming",
             definition:
               "Nombre de numéros qui diffèrent entre deux grilles. Par exemple, si la grille A = [1,2,3,4,5] et la grille B = [1,2,3,6,7], la distance est 2 (seuls 4 et 5 changent). Plus cette valeur est élevée, plus les grilles sont différentes.",
-            strength: "Un minimum élevé garantit qu'aucune paire de grilles ne se ressemble trop",
+            strength:
+              "Un minimum élevé garantit qu'aucune paire de grilles ne se ressemble trop",
           },
           {
             term: "Score moyen",
@@ -80,7 +83,8 @@ export default function PortfolioPage() {
             term: "Carte de chaleur (heatmap)",
             definition:
               "Grille visuelle montrant combien de fois chaque numéro apparaît dans votre portefeuille. Vert foncé = très présent (dans beaucoup de grilles), rouge = peu ou pas présent.",
-            strength: "Permet de repérer en un coup d'œil les « trous » dans votre couverture",
+            strength:
+              "Permet de repérer en un coup d'œil les « trous » dans votre couverture",
           },
         ]}
       />
@@ -180,7 +184,10 @@ export default function PortfolioPage() {
               </p>
               <p className="font-mono text-lg text-accent-green">
                 {formatScore(portfolio.avg_grid_score)}
-                <span className="text-xs text-text-secondary font-sans"> /10</span>
+                <span className="text-xs text-text-secondary font-sans">
+                  {" "}
+                  /10
+                </span>
               </p>
               <p className="text-xs text-text-secondary mt-0.5">
                 {Number(portfolio.avg_grid_score) >= 0.7
@@ -309,8 +316,11 @@ export default function PortfolioPage() {
           )}
 
           <p className="text-xs text-text-secondary">
-            Stratégie: {PORTFOLIO_STRATEGIES.find((s) => s.value === portfolio.strategy)?.label ?? portfolio.strategy} —
-            Méthode: {portfolio.method_used} — Temps: {portfolio.computation_time_ms.toFixed(0)}ms
+            Stratégie:{" "}
+            {PORTFOLIO_STRATEGIES.find((s) => s.value === portfolio.strategy)
+              ?.label ?? portfolio.strategy}{" "}
+            — Méthode: {portfolio.method_used} — Temps:{" "}
+            {portfolio.computation_time_ms.toFixed(0)}ms
           </p>
         </>
       )}

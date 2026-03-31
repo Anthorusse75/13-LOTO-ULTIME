@@ -62,7 +62,8 @@ export default function GridsPage() {
             definition:
               "La note globale de la grille. C'est une moyenne pondérée de 6 critères (fréquence, retard, co-occurrence, structure, équilibre, pénalité). Par exemple, une grille à 8/10 a de bons scores sur la majorité des critères. C'est comme une note à un examen avec plusieurs matières.",
             strength: "Permet de comparer rapidement les grilles entre elles",
-            limit: "Dépend de la quantité de tirages historiques disponibles — plus il y a de tirages, plus le score est fiable",
+            limit:
+              "Dépend de la quantité de tirages historiques disponibles — plus il y a de tirages, plus le score est fiable",
           },
           {
             term: "Méthode : Algorithme génétique",
@@ -131,9 +132,13 @@ export default function GridsPage() {
                 </option>
               ))}
             </select>
-            {OPTIMIZATION_METHODS.find((m) => m.value === method)?.description && (
+            {OPTIMIZATION_METHODS.find((m) => m.value === method)
+              ?.description && (
               <p className="text-xs text-text-secondary mt-1 italic">
-                {OPTIMIZATION_METHODS.find((m) => m.value === method)?.description}
+                {
+                  OPTIMIZATION_METHODS.find((m) => m.value === method)
+                    ?.description
+                }
               </p>
             )}
           </div>
@@ -273,7 +278,8 @@ export default function GridsPage() {
             />
           </div>
           <p className="text-xs text-text-secondary mb-2">
-            Chaque barre ci-dessous représente un critère. Passez la souris sur le « ? » pour comprendre ce que chaque critère mesure :
+            Chaque barre ci-dessous représente un critère. Passez la souris sur
+            le « ? » pour comprendre ce que chaque critère mesure :
           </p>
           <div className="space-y-2">
             {SCORE_CRITERIA.map((c) => (
@@ -322,7 +328,8 @@ export default function GridsPage() {
           </select>
         </div>
         <p className="text-xs text-text-secondary mb-3">
-          Cliquez sur le cœur ❤️ pour ajouter une grille à vos favoris et la retrouver facilement dans l'onglet Historique.
+          Cliquez sur le cœur ❤️ pour ajouter une grille à vos favoris et la
+          retrouver facilement dans l'onglet Historique.
         </p>
         {topLoading ? (
           <LoadingSpinner />

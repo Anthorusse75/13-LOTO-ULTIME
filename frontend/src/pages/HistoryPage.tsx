@@ -156,7 +156,8 @@ export default function HistoryPage() {
             term: "Performance cumulée (graphique)",
             definition:
               "Le graphique montre l'évolution de vos résultats au fil du temps. La courbe bleue = le score de qualité de la grille (/100), la courbe verte = le % de numéros correspondants avec le meilleur tirage. Si la courbe verte monte, vos choix s'améliorent !",
-            strength: "Identifie si vos stratégies de sélection progressent au fil du temps",
+            strength:
+              "Identifie si vos stratégies de sélection progressent au fil du temps",
           },
           {
             term: "Résultat (🏆⭐✅👍❌)",
@@ -263,10 +264,12 @@ export default function HistoryPage() {
             </LineChart>
           </ResponsiveContainer>
           <p className="text-xs text-text-secondary mt-2 text-center">
-            📘 Courbe bleue : score de qualité de la grille (/100) · 📗 Courbe verte : % de numéros trouvés dans le meilleur tirage
+            📘 Courbe bleue : score de qualité de la grille (/100) · 📗 Courbe
+            verte : % de numéros trouvés dans le meilleur tirage
           </p>
           <p className="text-xs text-text-secondary mt-1 text-center italic">
-            Si la courbe verte monte avec le temps, c'est que vos sélections s'améliorent !
+            Si la courbe verte monte avec le temps, c'est que vos sélections
+            s'améliorent !
           </p>
         </div>
       )}

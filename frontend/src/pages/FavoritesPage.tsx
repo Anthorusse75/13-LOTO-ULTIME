@@ -29,7 +29,8 @@ export default function FavoritesPage() {
               term: "Score (0 à 10)",
               definition:
                 "La note globale de la grille, calculée à partir de 6 critères statistiques. Par exemple, 7.2/10 signifie que la grille respecte bien les tendances des tirages passés. Plus c'est proche de 10, mieux c'est.",
-              strength: "Permet de comparer rapidement vos grilles favorites entre elles",
+              strength:
+                "Permet de comparer rapidement vos grilles favorites entre elles",
             },
             {
               term: "Détail des critères",
@@ -61,7 +62,8 @@ export default function FavoritesPage() {
             <a href="/grids" className="text-accent-blue hover:underline">
               Grilles
             </a>
-            , générez des grilles, puis cliquez sur le ❤️ de celles qui vous plaisent. Elles apparaîtront ici.
+            , générez des grilles, puis cliquez sur le ❤️ de celles qui vous
+            plaisent. Elles apparaîtront ici.
           </p>
         </div>
       )}

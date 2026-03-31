@@ -134,13 +134,15 @@ export default function SimulationPage() {
               "Imaginez qu'on fasse 10 000 tirages fictifs dans une urne. On compte combien de fois vos numéros sortent. Par exemple, si vous avez en moyenne 1.2 correspondances sur 5, c'est normal (c'est la loi des probabilités). Si vous obtenez 2.5, votre grille contient des numéros qui sortent plus souvent que la moyenne.",
             strength:
               "Donne une estimation très fiable des probabilités de correspondance",
-            limit: "Le résultat converge toujours vers l'espérance théorique — c'est rassurant mais pas surprenant !",
+            limit:
+              "Le résultat converge toujours vers l'espérance théorique — c'est rassurant mais pas surprenant !",
           },
           {
             term: "Stabilité (bootstrap)",
             definition:
               "On prend l'historique réel des tirages, on le « mélange » 1000 fois au hasard, et on recalcule le score de votre grille à chaque fois. Si le score ne bouge presque pas (CV < 5%), ça veut dire que votre grille est robuste : elle n'est pas bonne « par chance » mais grâce à ses caractéristiques.",
-            strength: "Un CV (coefficient de variation) < 5% = grille très fiable",
+            strength:
+              "Un CV (coefficient de variation) < 5% = grille très fiable",
             limit: "Limité à 1 000 itérations côté serveur",
           },
           {
@@ -159,7 +161,8 @@ export default function SimulationPage() {
             term: "Comparaison de stratégies",
             definition:
               "Met en duel deux algorithmes (par ex. Génétique vs Bayésien) sur un même lot de grilles. Comme un match : chaque algorithme génère N grilles, on compare les scores moyens, max et min. Le gagnant est celui qui produit les meilleurs scores en moyenne.",
-            strength: "Permet de choisir la meilleure stratégie pour votre jeu avant de générer vos vraies grilles",
+            strength:
+              "Permet de choisir la meilleure stratégie pour votre jeu avant de générer vos vraies grilles",
           },
         ]}
       />
@@ -168,14 +171,18 @@ export default function SimulationPage() {
       <div className="bg-surface rounded-lg border border-border p-6">
         <h2 className="text-sm font-semibold mb-2">Grille à simuler</h2>
         <p className="text-xs text-text-secondary mb-4">
-          Entrez les numéros de la grille que vous souhaitez tester. Vous pouvez entrer une grille que vous avez en tête, ou recopier une grille depuis la page Grilles.
+          Entrez les numéros de la grille que vous souhaitez tester. Vous pouvez
+          entrer une grille que vous avez en tête, ou recopier une grille depuis
+          la page Grilles.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="text-xs text-text-secondary block mb-1">
               Numéros ({game?.numbers_drawn ?? "?"} attendus, séparés par
               virgule)
-              <InfoTooltip text={`Tapez vos ${game?.numbers_drawn ?? "N"} numéros séparés par des virgules. Par exemple : 3, 12, 25, 34, 49`} />
+              <InfoTooltip
+                text={`Tapez vos ${game?.numbers_drawn ?? "N"} numéros séparés par des virgules. Par exemple : 3, 12, 25, 34, 49`}
+              />
             </label>
             <input
               type="text"
@@ -335,8 +342,11 @@ export default function SimulationPage() {
                   </BarChart>
                 </ResponsiveContainer>
                 <p className="text-xs text-text-secondary mt-2">
-                  Ce graphique montre la répartition des résultats : par exemple, la barre « 2 » indique combien de tirages simulés ont donné exactement 2 numéros en commun avec votre grille.
-                  Les barres les plus hautes représentent les résultats les plus fréquents.
+                  Ce graphique montre la répartition des résultats : par
+                  exemple, la barre « 2 » indique combien de tirages simulés ont
+                  donné exactement 2 numéros en commun avec votre grille. Les
+                  barres les plus hautes représentent les résultats les plus
+                  fréquents.
                 </p>
               </div>
 
@@ -413,7 +423,9 @@ export default function SimulationPage() {
                     CV
                     <InfoTooltip text="Coefficient de Variation = écart-type ÷ moyenne × 100. Moins de 5% = très stable, 5-10% = stable, plus de 10% = fragile." />
                   </p>
-                  <p className={`font-mono text-lg ${stab.cv * 100 < 5 ? "text-accent-green" : stab.cv * 100 < 10 ? "text-accent-yellow" : "text-accent-red"}`}>
+                  <p
+                    className={`font-mono text-lg ${stab.cv * 100 < 5 ? "text-accent-green" : stab.cv * 100 < 10 ? "text-accent-yellow" : "text-accent-red"}`}
+                  >
                     {(stab.cv * 100).toFixed(1)}%
                   </p>
                   <p className="text-xs text-text-secondary mt-1">
@@ -435,7 +447,9 @@ export default function SimulationPage() {
                   Intervalle de confiance (95%)
                 </h3>
                 <p className="text-xs text-text-secondary mb-3">
-                  Dans 95% des cas, le score de votre grille se situe entre les deux bornes ci-dessous. Plus l'intervalle est étroit, plus la grille est fiable.
+                  Dans 95% des cas, le score de votre grille se situe entre les
+                  deux bornes ci-dessous. Plus l'intervalle est étroit, plus la
+                  grille est fiable.
                 </p>
                 <div className="flex items-center gap-4">
                   <p className="font-mono text-accent-red">
@@ -489,7 +503,10 @@ export default function SimulationPage() {
 
             {!comp && !compMutation.isPending && (
               <p className="text-text-secondary text-sm mt-3">
-                Entrez votre grille ci-dessus, puis cliquez sur « Comparer au hasard ». On va générer des milliers de grilles aléatoires et voir où la vôtre se situe. C'est comme comparer votre devoir à celui de toute la classe !
+                Entrez votre grille ci-dessus, puis cliquez sur « Comparer au
+                hasard ». On va générer des milliers de grilles aléatoires et
+                voir où la vôtre se situe. C'est comme comparer votre devoir à
+                celui de toute la classe !
               </p>
             )}
 
@@ -578,7 +595,9 @@ export default function SimulationPage() {
               Comparer deux stratégies d'optimisation
             </h2>
             <p className="text-xs text-text-secondary mb-3">
-              Mettez en duel deux algorithmes : chacun génère le même nombre de grilles, et on compare les scores. Comme un match de boxe entre deux méthodes !
+              Mettez en duel deux algorithmes : chacun génère le même nombre de
+              grilles, et on compare les scores. Comme un match de boxe entre
+              deux méthodes !
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
