@@ -541,7 +541,7 @@ function SettingsPanel() {
             : ` — ${result.draws_found} tirages trouvés`)
       );
     },
-    onError: (err: any) => {
+    onError: (err: Error & { response?: { data?: { detail?: string } } }) => {
       setSwitching(false);
       toast.error(
         err?.response?.data?.detail || "Erreur lors du basculement"
