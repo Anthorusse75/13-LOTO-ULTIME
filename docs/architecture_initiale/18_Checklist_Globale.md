@@ -338,19 +338,19 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 
 ## Récapitulatif
 
-| Phase                           | Tâches  | Fait    | Statut                          |
-| ------------------------------- | ------- | ------- | ------------------------------- |
-| 1. Architecture & Documentation | 20      | 20/20   | ✅ Complète                      |
-| 2. Fondations Backend           | 36      | 35/36   | 🟡 97% (PG non testé)            |
-| 3. Moteur Statistique           | 18      | 18/18   | ✅ Complète                      |
-| 4. Moteur de Scoring            | 13      | 13/13   | ✅ Complète                      |
-| 5. Moteur d'Optimisation        | 13      | 13/13   | ✅ Complète                      |
-| 6. Moteur de Simulation         | 10      | 10/10   | ✅ Complète                      |
-| 7. Interface Frontend           | 49      | 45/49   | 🟡 92% (4 manquants)             |
-| 8. Scheduler & Jobs             | 21      | 21/21   | ✅ Complète                      |
-| 9. Sécurité & Auth              | 20      | 20/20   | ✅ Complète                      |
-| 10. Polish & Déploiement        | 19      | 17/19   | 🟡 89% (PG non testé)            |
-| **TOTAL**                       | **219** | **212** | **97%**                         |
+| Phase                           | Tâches  | Fait    | Statut               |
+| ------------------------------- | ------- | ------- | -------------------- |
+| 1. Architecture & Documentation | 20      | 20/20   | ✅ Complète           |
+| 2. Fondations Backend           | 36      | 35/36   | 🟡 97% (PG non testé) |
+| 3. Moteur Statistique           | 18      | 18/18   | ✅ Complète           |
+| 4. Moteur de Scoring            | 13      | 13/13   | ✅ Complète           |
+| 5. Moteur d'Optimisation        | 13      | 13/13   | ✅ Complète           |
+| 6. Moteur de Simulation         | 10      | 10/10   | ✅ Complète           |
+| 7. Interface Frontend           | 49      | 45/49   | 🟡 92% (4 manquants)  |
+| 8. Scheduler & Jobs             | 21      | 21/21   | ✅ Complète           |
+| 9. Sécurité & Auth              | 20      | 20/20   | ✅ Complète           |
+| 10. Polish & Déploiement        | 19      | 17/19   | 🟡 89% (PG non testé) |
+| **TOTAL**                       | **219** | **212** | **97%**              |
 
 ### Éléments restants (non bloquants)
 
