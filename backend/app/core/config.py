@@ -60,6 +60,10 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_JSON: bool = False
 
+    # LLM — Groq (gratuit, optionnel)
+    GROQ_API_KEY: str | None = None
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+
     model_config = {
         "env_file": Path(__file__).resolve().parents[2] / ".env",
         "env_file_encoding": "utf-8",

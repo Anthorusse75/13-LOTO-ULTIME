@@ -1,3 +1,4 @@
+import AiAnalysisPanel from "@/components/common/AiAnalysisPanel";
 import InfoTooltip from "@/components/common/InfoTooltip";
 import PageIntro from "@/components/common/PageIntro";
 import BayesianTab from "@/components/statistics/BayesianTab";
@@ -230,6 +231,31 @@ export default function StatisticsPage() {
 
       {/* Tab content */}
       {renderTab()}
+
+      {/* AI Analysis */}
+      {stats && (
+        <AiAnalysisPanel
+          topic="statistics"
+          buildContext={() => ({
+            active_tab: activeTab,
+            draw_count: stats.draw_count,
+            top_frequencies: stats.frequencies
+              ?.slice()
+              .sort((a, b) => b.relative - a.relative)
+              .slice(0, 10)
+              .map((f) => ({ number: f.number, pct: (f.relative * 100).toFixed(1) })),
+            top_gaps: stats.gaps
+              ?.slice()
+              .sort((a, b) => b.current_gap - a.current_gap)
+              .slice(0, 5)
+              .map((g) => ({ number: g.number, gap: g.current_gap })),
+            uniformity_score: stats.uniformity_score,
+            distribution_entropy: stats.distribution_entropy,
+          })}
+          dataKey={`${stats.draw_count}-${activeTab}`}
+          description="L'IA analyse les statistiques affichées et identifie les tendances remarquables."
+        />
+      )}
     </div>
   );
 }

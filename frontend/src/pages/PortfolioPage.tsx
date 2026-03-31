@@ -1,3 +1,4 @@
+import AiAnalysisPanel from "@/components/common/AiAnalysisPanel";
 import ExplanationPanel from "@/components/common/ExplanationPanel";
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
@@ -351,6 +352,27 @@ export default function PortfolioPage() {
           {portfolio.explanation && (
             <ExplanationPanel explanation={portfolio.explanation} />
           )}
+
+          {/* AI Analysis */}
+          <AiAnalysisPanel
+            topic="portfolio"
+            buildContext={() => ({
+              grid_count: portfolio.grid_count,
+              strategy: portfolio.strategy,
+              method_used: portfolio.method_used,
+              avg_grid_score: portfolio.avg_grid_score,
+              diversity_score: portfolio.diversity_score,
+              coverage_score: portfolio.coverage_score,
+              min_hamming_distance: portfolio.min_hamming_distance,
+              grids_summary: portfolio.grids.map((g) => ({
+                numbers: g.numbers,
+                stars: g.stars,
+                score: g.total_score,
+              })),
+            })}
+            dataKey={`${portfolio.computation_time_ms}-${portfolio.grid_count}`}
+            description="L'IA évalue la qualité de votre portefeuille et suggère des améliorations."
+          />
 
           {/* Save to history */}
           <SaveButton

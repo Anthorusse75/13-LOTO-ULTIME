@@ -1,3 +1,4 @@
+import AiAnalysisPanel from "@/components/common/AiAnalysisPanel";
 import ExplanationPanel from "@/components/common/ExplanationPanel";
 import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
@@ -361,6 +362,21 @@ export default function SimulationPage() {
                 <ExplanationPanel explanation={mc.explanation} />
               )}
 
+              {/* AI Analysis */}
+              <AiAnalysisPanel
+                topic="simulation"
+                buildContext={() => ({
+                  type: "monte_carlo",
+                  numbers: parseNumbers(),
+                  n_simulations: mc.n_simulations,
+                  avg_matches: mc.avg_matches,
+                  expected_matches: mc.expected_matches,
+                  match_distribution: mc.match_distribution,
+                })}
+                dataKey={`mc-${mc.computation_time_ms}`}
+                description="L'IA interprète les résultats de votre simulation Monte Carlo."
+              />
+
               {/* Save to history */}
               <SaveButton
                 resultType="simulation"
@@ -496,6 +512,25 @@ export default function SimulationPage() {
               <p className="text-xs text-text-secondary">
                 Temps: {stab.computation_time_ms.toFixed(0)}ms
               </p>
+
+              {/* AI Analysis */}
+              <AiAnalysisPanel
+                topic="simulation"
+                buildContext={() => ({
+                  type: "stability",
+                  numbers: parseNumbers(),
+                  mean_score: stab.mean_score,
+                  std_score: stab.std_score,
+                  cv: stab.cv,
+                  ci_95_low: stab.ci_95_low,
+                  ci_95_high: stab.ci_95_high,
+                  stability: stab.stability,
+                  min_score: stab.min_score,
+                  max_score: stab.max_score,
+                })}
+                dataKey={`stab-${stab.computation_time_ms}`}
+                description="L'IA évalue la stabilité de votre grille."
+              />
             </>
           )}
         </div>
@@ -608,6 +643,21 @@ export default function SimulationPage() {
                 {comp.explanation && (
                   <ExplanationPanel explanation={comp.explanation} />
                 )}
+
+                {/* AI Analysis */}
+                <AiAnalysisPanel
+                  topic="simulation"
+                  buildContext={() => ({
+                    type: "comparison",
+                    numbers: parseNumbers(),
+                    grid_score: comp.grid_score,
+                    random_mean: comp.random_mean,
+                    percentile: comp.percentile,
+                    z_score: comp.z_score,
+                  })}
+                  dataKey={`comp-${comp.computation_time_ms}`}
+                  description="L'IA analyse le positionnement de votre grille par rapport au hasard."
+                />
 
                 {/* Save to history */}
                 <SaveButton

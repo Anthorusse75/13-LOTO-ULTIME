@@ -37,11 +37,14 @@ def explain_grid(
     profile: str = "equilibre",
     numbers: list[int] | None = None,
     stars: list[int] | None = None,
+    star_name: str | None = None,
 ) -> Explanation:
     """Generate a truly personalized explanation for a scored grid."""
 
     nums_str = ", ".join(str(n) for n in numbers) if numbers else "—"
-    stars_str = f" + étoiles {', '.join(str(s) for s in stars)}" if stars else ""
+    _star_label = star_name or "étoile"
+    _star_label_plural = f"{_star_label}s" if stars and len(stars) > 1 else _star_label
+    stars_str = f" + {_star_label_plural} {', '.join(str(s) for s in stars)}" if stars else ""
     method_label = _METHOD_LABELS.get(method, method)
     profile_label = _PROFILE_LABELS.get(profile, profile)
 

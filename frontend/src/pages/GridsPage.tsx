@@ -3,6 +3,7 @@ import InfoTooltip from "@/components/common/InfoTooltip";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
 import DrawBalls from "@/components/draws/DrawBalls";
+import GridAiAnalysis from "@/components/grids/GridAiAnalysis";
 import CustomWeightsEditor from "@/components/grids/CustomWeightsEditor";
 import ScoreBar from "@/components/grids/ScoreBar";
 import SaveButton from "@/components/history/SaveButton";
@@ -12,6 +13,7 @@ import {
   useTopGrids,
 } from "@/hooks/useGrids";
 import { useSaveResult } from "@/hooks/useHistory";
+import { gameService } from "@/services/gameService";
 import { useGameStore } from "@/stores/gameStore";
 import type { GridScoreResponse } from "@/types/grid";
 import {
@@ -23,6 +25,7 @@ import { formatScore } from "@/utils/formatters";
 import { exportGridPDF, exportReportPDF } from "@/utils/pdfExport";
 import { Download, FileText, Heart, Loader2, Save } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function GridsPage() {
   const [count, setCount] = useState(10);
@@ -42,14 +45,30 @@ export default function GridsPage() {
   const toggleFavoriteMutation = useToggleFavorite();
   const saveMutation = useSaveResult();
   const gameId = useGameStore((s) => s.currentGameId);
+  const slug = useGameStore((s) => s.currentGameSlug);
+  const { data: game } = useQuery({
+    queryKey: ["game", slug],
+    queryFn: () => gameService.getBySlug(slug!),
+    enabled: !!slug,
+  });
+  const starLabel = game?.star_name ?? "étoile";
 
   const handleGenerate = () => {
-    generateMutation.mutate({
-      count,
-      method,
-      profile,
-      weights: customWeights ?? undefined,
-    });
+    generateMutation.mutate(
+      {
+        count,
+        method,
+        profile,
+        weights: customWeights ?? undefined,
+      },
+      {
+        onSuccess: (data) => {
+          if (data.grids.length > 0) {
+            setSelectedGrid(data.grids[0]);
+          }
+        },
+      },
+    );
   };
 
   const grids = generateMutation.data?.grids ?? [];
@@ -220,7 +239,10 @@ export default function GridsPage() {
       {/* Generated grids */}
       {grids.length > 0 && (
         <div className="bg-surface rounded-lg border border-border p-4">
-          <h2 className="text-sm font-semibold mb-4">Grilles générées</h2>
+          <h2 className="text-sm font-semibold mb-1">Grilles générées</h2>
+          <p className="text-xs text-text-secondary mb-4">
+            👆 Cliquez sur une grille pour voir le détail des scores et l'analyse IA experte.
+          </p>
           <div className="space-y-2">
             {grids.map((g, i) => (
               <div
@@ -326,11 +348,11 @@ export default function GridsPage() {
           </div>
           {selectedGrid.star_score !== null && (
             <p className="text-sm text-text-secondary mt-3">
-              Score étoiles:{" "}
+              Score {starLabel}:{" "}
               <span className="font-mono text-accent-purple">
                 {(selectedGrid.star_score * 10).toFixed(2)}
               </span>
-              <InfoTooltip text="Score spécifique aux étoiles (EuroMillions). Évalue si vos étoiles sont bien choisies selon les mêmes critères que les numéros principaux." />
+              <InfoTooltip text={`Score spécifique ${starLabel === "étoile" ? "aux étoiles" : `au ${starLabel}`}. Évalue si ${starLabel === "étoile" ? "vos étoiles sont bien choisies" : `votre ${starLabel} est bien choisi`} selon les mêmes critères que les numéros principaux.`} />
             </p>
           )}
 
@@ -340,6 +362,15 @@ export default function GridsPage() {
               <ExplanationPanel explanation={selectedGrid.explanation} />
             </div>
           )}
+
+          {/* AI Expert Analysis */}
+          <div className="mt-4">
+            <GridAiAnalysis
+              grid={selectedGrid}
+              method={generateMutation.data?.method_used ?? method}
+              profile={profile}
+            />
+          </div>
 
           {/* Save to history */}
           <div className="mt-4">

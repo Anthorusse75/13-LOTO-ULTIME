@@ -1,5 +1,11 @@
 import { useSettingsStore } from "@/stores/settingsStore";
-import { Bot, ChevronDown, ChevronUp, Lightbulb, X } from "lucide-react";
+import {
+  Bot,
+  ChevronDown,
+  ChevronUp,
+  Lightbulb,
+  X,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -180,6 +186,7 @@ const DEFAULT_TIPS = {
   ],
 };
 
+// ─── Page name mapping ────────────────────────────────────────────────────────
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function AiCoach() {
   const location = useLocation();
@@ -187,10 +194,15 @@ export default function AiCoach() {
   const [dismissed, setDismissed] = useState(false);
   const coachEnabled = useSettingsStore((s) => s.coachEnabled ?? true);
 
-  const context = useMemo(() => {
-    const path = "/" + location.pathname.split("/")[1];
-    return PAGE_TIPS[path] ?? DEFAULT_TIPS;
-  }, [location.pathname]);
+  const pagePath = useMemo(
+    () => "/" + location.pathname.split("/")[1],
+    [location.pathname],
+  );
+
+  const context = useMemo(
+    () => PAGE_TIPS[pagePath] ?? DEFAULT_TIPS,
+    [pagePath],
+  );
 
   if (!coachEnabled || dismissed) return null;
 
@@ -234,6 +246,7 @@ export default function AiCoach() {
       {/* Body */}
       {open && (
         <div id="ai-coach-body" className="px-4 py-3 space-y-2.5" role="list">
+          {/* Static tips */}
           {context.tips.map((tip, i) => (
             <div
               key={i}
@@ -251,7 +264,8 @@ export default function AiCoach() {
               </span>
             </div>
           ))}
-          <div className="pt-1 border-t border-border">
+
+          <div className="pt-2 border-t border-border">
             <span className="flex items-center gap-1 text-xs text-text-secondary">
               <Lightbulb className="w-3 h-3" aria-hidden="true" />
               Conseils basés sur la page active

@@ -61,6 +61,7 @@ async def score_grid(
                 profile=request.profile,
                 numbers=result.numbers,
                 stars=result.stars,
+                star_name=game_config.star_name,
             ).__dict__
         ),
     )
@@ -105,6 +106,7 @@ async def generate_grids(
                         profile=body.profile,
                         numbers=r.numbers,
                         stars=r.stars,
+                        star_name=game_config.star_name,
                     ).__dict__
                 ),
             )

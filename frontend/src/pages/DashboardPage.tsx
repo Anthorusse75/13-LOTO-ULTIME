@@ -1,3 +1,4 @@
+import AiAnalysisPanel from "@/components/common/AiAnalysisPanel";
 import Disclaimer from "@/components/common/Disclaimer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PageIntro from "@/components/common/PageIntro";
@@ -317,6 +318,34 @@ export default function DashboardPage() {
           <p className="text-text-secondary text-sm">Aucun tirage</p>
         )}
       </div>
+
+      {/* AI Analysis */}
+      {stats && (
+        <AiAnalysisPanel
+          topic="dashboard"
+          buildContext={() => ({
+            draw_count: stats.draw_count,
+            latest_draw: latest
+              ? { numbers: latest.numbers, stars: latest.stars, date: latest.draw_date }
+              : null,
+            top_frequencies: topFreq?.map((f) => ({
+              number: f.number,
+              pct: (f.relative * 100).toFixed(1),
+            })),
+            most_overdue: mostOverdue
+              ? { number: mostOverdue.number, gap: mostOverdue.current_gap }
+              : null,
+            uniformity_score: stats.uniformity_score,
+            top_grids: topGrids?.slice(0, 3).map((g) => ({
+              numbers: g.numbers,
+              stars: g.stars,
+              score: g.total_score,
+            })),
+          })}
+          dataKey={String(stats.draw_count)}
+          description="L'IA résume les faits marquants du dashboard et identifie les tendances."
+        />
+      )}
 
       <Disclaimer />
     </div>
