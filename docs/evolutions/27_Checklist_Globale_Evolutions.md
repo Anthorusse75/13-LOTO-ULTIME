@@ -155,51 +155,51 @@
 
 ### C.1–C.3 : Wheeling
 
-| ID      | Tâche                                    | Doc        | Statut |
-| ------- | ---------------------------------------- | ---------- | ------ |
-| B-26    | Créer engines/wheeling/greedy_cover.py   | 08, 16     | ✅      |
-| B-27    | Créer engines/wheeling/coverage.py       | 08, 16     | ✅      |
-| B-28    | Créer engines/wheeling/cost_estimator.py | 08, 16     | ✅      |
-| B-29    | Créer engines/wheeling/gain_analyzer.py  | 08, 16     | ✅      |
-| B-30    | Créer engines/wheeling/engine.py         | 08, 16     | ✅      |
-| B-31    | Implémenter WheelingService              | 08, 16     | ✅      |
-| DB-12   | Créer table wheeling_systems + migration | 19         | ✅      |
-| API-05  | Créer router wheeling (6 endpoints)      | 08, 18     | ✅      |
-| API-06  | Validation : n ≤ 20, t ∈ [2, k-1]        | 08, 18, 21 | ✅      |
-| API-07  | Timeout 30s sur wheeling/generate        | 22         | ✅      |
-| F-38    | Créer composant NumberGrid               | 08, 17     | ✅      |
-| F-39    | Créer composant StarsGrid                | 08, 17     | ✅      |
-| F-40    | Créer composant SelectionSummary         | 08, 17     | ✅      |
-| F-41    | Créer composant WheelingConfig           | 08, 17     | ✅      |
-| F-42    | Créer composant WheelingPreview          | 08, 17     | ✅      |
-| F-43    | Créer composant WheelingResults          | 08, 17     | ✅      |
-| F-44    | Créer composant CoverageMatrix           | 08, 17     | ✅      |
-| F-45    | Créer composant GainScenariosTable       | 08, 17     | ✅      |
-| F-46    | Créer WheelingPage + route /wheeling     | 08, 17     | ✅      |
-| F-47    | Créer service wheelingApi.ts             | 08, 17     | ✅      |
-| F-48    | Créer types/wheeling.ts                  | 08, 17     | ✅      |
-| F-49    | Créer hook useWheeling()                 | 08, 17     | ✅      |
+| ID      | Tâche                                    | Doc        | Statut       |
+| ------- | ---------------------------------------- | ---------- | ------------ |
+| B-26    | Créer engines/wheeling/greedy_cover.py   | 08, 16     | ✅            |
+| B-27    | Créer engines/wheeling/coverage.py       | 08, 16     | ✅            |
+| B-28    | Créer engines/wheeling/cost_estimator.py | 08, 16     | ✅            |
+| B-29    | Créer engines/wheeling/gain_analyzer.py  | 08, 16     | ✅            |
+| B-30    | Créer engines/wheeling/engine.py         | 08, 16     | ✅            |
+| B-31    | Implémenter WheelingService              | 08, 16     | ✅            |
+| DB-12   | Créer table wheeling_systems + migration | 19         | ✅            |
+| API-05  | Créer router wheeling (6 endpoints)      | 08, 18     | ✅            |
+| API-06  | Validation : n ≤ 20, t ∈ [2, k-1]        | 08, 18, 21 | ✅            |
+| API-07  | Timeout 30s sur wheeling/generate        | 22         | ✅            |
+| F-38    | Créer composant NumberGrid               | 08, 17     | ✅            |
+| F-39    | Créer composant StarsGrid                | 08, 17     | ✅            |
+| F-40    | Créer composant SelectionSummary         | 08, 17     | ✅            |
+| F-41    | Créer composant WheelingConfig           | 08, 17     | ✅            |
+| F-42    | Créer composant WheelingPreview          | 08, 17     | ✅            |
+| F-43    | Créer composant WheelingResults          | 08, 17     | ✅            |
+| F-44    | Créer composant CoverageMatrix           | 08, 17     | ✅            |
+| F-45    | Créer composant GainScenariosTable       | 08, 17     | ✅            |
+| F-46    | Créer WheelingPage + route /wheeling     | 08, 17     | ✅            |
+| F-47    | Créer service wheelingApi.ts             | 08, 17     | ✅            |
+| F-48    | Créer types/wheeling.ts                  | 08, 17     | ✅            |
+| F-49    | Créer hook useWheeling()                 | 08, 17     | ✅            |
 | TEST-11 | Tests wheeling unitaires (8 tests)       | 25         | ✅ (21 tests) |
 | TEST-12 | Tests wheeling intégration (4 tests)     | 25         | ✅ (7 tests)  |
 | TEST-13 | Tests wheeling API (4 tests)             | 25         | ✅ (7 tests)  |
 
 ### C.4 : Budget
 
-| ID      | Tâche                                    | Doc    | Statut |
-| ------- | ---------------------------------------- | ------ | ------ |
-| B-32    | Créer engines/budget/optimizer.py        | 09, 16 | ✅      |
-| B-33    | Créer engines/budget/strategies.py       | 09, 16 | ✅      |
-| B-34    | Implémenter BudgetService                | 09, 16 | ✅      |
-| DB-13   | Créer table budget_plans + migration     | 19     | ✅      |
-| API-08  | Créer router budget (4 endpoints)        | 09, 18 | ✅      |
-| F-50    | Créer composant BudgetInput              | 09, 17 | ✅      |
-| F-51    | Créer composant ObjectiveSelector        | 09, 17 | ✅      |
-| F-52    | Créer composant BudgetRecommendationCard | 09, 17 | ✅      |
-| F-53    | Créer composant BudgetResults            | 09, 17 | ✅      |
-| F-54    | Créer composant GainScenarioBar          | 09, 17 | ✅      |
-| F-55    | Créer BudgetPage + route /budget         | 09, 17 | ✅      |
-| F-56    | Créer service budgetApi.ts               | 09, 17 | ✅      |
-| F-57    | Créer types/budget.ts                    | 09, 17 | ✅      |
+| ID      | Tâche                                    | Doc    | Statut       |
+| ------- | ---------------------------------------- | ------ | ------------ |
+| B-32    | Créer engines/budget/optimizer.py        | 09, 16 | ✅            |
+| B-33    | Créer engines/budget/strategies.py       | 09, 16 | ✅            |
+| B-34    | Implémenter BudgetService                | 09, 16 | ✅            |
+| DB-13   | Créer table budget_plans + migration     | 19     | ✅            |
+| API-08  | Créer router budget (4 endpoints)        | 09, 18 | ✅            |
+| F-50    | Créer composant BudgetInput              | 09, 17 | ✅            |
+| F-51    | Créer composant ObjectiveSelector        | 09, 17 | ✅            |
+| F-52    | Créer composant BudgetRecommendationCard | 09, 17 | ✅            |
+| F-53    | Créer composant BudgetResults            | 09, 17 | ✅            |
+| F-54    | Créer composant GainScenarioBar          | 09, 17 | ✅            |
+| F-55    | Créer BudgetPage + route /budget         | 09, 17 | ✅            |
+| F-56    | Créer service budgetApi.ts               | 09, 17 | ✅            |
+| F-57    | Créer types/budget.ts                    | 09, 17 | ✅            |
 | TEST-14 | Tests budget (10 tests)                  | 25     | ✅ (15 tests) |
 
 ---
@@ -323,12 +323,12 @@
 
 ## Compteurs de progression
 
-| Phase     | Tâches     | Faites | %        |
-| --------- | ---------- | ------ | -------- |
-| P0        | 12         | 12     | **100%** |
-| A         | 17         | 17     | **100%** |
-| B         | 40         | 40     | **100%** |
-| C         | 39         | 39     | **100%** |
-| D         | 34         | 0      | 0%       |
-| E         | 26 + 7 obs | 0      | 0%       |
+| Phase     | Tâches     | Faites  | %        |
+| --------- | ---------- | ------- | -------- |
+| P0        | 12         | 12      | **100%** |
+| A         | 17         | 17      | **100%** |
+| B         | 40         | 40      | **100%** |
+| C         | 39         | 39      | **100%** |
+| D         | 34         | 0       | 0%       |
+| E         | 26 + 7 obs | 0       | 0%       |
 | **Total** | **~175**   | **108** | **62%**  |
