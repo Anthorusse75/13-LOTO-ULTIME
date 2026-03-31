@@ -1,6 +1,7 @@
 """Database admin API — info, connection details, and engine switch."""
 
 import os
+from typing import Any
 from urllib.parse import urlparse
 
 import structlog
@@ -18,7 +19,7 @@ router = APIRouter(dependencies=[Depends(require_role(UserRole.ADMIN))])
 logger = structlog.get_logger(__name__)
 
 
-def _parse_db_info(database_url: str) -> dict:
+def _parse_db_info(database_url: str) -> dict[str, Any]:
     """Extract connection details from a DATABASE_URL."""
     if database_url.startswith("sqlite"):
         path = database_url.split(":///", 1)[1] if ":///" in database_url else "unknown"
@@ -78,7 +79,7 @@ def _parse_db_info(database_url: str) -> dict:
 
 
 @router.get("")
-async def get_database_info(session: AsyncSession = Depends(get_db)):
+async def get_database_info(session: AsyncSession = Depends(get_db)) -> dict[str, Any]:
     """Return current database engine info, stats, and connection details."""
     settings = get_settings()
     info = _parse_db_info(settings.DATABASE_URL)
@@ -110,9 +111,9 @@ async def get_database_info(session: AsyncSession = Depends(get_db)):
 
 @router.post("/switch")
 async def switch_database(
-    payload: dict,
+    payload: dict[str, Any],
     session: AsyncSession = Depends(get_db),
-):
+) -> dict[str, Any]:
     """Switch the database engine. Expects { "engine": "postgresql" | "sqlite" }.
 
     - Closes the current engine

@@ -1,5 +1,7 @@
 """Frequency scoring criterion."""
 
+from typing import Any
+
 from app.core.game_definitions import GameConfig
 
 from .base import BaseScoringCriterion
@@ -8,8 +10,8 @@ from .base import BaseScoringCriterion
 class FrequencyCriterion(BaseScoringCriterion):
     """Score based on frequency ratios — favours frequently drawn numbers."""
 
-    def compute(self, grid: list[int], game: GameConfig, **kwargs) -> float:
-        frequencies: dict = kwargs["frequencies"]
+    def compute(self, grid: list[int], game: GameConfig, **kwargs: Any) -> float:
+        frequencies: dict[str, Any] = kwargs["frequencies"]
         all_ratios = [
             frequencies[str(n)]["ratio"]
             for n in range(game.min_number, game.max_number + 1)
@@ -33,7 +35,7 @@ class FrequencyCriterion(BaseScoringCriterion):
             else:
                 normalized.append(0.0)
 
-        return sum(normalized) / len(normalized)
+        return float(sum(normalized) / len(normalized))
 
     def get_name(self) -> str:
         return "frequency"

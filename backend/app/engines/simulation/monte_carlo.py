@@ -84,7 +84,7 @@ class MonteCarloSimulator:
             n_simulations=n_simulations,
             match_distribution={i: int(match_counts[i]) for i in range(k + 1)},
             star_match_distribution=(
-                {i: int(star_match_counts[i]) for i in range(self.game.stars_drawn + 1)}
+                {i: int(star_match_counts[i]) for i in range(self.game.stars_drawn + 1)}  # type: ignore[operator]
                 if star_match_counts is not None
                 else None
             ),

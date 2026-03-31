@@ -2,6 +2,7 @@
 
 import time
 from datetime import UTC, datetime
+from typing import Any
 
 import numpy as np
 import structlog
@@ -127,7 +128,9 @@ class StatisticsService:
         """Return the most recent statistics snapshot."""
         return await self._stats_repo.get_latest(game_id)
 
-    def compute_single(self, engine_name: str, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute_single(
+        self, engine_name: str, draws: np.ndarray, game: GameConfig
+    ) -> dict[int | str, Any]:
         """Run a single engine on a draw matrix (no persistence)."""
         engine = self._engines.get(engine_name)
         if engine is None:

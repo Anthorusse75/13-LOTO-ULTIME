@@ -1,5 +1,7 @@
 """Jobs API — manual trigger and history endpoints."""
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -30,7 +32,7 @@ TRIGGERABLE_JOBS = {
 async def trigger_job(
     job_name: str,
     job_repo: JobRepository = Depends(get_job_repository),
-):
+) -> Any:
     """Manually trigger a scheduled job."""
     if job_name not in TRIGGERABLE_JOBS:
         raise HTTPException(
@@ -56,7 +58,7 @@ async def trigger_job(
 
     job_func = _resolve_job_func(module_name)
 
-    async def _run_job():
+    async def _run_job() -> None:
         """Wrapper to catch and log exceptions from fire-and-forget tasks."""
         try:
             await job_func(*args, triggered_by="manual")
@@ -98,7 +100,7 @@ async def list_job_executions(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     session: AsyncSession = Depends(get_db),
-):
+) -> Any:
     """List recent job executions (paginated)."""
     stmt = select(JobExecution).order_by(JobExecution.started_at.desc()).offset(offset).limit(limit)
     result = await session.execute(stmt)
@@ -110,7 +112,7 @@ async def get_job_history(
     job_name: str,
     limit: int = Query(default=20, ge=1, le=100),
     session: AsyncSession = Depends(get_db),
-):
+) -> Any:
     """Get execution history for a specific job."""
     stmt = (
         select(JobExecution)
@@ -125,15 +127,15 @@ async def get_job_history(
     return rows
 
 
-@router.get("/status", response_model=dict)
+@router.get("/status", response_model=dict[str, Any])
 async def get_scheduler_status(
     job_repo: JobRepository = Depends(get_job_repository),
-):
+) -> dict[str, Any]:
     """Get current scheduler status summary."""
     running = await job_repo.get_running_jobs()
 
     # Get last execution per job type
-    last_runs: dict[str, dict] = {}
+    last_runs: dict[str, dict[str, Any]] = {}
     for jn in TRIGGERABLE_JOBS:
         module_name, args = TRIGGERABLE_JOBS[jn]
         full_name = f"{module_name}_{args[0]}" if args else module_name
@@ -153,7 +155,7 @@ async def get_scheduler_status(
     }
 
 
-def _resolve_job_func(module_name: str):
+def _resolve_job_func(module_name: str) -> Any:
     """Dynamically import a job function by module name."""
     job_map = {
         "fetch_draws": "app.scheduler.jobs.fetch_draws:fetch_draws_job",

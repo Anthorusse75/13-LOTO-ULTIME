@@ -1,5 +1,7 @@
 """Balance scoring criterion."""
 
+from typing import Any
+
 from app.core.game_definitions import GameConfig
 
 from .base import BaseScoringCriterion
@@ -8,7 +10,7 @@ from .base import BaseScoringCriterion
 class BalanceCriterion(BaseScoringCriterion):
     """Score based on spatial distribution — measures spread uniformity."""
 
-    def compute(self, grid: list[int], game: GameConfig, **kwargs) -> float:
+    def compute(self, grid: list[int], game: GameConfig, **kwargs: Any) -> float:
         sorted_grid = sorted(grid)
         k = len(grid)
         n = game.max_number - game.min_number + 1

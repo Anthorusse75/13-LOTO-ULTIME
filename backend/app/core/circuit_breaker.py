@@ -2,6 +2,7 @@
 
 import time
 from enum import Enum
+from typing import Any
 
 import structlog
 
@@ -67,7 +68,7 @@ class CircuitBreaker:
 _breakers: dict[str, CircuitBreaker] = {}
 
 
-def get_circuit_breaker(name: str, **kwargs) -> CircuitBreaker:
+def get_circuit_breaker(name: str, **kwargs: Any) -> CircuitBreaker:
     """Get or create a circuit breaker by name."""
     if name not in _breakers:
         _breakers[name] = CircuitBreaker(name=name, **kwargs)

@@ -1,6 +1,7 @@
 """Job: regenerate top grids for all active games."""
 
 from datetime import UTC, datetime
+from typing import Any
 
 import structlog
 
@@ -26,10 +27,10 @@ async def compute_top_grids_job(triggered_by: str = "scheduler") -> None:
     )
 
 
-async def _do_compute_top_grids() -> dict:
+async def _do_compute_top_grids() -> dict[str, Any]:
     """Core logic — generate new top grids."""
     configs = load_all_game_configs()
-    results = {}
+    results: dict[str, Any] = {}
 
     # First, get the list of active games (short-lived session)
     async for session in get_session():

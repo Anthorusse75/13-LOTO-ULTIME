@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import JSON, DateTime, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column
@@ -15,17 +16,19 @@ class StatisticsSnapshot(Base):
     draw_count: Mapped[int] = mapped_column(Integer)
 
     # Données statistiques (JSON)
-    frequencies: Mapped[dict] = mapped_column(JSON)
-    gaps: Mapped[dict] = mapped_column(JSON)
-    cooccurrence_matrix: Mapped[dict] = mapped_column(JSON)
-    temporal_trends: Mapped[dict] = mapped_column(JSON)
-    bayesian_priors: Mapped[dict] = mapped_column(JSON)
-    graph_metrics: Mapped[dict] = mapped_column(JSON)
-    distribution_stats: Mapped[dict] = mapped_column(JSON)
+    frequencies: Mapped[dict[str, Any]] = mapped_column(JSON)
+    gaps: Mapped[dict[str, Any]] = mapped_column(JSON)
+    cooccurrence_matrix: Mapped[dict[str, Any]] = mapped_column(JSON)
+    temporal_trends: Mapped[dict[str, Any]] = mapped_column(JSON)
+    bayesian_priors: Mapped[dict[str, Any]] = mapped_column(JSON)
+    graph_metrics: Mapped[dict[str, Any]] = mapped_column(JSON)
+    distribution_stats: Mapped[dict[str, Any]] = mapped_column(JSON)
 
     # Star/complementary number statistics (nullable — only for games with stars)
-    star_frequencies: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=None)
-    star_gaps: Mapped[dict | None] = mapped_column(JSON, nullable=True, default=None)
+    star_frequencies: Mapped[dict[str, Any] | None] = mapped_column(
+        JSON, nullable=True, default=None
+    )
+    star_gaps: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True, default=None)
 
     def __repr__(self) -> str:
         return f"<StatisticsSnapshot(game_id={self.game_id}, at={self.computed_at})>"

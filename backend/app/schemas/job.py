@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -13,7 +14,7 @@ class JobExecutionResponse(BaseModel):
     started_at: datetime
     finished_at: datetime | None
     duration_seconds: float | None
-    result_summary: dict | None
+    result_summary: dict[str, Any] | None
     error_message: str | None
     triggered_by: str
 

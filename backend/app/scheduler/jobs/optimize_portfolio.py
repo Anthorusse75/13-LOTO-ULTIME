@@ -1,6 +1,7 @@
 """Job: regenerate optimized portfolios for all active games."""
 
 from datetime import UTC, datetime
+from typing import Any
 
 import structlog
 
@@ -29,10 +30,10 @@ async def optimize_portfolio_job(triggered_by: str = "scheduler") -> None:
     )
 
 
-async def _do_optimize_portfolio() -> dict:
+async def _do_optimize_portfolio() -> dict[str, Any]:
     """Core logic — generate portfolio per strategy per game."""
     configs = load_all_game_configs()
-    results = {}
+    results: dict[str, Any] = {}
 
     # First, get the list of active games (short-lived session)
     async for session in get_session():

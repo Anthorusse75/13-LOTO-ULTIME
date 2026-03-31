@@ -1,6 +1,7 @@
 """Gap (retard) scoring criterion."""
 
 import math
+from typing import Any
 
 from app.core.game_definitions import GameConfig
 
@@ -13,8 +14,8 @@ class GapCriterion(BaseScoringCriterion):
     def __init__(self, sensitivity: float = 3.0):
         self.sensitivity = sensitivity
 
-    def compute(self, grid: list[int], game: GameConfig, **kwargs) -> float:
-        gaps: dict = kwargs["gaps"]
+    def compute(self, grid: list[int], game: GameConfig, **kwargs: Any) -> float:
+        gaps: dict[str, Any] = kwargs["gaps"]
         scores = []
         for num in grid:
             key = str(num)

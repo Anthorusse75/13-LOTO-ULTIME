@@ -1,6 +1,7 @@
 """Robustness analysis — bootstrap stability and random comparison."""
 
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 
@@ -42,7 +43,7 @@ class RobustnessAnalyzer:
         self._gap_engine = GapEngine()
         self._cooc_engine = CooccurrenceEngine()
 
-    def _compute_stats(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def _compute_stats(self, draws: np.ndarray, game: GameConfig) -> dict[str, Any]:
         """Compute the 3 statistics needed for scoring from a draw matrix."""
         return {
             "frequency": self._freq_engine.compute(draws, game),
@@ -90,7 +91,7 @@ class RobustnessAnalyzer:
         self,
         grid_score: float,
         game: GameConfig,
-        statistics: dict,
+        statistics: dict[str, Any],
         scorer: GridScorer,
         n_random: int = 1000,
     ) -> ComparisonResult:

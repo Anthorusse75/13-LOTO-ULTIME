@@ -3,6 +3,7 @@
 import math
 import time
 from collections import defaultdict
+from typing import Any
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
@@ -26,12 +27,14 @@ audit_log = __import__("structlog").get_logger("audit")
 
 # ── Progressive login throttle (Apple-style) ──
 # Delays: 0, 1s, 5s, 15s, 30s, 60s, 120s, 300s, 600s
-_login_failures: dict[str, list] = defaultdict(lambda: [0, 0.0])  # {ip: [count, locked_until]}
+_login_failures: dict[str, list[float]] = defaultdict(
+    lambda: [0, 0.0]
+)  # {ip: [count, locked_until]}
 _DELAYS = [0, 1, 5, 15, 30, 60, 120, 300, 600]
 
 
-def _get_delay(failures: int) -> int:
-    idx = min(failures, len(_DELAYS) - 1)
+def _get_delay(failures: int | float) -> int:
+    idx = min(int(failures), len(_DELAYS) - 1)
     return _DELAYS[idx]
 
 
@@ -41,7 +44,7 @@ async def login(
     request: Request,
     body: LoginRequest,
     auth_service: AuthService = Depends(get_auth_service),
-):
+) -> TokenResponse | JSONResponse:
     """Authenticate a user and return JWT tokens."""
     ip = get_remote_address(request)
     state = _login_failures[ip]
@@ -98,7 +101,7 @@ async def register(
     body: UserCreate,
     auth_service: AuthService = Depends(get_auth_service),
     current_user: User = Depends(get_current_user),
-):
+) -> Any:
     """Register a new user (admin only)."""
     if current_user.role != UserRole.ADMIN:
         raise AuthenticationError("Seul un administrateur peut créer des utilisateurs")
@@ -123,7 +126,7 @@ async def refresh_token(
     request: RefreshRequest,
     auth_service: AuthService = Depends(get_auth_service),
     settings: Settings = Depends(get_settings),
-):
+) -> TokenResponse:
     """Refresh tokens with rotation — old refresh token is revoked."""
     from jose import JWTError
 
@@ -161,7 +164,7 @@ async def refresh_token(
 async def logout(
     body: LogoutRequest,
     settings: Settings = Depends(get_settings),
-):
+) -> None:
     """Revoke the refresh token on logout."""
     from jose import JWTError
 
@@ -185,7 +188,7 @@ async def logout(
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_me(current_user: User = Depends(get_current_user)):
+async def get_me(current_user: User = Depends(get_current_user)) -> Any:
     """Get the current authenticated user's profile."""
     return current_user
 
@@ -194,7 +197,7 @@ async def get_me(current_user: User = Depends(get_current_user)):
 async def list_users(
     current_user: User = Depends(get_current_user),
     user_repo: UserRepository = Depends(get_user_repository),
-):
+) -> Any:
     """List all users (admin only)."""
     if current_user.role != UserRole.ADMIN:
         raise AuthenticationError("Accès réservé aux administrateurs")

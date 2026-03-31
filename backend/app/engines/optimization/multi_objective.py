@@ -1,5 +1,7 @@
 """Multi-Objective optimizer (simplified NSGA-II)."""
 
+from typing import Any
+
 from app.core.game_definitions import GameConfig
 from app.engines.scoring.scorer import GridScorer, ScoredResult
 
@@ -12,7 +14,7 @@ class MultiObjectiveOptimizer(BaseOptimizer):
     def __init__(
         self,
         scorer: GridScorer,
-        statistics: dict,
+        statistics: dict[str, Any],
         game: GameConfig,
         population_size: int = 100,
         max_generations: int = 200,

@@ -1,6 +1,7 @@
 """Job: cleanup old data (snapshots, job history, old grids, old portfolios)."""
 
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 import structlog
 from sqlalchemy import delete
@@ -30,23 +31,23 @@ async def cleanup_job(triggered_by: str = "scheduler") -> None:
     )
 
 
-async def _do_cleanup() -> dict:
+async def _do_cleanup() -> dict[str, Any]:
     """Core logic — delete old job records, old snapshots, old grids, old portfolios."""
     now = datetime.now(UTC)
-    results = {}
+    results: dict[str, Any] = {}
 
     async for session in get_session():
         # Clean old job executions
         cutoff_jobs = now - timedelta(days=RETENTION_DAYS_JOBS)
         stmt = delete(JobExecution).where(JobExecution.started_at < cutoff_jobs)
         result = await session.execute(stmt)
-        results["jobs_deleted"] = result.rowcount
+        results["jobs_deleted"] = result.rowcount  # type: ignore[attr-defined]
 
         # Clean old statistics snapshots
         cutoff_stats = now - timedelta(days=RETENTION_DAYS_SNAPSHOTS)
         stmt = delete(StatisticsSnapshot).where(StatisticsSnapshot.computed_at < cutoff_stats)
         result = await session.execute(stmt)
-        results["snapshots_deleted"] = result.rowcount
+        results["snapshots_deleted"] = result.rowcount  # type: ignore[attr-defined]
 
         # Clean old scored grids (non-top, older than 30 days)
         cutoff_grids = now - timedelta(days=RETENTION_DAYS_GRIDS)
@@ -55,13 +56,13 @@ async def _do_cleanup() -> dict:
             ScoredGrid.is_top == False,  # noqa: E712
         )
         result = await session.execute(stmt)
-        results["grids_deleted"] = result.rowcount
+        results["grids_deleted"] = result.rowcount  # type: ignore[attr-defined]
 
         # Clean old portfolios
         cutoff_portfolios = now - timedelta(days=RETENTION_DAYS_PORTFOLIOS)
         stmt = delete(Portfolio).where(Portfolio.computed_at < cutoff_portfolios)
         result = await session.execute(stmt)
-        results["portfolios_deleted"] = result.rowcount
+        results["portfolios_deleted"] = result.rowcount  # type: ignore[attr-defined]
 
         await session.commit()
         break

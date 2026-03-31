@@ -1,6 +1,7 @@
 """Base class for all statistical engines."""
 
 from abc import ABC, abstractmethod
+from typing import Any
 
 import numpy as np
 
@@ -11,7 +12,7 @@ class BaseStatisticsEngine(ABC):
     """Abstract base for statistical computation engines."""
 
     @abstractmethod
-    def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         """Compute statistics from a draw matrix.
 
         Args:

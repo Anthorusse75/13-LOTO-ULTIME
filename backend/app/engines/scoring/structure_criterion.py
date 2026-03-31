@@ -1,5 +1,7 @@
 """Structure scoring criterion."""
 
+from typing import Any
+
 import numpy as np
 
 from app.core.game_definitions import GameConfig
@@ -10,7 +12,7 @@ from .base import BaseScoringCriterion
 class StructureCriterion(BaseScoringCriterion):
     """Score based on structural quality (even/odd, decades, low/high, gaps)."""
 
-    def compute(self, grid: list[int], game: GameConfig, **kwargs) -> float:
+    def compute(self, grid: list[int], game: GameConfig, **kwargs: Any) -> float:
         sorted_grid = sorted(grid)
         k = len(grid)
         midpoint = (game.min_number + game.max_number) / 2

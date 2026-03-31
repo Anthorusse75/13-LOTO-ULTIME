@@ -1,4 +1,5 @@
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Callable, Coroutine
+from typing import Any
 
 from fastapi import Depends, HTTPException, Path
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -170,7 +171,7 @@ async def get_current_user(
     return user
 
 
-def require_role(minimum_role: UserRole):
+def require_role(minimum_role: UserRole) -> Callable[..., Coroutine[Any, Any, User]]:
     """FastAPI dependency that checks the user has the minimum required role."""
     role_hierarchy = {
         UserRole.CONSULTATION: 1,

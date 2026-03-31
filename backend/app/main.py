@@ -1,6 +1,8 @@
 import time
 import uuid
+from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
+from typing import Any
 
 import structlog
 from fastapi import FastAPI, Request, Response
@@ -105,7 +107,7 @@ async def _maybe_initial_fetch() -> None:
 
     logger.info("initial_fetch.starting", reason="empty_draws_table")
 
-    async def _run_pipeline():
+    async def _run_pipeline() -> None:
         try:
             from app.scheduler.jobs.nightly_pipeline import _do_nightly_pipeline
 
@@ -118,7 +120,7 @@ async def _maybe_initial_fetch() -> None:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup / shutdown logic."""
     setup_logging(log_level=settings.LOG_LEVEL, json_output=settings.LOG_JSON)
     init_db(settings.DATABASE_URL)
@@ -184,7 +186,9 @@ def create_app() -> FastAPI:
 
     # ── Middlewares ──
     @app.middleware("http")
-    async def timing_middleware(request: Request, call_next):
+    async def timing_middleware(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
         import time as _time
 
         from app.core.metrics import http_request_duration_seconds, http_requests_total
@@ -213,7 +217,9 @@ def create_app() -> FastAPI:
         return response
 
     @app.middleware("http")
-    async def logging_context_middleware(request: Request, call_next):
+    async def logging_context_middleware(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
         request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
         structlog.contextvars.clear_contextvars()
         structlog.contextvars.bind_contextvars(request_id=request_id)
@@ -222,7 +228,9 @@ def create_app() -> FastAPI:
         return response
 
     @app.middleware("http")
-    async def security_headers_middleware(request: Request, call_next):
+    async def security_headers_middleware(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
         response: Response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
@@ -238,32 +246,34 @@ def create_app() -> FastAPI:
 
     # ── Exception handlers ──
     @app.exception_handler(GameNotFoundError)
-    async def game_not_found_handler(request: Request, exc: GameNotFoundError):
+    async def game_not_found_handler(request: Request, exc: GameNotFoundError) -> JSONResponse:
         return JSONResponse(status_code=404, content={"detail": str(exc)})
 
     @app.exception_handler(DrawAlreadyExistsError)
-    async def draw_exists_handler(request: Request, exc: DrawAlreadyExistsError):
+    async def draw_exists_handler(request: Request, exc: DrawAlreadyExistsError) -> JSONResponse:
         return JSONResponse(status_code=409, content={"detail": str(exc)})
 
     @app.exception_handler(InvalidDrawDataError)
-    async def invalid_draw_handler(request: Request, exc: InvalidDrawDataError):
+    async def invalid_draw_handler(request: Request, exc: InvalidDrawDataError) -> JSONResponse:
         return JSONResponse(status_code=422, content={"detail": str(exc)})
 
     @app.exception_handler(InsufficientDataError)
-    async def insufficient_data_handler(request: Request, exc: InsufficientDataError):
+    async def insufficient_data_handler(
+        request: Request, exc: InsufficientDataError
+    ) -> JSONResponse:
         return JSONResponse(status_code=422, content={"detail": str(exc)})
 
     @app.exception_handler(AuthenticationError)
-    async def auth_error_handler(request: Request, exc: AuthenticationError):
+    async def auth_error_handler(request: Request, exc: AuthenticationError) -> JSONResponse:
         return JSONResponse(status_code=401, content={"detail": str(exc)})
 
     @app.exception_handler(AuthorizationError)
-    async def authz_error_handler(request: Request, exc: AuthorizationError):
+    async def authz_error_handler(request: Request, exc: AuthorizationError) -> JSONResponse:
         return JSONResponse(status_code=403, content={"detail": str(exc)})
 
     # ── Health check ──
     @app.get("/health", tags=["System"])
-    async def health_check():
+    async def health_check() -> dict[str, Any]:
         import shutil
         from datetime import UTC, datetime
 
@@ -312,12 +322,10 @@ def create_app() -> FastAPI:
                     last_stats_date = str(latest_stats)
 
                 # Latest job execution
-                result = await session.execute(
-                    select(JobExecution)
-                    .order_by(JobExecution.started_at.desc())  # type: ignore[arg-type]
-                    .limit(1)
+                job_result = await session.execute(
+                    select(JobExecution).order_by(JobExecution.started_at.desc()).limit(1)
                 )
-                last_job = result.scalars().first()
+                last_job = job_result.scalars().first()
                 if last_job:
                     last_job_status = last_job.status
                     last_job_name = last_job.job_name
@@ -344,7 +352,7 @@ def create_app() -> FastAPI:
                 scheduler_status = "error"
 
         # ── Disk ──
-        disk_info: dict = {}
+        disk_info: dict[str, Any] = {}
         try:
             usage = shutil.disk_usage(".")
             disk_info = {

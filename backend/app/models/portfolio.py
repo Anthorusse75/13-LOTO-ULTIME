@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import JSON, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
@@ -14,7 +15,7 @@ class Portfolio(Base):
     name: Mapped[str] = mapped_column(String(100))
     strategy: Mapped[str] = mapped_column(String(50))
     grid_count: Mapped[int] = mapped_column(Integer)
-    grids: Mapped[list[dict]] = mapped_column(JSON)
+    grids: Mapped[list[dict[str, Any]]] = mapped_column(JSON)
     diversity_score: Mapped[float] = mapped_column(Float)
     coverage_score: Mapped[float] = mapped_column(Float)
     avg_grid_score: Mapped[float] = mapped_column(Float)

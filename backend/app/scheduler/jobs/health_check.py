@@ -1,6 +1,7 @@
 """Job: system health check — verify DB connectivity and data freshness."""
 
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 import structlog
 
@@ -24,9 +25,9 @@ async def health_check_job(triggered_by: str = "scheduler") -> None:
     )
 
 
-async def _do_health_check() -> dict:
+async def _do_health_check() -> dict[str, Any]:
     """Core logic — check DB, data freshness, recent job failures."""
-    results = {"status": "healthy", "checks": {}}
+    results: dict[str, Any] = {"status": "healthy", "checks": {}}
     now = datetime.now(UTC)
     today = now.date()
 

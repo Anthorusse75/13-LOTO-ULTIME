@@ -1,5 +1,7 @@
 """Draws endpoints — /api/v1/games/{game_id}/draws."""
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, Query
 
 from app.dependencies import get_draw_repository, get_game_repository
@@ -17,7 +19,7 @@ async def list_draws(
     limit: int = Query(50, ge=1, le=500),
     draw_repo: DrawRepository = Depends(get_draw_repository),
     game_repo: GameRepository = Depends(get_game_repository),
-):
+) -> Any:
     """List draws for a game, ordered by date descending."""
     game = await game_repo.get(game_id)
     if game is None:
@@ -34,7 +36,7 @@ async def get_latest_draw(
     game_id: int,
     draw_repo: DrawRepository = Depends(get_draw_repository),
     game_repo: GameRepository = Depends(get_game_repository),
-):
+) -> Any:
     """Get the most recent draw for a game."""
     game = await game_repo.get(game_id)
     if game is None:

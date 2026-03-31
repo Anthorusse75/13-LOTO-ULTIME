@@ -1,5 +1,7 @@
 """Tabu Search optimizer."""
 
+from typing import Any
+
 from app.core.game_definitions import GameConfig
 from app.engines.scoring.scorer import GridScorer, ScoredResult
 
@@ -12,7 +14,7 @@ class TabuSearch(BaseOptimizer):
     def __init__(
         self,
         scorer: GridScorer,
-        statistics: dict,
+        statistics: dict[str, Any],
         game: GameConfig,
         max_iterations: int = 10000,
         tabu_size: int = 100,
@@ -32,7 +34,7 @@ class TabuSearch(BaseOptimizer):
             stars = self._random_stars()
             current = self._score(grid, stars or None)
             best = current
-            tabu_list: list[tuple] = []
+            tabu_list: list[tuple[tuple[int, ...], tuple[int, ...]]] = []
 
             for _ in range(self.max_iterations):
                 # Generate neighbors

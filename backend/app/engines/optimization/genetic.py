@@ -1,5 +1,7 @@
 """Genetic Algorithm optimizer."""
 
+from typing import Any
+
 from app.core.game_definitions import GameConfig
 from app.engines.scoring.scorer import GridScorer, ScoredResult
 
@@ -12,7 +14,7 @@ class GeneticAlgorithm(BaseOptimizer):
     def __init__(
         self,
         scorer: GridScorer,
-        statistics: dict,
+        statistics: dict[str, Any],
         game: GameConfig,
         population_size: int = 200,
         max_generations: int = 500,
@@ -66,6 +68,8 @@ class GeneticAlgorithm(BaseOptimizer):
         """Uniform crossover for stars."""
         if not self._has_stars:
             return []
+        assert self.game.stars_drawn is not None
+        assert self.game.stars_pool is not None
         combined = list(set(p1_stars) | set(p2_stars))
         needed = self.game.stars_drawn
         if len(combined) < needed:
@@ -82,6 +86,7 @@ class GeneticAlgorithm(BaseOptimizer):
         new_stars = stars.copy()
         for i in range(len(new_stars)):
             if self.rng.random() < self.mutation_rate:
+                assert self.game.stars_pool is not None
                 available = [n for n in range(1, self.game.stars_pool + 1) if n not in new_stars]
                 new_stars[i] = int(self.rng.choice(available))
         return sorted(new_stars)
@@ -90,7 +95,8 @@ class GeneticAlgorithm(BaseOptimizer):
         """Select one individual via tournament selection."""
         indices = self.rng.choice(len(population), size=self.tournament_size, replace=False)
         candidates = [population[i] for i in indices]
-        return max(candidates, key=lambda x: x.total_score)
+        best: ScoredResult = max(candidates, key=lambda x: x.total_score)
+        return best
 
     def optimize(self, n_grids: int = 10) -> list[ScoredResult]:
         # Initialize population

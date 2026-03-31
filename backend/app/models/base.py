@@ -1,4 +1,6 @@
+from collections.abc import AsyncGenerator
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import event, func
 from sqlalchemy.ext.asyncio import (
@@ -30,7 +32,7 @@ def init_db(database_url: str) -> None:
     """Initialise le moteur et la session factory."""
     global _engine, _session_factory
 
-    connect_args: dict = {}
+    connect_args: dict[str, Any] = {}
     pool_class = None
     is_sqlite = database_url.startswith("sqlite")
 
@@ -38,7 +40,7 @@ def init_db(database_url: str) -> None:
         connect_args["check_same_thread"] = False
         pool_class = StaticPool if ":memory:" in database_url else NullPool
 
-    engine_kwargs: dict = {
+    engine_kwargs: dict[str, Any] = {
         "echo": False,
     }
     if connect_args:
@@ -58,18 +60,18 @@ def init_db(database_url: str) -> None:
     if is_sqlite:
 
         @event.listens_for(_engine.sync_engine, "connect")
-        def _set_sqlite_pragma(dbapi_conn, connection_record):
+        def _set_sqlite_pragma(dbapi_conn: Any, connection_record: Any) -> None:
             cursor = dbapi_conn.cursor()
             cursor.execute("PRAGMA foreign_keys=ON")
             cursor.close()
 
 
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """Fournit une session async (à utiliser comme dependency FastAPI)."""
     if _session_factory is None:
         raise RuntimeError("Database not initialized. Call init_db() first.")
     async with _session_factory() as session:
-        yield session  # type: ignore[misc]
+        yield session
 
 
 async def close_db() -> None:
@@ -81,6 +83,6 @@ async def close_db() -> None:
         _session_factory = None
 
 
-def get_engine():
+def get_engine() -> Any:
     """Retourne le moteur SQLAlchemy (pour Alembic notamment)."""
     return _engine

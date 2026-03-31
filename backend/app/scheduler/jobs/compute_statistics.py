@@ -1,5 +1,7 @@
 """Job: recompute statistics for all active games."""
 
+from typing import Any
+
 import structlog
 
 from app.core.game_definitions import load_all_game_configs
@@ -22,10 +24,10 @@ async def compute_stats_job(triggered_by: str = "scheduler") -> None:
     )
 
 
-async def _do_compute_stats() -> dict:
+async def _do_compute_stats() -> dict[str, Any]:
     """Core logic — compute stats for every active game."""
     configs = load_all_game_configs()
-    results = {}
+    results: dict[str, Any] = {}
 
     async for session in get_session():
         game_repo = GameRepository(session)

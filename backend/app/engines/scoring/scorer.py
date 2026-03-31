@@ -1,6 +1,7 @@
 """Grid scorer — orchestrates all criteria with weighted scoring."""
 
 from dataclasses import dataclass, field
+from typing import Any
 
 from app.core.game_definitions import GameConfig
 
@@ -80,7 +81,7 @@ class GridScorer:
 
     weights: dict[str, float] = field(default_factory=lambda: PROFILES["equilibre"].copy())
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self._frequency = FrequencyCriterion()
         self._gap = GapCriterion()
         self._cooccurrence = CooccurrenceCriterion()
@@ -98,7 +99,7 @@ class GridScorer:
     def score(
         self,
         grid: list[int],
-        statistics: dict,
+        statistics: dict[str, Any],
         game: GameConfig,
     ) -> ScoredResult:
         """Score a grid against a statistics snapshot (dict form)."""
@@ -139,7 +140,7 @@ class GridScorer:
         self,
         grid: list[int],
         stars: list[int],
-        statistics: dict,
+        statistics: dict[str, Any],
         game: GameConfig,
     ) -> ScoredResult:
         """Score a grid including star/complementary numbers."""

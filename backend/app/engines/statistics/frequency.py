@@ -1,5 +1,7 @@
 """Frequency analysis engine."""
 
+from typing import Any
+
 import numpy as np
 
 from app.core.game_definitions import GameConfig
@@ -10,13 +12,13 @@ from .base import BaseStatisticsEngine
 class FrequencyEngine(BaseStatisticsEngine):
     """Compute frequency statistics for each number."""
 
-    def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         n_draws = draws.shape[0]
         if n_draws == 0:
             return {}
 
         theoretical_p = game.numbers_drawn / game.numbers_pool
-        frequencies = {}
+        frequencies: dict[int | str, Any] = {}
 
         for num in range(game.min_number, game.max_number + 1):
             mask = np.any(draws == num, axis=1)

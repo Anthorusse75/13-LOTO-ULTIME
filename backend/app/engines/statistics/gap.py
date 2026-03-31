@@ -1,5 +1,7 @@
 """Gap (retard) analysis engine."""
 
+from typing import Any
+
 import numpy as np
 
 from app.core.game_definitions import GameConfig
@@ -10,13 +12,13 @@ from .base import BaseStatisticsEngine
 class GapEngine(BaseStatisticsEngine):
     """Compute gap statistics for each number."""
 
-    def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         n_draws = draws.shape[0]
         if n_draws == 0:
             return {}
 
         expected_gap = round(game.numbers_pool / game.numbers_drawn, 2)
-        gaps = {}
+        gaps: dict[int | str, Any] = {}
 
         for num in range(game.min_number, game.max_number + 1):
             mask = np.any(draws == num, axis=1)

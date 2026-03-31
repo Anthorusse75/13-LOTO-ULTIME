@@ -1,5 +1,7 @@
 """Distribution analysis engine."""
 
+from typing import Any
+
 import numpy as np
 from scipy import stats as sp_stats
 
@@ -11,7 +13,7 @@ from .base import BaseStatisticsEngine
 class DistributionEngine(BaseStatisticsEngine):
     """Compute distribution statistics: entropy, chi-2, sums, even/odd."""
 
-    def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         n_draws = draws.shape[0]
         if n_draws == 0:
             return {}

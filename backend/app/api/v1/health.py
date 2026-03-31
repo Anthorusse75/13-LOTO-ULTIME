@@ -7,7 +7,7 @@ settings = get_settings()
 
 
 @router.get("/info")
-async def system_info():
+async def system_info() -> dict[str, str]:
     """Informations système."""
     return {
         "app": settings.APP_NAME,

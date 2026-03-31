@@ -3,6 +3,7 @@
 import asyncio
 import time
 from datetime import UTC, datetime
+from typing import Any
 
 import structlog
 
@@ -19,6 +20,7 @@ from app.engines.optimization import (
 )
 from app.engines.scoring.scorer import GridScorer, ScoredResult
 from app.models.grid import ScoredGrid
+from app.models.statistics import StatisticsSnapshot
 from app.repositories.grid_repository import GridRepository
 from app.repositories.portfolio_repository import PortfolioRepository
 from app.repositories.statistics_repository import StatisticsRepository
@@ -89,7 +91,7 @@ class GridService:
         """Return a single grid by ID."""
         return await self._grid_repo.get(grid_id)
 
-    def _build_statistics(self, snapshot) -> dict:
+    def _build_statistics(self, snapshot: StatisticsSnapshot) -> dict[str, Any]:
         """Build statistics dict from a snapshot."""
         stats = {
             "frequency": snapshot.frequencies,

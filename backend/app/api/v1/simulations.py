@@ -32,7 +32,7 @@ async def simulate_grid(
     game_id: int = Path(..., gt=0),
     game_config: GameConfig = Depends(get_game_config),
     service: SimulationService = Depends(get_simulation_service),
-):
+) -> MonteCarloGridResponse:
     """Run Monte Carlo simulation on a single grid."""
 
     result, elapsed_ms = await service.simulate_grid(
@@ -64,7 +64,7 @@ async def simulate_portfolio(
     game_id: int = Path(..., gt=0),
     game_config: GameConfig = Depends(get_game_config),
     service: SimulationService = Depends(get_simulation_service),
-):
+) -> MonteCarloPortfolioResponse:
     """Run Monte Carlo simulation on a portfolio of grids."""
 
     result, elapsed_ms = await service.simulate_portfolio(
@@ -94,7 +94,7 @@ async def analyze_stability(
     game_id: int = Path(..., gt=0),
     game_config: GameConfig = Depends(get_game_config),
     service: SimulationService = Depends(get_simulation_service),
-):
+) -> StabilityResponse:
     """Bootstrap stability analysis for a grid."""
 
     try:
@@ -130,7 +130,7 @@ async def compare_with_random(
     game_id: int = Path(..., gt=0),
     game_config: GameConfig = Depends(get_game_config),
     service: SimulationService = Depends(get_simulation_service),
-):
+) -> ComparisonResponse:
     """Compare a grid's score against random grids."""
 
     try:

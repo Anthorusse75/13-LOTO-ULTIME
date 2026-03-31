@@ -1,5 +1,7 @@
 """Temporal trend analysis engine."""
 
+from typing import Any
+
 import numpy as np
 
 from app.core.game_definitions import GameConfig
@@ -16,7 +18,7 @@ class TemporalEngine(BaseStatisticsEngine):
     def __init__(self, windows: list[int] | None = None):
         self.WINDOWS = windows or DEFAULT_WINDOWS
 
-    def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         n_draws = draws.shape[0]
         if n_draws == 0:
             return {"windows": []}
@@ -64,7 +66,7 @@ class TemporalEngine(BaseStatisticsEngine):
 
         return {"windows": windows_data, "momentum": momentum}
 
-    def _compute_momentum(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def _compute_momentum(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         """Compute momentum via linear regression on sliding window frequencies.
 
         Only returns trends with R² > MIN_R2_THRESHOLD.
@@ -74,7 +76,7 @@ class TemporalEngine(BaseStatisticsEngine):
         if len(available_windows) < 2:
             return {}
 
-        momentum = {}
+        momentum: dict[int | str, Any] = {}
         x = np.arange(len(available_windows), dtype=float)
         x_mean = x.mean()
         ss_xx = float(((x - x_mean) ** 2).sum())

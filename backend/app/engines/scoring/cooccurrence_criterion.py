@@ -1,5 +1,7 @@
 """Cooccurrence scoring criterion."""
 
+from typing import Any
+
 from app.core.game_definitions import GameConfig
 
 from .base import BaseScoringCriterion
@@ -8,8 +10,8 @@ from .base import BaseScoringCriterion
 class CooccurrenceCriterion(BaseScoringCriterion):
     """Score based on pair affinities — favours historically co-drawn numbers."""
 
-    def compute(self, grid: list[int], game: GameConfig, **kwargs) -> float:
-        cooccurrences: dict = kwargs["cooccurrences"]
+    def compute(self, grid: list[int], game: GameConfig, **kwargs: Any) -> float:
+        cooccurrences: dict[str, Any] = kwargs["cooccurrences"]
         pairs = cooccurrences.get("pairs", {})
 
         all_affinities = [v["affinity"] for v in pairs.values()]

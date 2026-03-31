@@ -5,7 +5,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from app.core.exceptions import GameNotFoundError, InsufficientDataError
-from app.core.game_definitions import load_all_game_configs
+from app.core.game_definitions import GameConfig, load_all_game_configs
 from app.dependencies import (
     get_draw_repository,
     get_game_config,
@@ -13,6 +13,7 @@ from app.dependencies import (
     get_statistics_service,
     require_role,
 )
+from app.models.statistics import StatisticsSnapshot
 from app.models.user import User, UserRole
 from app.repositories.draw_repository import DrawRepository
 from app.repositories.game_repository import GameRepository
@@ -36,7 +37,7 @@ limiter = Limiter(key_func=get_remote_address)
 router = APIRouter()
 
 
-async def _get_snapshot(game_id: int, stats_service: StatisticsService):
+async def _get_snapshot(game_id: int, stats_service: StatisticsService) -> StatisticsSnapshot:
     """Fetch the latest snapshot or raise 404."""
     snapshot = await stats_service.get_latest(game_id)
     if snapshot is None:
@@ -53,7 +54,7 @@ async def _get_snapshot(game_id: int, stats_service: StatisticsService):
 async def get_statistics(
     game_id: int,
     stats_service: StatisticsService = Depends(get_statistics_service),
-):
+) -> StatisticsResponse:
     """Get the full latest statistics summary."""
     snapshot = await _get_snapshot(game_id, stats_service)
 
@@ -109,8 +110,8 @@ async def get_frequencies(
     last_n: int | None = Query(None, ge=10, le=2000, description="Limit to the last N draws"),
     stats_service: StatisticsService = Depends(get_statistics_service),
     draw_repo: DrawRepository = Depends(get_draw_repository),
-    game_config=Depends(get_game_config),
-):
+    game_config: GameConfig = Depends(get_game_config),
+) -> list[FrequencyItem]:
     """Get detailed frequency data for all numbers.
 
     Use `last_n` to restrict the analysis to the most recent N draws.
@@ -137,8 +138,8 @@ async def get_gaps(
     last_n: int | None = Query(None, ge=10, le=2000, description="Limit to the last N draws"),
     stats_service: StatisticsService = Depends(get_statistics_service),
     draw_repo: DrawRepository = Depends(get_draw_repository),
-    game_config=Depends(get_game_config),
-):
+    game_config: GameConfig = Depends(get_game_config),
+) -> list[GapItem]:
     """Get detailed gap data for all numbers.
 
     Use `last_n` to restrict the analysis to the most recent N draws.
@@ -162,7 +163,7 @@ async def get_cooccurrences(
     game_id: int,
     top_n: int = Query(50, ge=1, le=500),
     stats_service: StatisticsService = Depends(get_statistics_service),
-):
+) -> CooccurrenceResponse:
     """Get cooccurrence pair data."""
     snapshot = await _get_snapshot(game_id, stats_service)
     cooc = snapshot.cooccurrence_matrix
@@ -185,7 +186,7 @@ async def get_cooccurrences(
 async def get_temporal(
     game_id: int,
     stats_service: StatisticsService = Depends(get_statistics_service),
-):
+) -> TemporalResponse:
     """Get temporal trend data."""
     snapshot = await _get_snapshot(game_id, stats_service)
     return TemporalResponse(**snapshot.temporal_trends)
@@ -198,7 +199,7 @@ async def get_temporal(
 async def get_distribution(
     game_id: int,
     stats_service: StatisticsService = Depends(get_statistics_service),
-):
+) -> DistributionResponse:
     """Get distribution statistics."""
     snapshot = await _get_snapshot(game_id, stats_service)
     d = snapshot.distribution_stats
@@ -223,7 +224,7 @@ async def get_bayesian(
     game_id: int,
     stats_service: StatisticsService = Depends(get_statistics_service),
     _user: User = Depends(require_role(UserRole.UTILISATEUR)),
-):
+) -> list[BayesianItem]:
     """Get Bayesian posterior estimates."""
     snapshot = await _get_snapshot(game_id, stats_service)
     items = [
@@ -241,7 +242,7 @@ async def get_graph(
     game_id: int,
     stats_service: StatisticsService = Depends(get_statistics_service),
     _user: User = Depends(require_role(UserRole.UTILISATEUR)),
-):
+) -> GraphResponse:
     """Get graph analysis metrics."""
     snapshot = await _get_snapshot(game_id, stats_service)
     g = snapshot.graph_metrics
@@ -270,7 +271,7 @@ async def recompute_statistics(
     game_repo: GameRepository = Depends(get_game_repository),
     stats_service: StatisticsService = Depends(get_statistics_service),
     _user: User = Depends(require_role(UserRole.ADMIN)),
-):
+) -> StatisticsResponse:
     """Force full recomputation of all statistics."""
     game_def = await game_repo.get(game_id)
     if game_def is None:

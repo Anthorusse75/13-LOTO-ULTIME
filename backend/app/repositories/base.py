@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,7 +18,7 @@ class BaseRepository(Generic[T]):
     async def get(self, id: int) -> T | None:
         return await self._session.get(self._model_class, id)
 
-    async def get_all(self, **filters) -> list[T]:
+    async def get_all(self, **filters: Any) -> list[T]:
         stmt = select(self._model_class).filter_by(**filters)
         result = await self._session.execute(stmt)
         return list(result.scalars().all())
@@ -38,7 +38,7 @@ class BaseRepository(Generic[T]):
         await self._session.delete(entity)
         await self._session.flush()
 
-    async def count(self, **filters) -> int:
+    async def count(self, **filters: Any) -> int:
         stmt = select(func.count()).select_from(
             select(self._model_class).filter_by(**filters).subquery()
         )

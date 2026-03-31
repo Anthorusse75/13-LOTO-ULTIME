@@ -26,7 +26,7 @@ async def generate_portfolio(
     game_id: int = Path(..., gt=0),
     game_config: GameConfig = Depends(get_game_config),
     service: GridService = Depends(get_grid_service),
-):
+) -> PortfolioGenerateResponse:
     """Generate an optimized portfolio of diverse, high-scoring grids."""
 
     try:
@@ -59,7 +59,7 @@ async def delete_portfolio(
     portfolio_id: int = Path(..., gt=0),
     game_id: int = Path(..., gt=0),
     service: GridService = Depends(get_grid_service),
-):
+) -> None:
     """Delete a portfolio by ID."""
     deleted = await service.delete_portfolio(portfolio_id)
     if not deleted:

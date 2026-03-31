@@ -4,6 +4,7 @@ import asyncio
 import shutil
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import structlog
 
@@ -22,7 +23,7 @@ async def backup_db_job(triggered_by: str = "scheduler") -> None:
     )
 
 
-async def _do_backup() -> dict:
+async def _do_backup() -> dict[str, Any]:
     """Backup the database — SQLite file copy or PostgreSQL pg_dump."""
     settings = get_settings()
     db_url = settings.DATABASE_URL
@@ -35,7 +36,7 @@ async def _do_backup() -> dict:
         return {"status": "skipped", "reason": f"unsupported database: {db_url.split('://')[0]}"}
 
 
-async def _backup_sqlite(db_url: str) -> dict:
+async def _backup_sqlite(db_url: str) -> dict[str, Any]:
     """Copy the SQLite database file to a timestamped backup."""
     if ":///" in db_url:
         db_path_str = db_url.split(":///", 1)[1]
@@ -76,7 +77,7 @@ async def _backup_sqlite(db_url: str) -> dict:
     }
 
 
-async def _backup_postgresql(db_url: str) -> dict:
+async def _backup_postgresql(db_url: str) -> dict[str, Any]:
     """Dump the PostgreSQL database using pg_dump."""
     # Parse asyncpg URL → psycopg-style for pg_dump
     # postgresql+asyncpg://user:pass@host:port/dbname

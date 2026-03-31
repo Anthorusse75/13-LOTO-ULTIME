@@ -1,6 +1,7 @@
 """Job execution runner with retry, logging, and historisation."""
 
 import asyncio
+from collections.abc import Callable, Coroutine
 from datetime import UTC, datetime
 from typing import Any
 
@@ -18,7 +19,7 @@ RETRY_DELAYS = [0, 5, 30]  # seconds: immediate, 5s, 30s
 
 async def execute_with_tracking(
     job_name: str,
-    func,
+    func: Callable[..., Coroutine[Any, Any, Any]],
     *args: Any,
     game_id: int | None = None,
     triggered_by: str = "scheduler",
@@ -78,7 +79,7 @@ async def execute_with_tracking(
 
     # Persist final state
     async for session in get_session():
-        merged = await session.merge(job_execution)
+        merged: JobExecution = await session.merge(job_execution)
         await session.commit()
         return merged
 

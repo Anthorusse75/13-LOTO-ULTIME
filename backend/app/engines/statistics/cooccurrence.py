@@ -1,5 +1,7 @@
 """Cooccurrence analysis engine."""
 
+from typing import Any
+
 import numpy as np
 
 from app.core.game_definitions import GameConfig
@@ -10,7 +12,7 @@ from .base import BaseStatisticsEngine
 class CooccurrenceEngine(BaseStatisticsEngine):
     """Compute cooccurrence matrix and pair affinities."""
 
-    def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         n_draws = draws.shape[0]
         if n_draws == 0:
             return {"pairs": {}, "expected_pair_count": 0, "matrix_shape": [0, 0]}

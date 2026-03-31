@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi import APIRouter, Depends
 
 from app.dependencies import get_game_repository
@@ -10,7 +12,7 @@ router = APIRouter()
 @router.get("", response_model=list[GameDefinitionResponse])
 async def list_games(
     game_repo: GameRepository = Depends(get_game_repository),
-):
+) -> Any:
     """Liste tous les jeux actifs."""
     games = await game_repo.get_active_games()
     return games
@@ -20,7 +22,7 @@ async def list_games(
 async def get_game(
     slug: str,
     game_repo: GameRepository = Depends(get_game_repository),
-):
+) -> Any:
     """Récupère un jeu par son slug."""
     from app.core.exceptions import GameNotFoundError
 

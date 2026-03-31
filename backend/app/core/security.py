@@ -1,5 +1,6 @@
 import uuid
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 import bcrypt
 from jose import jwt
@@ -16,7 +17,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(
-    data: dict, secret_key: str, algorithm: str = "HS256", expires_minutes: int = 60
+    data: dict[str, Any], secret_key: str, algorithm: str = "HS256", expires_minutes: int = 60
 ) -> str:
     """Crée un token JWT signé avec un JTI unique.
 
@@ -25,11 +26,11 @@ def create_access_token(
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(minutes=expires_minutes)
     to_encode.update({"exp": expire, "type": "access", "jti": uuid.uuid4().hex})
-    return jwt.encode(to_encode, secret_key, algorithm=algorithm)
+    return str(jwt.encode(to_encode, secret_key, algorithm=algorithm))
 
 
 def create_refresh_token(
-    data: dict, secret_key: str, algorithm: str = "HS256", expires_days: int = 7
+    data: dict[str, Any], secret_key: str, algorithm: str = "HS256", expires_days: int = 7
 ) -> str:
     """Crée un refresh token JWT signé avec un JTI unique.
 
@@ -38,7 +39,7 @@ def create_refresh_token(
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(days=expires_days)
     to_encode.update({"exp": expire, "type": "refresh", "jti": uuid.uuid4().hex})
-    return jwt.encode(to_encode, secret_key, algorithm=algorithm)
+    return str(jwt.encode(to_encode, secret_key, algorithm=algorithm))
 
 
 def decode_access_token(
@@ -46,7 +47,7 @@ def decode_access_token(
     secret_key: str,
     algorithm: str = "HS256",
     previous_secret_key: str | None = None,
-) -> dict:
+) -> dict[str, Any]:
     """Décode et valide un token JWT.
 
     Pour RS256 : `secret_key` doit contenir le contenu PEM de la clé *publique*.
@@ -54,9 +55,9 @@ def decode_access_token(
     car la rotation se fait par rotation de clé publique.
     """
     try:
-        return jwt.decode(token, secret_key, algorithms=[algorithm])
+        return dict(jwt.decode(token, secret_key, algorithms=[algorithm]))
     except Exception:
         if previous_secret_key and algorithm == "HS256":
             # Rotation gracieuse uniquement pour HS256 (clé symétrique)
-            return jwt.decode(token, previous_secret_key, algorithms=[algorithm])
+            return dict(jwt.decode(token, previous_secret_key, algorithms=[algorithm]))
         raise

@@ -1,5 +1,7 @@
 """Pattern penalty criterion."""
 
+from typing import Any
+
 from app.core.game_definitions import GameConfig
 
 from .base import BaseScoringCriterion
@@ -8,7 +10,7 @@ from .base import BaseScoringCriterion
 class PatternPenalty(BaseScoringCriterion):
     """Detect and penalise overly regular patterns (arithmetic sequences, etc.)."""
 
-    def compute(self, grid: list[int], game: GameConfig, **kwargs) -> float:
+    def compute(self, grid: list[int], game: GameConfig, **kwargs: Any) -> float:
         sorted_grid = sorted(grid)
         k = len(grid)
         penalties: list[float] = []

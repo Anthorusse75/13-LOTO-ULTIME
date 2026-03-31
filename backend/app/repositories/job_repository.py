@@ -45,4 +45,4 @@ class JobRepository(BaseRepository[JobExecution]):
         """Delete job execution records older than cutoff. Returns count deleted."""
         stmt = delete(JobExecution).where(JobExecution.started_at < cutoff)
         result = await self._session.execute(stmt)
-        return result.rowcount
+        return int(result.rowcount)  # type: ignore[attr-defined]

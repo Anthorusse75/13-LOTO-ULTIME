@@ -1,5 +1,7 @@
 """Bayesian (Beta-Binomial) analysis engine."""
 
+from typing import Any
+
 import numpy as np
 from scipy.stats import beta as beta_dist
 
@@ -14,12 +16,12 @@ class BayesianEngine(BaseStatisticsEngine):
     ALPHA_PRIOR = 0.5  # Jeffreys prior
     BETA_PRIOR = 0.5
 
-    def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         n_draws = draws.shape[0]
         if n_draws == 0:
             return {}
 
-        results = {}
+        results: dict[int | str, Any] = {}
 
         for num in range(game.min_number, game.max_number + 1):
             count = int(np.any(draws == num, axis=1).sum())

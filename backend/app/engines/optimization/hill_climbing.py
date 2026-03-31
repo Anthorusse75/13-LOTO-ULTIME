@@ -1,5 +1,7 @@
 """Hill Climbing optimizer with random restarts."""
 
+from typing import Any
+
 from app.core.game_definitions import GameConfig
 from app.engines.scoring.scorer import GridScorer, ScoredResult
 
@@ -12,7 +14,7 @@ class HillClimbing(BaseOptimizer):
     def __init__(
         self,
         scorer: GridScorer,
-        statistics: dict,
+        statistics: dict[str, Any],
         game: GameConfig,
         n_restarts: int = 100,
         max_no_improve: int = 50,

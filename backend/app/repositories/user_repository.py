@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,7 +22,7 @@ class UserRepository(BaseRepository[User]):
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def count(self) -> int:
+    async def count(self, **filters: Any) -> int:
         stmt = select(func.count()).select_from(User)
         result = await self._session.execute(stmt)
         return result.scalar_one()

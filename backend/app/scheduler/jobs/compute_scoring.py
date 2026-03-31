@@ -1,5 +1,7 @@
 """Job: rescore existing grids against latest statistics."""
 
+from typing import Any
+
 import structlog
 
 from app.core.game_definitions import load_all_game_configs
@@ -22,10 +24,10 @@ async def compute_scoring_job(triggered_by: str = "scheduler") -> None:
     )
 
 
-async def _do_compute_scoring() -> dict:
+async def _do_compute_scoring() -> dict[str, Any]:
     """Core logic — rescore grids against latest stats snapshot."""
     configs = load_all_game_configs()
-    results = {}
+    results: dict[str, Any] = {}
 
     async for session in get_session():
         game_repo = GameRepository(session)

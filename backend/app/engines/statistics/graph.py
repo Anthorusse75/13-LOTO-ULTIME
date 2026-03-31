@@ -1,5 +1,7 @@
 """Graph analysis engine (cooccurrence graph, centrality, communities)."""
 
+from typing import Any
+
 import networkx as nx
 import numpy as np
 from networkx.algorithms.community import louvain_communities
@@ -13,7 +15,7 @@ from .cooccurrence import CooccurrenceEngine
 class GraphEngine(BaseStatisticsEngine):
     """Build cooccurrence graph and compute centrality + community metrics."""
 
-    def compute(self, draws: np.ndarray, game: GameConfig) -> dict:
+    def compute(self, draws: np.ndarray, game: GameConfig) -> dict[int | str, Any]:
         n_draws = draws.shape[0]
         if n_draws == 0:
             return {

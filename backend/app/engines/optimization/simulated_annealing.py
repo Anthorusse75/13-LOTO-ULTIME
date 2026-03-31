@@ -1,5 +1,7 @@
 """Simulated Annealing optimizer."""
 
+from typing import Any
+
 import numpy as np
 
 from app.core.game_definitions import GameConfig
@@ -14,7 +16,7 @@ class SimulatedAnnealing(BaseOptimizer):
     def __init__(
         self,
         scorer: GridScorer,
-        statistics: dict,
+        statistics: dict[str, Any],
         game: GameConfig,
         t_initial: float = 1.0,
         t_min: float = 0.001,

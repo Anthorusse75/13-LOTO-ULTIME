@@ -1,6 +1,7 @@
 """Abstract base class for optimization meta-heuristics."""
 
 from abc import ABC, abstractmethod
+from typing import Any
 
 import numpy as np
 
@@ -14,7 +15,7 @@ class BaseOptimizer(ABC):
     def __init__(
         self,
         scorer: GridScorer,
-        statistics: dict,
+        statistics: dict[str, Any],
         game: GameConfig,
         seed: int | None = None,
     ):
@@ -38,6 +39,8 @@ class BaseOptimizer(ABC):
         """Generate random stars (empty list if game has no stars)."""
         if not self._has_stars:
             return []
+        assert self.game.stars_pool is not None
+        assert self.game.stars_drawn is not None
         return sorted(
             self.rng.choice(
                 range(1, self.game.stars_pool + 1),
@@ -62,6 +65,7 @@ class BaseOptimizer(ABC):
             return stars
         new_stars = stars.copy()
         idx = self.rng.integers(0, len(new_stars))
+        assert self.game.stars_pool is not None
         available = [n for n in range(1, self.game.stars_pool + 1) if n not in new_stars]
         new_stars[idx] = int(self.rng.choice(available))
         return sorted(new_stars)

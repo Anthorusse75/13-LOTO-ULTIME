@@ -1,5 +1,7 @@
 """Job: fetch draws from external source for a given game."""
 
+from typing import Any
+
 import structlog
 
 from app.core.circuit_breaker import get_circuit_breaker
@@ -40,7 +42,7 @@ async def fetch_draws_job(game_slug: str, triggered_by: str = "scheduler") -> No
     )
 
 
-async def _do_fetch(game_slug: str) -> dict:
+async def _do_fetch(game_slug: str) -> dict[str, Any]:
     """Core fetch logic — returns result summary."""
     # Circuit breaker check
     cb = get_circuit_breaker(f"scraper_{game_slug}")

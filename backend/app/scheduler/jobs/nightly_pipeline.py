@@ -1,5 +1,8 @@
 """Job: nightly pipeline orchestrator — chains all steps sequentially."""
 
+from collections.abc import Callable, Coroutine
+from typing import Any
+
 import structlog
 
 from app.scheduler.runner import execute_with_tracking
@@ -16,7 +19,7 @@ async def nightly_pipeline_job(triggered_by: str = "scheduler") -> None:
     )
 
 
-async def _do_nightly_pipeline() -> dict:
+async def _do_nightly_pipeline() -> dict[str, Any]:
     """Core logic — chain fetch → stats → scoring → top grids → portfolio."""
     from app.scheduler.jobs.compute_scoring import _do_compute_scoring
     from app.scheduler.jobs.compute_statistics import _do_compute_stats
@@ -24,8 +27,8 @@ async def _do_nightly_pipeline() -> dict:
     from app.scheduler.jobs.fetch_draws import _do_fetch
     from app.scheduler.jobs.optimize_portfolio import _do_optimize_portfolio
 
-    results: dict = {}
-    steps = [
+    results: dict[str, Any] = {}
+    steps: list[tuple[str, Callable[..., Coroutine[Any, Any, dict[str, Any]]]]] = [
         ("fetch_loto", lambda: _do_fetch("loto-fdj")),
         ("fetch_euromillions", lambda: _do_fetch("euromillions")),
         ("fetch_keno", lambda: _do_fetch("keno")),
