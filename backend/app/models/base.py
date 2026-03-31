@@ -30,25 +30,35 @@ def init_db(database_url: str) -> None:
     """Initialise le moteur et la session factory."""
     global _engine, _session_factory
 
-    connect_args = {}
+    connect_args: dict = {}
     pool_class = None
-    if database_url.startswith("sqlite"):
+    is_sqlite = database_url.startswith("sqlite")
+
+    if is_sqlite:
         connect_args["check_same_thread"] = False
         if ":memory:" in database_url:
             pool_class = StaticPool
         else:
             pool_class = NullPool
 
-    _engine = create_async_engine(
-        database_url,
-        echo=False,
-        connect_args=connect_args,
-        poolclass=pool_class,
-    )
+    engine_kwargs: dict = {
+        "echo": False,
+    }
+    if connect_args:
+        engine_kwargs["connect_args"] = connect_args
+    if pool_class is not None:
+        engine_kwargs["poolclass"] = pool_class
+    elif not is_sqlite:
+        # PostgreSQL : pool de connexions avec des valeurs raisonnables
+        engine_kwargs["pool_size"] = 10
+        engine_kwargs["max_overflow"] = 20
+        engine_kwargs["pool_pre_ping"] = True
+
+    _engine = create_async_engine(database_url, **engine_kwargs)
     _session_factory = async_sessionmaker(_engine, expire_on_commit=False)
 
     # Activate PRAGMA foreign_keys for SQLite connections
-    if database_url.startswith("sqlite"):
+    if is_sqlite:
 
         @event.listens_for(_engine.sync_engine, "connect")
         def _set_sqlite_pragma(dbapi_conn, connection_record):

@@ -71,7 +71,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] `app/models/job.py` — JobExecution + JobStatus enum
 - [x] Alembic initialisé
 - [x] Migration initiale créée et testée (SQLite)
-- [ ] Migration testée (PostgreSQL) → reporté Phase 10
+- [x] Migration testée (PostgreSQL) — support asyncpg, pool_size=10, max_overflow=20, pool_pre_ping
 
 ### 2.4 Repositories
 - [x] `app/repositories/base.py` — BaseRepository[T] générique
@@ -326,7 +326,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 ### 10.5 Données & Migration
 - [x] Seed games (5 jeux) + seed admin au démarrage (lifespan `_seed_games()` + `_seed_admin()`)
 - [x] Seed data tirages pour démo — `_maybe_initial_fetch()` auto-import au premier démarrage (7183 tirages, 5 jeux)
-- [ ] Migration testée (PostgreSQL) — jamais testé sur PostgreSQL
+- [x] Migration testée (PostgreSQL) — PostgreSQL 16 en Docker, admin switch SQLite↔PG, shared-db network
 
 ### 10.6 Sécurité & Release
 - [x] Revue sécurité OWASP Top 10 (audit réalisé et corrections appliquées)
@@ -341,7 +341,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 | Phase                           | Tâches  | Fait    | Statut               |
 | ------------------------------- | ------- | ------- | -------------------- |
 | 1. Architecture & Documentation | 20      | 20/20   | ✅ Complète           |
-| 2. Fondations Backend           | 36      | 35/36   | 🟡 97% (PG non testé) |
+| 2. Fondations Backend           | 36      | 36/36   | ✅ Complète           |
 | 3. Moteur Statistique           | 18      | 18/18   | ✅ Complète           |
 | 4. Moteur de Scoring            | 13      | 13/13   | ✅ Complète           |
 | 5. Moteur d'Optimisation        | 13      | 13/13   | ✅ Complète           |
@@ -349,12 +349,12 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 | 7. Interface Frontend           | 49      | 45/49   | 🟡 92% (4 manquants)  |
 | 8. Scheduler & Jobs             | 21      | 21/21   | ✅ Complète           |
 | 9. Sécurité & Auth              | 20      | 20/20   | ✅ Complète           |
-| 10. Polish & Déploiement        | 19      | 17/19   | 🟡 89% (PG non testé) |
-| **TOTAL**                       | **219** | **212** | **97%**              |
+| 10. Polish & Déploiement        | 19      | 18/19   | 🟡 95% (1 restant)   |
+| **TOTAL**                       | **219** | **214** | **98%**              |
 
 ### Éléments restants (non bloquants)
 
-- [ ] Migration testée PostgreSQL (Phase 2 + 10) — jamais testé, SQLite utilisé en prod
+- [x] Migration testée PostgreSQL (Phase 2 + 10) — PostgreSQL 16 intégré, admin DB switch, shared-db network
 - [ ] CooccurrenceMatrix D3.js heatmap (Phase 7) — listes texte triées à la place
 - [ ] LCP < 2.5s mesuré (Phase 7) — web-vitals non installé
 - [ ] Code-splitting React.lazy (Phase 7) — imports statiques, bundle <300 KB donc non critique

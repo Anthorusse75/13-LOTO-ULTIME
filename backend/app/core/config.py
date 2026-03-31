@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     DEBUG: bool = False
 
-    # Base de données
+    # Base de données (SQLite pour dev local, PostgreSQL pour Docker/prod)
     DATABASE_URL: str = "sqlite+aiosqlite:///./loto_ultime.db"
 
     # Sécurité — HS256 (symétrique, défaut)

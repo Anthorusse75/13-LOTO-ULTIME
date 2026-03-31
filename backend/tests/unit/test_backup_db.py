@@ -23,8 +23,8 @@ class TestBackupDb:
             result = await _do_backup()
 
         assert result["status"] == "success"
-        assert "backup_path" in result
-        backup = Path(result["backup_path"])
+        assert "backup" in result
+        backup = Path(result["backup"])
         assert backup.exists()
 
     @pytest.mark.asyncio
@@ -42,11 +42,11 @@ class TestBackupDb:
         assert len(backups) <= 5
 
     @pytest.mark.asyncio
-    async def test_do_backup_skips_non_sqlite(self):
+    async def test_do_backup_skips_unsupported_db(self):
         from app.scheduler.jobs.backup_db import _do_backup
 
         with patch("app.scheduler.jobs.backup_db.get_settings") as mock_settings:
-            mock_settings.return_value.DATABASE_URL = "postgresql://localhost/test"
+            mock_settings.return_value.DATABASE_URL = "mysql://localhost/test"
             result = await _do_backup()
 
         assert result["status"] == "skipped"

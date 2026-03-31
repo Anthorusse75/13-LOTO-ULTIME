@@ -47,15 +47,11 @@ async def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     url = os.environ.get("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
 
-    connect_args = {}
+    engine_kwargs: dict = {"poolclass": pool.NullPool}
     if url and url.startswith("sqlite"):
-        connect_args["check_same_thread"] = False
+        engine_kwargs["connect_args"] = {"check_same_thread": False}
 
-    connectable = create_async_engine(
-        url,
-        poolclass=pool.NullPool,
-        connect_args=connect_args,
-    )
+    connectable = create_async_engine(url, **engine_kwargs)
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)

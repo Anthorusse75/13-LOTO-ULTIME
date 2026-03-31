@@ -66,7 +66,7 @@ Cocher `[x]` au fur et à mesure de l'avancement.
 - [x] `app/models/job.py` — JobExecution + JobStatus enum
 - [x] Alembic initialisé
 - [x] Migration initiale créée et testée (SQLite)
-- [ ] Migration testée (PostgreSQL) → reporté Phase 10
+- [x] Migration testée (PostgreSQL) — support asyncpg, pool_size=10, max_overflow=20, pool_pre_ping
 
 ### 2.4 Repositories
 - [x] `app/repositories/base.py` — BaseRepository[T] générique

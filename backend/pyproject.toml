@@ -27,6 +27,7 @@ dependencies = [
     "python-multipart>=0.0.9",
     "prometheus-client>=0.21.0",
     "slowapi>=0.1.9",
+    "asyncpg>=0.30.0",
 ]
 
 [project.optional-dependencies]
@@ -39,9 +40,6 @@ dev = [
     "mypy>=1.13.0",
     "pre-commit>=4.0.0",
     "factory-boy>=3.3.0",
-]
-postgres = [
-    "asyncpg>=0.30.0",
 ]
 
 [tool.pytest.ini_options]

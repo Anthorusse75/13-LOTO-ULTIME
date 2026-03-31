@@ -1,14 +1,35 @@
 services:
-  # ── Backend (FastAPI + SQLite) ─────────────────────────────
+  # ── PostgreSQL (réseau partagé shared-db) ──────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: loto-ultime-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-loto_ultime}
+      POSTGRES_USER: ${POSTGRES_USER:-loto}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-loto_secret}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - default
+      - shared-db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-loto} -d ${POSTGRES_DB:-loto_ultime}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Backend (FastAPI + PostgreSQL) ─────────────────────────
   backend:
     build: ./backend
     container_name: loto-ultime-backend
     expose:
       - "8000"
-    volumes:
-      - sqlite-data:/app/data
     environment:
-      - DATABASE_URL=sqlite+aiosqlite:////app/data/loto_ultime.db
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-loto}:${POSTGRES_PASSWORD:-loto_secret}@postgres:5432/${POSTGRES_DB:-loto_ultime}
       - SCHEDULER_ENABLED=true
       - SECRET_KEY=${SECRET_KEY:-change-me-in-production-min-32-chars!!}
       - APP_ENV=${APP_ENV:-production}
@@ -17,6 +38,9 @@ services:
       - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@loto-ultime.local}
       - ADMIN_INITIAL_PASSWORD=${ADMIN_INITIAL_PASSWORD:-ChangeMe123!}
       - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-30}
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test:
@@ -88,6 +112,11 @@ services:
       - monitoring
 
 volumes:
-  sqlite-data:
+  postgres-data:
   prometheus-data:
   grafana-data:
+
+networks:
+  shared-db:
+    name: shared-db
+    driver: bridge

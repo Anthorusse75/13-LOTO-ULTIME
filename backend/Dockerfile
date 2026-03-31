@@ -12,8 +12,10 @@ RUN pip install --no-cache-dir --prefix=/install .
 # ── Stage 2: Runtime ──
 FROM python:3.11-slim AS runtime
 
-# Non-root user
-RUN groupadd --gid 1000 appuser \
+# Install PostgreSQL client (for pg_dump backups) + create non-root user
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 1000 appuser \
     && useradd --uid 1000 --gid appuser --create-home appuser
 
 WORKDIR /app

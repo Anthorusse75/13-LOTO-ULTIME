@@ -346,8 +346,7 @@ def create_app() -> FastAPI:
         # ── Disk ──
         disk_info: dict = {}
         try:
-            db_path = settings.DATABASE_URL.replace("sqlite+aiosqlite:///", "")
-            usage = shutil.disk_usage(db_path if db_path.startswith("/") else ".")
+            usage = shutil.disk_usage(".")
             disk_info = {
                 "total_gb": round(usage.total / 1e9, 2),
                 "used_gb": round(usage.used / 1e9, 2),

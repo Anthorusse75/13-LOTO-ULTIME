@@ -1,13 +1,17 @@
 import { useJobs, useSchedulerStatus, useTriggerJob } from "@/hooks/useJobs";
 import { authService } from "@/services/authService";
+import { databaseService } from "@/services/databaseService";
+import type { DatabaseInfo } from "@/services/databaseService";
 import { gameService } from "@/services/gameService";
 import type { GameDefinition } from "@/types/game";
 import type { JobExecution, JobStatus } from "@/types/job";
 import type { User, UserRole } from "@/types/user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  ArrowRightLeft,
   CheckCircle2,
   Clock,
+  Copy,
   Database,
   Loader2,
   Play,
@@ -18,6 +22,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const JOB_LABELS: Record<string, string> = {
   fetch_loto: "Scraping Loto FDJ",
@@ -514,10 +519,187 @@ function GamesPanel() {
 
 function SettingsPanel() {
   const { data: status } = useSchedulerStatus();
+  const queryClient = useQueryClient();
+  const [switching, setSwitching] = useState(false);
+
+  const { data: dbInfo, isLoading: dbLoading } = useQuery<DatabaseInfo>({
+    queryKey: ["database-info"],
+    queryFn: databaseService.getInfo,
+    staleTime: 30_000,
+  });
+
+  const switchMutation = useMutation({
+    mutationFn: (engine: "sqlite" | "postgresql") =>
+      databaseService.switchEngine(engine),
+    onSuccess: (result) => {
+      setSwitching(false);
+      queryClient.invalidateQueries({ queryKey: ["database-info"] });
+      toast.success(
+        `Base de données basculée sur ${result.engine === "postgresql" ? "PostgreSQL" : "SQLite"}` +
+          (result.fetch_triggered
+            ? " — Téléchargement de l'historique en cours..."
+            : ` — ${result.draws_found} tirages trouvés`)
+      );
+    },
+    onError: (err: any) => {
+      setSwitching(false);
+      toast.error(
+        err?.response?.data?.detail || "Erreur lors du basculement"
+      );
+    },
+  });
+
+  const handleSwitch = () => {
+    if (!dbInfo || switching) return;
+    const target = dbInfo.engine === "sqlite" ? "postgresql" : "sqlite";
+    setSwitching(true);
+    switchMutation.mutate(target);
+  };
 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* ── Database card ── */}
+        <div className="bg-surface rounded-lg border border-border p-4 space-y-3 md:col-span-2">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Database size={16} className="text-accent-blue" />
+              Base de données
+            </h3>
+            <button
+              onClick={handleSwitch}
+              disabled={switching || dbLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-accent-blue/20 text-accent-blue hover:bg-accent-blue/30 disabled:opacity-50 transition-colors"
+            >
+              {switching ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <ArrowRightLeft size={14} />
+              )}
+              {switching
+                ? "Basculement..."
+                : `Basculer sur ${dbInfo?.engine === "sqlite" ? "PostgreSQL" : "SQLite"}`}
+            </button>
+          </div>
+
+          {dbLoading ? (
+            <div className="flex items-center gap-2 text-sm text-text-secondary">
+              <Loader2 size={14} className="animate-spin" /> Chargement...
+            </div>
+          ) : dbInfo ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Moteur</span>
+                  <span className="font-medium">
+                    {dbInfo.engine === "postgresql" ? (
+                      <span className="text-accent-blue">PostgreSQL</span>
+                    ) : (
+                      <span className="text-accent-amber">SQLite</span>
+                    )}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Version</span>
+                  <span className="text-xs font-mono">{dbInfo.version?.split(" ").slice(0, 2).join(" ") || "—"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Driver</span>
+                  <span>{dbInfo.driver}</span>
+                </div>
+                {dbInfo.host && (
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Host</span>
+                    <span className="font-mono text-xs">{dbInfo.host}:{dbInfo.port}</span>
+                  </div>
+                )}
+                {dbInfo.user && (
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Utilisateur</span>
+                    <span className="font-mono text-xs">{dbInfo.user}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Base</span>
+                  <span className="font-mono text-xs">{dbInfo.database}</span>
+                </div>
+              </div>
+
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Tirages</span>
+                  <span className="font-medium">{dbInfo.stats.draws.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Jeux</span>
+                  <span>{dbInfo.stats.games}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Utilisateurs</span>
+                  <span>{dbInfo.stats.users}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Migrations</span>
+                  <span>Alembic</span>
+                </div>
+              </div>
+
+              {/* PostgreSQL connection info for other projects */}
+              {dbInfo.engine === "postgresql" && dbInfo.connections && (
+                <div className="md:col-span-2 mt-1 space-y-2">
+                  <h4 className="text-xs font-semibold text-text-secondary">
+                    Informations de connexion PostgreSQL
+                  </h4>
+                  {(
+                    [
+                      ["internal", "🐳"],
+                      ["docker_network", "🔗"],
+                      ["external", "🌐"],
+                    ] as const
+                  ).map(([key, icon]) => {
+                    const conn =
+                      dbInfo.connections![
+                        key as keyof typeof dbInfo.connections
+                      ];
+                    return (
+                      <div
+                        key={key}
+                        className="p-3 rounded-md bg-background border border-border"
+                      >
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-xs font-semibold">
+                            {icon} {conn.label}
+                          </span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(conn.url);
+                              toast.success("URL copiée !");
+                            }}
+                            className="flex items-center gap-1 text-xs text-accent-blue hover:text-accent-blue/80"
+                          >
+                            <Copy size={12} /> Copier
+                          </button>
+                        </div>
+                        <code className="text-xs font-mono text-accent-green break-all">
+                          {conn.url}
+                        </code>
+                        {"network" in conn && conn.network && (
+                          <p className="text-xs text-text-secondary mt-1.5">
+                            Ajouter dans le docker-compose de l'autre projet :
+                            <code className="ml-1 text-accent-amber">
+                              networks: [shared-db]
+                            </code>
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ) : null}
+        </div>
+
         <div className="bg-surface rounded-lg border border-border p-4 space-y-3">
           <h3 className="text-sm font-semibold">Scheduler</h3>
           <div className="space-y-2 text-sm">
@@ -541,20 +723,6 @@ function SettingsPanel() {
             <div className="flex justify-between">
               <span className="text-text-secondary">Jobs en cours</span>
               <span>{status?.running_count ?? 0}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-surface rounded-lg border border-border p-4 space-y-3">
-          <h3 className="text-sm font-semibold">Base de données</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-text-secondary">Type</span>
-              <span>SQLite (aiosqlite)</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-secondary">Migrations</span>
-              <span>Alembic</span>
             </div>
           </div>
         </div>
