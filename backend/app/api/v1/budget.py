@@ -1,7 +1,10 @@
 """Budget API — optimize, history, and management of budget plans."""
 
+import structlog
 from fastapi import APIRouter, Depends, HTTPException, Path, Request
 from app.core.rate_limit import limiter
+
+logger = structlog.get_logger(__name__)
 
 from app.core.game_definitions import GameConfig
 from app.dependencies import get_budget_service, get_game_config, require_role
@@ -30,6 +33,13 @@ async def optimize_budget(
     user: User = Depends(get_current_user),
 ) -> BudgetOptimizeResponse:
     """Generate budget-optimized grid recommendations."""
+    logger.info(
+        "budget_optimize_request",
+        game_id=game_id,
+        budget=body.budget,
+        objective=body.objective,
+        user_id=user.id,
+    )
     if body.numbers:
         _validate_numbers(body.numbers, game_config)
 

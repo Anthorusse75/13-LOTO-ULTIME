@@ -977,11 +977,16 @@ class TestNightlyPipelineJob:
                 new_callable=AsyncMock,
                 return_value={"cleaned": 0},
             ),
+            patch(
+                "app.scheduler.jobs.cleanup_anonymous._do_cleanup_anonymous",
+                new_callable=AsyncMock,
+                return_value={"anonymous_grids_deleted": 0, "anonymous_portfolios_deleted": 0},
+            ),
         ):
             from app.scheduler.jobs.nightly_pipeline import _do_nightly_pipeline
 
             result = await _do_nightly_pipeline()
-            assert result["steps"] == 12
+            assert result["steps"] == 13
             for step in result["details"].values():
                 assert step["status"] == "success"
 

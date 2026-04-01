@@ -55,6 +55,7 @@ class GridScoreResponse(BaseModel):
     total_score: float
     score_breakdown: ScoreBreakdown
     star_score: float | None = None
+    star_breakdown: dict[str, float] | None = None
     explanation: ExplanationSchema | None = None
 
 

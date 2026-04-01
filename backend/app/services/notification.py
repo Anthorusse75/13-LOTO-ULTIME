@@ -53,6 +53,7 @@ class NotificationService:
         data: dict[str, Any] | None = None,
     ) -> UserNotification:
         """Create a single notification."""
+        logger.info("notification_created", user_id=user_id, type=notification_type)
         notif = UserNotification(
             user_id=user_id,
             type=notification_type,

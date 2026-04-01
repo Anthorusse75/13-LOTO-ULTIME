@@ -22,6 +22,7 @@ async def nightly_pipeline_job(triggered_by: str = "scheduler") -> None:
 async def _do_nightly_pipeline() -> dict[str, Any]:
     """Core logic — chain fetch → stats → scoring → top grids → portfolio."""
     from app.scheduler.jobs.check_played_grids import _do_check_played_grids
+    from app.scheduler.jobs.cleanup_anonymous import _do_cleanup_anonymous
     from app.scheduler.jobs.cleanup_notifications import _do_cleanup_notifications
     from app.scheduler.jobs.compute_hot_cold import _do_compute_hot_cold
     from app.scheduler.jobs.compute_scoring import _do_compute_scoring
@@ -46,6 +47,7 @@ async def _do_nightly_pipeline() -> dict[str, Any]:
         ("check_played_grids", _do_check_played_grids),
         ("create_grid_result_notifications", _do_create_grid_result_notifications),
         ("cleanup_notifications", _do_cleanup_notifications),
+        ("cleanup_anonymous_data", _do_cleanup_anonymous),
     ]
 
     for step_name, step_func in steps:

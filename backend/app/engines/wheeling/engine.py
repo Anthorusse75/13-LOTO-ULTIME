@@ -9,7 +9,11 @@ from dataclasses import dataclass, field
 from itertools import combinations
 from typing import Any
 
+import structlog
+
 from app.core.game_definitions import GameConfig
+
+logger = structlog.get_logger(__name__)
 
 from .cost_estimator import estimate_cost, estimate_grid_count
 from .coverage import coverage_rate, full_wheel_size, reduction_rate, total_t_combinations
@@ -138,6 +142,18 @@ class WheelingEngine:
             gain_scenarios = analyze_gains(raw_grids, numbers, prize_tiers, k)
 
         cost = estimate_cost(grid_count, self._config.grid_price)
+
+        logger.info(
+            "wheeling_generated",
+            game=self._config.slug,
+            numbers_count=len(numbers),
+            guarantee=t,
+            grid_count=grid_count,
+            coverage=round(cov, 4),
+            reduction=round(red, 4),
+            cost=cost,
+            elapsed_ms=round(elapsed_ms, 1),
+        )
 
         return WheelingResult(
             grids=grids,

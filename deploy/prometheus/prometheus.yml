@@ -5,6 +5,9 @@ global:
     app: loto-ultime
     environment: production
 
+rule_files:
+  - alert_rules.yml
+
 scrape_configs:
   - job_name: loto-ultime-backend
     static_configs:

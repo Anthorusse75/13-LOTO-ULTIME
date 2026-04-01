@@ -10,6 +10,10 @@ import math
 from dataclasses import dataclass, field
 from typing import Any
 
+import structlog
+
+logger = structlog.get_logger(__name__)
+
 
 @dataclass(frozen=True)
 class GainScenarioSummary:

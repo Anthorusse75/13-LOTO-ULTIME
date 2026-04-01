@@ -1,0 +1,73 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Wheeling Generations / min",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "rate(loto_wheeling_generations_total[5m]) * 60",
+          "legendFormat": "{{game}} (guarantee={{guarantee_level}})"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "ops" }
+      }
+    },
+    {
+      "title": "Wheeling Generation Duration (p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, rate(loto_wheeling_generation_duration_seconds_bucket[5m]))",
+          "legendFormat": "{{game}} p95"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "title": "Grids per Wheeling System",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, rate(loto_wheeling_grid_count_bucket[5m]))",
+          "legendFormat": "{{game}} median"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(loto_wheeling_grid_count_bucket[5m]))",
+          "legendFormat": "{{game}} p95"
+        }
+      ]
+    },
+    {
+      "title": "Total Wheeling Generations",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(loto_wheeling_generations_total)",
+          "legendFormat": "Total"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short" }
+      }
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["loto-ultime", "wheeling"],
+  "templating": { "list": [] },
+  "time": { "from": "now-24h", "to": "now" },
+  "title": "LOTO ULTIME — Wheeling",
+  "uid": "loto-wheeling"
+}

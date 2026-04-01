@@ -1,0 +1,81 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Cache Hit Rate",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(rate(loto_cache_hits_total[5m])) / (sum(rate(loto_cache_hits_total[5m])) + sum(rate(loto_cache_misses_total[5m])))",
+          "legendFormat": "Hit Rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "yellow", "value": 0.5 },
+              { "color": "green", "value": 0.8 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Cache Hits vs Misses / min",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "rate(loto_cache_hits_total[5m]) * 60",
+          "legendFormat": "hits — {{cache_name}}"
+        },
+        {
+          "expr": "rate(loto_cache_misses_total[5m]) * 60",
+          "legendFormat": "misses — {{cache_name}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "ops" }
+      }
+    },
+    {
+      "title": "Cache Hits by Name",
+      "type": "piechart",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum by (cache_name) (loto_cache_hits_total)",
+          "legendFormat": "{{cache_name}}"
+        }
+      ]
+    },
+    {
+      "title": "Cache Misses by Name",
+      "type": "piechart",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum by (cache_name) (loto_cache_misses_total)",
+          "legendFormat": "{{cache_name}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["loto-ultime", "cache"],
+  "templating": { "list": [] },
+  "time": { "from": "now-24h", "to": "now" },
+  "title": "LOTO ULTIME — Cache",
+  "uid": "loto-cache"
+}

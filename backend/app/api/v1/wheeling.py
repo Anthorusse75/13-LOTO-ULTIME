@@ -1,7 +1,10 @@
 """Wheeling API — preview, generate, history, and management of wheeling systems."""
 
+import structlog
 from fastapi import APIRouter, Depends, HTTPException, Path, Request
 from app.core.rate_limit import limiter
+
+logger = structlog.get_logger(__name__)
 
 from app.core.game_definitions import GameConfig
 from app.dependencies import get_game_config, get_wheeling_service, require_role
@@ -46,6 +49,13 @@ async def generate_wheeling(
 ) -> WheelingGenerateResponse:
     """Generate a full wheeling system and persist it."""
     _validate_inputs(body.numbers, body.stars, body.guarantee, game_config)
+    logger.info(
+        "wheeling_generate_request",
+        game_id=game_id,
+        numbers_count=len(body.numbers),
+        guarantee=body.guarantee,
+        user_id=user.id,
+    )
 
     result, system = await service.generate(
         game_id=game_id,

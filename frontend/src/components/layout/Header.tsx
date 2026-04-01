@@ -51,14 +51,14 @@ export default function Header() {
   const currentGame = games?.find((g) => g.id === currentGameId);
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-14 px-6 bg-surface border-b border-border">
+    <header className="sticky top-0 z-30 flex items-center justify-between h-12 px-3 sm:h-14 sm:px-6 bg-surface border-b border-border">
       <div className="flex items-center gap-4">
-        <h1 className="text-sm font-medium text-text-secondary">
+        <h1 className="hidden sm:block text-sm font-medium text-text-secondary">
           {currentGame ? currentGame.name : "Chargement..."}
         </h1>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* Game selector */}
         {games && games.length > 1 && (
           <div className="relative">

@@ -53,6 +53,7 @@ async def score_grid(
         total_score=result.total_score,
         score_breakdown=result.score_breakdown,
         star_score=result.star_score,
+        star_breakdown=result.star_breakdown,
         explanation=ExplanationSchema(
             **explain_grid(
                 score=result.total_score,
@@ -98,6 +99,7 @@ async def generate_grids(
                 total_score=r.total_score,
                 score_breakdown=r.score_breakdown,
                 star_score=r.star_score,
+                star_breakdown=r.star_breakdown,
                 explanation=ExplanationSchema(
                     **explain_grid(
                         score=r.total_score,

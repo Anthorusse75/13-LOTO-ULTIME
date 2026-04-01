@@ -6,6 +6,7 @@ from .coach import router as coach_router
 from .comparison import router as comparison_router
 from .database import router as database_router
 from .draws import router as draws_router
+from .export import router as export_router
 from .games import router as games_router
 from .grids import router as grids_router
 from .health import router as health_router
@@ -75,4 +76,9 @@ api_v1_router.include_router(
     notifications_router,
     prefix="/notifications",
     tags=["Notifications"],
+)
+api_v1_router.include_router(
+    export_router,
+    prefix="/export",
+    tags=["Export"],
 )

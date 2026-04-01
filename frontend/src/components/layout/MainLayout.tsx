@@ -2,6 +2,7 @@ import AiCoach from "@/components/common/AiCoach";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import OnboardingTour from "@/components/common/OnboardingTour";
 import { Outlet } from "react-router-dom";
+import Breadcrumbs from "./Breadcrumbs";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
@@ -19,8 +20,9 @@ export default function MainLayout() {
         <main
           id="main-content"
           tabIndex={-1}
-          className="flex-1 overflow-x-hidden overflow-y-auto p-4 pt-14 md:p-6 md:pt-6"
+          className="flex-1 overflow-x-hidden overflow-y-auto p-3 pt-14 sm:p-4 sm:pt-14 md:p-6 md:pt-6"
         >
+          <Breadcrumbs />
           <ErrorBoundary>
             <Outlet />
           </ErrorBoundary>

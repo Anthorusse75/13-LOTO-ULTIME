@@ -219,6 +219,78 @@ export default function HowItWorksPage() {
             </p>
           </LearnSection>
 
+          <LearnSection title="Les systèmes réduits (Wheeling)">
+            <p>
+              Un <strong>système réduit</strong> (ou <em>wheeling</em>) permet
+              de jouer plus de numéros que ce que la grille standard autorise,
+              tout en garantissant un niveau minimum de correspondance si
+              certains de vos numéros sont tirés.
+            </p>
+            <p>
+              <strong>Exemple concret :</strong> au Loto FDJ (5 numéros parmi
+              49), si vous aimez 10 numéros, le système complet (toutes les
+              combinaisons de 5 parmi 10) nécessiterait 252 grilles. Un système
+              réduit avec <strong>garantie 3</strong> n'en nécessite qu'une
+              dizaine — si 3 de vos numéros sont tirés, au moins une de vos
+              grilles les contiendra.
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>Paramètre t (garantie)</strong> — le nombre minimum de
+                numéros que vous êtes sûr de retrouver dans une grille si
+                t numéros parmi vos sélectionnés sont tirés.
+              </li>
+              <li>
+                <strong>Couverture</strong> — pourcentage de combinaisons
+                possibles couvertes par le système. 100% = système complet.
+              </li>
+              <li>
+                <strong>Compromis</strong> — plus la garantie est élevée, plus
+                il faut de grilles (et donc un budget plus important).
+              </li>
+            </ul>
+            <p>
+              La matrice de couverture montre quels numéros apparaissent dans
+              quelles grilles. Les scénarios de gain conditionnels estiment vos
+              gains potentiels selon le nombre de bons numéros.
+            </p>
+          </LearnSection>
+
+          <LearnSection title="Comprendre le coût et les compromis">
+            <p>
+              Chaque grille a un coût fixe : <strong>2,20 €</strong> pour le
+              Loto FDJ, <strong>2,50 €</strong> pour l'EuroMillions. Un système
+              réduit de 15 grilles coûte donc entre 33 € et 37,50 €.
+            </p>
+            <p>
+              <strong>La loi des rendements décroissants</strong> s'applique :
+              augmenter le nombre de numéros sélectionnés ou le niveau de
+              garantie augmente le coût de manière exponentielle, alors que le
+              gain de couverture ralentit.
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>Budget raisonnable</strong> — définissez un montant
+                mensuel fixe que vous êtes prêt à dépenser et ne le dépassez
+                jamais.
+              </li>
+              <li>
+                <strong>Ratio coût/couverture</strong> — comparez le pourcentage
+                de couverture obtenu pour chaque euro dépensé. L'optimiseur
+                budget vous aide à trouver le meilleur rapport.
+              </li>
+              <li>
+                <strong>Espérance conditionnelle</strong> — le gain espéré
+                «si vous avez N bons numéros» permet d'évaluer le rapport
+                risque/bénéfice de chaque système.
+              </li>
+            </ul>
+            <p>
+              L'outil Budget intelligent analyse automatiquement ces compromis
+              et propose la stratégie optimale pour votre enveloppe.
+            </p>
+          </LearnSection>
+
           <LearnSection title="Jeu responsable">
             <p>
               La loterie reste un jeu de hasard.{" "}

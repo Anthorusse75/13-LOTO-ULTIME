@@ -33,7 +33,13 @@
     --color-surface-hover: #e4e4e7;
     --color-border: #d4d4d8;
     --color-text-primary: #09090b;
-    --color-text-secondary: #71717a;
+    --color-text-secondary: #52525b;
+    --color-accent-blue: #2563eb;
+    --color-accent-green: #16a34a;
+    --color-accent-amber: #d97706;
+    --color-accent-red: #dc2626;
+    --color-accent-purple: #9333ea;
+    --color-accent-yellow: #ca8a04;
   }
 
   /* WCAG 2.4.7 — Visible focus ring for keyboard navigation */

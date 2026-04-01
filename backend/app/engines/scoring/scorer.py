@@ -73,6 +73,7 @@ class ScoredResult:
     score_breakdown: dict[str, float]
     stars: list[int] | None = None
     star_score: float | None = None
+    star_breakdown: dict[str, float] | None = None
 
 
 @dataclass
@@ -136,6 +137,62 @@ class GridScorer:
             score_breakdown={k: round(v, 6) for k, v in breakdown.items()},
         )
 
+    def score_stars(
+        self,
+        stars: list[int],
+        statistics: dict[str, Any],
+        game: GameConfig,
+    ) -> tuple[float, dict[str, float]]:
+        """Score stars/complementary numbers independently.
+
+        Criteria:
+        - frequency (40%): ratio of observed vs expected frequency
+        - gap (40%): sigmoid of normalized current gap
+        - balance (20%): distribution across the star range
+        """
+        import math
+
+        star_freq = statistics.get("star_frequency", {})
+        star_gaps = statistics.get("star_gaps", {})
+
+        if not star_freq or not star_gaps or not stars:
+            return 0.5, {"star_frequency": 0.5, "star_gap": 0.5, "star_balance": 0.5}
+
+        # Frequency criterion for stars
+        freq_scores = []
+        for s in stars:
+            key = str(s)
+            freq_scores.append(star_freq.get(key, {}).get("ratio", 1.0))
+        freq_score = sum(freq_scores) / len(freq_scores) if freq_scores else 0.5
+
+        # Gap criterion for stars (sigmoid of normalized gap deviation)
+        gap_scores = []
+        for s in stars:
+            key = str(s)
+            g_data = star_gaps.get(key, {})
+            g_current = g_data.get("current_gap", 0)
+            g_avg = g_data.get("avg_gap", 1)
+            g_ratio = (g_current - g_avg) / g_avg if g_avg > 0 else 0
+            gap_scores.append(1.0 / (1.0 + math.exp(-3.0 * g_ratio)))
+        gap_score = sum(gap_scores) / len(gap_scores) if gap_scores else 0.5
+
+        # Balance criterion for stars (spread across range)
+        star_max = game.stars_pool if game.stars_pool else max(stars)
+        if len(stars) >= 2 and star_max > 1:
+            spread = (max(stars) - min(stars)) / (star_max - 1)
+            balance_score = min(1.0, spread)
+        else:
+            balance_score = 0.5
+
+        breakdown = {
+            "star_frequency": round(freq_score, 6),
+            "star_gap": round(gap_score, 6),
+            "star_balance": round(balance_score, 6),
+        }
+
+        total = 0.40 * freq_score + 0.40 * gap_score + 0.20 * balance_score
+        return round(max(0.0, min(1.0, total)), 6), breakdown
+
     def score_with_stars(
         self,
         grid: list[int],
@@ -145,28 +202,7 @@ class GridScorer:
     ) -> ScoredResult:
         """Score a grid including star/complementary numbers."""
         result = self.score(grid, statistics, game)
-
-        # Star scoring: frequency + gap only (limited data)
-        star_freq = statistics.get("star_frequency", {})
-        star_gaps = statistics.get("star_gaps", {})
-
-        if star_freq and star_gaps:
-            star_scores = []
-            for s in stars:
-                key = str(s)
-                f_score = star_freq.get(key, {}).get("ratio", 1.0)
-                g_data = star_gaps.get(key, {})
-                g_current = g_data.get("current_gap", 0)
-                g_avg = g_data.get("avg_gap", 1)
-                g_ratio = (g_current - g_avg) / g_avg if g_avg > 0 else 0
-                import math
-
-                g_score = 1.0 / (1.0 + math.exp(-3.0 * g_ratio))
-                star_scores.append(0.5 * f_score + 0.5 * g_score)
-
-            star_score = sum(star_scores) / len(star_scores) if star_scores else 0.5
-        else:
-            star_score = 0.5
+        star_score, star_breakdown = self.score_stars(stars, statistics, game)
 
         # Combined: 85% main numbers + 15% stars (per doc 08 sec 6)
         combined = 0.85 * result.total_score + 0.15 * star_score
@@ -177,5 +213,6 @@ class GridScorer:
             total_score=combined,
             score_breakdown=result.score_breakdown,
             stars=sorted(stars),
-            star_score=round(star_score, 6),
+            star_score=star_score,
+            star_breakdown=star_breakdown,
         )

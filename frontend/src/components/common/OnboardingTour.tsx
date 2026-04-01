@@ -39,6 +39,27 @@ const STEPS: Step[] = [
     action: { label: "Générer des grilles", to: "/grids" },
   },
   {
+    title: "Système réduit (Wheeling)",
+    description:
+      "Sélectionnez plus de numéros que la grille standard et générez un système réduit avec un niveau de garantie. Visualisez la couverture et les scénarios de gains.",
+    icon: "🔗",
+    action: { label: "Essayer le wheeling", to: "/wheeling" },
+  },
+  {
+    title: "Budget intelligent",
+    description:
+      "Entrez votre budget et vos préférences : l'optimiseur vous recommande la meilleure stratégie (grilles top, portefeuille ou système réduit) pour maximiser vos chances.",
+    icon: "💰",
+    action: { label: "Optimiser mon budget", to: "/budget" },
+  },
+  {
+    title: "Le Comparateur",
+    description:
+      "Comparez jusqu'à 5 stratégies côte à côte avec des graphiques radar, des métriques détaillées et un classement automatique. Trouvez la meilleure approche.",
+    icon: "⚖️",
+    action: { label: "Comparer des stratégies", to: "/comparator" },
+  },
+  {
     title: "Le Portefeuille",
     description:
       "Optimisez un ensemble de grilles pour maximiser la couverture tout en minimisant les recoupements. 4 stratégies de portfolio disponibles.",
@@ -55,7 +76,7 @@ const STEPS: Step[] = [
   {
     title: "Vous êtes prêt(e) ! ✅",
     description:
-      "Le Coach IA (en bas à droite) vous donnera des conseils contextuels sur chaque page. Commencez par consulter les statistiques pour comprendre les tendances actuelles.",
+      "Le Coach IA (en bas à droite) vous donnera des conseils contextuels sur chaque page. Basculez entre les modes Simplifié et Expert selon vos besoins. Bon jeu !",
     icon: "🎓",
     action: { label: "Voir le tableau de bord", to: "/" },
   },

@@ -272,36 +272,36 @@
 
 | ID     | Tâche                                                       | Doc    | Statut |
 | ------ | ----------------------------------------------------------- | ------ | ------ |
-| F-79   | PED-04 : Section « Systèmes réduits » (pédagogie)           | 14     | ⬜      |
-| F-80   | PED-07 : Section « Coûts et compromis »                     | 14     | ⬜      |
-| F-81   | Enrichir GlossaryPage avec liens vers sections              | 14     | ⬜      |
-| F-82   | Restructurer Sidebar par catégories                         | 07     | ⬜      |
-| F-83   | Ajouter breadcrumbs                                         | 07     | ⬜      |
-| F-84   | Implémenter thème clair (light mode)                        | 07     | ⬜      |
-| F-85   | Ajouter theme dans settingsStore                            | 07     | ⬜      |
-| F-86   | Responsive amélioré (sm/md breakpoints)                     | 07     | ⬜      |
-| F-87   | Onboarding tour enrichi                                     | 07     | ⬜      |
-| B-40   | Implémenter star scoring séparé                             | 06, 05 | ⬜      |
-| B-41   | Multi-format export (PDF, CSV, JSON) dans ExportMenu        | 06, 16 | ⬜      |
-| F-88   | Créer composant ExportMenu                                  | 06, 17 | ⬜      |
-| F-89   | Code splitting React.lazy pour Wheeling, Budget, Comparator | 22     | ⬜      |
-| JOB-09 | Implémenter cleanup_anonymous_data                          | 20     | ⬜      |
-| DB-16  | Créer tous les index secondaires (migration finale)         | 19     | ⬜      |
-| DOC-01 | Créer RUNBOOK_DEPLOYMENT.md                                 | 23     | ⬜      |
-| DOC-02 | Créer RUNBOOK_ROLLBACK.md                                   | 23     | ⬜      |
-| DOC-03 | Configurer feature flags                                    | 23     | ⬜      |
+| F-79   | PED-04 : Section « Systèmes réduits » (pédagogie)           | 14     | ✅      |
+| F-80   | PED-07 : Section « Coûts et compromis »                     | 14     | ✅      |
+| F-81   | Enrichir GlossaryPage avec liens vers sections              | 14     | ✅      |
+| F-82   | Restructurer Sidebar par catégories                         | 07     | ✅      |
+| F-83   | Ajouter breadcrumbs                                         | 07     | ✅      |
+| F-84   | Implémenter thème clair (light mode)                        | 07     | ✅      |
+| F-85   | Ajouter theme dans settingsStore                            | 07     | ✅      |
+| F-86   | Responsive amélioré (sm/md breakpoints)                     | 07     | ✅      |
+| F-87   | Onboarding tour enrichi                                     | 07     | ✅      |
+| B-40   | Implémenter star scoring séparé                             | 06, 05 | ✅      |
+| B-41   | Multi-format export (PDF, CSV, JSON) dans ExportMenu        | 06, 16 | ✅      |
+| F-88   | Créer composant ExportMenu                                  | 06, 17 | ✅      |
+| F-89   | Code splitting React.lazy pour Wheeling, Budget, Comparator | 22     | ✅      |
+| JOB-09 | Implémenter cleanup_anonymous_data                          | 20     | ✅      |
+| DB-16  | Créer tous les index secondaires (migration finale)         | 19     | ✅      |
+| DOC-01 | Créer RUNBOOK_DEPLOYMENT.md                                 | 23     | ✅      |
+| DOC-02 | Créer RUNBOOK_ROLLBACK.md                                   | 23     | ✅      |
+| DOC-03 | Configurer feature flags                                    | 23     | ✅      |
 
 ### Observabilité (Phase E)
 
 | ID     | Tâche                                                          | Doc | Statut |
 | ------ | -------------------------------------------------------------- | --- | ------ |
-| OBS-01 | Ajouter métriques Prometheus pour wheeling, budget, comparison | 23  | ⬜      |
-| OBS-02 | Créer dashboard Grafana : Wheeling                             | 23  | ⬜      |
-| OBS-03 | Créer dashboard Grafana : Pipeline étendu                      | 23  | ⬜      |
-| OBS-04 | Créer dashboard Grafana : Cache                                | 23  | ⬜      |
-| OBS-05 | Configurer alertes critiques                                   | 23  | ⬜      |
-| OBS-06 | Configurer alertes warning                                     | 23  | ⬜      |
-| OBS-07 | Ajouter logs structurés pour nouveaux modules                  | 23  | ⬜      |
+| OBS-01 | Ajouter métriques Prometheus pour wheeling, budget, comparison | 23  | ✅      |
+| OBS-02 | Créer dashboard Grafana : Wheeling                             | 23  | ✅      |
+| OBS-03 | Créer dashboard Grafana : Pipeline étendu                      | 23  | ✅      |
+| OBS-04 | Créer dashboard Grafana : Cache                                | 23  | ✅      |
+| OBS-05 | Configurer alertes critiques                                   | 23  | ✅      |
+| OBS-06 | Configurer alertes warning                                     | 23  | ✅      |
+| OBS-07 | Ajouter logs structurés pour nouveaux modules                  | 23  | ✅      |
 
 ---
 
@@ -330,6 +330,6 @@
 | A         | 17         | 17      | **100%** |
 | B         | 40         | 40      | **100%** |
 | C         | 39         | 39      | **100%** |
-| D         | 34         | 0       | 0%       |
-| E         | 26 + 7 obs | 0       | 0%       |
-| **Total** | **~175**   | **108** | **62%**  |
+| D         | 34         | 34      | **100%** |
+| E         | 26 + 7 obs | 33      | **100%** |
+| **Total** | **~175**   | **175** | **100%** |

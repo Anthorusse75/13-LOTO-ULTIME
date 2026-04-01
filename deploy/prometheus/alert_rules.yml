@@ -1,0 +1,113 @@
+groups:
+  # ─────────────────────────────────────────────────────────────────────
+  # OBS-05 — Alertes critiques (severity: critical)
+  # ─────────────────────────────────────────────────────────────────────
+  - name: loto_critical
+    rules:
+      - alert: BackendDown
+        expr: up{job="loto-ultime-backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend LOTO ULTIME est down"
+          description: "Le backend ne répond plus depuis 2 minutes."
+
+      - alert: NightlyPipelineStale
+        expr: (time() - loto_last_pipeline_run_timestamp_seconds) > 86400
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pipeline nightly n'a pas tourné depuis 24h"
+          description: "Le dernier run date de {{ $value | humanizeDuration }}."
+
+      - alert: HighErrorRate
+        expr: rate(loto_http_requests_total{status_code=~"5.."}[5m]) / rate(loto_http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taux d'erreurs HTTP 5xx > 5%"
+          description: "{{ $value | humanizePercentage }} des requêtes sont en erreur."
+
+      - alert: EngineErrorSpike
+        expr: increase(loto_engine_errors_total[15m]) > 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Plus de 10 erreurs moteur en 15 minutes"
+          description: "Engine {{ $labels.engine }} / game {{ $labels.game }}."
+
+      - alert: DatabaseConnectionFailure
+        expr: increase(loto_http_requests_total{status_code="500", endpoint=~"/api/v1/draws.*|/api/v1/games.*"}[5m]) > 20
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Erreurs massives sur endpoints DB"
+          description: "Possible panne de connexion à la base de données."
+
+  # ─────────────────────────────────────────────────────────────────────
+  # OBS-06 — Alertes warning (severity: warning)
+  # ─────────────────────────────────────────────────────────────────────
+  - name: loto_warning
+    rules:
+      - alert: HighLatencyP95
+        expr: histogram_quantile(0.95, rate(loto_http_request_duration_seconds_bucket[5m])) > 2
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latence p95 HTTP > 2s"
+          description: "Le p95 est à {{ $value }}s sur {{ $labels.endpoint }}."
+
+      - alert: WheelingSlowGeneration
+        expr: histogram_quantile(0.95, rate(loto_wheeling_generation_duration_seconds_bucket[5m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Génération wheeling p95 > 10s"
+          description: "Les systèmes réduits prennent trop de temps."
+
+      - alert: ScraperFailures
+        expr: increase(loto_scraper_fetches_total{status="failure"}[1h]) > 5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Plus de 5 échecs scraper en 1h"
+          description: "Game {{ $labels.game }} : {{ $value }} échecs."
+
+      - alert: LowCacheHitRate
+        expr: >
+          sum(rate(loto_cache_hits_total[5m]))
+          / (sum(rate(loto_cache_hits_total[5m])) + sum(rate(loto_cache_misses_total[5m])))
+          < 0.5
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taux de cache hits < 50%"
+          description: "Le cache n'est pas efficace ({{ $value | humanizePercentage }})."
+
+      - alert: NoDrawsFor48h
+        expr: >
+          (time() - max(loto_last_statistics_snapshot_timestamp_seconds)) > 172800
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pas de snapshot statistique depuis 48h"
+          description: "Les statistiques sont potentiellement obsolètes."
+
+      - alert: HighExportVolume
+        expr: increase(loto_exports_total[1h]) > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Plus de 100 exports en 1h"
+          description: "Volume inhabituel d'exports ({{ $value }})."
