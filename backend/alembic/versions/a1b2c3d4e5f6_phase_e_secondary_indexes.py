@@ -6,6 +6,7 @@ Create Date: 2025-01-15 00:00:00.000000
 """
 
 from alembic import op
+from sqlalchemy import text
 
 revision = "a1b2c3d4e5f6"
 down_revision = "990d5f890631"
@@ -14,62 +15,59 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # -- wheeling_systems: sort by newest first
-    op.create_index(
-        "ix_wheeling_systems_created_at_desc",
-        "wheeling_systems",
-        ["created_at"],
-        postgresql_using="btree",
-        postgresql_ops={"created_at": "DESC"},
-    )
+    conn = op.get_bind()
 
-    # -- user_saved_results: quick lookup of favorites per user
-    op.create_index(
-        "ix_user_saved_results_user_favorite",
-        "user_saved_results",
-        ["user_id", "is_favorite"],
-        postgresql_where="is_favorite = TRUE",
-    )
+    # -- wheeling_systems: sort by newest first
+    conn.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_wheeling_systems_created_at_desc "
+        "ON wheeling_systems USING btree (created_at DESC)"
+    ))
+
+    # -- user_saved_results: quick lookup of favorites per user (partial)
+    conn.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_user_saved_results_user_favorite "
+        "ON user_saved_results (user_id, is_favorite) WHERE is_favorite = TRUE"
+    ))
 
     # -- user_saved_results: sort by newest first
-    op.create_index(
-        "ix_user_saved_results_created_at_desc",
-        "user_saved_results",
-        ["created_at"],
-        postgresql_using="btree",
-        postgresql_ops={"created_at": "DESC"},
-    )
+    conn.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_user_saved_results_created_at_desc "
+        "ON user_saved_results USING btree (created_at DESC)"
+    ))
 
     # -- user_notifications: partial index for unread notifications
-    op.create_index(
-        "ix_notifications_user_unread",
-        "user_notifications",
-        ["user_id", "is_read"],
-        postgresql_where="is_read = FALSE",
-    )
+    conn.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_notifications_user_unread "
+        "ON user_notifications (user_id, is_read) WHERE is_read = FALSE"
+    ))
 
     # -- user_notifications: sort by newest first
-    op.create_index(
-        "ix_notifications_created_at_desc",
-        "user_notifications",
-        ["created_at"],
-        postgresql_using="btree",
-        postgresql_ops={"created_at": "DESC"},
-    )
+    conn.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_notifications_created_at_desc "
+        "ON user_notifications USING btree (created_at DESC)"
+    ))
 
-    # -- scored_grids: partial index for played grids
-    op.create_index(
-        "ix_scored_grids_is_played",
-        "scored_grids",
-        ["is_played"],
-        postgresql_where="is_played = TRUE",
-    )
+    # -- scored_grids: replace the plain index with a partial index for played grids
+    # Drop the auto-generated non-partial index first (from model index=True)
+    conn.execute(text(
+        "DROP INDEX IF EXISTS ix_scored_grids_is_played"
+    ))
+    conn.execute(text(
+        "CREATE INDEX ix_scored_grids_played_partial "
+        "ON scored_grids (is_played) WHERE is_played = TRUE"
+    ))
 
 
 def downgrade() -> None:
-    op.drop_index("ix_scored_grids_is_played", table_name="scored_grids")
-    op.drop_index("ix_notifications_created_at_desc", table_name="user_notifications")
-    op.drop_index("ix_notifications_user_unread", table_name="user_notifications")
-    op.drop_index("ix_user_saved_results_created_at_desc", table_name="user_saved_results")
-    op.drop_index("ix_user_saved_results_user_favorite", table_name="user_saved_results")
-    op.drop_index("ix_wheeling_systems_created_at_desc", table_name="wheeling_systems")
+    conn = op.get_bind()
+    conn.execute(text("DROP INDEX IF EXISTS ix_scored_grids_played_partial"))
+    # Restore the original non-partial index
+    conn.execute(text(
+        "CREATE INDEX IF NOT EXISTS ix_scored_grids_is_played "
+        "ON scored_grids (is_played)"
+    ))
+    conn.execute(text("DROP INDEX IF EXISTS ix_notifications_created_at_desc"))
+    conn.execute(text("DROP INDEX IF EXISTS ix_notifications_user_unread"))
+    conn.execute(text("DROP INDEX IF EXISTS ix_user_saved_results_created_at_desc"))
+    conn.execute(text("DROP INDEX IF EXISTS ix_user_saved_results_user_favorite"))
+    conn.execute(text("DROP INDEX IF EXISTS ix_wheeling_systems_created_at_desc"))
