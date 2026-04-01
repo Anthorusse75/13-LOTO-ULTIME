@@ -25,7 +25,12 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
-type NavItem = { to: string; icon: typeof LayoutDashboard; label: string; adminOnly?: boolean };
+type NavItem = {
+  to: string;
+  icon: typeof LayoutDashboard;
+  label: string;
+  adminOnly?: boolean;
+};
 
 type NavCategory = { title: string; items: NavItem[] };
 
@@ -66,7 +71,12 @@ const navCategories: NavCategory[] = [
   {
     title: "Admin",
     items: [
-      { to: "/admin", icon: Settings, label: "Administration", adminOnly: true },
+      {
+        to: "/admin",
+        icon: Settings,
+        label: "Administration",
+        adminOnly: true,
+      },
     ],
   },
 ];
@@ -158,7 +168,9 @@ export default function Sidebar() {
         <button
           onClick={toggleTheme}
           className="flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm text-text-secondary hover:bg-surface-hover transition-colors"
-          aria-label={theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
+          aria-label={
+            theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"
+          }
         >
           {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           {(mobile || !collapsed) && (

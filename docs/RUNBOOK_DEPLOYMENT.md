@@ -2,12 +2,12 @@
 
 ## Pré-requis
 
-| Élément | Détail |
-|---------|--------|
-| Python | 3.12+ |
-| Node.js | 20 LTS+ |
-| PostgreSQL | 15+ |
-| Redis | 7+ (optionnel, cache) |
+| Élément    | Détail                |
+| ---------- | --------------------- |
+| Python     | 3.12+                 |
+| Node.js    | 20 LTS+               |
+| PostgreSQL | 15+                   |
+| Redis      | 7+ (optionnel, cache) |
 
 ## Variables d'environnement
 

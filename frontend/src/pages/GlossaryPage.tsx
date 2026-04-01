@@ -13,7 +13,10 @@ const glossaryTerms = [
     term: "Distance de Hamming",
     definition:
       "Nombre de positions où deux combinaisons diffèrent. Une distance de Hamming élevée entre deux grilles signifie une meilleure diversification.",
-    seeAlso: { label: "Le portefeuille et la diversification", to: "/how-it-works" },
+    seeAlso: {
+      label: "Le portefeuille et la diversification",
+      to: "/how-it-works",
+    },
   },
   {
     term: "Écart (Gap)",
@@ -77,7 +80,10 @@ const glossaryTerms = [
     term: "Portefeuille",
     definition:
       "Ensemble de grilles optimisées pour maximiser la couverture de numéros et la diversité tout en maintenant des scores élevés.",
-    seeAlso: { label: "Le portefeuille et la diversification", to: "/how-it-works" },
+    seeAlso: {
+      label: "Le portefeuille et la diversification",
+      to: "/how-it-works",
+    },
   },
   {
     term: "Profil de jeu",

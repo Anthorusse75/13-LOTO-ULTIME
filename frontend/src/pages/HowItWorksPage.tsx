@@ -237,8 +237,8 @@ export default function HowItWorksPage() {
             <ul className="list-disc pl-5 space-y-1">
               <li>
                 <strong>Paramètre t (garantie)</strong> — le nombre minimum de
-                numéros que vous êtes sûr de retrouver dans une grille si
-                t numéros parmi vos sélectionnés sont tirés.
+                numéros que vous êtes sûr de retrouver dans une grille si t
+                numéros parmi vos sélectionnés sont tirés.
               </li>
               <li>
                 <strong>Couverture</strong> — pourcentage de combinaisons
@@ -280,8 +280,8 @@ export default function HowItWorksPage() {
                 budget vous aide à trouver le meilleur rapport.
               </li>
               <li>
-                <strong>Espérance conditionnelle</strong> — le gain espéré
-                «si vous avez N bons numéros» permet d'évaluer le rapport
+                <strong>Espérance conditionnelle</strong> — le gain espéré «si
+                vous avez N bons numéros» permet d'évaluer le rapport
                 risque/bénéfice de chaque système.
               </li>
             </ul>

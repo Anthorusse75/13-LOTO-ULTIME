@@ -20,7 +20,10 @@ const FORMATS = [
   { key: "pdf", label: "PDF", icon: FileText, mime: "application/pdf" },
 ] as const;
 
-export default function ExportMenu({ title = "Export Loto Ultime", grids }: ExportMenuProps) {
+export default function ExportMenu({
+  title = "Export Loto Ultime",
+  grids,
+}: ExportMenuProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

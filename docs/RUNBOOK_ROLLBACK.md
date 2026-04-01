@@ -102,8 +102,8 @@ Après un rollback :
 
 ## 7. Points de contact
 
-| Rôle | Responsabilité |
-|------|---------------|
-| Dev Backend | Rollback migrations, logs serveur |
-| Dev Frontend | Rollback build, vérification UI |
-| Ops | Infra, Nginx, monitoring Grafana |
+| Rôle         | Responsabilité                    |
+| ------------ | --------------------------------- |
+| Dev Backend  | Rollback migrations, logs serveur |
+| Dev Frontend | Rollback build, vérification UI   |
+| Ops          | Infra, Nginx, monitoring Grafana  |
